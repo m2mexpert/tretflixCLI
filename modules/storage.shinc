@@ -34,15 +34,17 @@ function storage__root() {
 }
 
 function storage__add_cifs() {
-  if [ "${#CLI_ARGS[@]}" -ge 5 ]; then
-    echo "Debug: storage__add_cifs code goes here!"
+  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
+    echo "Anonymous Share"
+  elif [ "${#CLI_ARGS[@]}" -eq 8 ]; then
+    echo "Authenticated Share"
   else
     help__storage
   fi
 }
 
 function storage__add_nfs() {
-  if [ "${#CLI_ARGS[@]}" -ge 5 ]; then
+  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
     echo "Debug: storage__add_nfs code goes here!"
   else
     help__storage
@@ -50,7 +52,7 @@ function storage__add_nfs() {
 }
 
 function storage__del_cifs() {
-  if [ "${#CLI_ARGS[@]}" -ge 5 ]; then
+  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
     echo "Debug: storage__del_cifs code goes here!"
   else
     help__storage
@@ -58,7 +60,7 @@ function storage__del_cifs() {
 }
 
 function storage__del_nfs() {
-  if [ "${#CLI_ARGS[@]}" -ge 5 ]; then
+  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
     echo "Debug: storage__del_nfs code goes here!"
   else
     help__storage
