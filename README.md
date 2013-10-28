@@ -58,10 +58,10 @@
 	Usage: tretflix storage [COMMAND] [INPUT] [OPTION]
 
 	COMMANDS:
-	  tretflix storage add cifs [ADDRESS] [LABEL] [OPTION] ...
-	  tretflix storage add nfs [ADDRESS] [LABEL] [OPTION] ...
-	  tretflix storage del cifs [ADDRESS] [LABEL]
-	  tretflix storage del nfs [ADDRESS] [LABEL]
+	  tretflix storage add cifs [ADDRESS] [SHARE] [OPTION] ...
+	  tretflix storage add nfs [ADDRESS] [EXPORT]
+	  tretflix storage del cifs [ADDRESS] [SHARE]
+	  tretflix storage del nfs [ADDRESS] [EXPORT]
 	  tretflix storage show config
 	  tretflix storage reset config
 
