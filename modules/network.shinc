@@ -1,0 +1,71 @@
+# avoid double inclusion
+if test "${network__imported+defined}" == "defined"; then
+  return 0
+fi
+network__imported=1
+
+function network__root() {
+  if test "${CLI_ARGS[2]+isset}"; then
+    case "${CLI_ARGS[1]} ${CLI_ARGS[2]}" in
+      'set static')
+        network__set_static
+        ;;
+      'set dns')
+        network__set_dns
+        ;;
+      'set domain')
+        network__set_domain
+        ;;
+      'show config')
+        network__show_config
+        ;;
+      'reset config')
+        network__reset_config
+        ;;
+      *)
+        help__network
+    esac	
+  else
+    help__network
+  fi
+}
+
+function network__set_static() {
+  if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
+    echo "Debug: network__set_static code goes here!"
+  else
+    help__network
+  fi
+}
+
+function network__set_dns() {
+  if [ "${#CLI_ARGS[@]}" -ge 4 ]; then
+    echo "Debug: network__set_dns code goes here!"
+  else
+    help__network
+  fi
+}
+
+function network__set_domain() {
+  if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
+    echo "Debug: network__set_domain code goes here!"
+  else
+    help__network
+  fi
+}
+
+function network__show_config() {
+  if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
+    ifconfig eth0
+  else
+    help__network
+  fi
+}
+
+function network__reset_config() {
+  if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
+    echo "Debug: network__reset_config code goes here!"
+  else
+    help__network
+  fi
+}

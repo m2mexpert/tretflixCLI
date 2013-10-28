@@ -1,0 +1,6 @@
+# avoid double inclusion
+if test "${couchpotato__imported+defined}" == "defined"; then
+  return 0
+fi
+couchpotato__imported=1
+

@@ -1,0 +1,6 @@
+# avoid double inclusion
+if test "${sabnzbd__imported+defined}" == "defined"; then
+  return 0
+fi
+sabnzbd__imported=1
+

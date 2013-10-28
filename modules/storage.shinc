@@ -1,0 +1,82 @@
+# avoid double inclusion
+if test "${storage__imported+defined}" == "defined"; then
+  return 0
+fi
+storage__imported=1
+
+function storage__root() {
+  if test "${CLI_ARGS[2]+isset}"; then
+    case "${CLI_ARGS[1]} ${CLI_ARGS[2]}" in
+      'add cifs')
+        storage__add_cifs
+        ;;
+      'add nfs')
+        storage__add_nfs
+        ;;
+      'del cifs')
+        storage__del_cifs
+        ;;
+      'del nfs')
+        storage__del_nfs
+        ;;
+      'show config')
+        storage__show_config
+        ;;
+      'reset config')
+        storage__reset_config
+        ;;
+      *)
+        help__storage
+    esac
+  else
+    help__storage
+  fi
+}
+
+function storage__add_cifs() {
+  if [ "${#CLI_ARGS[@]}" -ge 5 ]; then
+    echo "Debug: storage__add_cifs code goes here!"
+  else
+    help__storage
+  fi
+}
+
+function storage__add_nfs() {
+  if [ "${#CLI_ARGS[@]}" -ge 5 ]; then
+    echo "Debug: storage__add_nfs code goes here!"
+  else
+    help__storage
+  fi
+}
+
+function storage__del_cifs() {
+  if [ "${#CLI_ARGS[@]}" -ge 5 ]; then
+    echo "Debug: storage__del_cifs code goes here!"
+  else
+    help__storage
+  fi
+}
+
+function storage__del_nfs() {
+  if [ "${#CLI_ARGS[@]}" -ge 5 ]; then
+    echo "Debug: storage__del_nfs code goes here!"
+  else
+    help__storage
+  fi
+}
+
+function storage__show_config() {
+  if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
+    echo "Debug: storage__show_config code goes here!"
+  else
+    help__storage
+  fi
+}
+
+function storage__reset_config() {
+  if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
+    echo "Debug: storage__reset_config code goes here!"
+  else
+    help__storage
+  fi
+}

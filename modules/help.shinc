@@ -1,0 +1,90 @@
+# avoid double inclusion
+if test "${help__imported+defined}" == "defined"; then
+  return 0
+fi
+help__imported=1
+
+function help__root() {
+  echo "tretflix --help"
+  echo
+  echo "Appliance Commands:"
+  echo "--------------------------------------------------"
+  help__appliance
+  echo
+  echo "Application Commands:"
+  echo "--------------------------------------------------"
+  help__application
+  echo
+  echo "Network Commands:"
+  echo "--------------------------------------------------"
+  help__network
+  echo
+  echo "Storage Commands:"
+  echo "--------------------------------------------------"
+  help__storage
+  echo
+}
+
+function help__appliance() {
+  echo "Usage: tretflix appliance [COMMAND] [INPUT]"
+  echo
+  echo "COMMANDS:"
+  echo "  tretflix appliance setup"
+  echo "  tretflix appliance backup"
+  echo "  tretflix appliance restore [FILE]"
+  echo
+}
+
+function help__application() {
+  echo "Usage: tretflix application [OPTION] [COMMAND] [INPUT]"
+  echo
+  echo "COMMANDS:"
+  echo "  tretflix application [OPTION] enable"
+  echo "  tretflix application [OPTION] disable"
+  echo "  tretflix application [OPTION] set username [USERNAME]"
+  echo "  tretflix application [OPTION] set password [PASSWORD]"
+  echo "  tretflix application [OPTION] set port [PORT]"
+  echo "  tretflix application [OPTION] new apikey"
+  echo "  tretflix application [OPTION] show config"
+  echo "  tretflix application [OPTION] reset config"
+  echo
+  echo "OPTIONS:"
+  echo "  -a, --all"
+  echo "  -b, --sickbeard"
+  echo "  -c, --couchpotato"
+  echo "  -m, --maraschino"
+  echo "  -s, --sabnzbd"
+  echo "  -t, --transmission"
+  echo
+  echo "  Note: 'all' option not available when setting ports."
+  echo
+}
+
+function help__network() {
+  echo "Usage: tretflix network [COMMAND] [INPUT]"
+  echo
+  echo "COMMANDS:"
+  echo "  tretflix network set static [IPV4] [NETMASK] [GATEWAY]"
+  echo "  tretflix network set dns [SERVER1] [SERVER2] ..."
+  echo "  tretflix network set domain [DOMAIN]"
+  echo "  tretflix network show config"
+  echo "  tretflix network reset config"
+  echo
+}
+
+function help__storage() {
+  echo "Usage: tretflix storage [COMMAND] [INPUT] [OPTION]"
+  echo
+  echo "COMMANDS:"
+  echo "  tretflix storage add cifs [ADDRESS] [LABEL] [OPTION] ..."
+  echo "  tretflix storage add nfs [ADDRESS] [LABEL] [OPTION] ..."
+  echo "  tretflix storage del cifs [ADDRESS] [LABEL]"
+  echo "  tretflix storage del nfs [ADDRESS] [LABEL]"
+  echo "  tretflix storage show config"
+  echo "  tretflix storage reset config"
+  echo
+  echo "OPTIONS:"
+  echo "  -u, --username [USERNAME]"
+  echo "  -p, --password [PASSWORD]"
+  echo
+}

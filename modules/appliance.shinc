@@ -1,0 +1,49 @@
+# avoid double inclusion
+if test "${appliance__imported+defined}" == "defined"; then
+  return 0
+fi
+appliance__imported=1
+
+function appliance__root() {
+  if test "${CLI_ARGS[1]+isset}"; then
+    case "${CLI_ARGS[1]}" in
+      setup)
+        appliance__setup
+        ;;
+      backup)
+        appliance__backup
+        ;;
+      restore)
+        appliance__restore
+        ;;
+      *)
+        help__appliance
+    esac
+  else
+    help__appliance
+  fi
+}
+
+function appliance__setup() {
+  if [ "${#CLI_ARGS[@]}" -eq 2 ]; then
+    echo "Debug: appliance__setup code goes here!"
+  else
+    help__appliance
+  fi
+}
+
+function appliance__backup() {
+  if [ "${#CLI_ARGS[@]}" -eq 2 ]; then
+    echo "Debug: appliance_backup code goes here!"
+  else
+    help__appliance
+  fi
+}
+
+function appliance__restore() {
+  if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
+    echo "Debug: appliance_restore code goes here!"
+  else
+    help__appliance
+  fi
+}

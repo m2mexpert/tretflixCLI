@@ -1,0 +1,6 @@
+# avoid double inclusion
+if test "${transmission__imported+defined}" == "defined"; then
+  return 0
+fi
+transmission__imported=1
+
