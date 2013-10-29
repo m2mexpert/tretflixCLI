@@ -5,20 +5,25 @@ fi
 storage__imported=1
 
 function storage__root() {
-  if test "${CLI_ARGS[2]+isset}"; then
+  if test "${CLI_ARGS[3]+isset}"; then
+    case "${CLI_ARGS[1]} ${CLI_ARGS[2]} ${CLI_ARGS[3]}" in
+    	'cifs share add')
+    	  storage__cifs_share_add
+    	  ;;
+    	'cifs share del')
+    	  storage__cifs_share_del
+    	  ;;
+    	'nfs share add')
+    	  storage__nfs_share_add
+    	  ;;
+    	'nfs share del')
+    	  storage__nfs_share_del
+    	  ;;
+    	*)
+        help__storage
+    esac
+  elif test "${CLI_ARGS[2]+isset}"; then
     case "${CLI_ARGS[1]} ${CLI_ARGS[2]}" in
-      'add cifs')
-        storage__add_cifs
-        ;;
-      'add nfs')
-        storage__add_nfs
-        ;;
-      'del cifs')
-        storage__del_cifs
-        ;;
-      'del nfs')
-        storage__del_nfs
-        ;;
       'show config')
         storage__show_config
         ;;
@@ -33,15 +38,15 @@ function storage__root() {
   fi
 }
 
-function storage__add_cifs() {
-  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
+function storage__cifs_share_add() {
+  if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
     authmode="Anonymous"
-    cifstest=$(tools__cifs_test ${CLI_ARGS[3]} ${CLI_ARGS[4]})
-  elif [ "${#CLI_ARGS[@]}" -eq 8 ]; then
-    case "${CLI_ARGS[5]}" in
+    cifstest=$(tools__cifs_test ${CLI_ARGS[4]} ${CLI_ARGS[5]})
+  elif [ "${#CLI_ARGS[@]}" -eq 9 ]; then
+    case "${CLI_ARGS[6]}" in
       '-u' | '--username')
         authmode="Login"
-        cifstest=$(tools__cifs_test ${CLI_ARGS[3]} ${CLI_ARGS[4]} ${CLI_ARGS[6]} ${CLI_ARGS[7]})
+        cifstest=$(tools__cifs_test ${CLI_ARGS[4]} ${CLI_ARGS[5]} ${CLI_ARGS[7]} ${CLI_ARGS[8]})
         ;;
       *)
         help__storage
@@ -51,14 +56,14 @@ function storage__add_cifs() {
   fi
 
   if [ "$cifstest" == "Success" ]; then
-    mountpoint="/mnt/${CLI_ARGS[3]}/${CLI_ARGS[4]}"
+    mountpoint="/mnt/${CLI_ARGS[4]}/${CLI_ARGS[5]}"
     mountcheck=$(tools__mountpoint_check $mountpoint)
     if [ "$mountcheck" == "Available" ]; then
 
       if [ "$authmode" == "Anonymous" ]; then
-        fstabline="//${CLI_ARGS[3]}/${CLI_ARGS[4]} $mountpoint cifs auto,sec=ntlm 0 0"
+        fstabline="//${CLI_ARGS[4]}/${CLI_ARGS[5]} $mountpoint cifs auto,sec=ntlm 0 0"
       else
-        fstabline="//${CLI_ARGS[3]}/${CLI_ARGS[4]} $mountpoint cifs auto,sec=ntlm,username=${CLI_ARGS[6]},password=${CLI_ARGS[7]} 0 0"
+        fstabline="//${CLI_ARGS[4]}/${CLI_ARGS[5]} $mountpoint cifs auto,sec=ntlm,username=${CLI_ARGS[7]},password=${CLI_ARGS[8]} 0 0"
       fi
 
       sudo mkdir -p $mountpoint
@@ -79,25 +84,24 @@ function storage__add_cifs() {
   fi
 }
 
-
-function storage__add_nfs() {
-  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
-    echo "Debug: storage__add_nfs code goes here!"
-  else
-    help__storage
-  fi
-}
-
-function storage__del_cifs() {
-  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
+function storage__cifs_share_del() {
+  if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
     echo "Debug: storage__del_cifs code goes here!"
   else
     help__storage
   fi
 }
 
-function storage__del_nfs() {
-  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
+function storage__nfs_share_add() {
+  if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
+    echo "Debug: storage__add_nfs code goes here!"
+  else
+    help__storage
+  fi
+}
+
+function storage__nfs_share_del() {
+  if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
     echo "Debug: storage__del_nfs code goes here!"
   else
     help__storage

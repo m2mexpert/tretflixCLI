@@ -76,10 +76,10 @@ function help__storage() {
   echo "Usage: tretflix storage [COMMAND] [INPUT] [OPTION]"
   echo
   echo "COMMANDS:"
-  echo "  tretflix storage add cifs [ADDRESS] [SHARE] [OPTION] ..."
-  echo "  tretflix storage add nfs [ADDRESS] [EXPORT]"
-  echo "  tretflix storage del cifs [ADDRESS] [SHARE]"
-  echo "  tretflix storage del nfs [ADDRESS] [EXPORT]"
+  echo "  tretflix storage cifs share add [ADDRESS] [SHARE] [OPTION] ..."
+  echo "  tretflix storage cifs share del [ADDRESS] [SHARE]"
+  echo "  tretflix storage nfs share add [ADDRESS] [EXPORT]"
+  echo "  tretflix storage nfs share del [ADDRESS] [EXPORT]"
   echo "  tretflix storage show config"
   echo "  tretflix storage reset config"
   echo
