@@ -96,6 +96,7 @@ import "modules/sabnzbd"
 import "modules/setup"
 import "modules/sickbeard"
 import "modules/storage"
+import "modules/tools"
 import "modules/transmission"
 
 # call appropriate module based on options entered by the user via CLI
@@ -120,3 +121,6 @@ if test "${CLI_ARGS[0]+isset}"; then
 else
   help__root
 fi
+
+echo
+exit

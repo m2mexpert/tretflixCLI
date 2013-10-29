@@ -1,0 +1,54 @@
+# avoid double inclusion
+if test "${tools__imported+defined}" == "defined"; then
+  return 0
+fi
+tools__imported=1
+
+function tools__cifs_test() {
+  if [ $# -eq 2 ]; then
+    output=$(smbclient \\\\$1\\$2 -N -g -c quit 2> /dev/null)
+  else
+    output=$(smbclient \\\\$1\\$2 -U $3 $4 -g -c quit 2> /dev/null)
+  fi
+
+  if [ $? -eq 0 ]; then
+    result="Success"
+  else
+    if echo $output | grep -q "Connection to.*failed.*Error NT_STATUS_HOST_UNREACHABLE"; then
+      result="Cannot reach host"
+    elif echo $output | grep -q "Connection to.*failed.*Error NT_STATUS_BAD_NETWORK_NAME"; then
+      result="Cannot resolve hostname"
+    elif echo $output | grep -q "tree connect failed.*NT_STATUS_BAD_NETWORK_NAME"; then
+      result="Share not found"
+    elif echo $output | grep -q "tree connect failed.*NT_STATUS_ACCESS_DENIED"; then
+      result="Guest access denied"
+    elif echo $output | grep -q "session setup failed.*NT_STATUS_LOGON_FAILURE"; then
+      result="Login failed"
+    else
+      result="Unknown error"
+    fi
+  fi
+  echo $result
+}
+
+#function tools__nfs_test() {
+#
+#}
+
+#function tools__fstab_check() {
+#
+#}
+
+function tools__mountpoint_check() {
+  if df | grep -q "$1"; then
+    result="Path/Dir '$1' is in Use (Mounted)"
+  elif cat /etc/fstab | grep -q "$1"; then
+    result="Path/Dir '$1' is in Use (Unmounted)"
+  elif [ -d "$1" ] && [ "$(ls -A $1)" ]; then
+    result="Path/Dir '$1' is in Use (Not Empty)"
+  else
+    result="Available"
+  fi
+  echo $result
+}
+

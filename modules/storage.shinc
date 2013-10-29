@@ -35,13 +35,50 @@ function storage__root() {
 
 function storage__add_cifs() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
-    echo "Anonymous Share"
+    authmode="Anonymous"
+    cifstest=$(tools__cifs_test ${CLI_ARGS[3]} ${CLI_ARGS[4]})
   elif [ "${#CLI_ARGS[@]}" -eq 8 ]; then
-    echo "Authenticated Share"
+    case "${CLI_ARGS[5]}" in
+      '-u' | '--username')
+        authmode="Login"
+        cifstest=$(tools__cifs_test ${CLI_ARGS[3]} ${CLI_ARGS[4]} ${CLI_ARGS[6]} ${CLI_ARGS[7]})
+        ;;
+      *)
+        help__storage
+    esac
   else
     help__storage
   fi
+
+  if [ "$cifstest" == "Success" ]; then
+    mountpoint="/mnt/${CLI_ARGS[3]}/${CLI_ARGS[4]}"
+    mountcheck=$(tools__mountpoint_check $mountpoint)
+    if [ "$mountcheck" == "Available" ]; then
+
+      if [ "$authmode" == "Anonymous" ]; then
+        fstabline="//${CLI_ARGS[3]}/${CLI_ARGS[4]} $mountpoint cifs auto,sec=ntlm 0 0"
+      else
+        fstabline="//${CLI_ARGS[3]}/${CLI_ARGS[4]} $mountpoint cifs auto,sec=ntlm,username=${CLI_ARGS[6]},password=${CLI_ARGS[7]} 0 0"
+      fi
+
+      sudo mkdir -p $mountpoint
+      sudo su -c "echo -e '$fstabline' >> /etc/fstab"
+      sudo mount $mountpoint
+
+      if [ $? -eq 0 ]; then
+        echo "Mount Successful"
+      else
+        echo "Mount Failed"
+      fi
+
+    else
+        echo $mountcheck
+    fi
+  else
+    echo $cifstest
+  fi
 }
+
 
 function storage__add_nfs() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
