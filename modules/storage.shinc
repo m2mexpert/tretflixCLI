@@ -7,23 +7,20 @@ storage__imported=1
 function storage__root() {
   if test "${CLI_ARGS[3]+isset}"; then
     case "${CLI_ARGS[1]} ${CLI_ARGS[2]} ${CLI_ARGS[3]}" in
-    	'cifs mount add')
-    	  storage__cifs_mount_add
+    	'mount cifs share')
+    	  storage__mount_cifs_share
     	  ;;
-    	'cifs mount del')
-    	  storage__cifs_mount_del
-    	  ;;
-    	'nfs mount add')
-    	  storage__nfs_mount_add
-    	  ;;
-    	'nfs mount del')
-    	  storage__nfs_mount_del
+    	'mount nfs share')
+    	  storage__mount_nfs_share
     	  ;;
     	*)
         help__storage
     esac
   elif test "${CLI_ARGS[2]+isset}"; then
     case "${CLI_ARGS[1]} ${CLI_ARGS[2]}" in
+    	'unmount share')
+    	  storage__unmount_share
+    	  ;;
       'show config')
         storage__show_config
         ;;
@@ -35,7 +32,7 @@ function storage__root() {
   fi
 }
 
-function storage__cifs_mount_add() {
+function storage__mount_cifs_share() {
   cifstest=""
   if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
     authtype="Anonymous"
@@ -103,7 +100,15 @@ function storage__cifs_mount_add() {
   fi
 }
 
-function storage__cifs_mount_del() {
+function storage__mount_nfs_share() {
+  if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
+    echo "Debug: storage__add_nfs code goes here!"
+  else
+    help__storage
+  fi
+}
+
+function storage__unmount_share() {
   if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
     share="//${CLI_ARGS[4]}/${CLI_ARGS[5]}"
     mntpoint="/mnt/${CLI_ARGS[4]}/${CLI_ARGS[5]}"
@@ -120,32 +125,16 @@ function storage__cifs_mount_del() {
 
       sudo sed -i '\#^'"$share"' '"$mntpoint"'#d' /etc/fstab
       if ! tools__share_exists $share $mntpoint; then
-        echo "Cifs share removed"
+        echo "Share removed"
       else
         echo "Error: Failed to remove the share from /etc/fstab"
         return 1
       fi
 
     else
-      echo "Error: The share could not be found"
+      echo "Error: No such share"
     fi
 
-  else
-    help__storage
-  fi
-}
-
-function storage__nfs_mount_add() {
-  if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
-    echo "Debug: storage__add_nfs code goes here!"
-  else
-    help__storage
-  fi
-}
-
-function storage__nfs_mount_del() {
-  if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
-    echo "Debug: storage__del_nfs code goes here!"
   else
     help__storage
   fi
