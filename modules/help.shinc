@@ -64,7 +64,7 @@ function help__network() {
   echo "Usage: tretflix network [COMMAND] [INPUT]"
   echo
   echo "COMMANDS:"
-  echo "  tretflix network set static [IPV4] [NETMASK] [GATEWAY]"
+  echo "  tretflix network set eth0 [IPV4] [NETMASK] [GATEWAY]"
   echo "  tretflix network set dns [SERVER1] [SERVER2] ..."
   echo "  tretflix network set domain [DOMAIN]"
   echo "  tretflix network show config"
@@ -76,12 +76,11 @@ function help__storage() {
   echo "Usage: tretflix storage [COMMAND] [INPUT] [OPTION]"
   echo
   echo "COMMANDS:"
-  echo "  tretflix storage cifs share add [ADDRESS] [SHARE] [OPTION] ..."
-  echo "  tretflix storage cifs share del [ADDRESS] [SHARE]"
-  echo "  tretflix storage nfs share add [ADDRESS] [EXPORT]"
-  echo "  tretflix storage nfs share del [ADDRESS] [EXPORT]"
+  echo "  tretflix storage cifs mount add [ADDRESS] [SHARE] [OPTION] ..."
+  echo "  tretflix storage cifs mount del [ADDRESS] [SHARE]"
+  echo "  tretflix storage nfs mount add [ADDRESS] [EXPORT]"
+  echo "  tretflix storage nfs mount del [ADDRESS] [EXPORT]"
   echo "  tretflix storage show config"
-  echo "  tretflix storage reset config"
   echo
   echo "OPTIONS:"
   echo "  -u, --user [USERNAME] [PASSWORD]"
