@@ -8,7 +8,7 @@ function network__root() {
   if test "${CLI_ARGS[2]+isset}"; then
     case "${CLI_ARGS[1]} ${CLI_ARGS[2]}" in
       'set static')
-        network__set_static
+        network__set_eth0
         ;;
       'set dns')
         network__set_dns
@@ -30,9 +30,9 @@ function network__root() {
   fi
 }
 
-function network__set_static() {
+function network__set_eth0() {
   if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
-    echo "Debug: network__set_static code goes here!"
+    echo "Debug: network__set_eth0 code goes here!"
   else
     help__network
   fi
