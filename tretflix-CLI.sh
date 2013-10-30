@@ -122,5 +122,4 @@ else
   help__root
 fi
 
-echo
 exit
