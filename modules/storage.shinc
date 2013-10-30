@@ -153,7 +153,7 @@ function storage__nfs_mount_del() {
 
 function storage__show_config() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    df -h | egrep "Filesystem.*Size.*Used|^/dev/sd|^//"
+    df -h | egrep "Filesystem.*Size.*Used|^//"
   else
     help__storage
   fi
