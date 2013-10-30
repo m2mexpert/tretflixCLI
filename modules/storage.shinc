@@ -13,14 +13,14 @@ function storage__root() {
     	'mount nfs share')
     	  storage__mount_nfs_share
     	  ;;
+    	'unmount share'?*)
+    	  storage__unmount_share
+    	  ;;
     	*)
         help__storage
     esac
   elif test "${CLI_ARGS[2]+isset}"; then
     case "${CLI_ARGS[1]} ${CLI_ARGS[2]}" in
-    	'unmount share')
-    	  storage__unmount_share
-    	  ;;
       'show shares')
         storage__show_shares
         ;;
@@ -101,7 +101,7 @@ function storage__mount_cifs_share() {
 }
 
 function storage__mount_nfs_share() {
-  if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
+  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
     echo "Debug: storage__add_nfs code goes here!"
   else
     help__storage
@@ -110,8 +110,8 @@ function storage__mount_nfs_share() {
 
 function storage__unmount_share() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
-    share="//${CLI_ARGS[4]}/${CLI_ARGS[5]}"
-    mntpoint="/mnt/${CLI_ARGS[4]}/${CLI_ARGS[5]}"
+    share="//${CLI_ARGS[3]}/${CLI_ARGS[4]}"
+    mntpoint="/mnt/${CLI_ARGS[3]}/${CLI_ARGS[4]}"
 
     if tools__share_exists $share $mntpoint; then
 
@@ -142,7 +142,11 @@ function storage__unmount_share() {
 
 function storage__show_shares() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    df -h | egrep "Filesystem.*Size.*Used|^//"
+    if df -h | grep "^//"; then
+      df -h | egrep "Filesystem.*Size.*Used|^//"
+    else
+      echo "There are no mounted shares"
+    fi
   else
     help__storage
   fi
