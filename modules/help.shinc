@@ -79,7 +79,7 @@ function help__storage() {
   echo "  tretflix storage mount cifs share [ADDRESS] [SHARE] [OPTION] ..."
   echo "  tretflix storage mount nfs share [ADDRESS] [SHARE]"
   echo "  tretflix storage unmount share [ADDRESS] [SHARE]"
-  echo "  tretflix storage show config"
+  echo "  tretflix storage show shares"
   echo
   echo "OPTIONS:"
   echo "  -u, --user [USERNAME] [PASSWORD]"

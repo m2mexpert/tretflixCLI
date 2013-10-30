@@ -21,8 +21,8 @@ function storage__root() {
     	'unmount share')
     	  storage__unmount_share
     	  ;;
-      'show config')
-        storage__show_config
+      'show shares')
+        storage__show_shares
         ;;
       *)
         help__storage
@@ -109,7 +109,7 @@ function storage__mount_nfs_share() {
 }
 
 function storage__unmount_share() {
-  if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
+  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
     share="//${CLI_ARGS[4]}/${CLI_ARGS[5]}"
     mntpoint="/mnt/${CLI_ARGS[4]}/${CLI_ARGS[5]}"
 
@@ -140,7 +140,7 @@ function storage__unmount_share() {
   fi
 }
 
-function storage__show_config() {
+function storage__show_shares() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
     df -h | egrep "Filesystem.*Size.*Used|^//"
   else
