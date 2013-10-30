@@ -39,13 +39,14 @@ function storage__root() {
 }
 
 function storage__cifs_share_add() {
+  cifstest=""
   if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
-    authmode="Anonymous"
+    authtype="Anonymous"
     cifstest=$(tools__cifs_test ${CLI_ARGS[4]} ${CLI_ARGS[5]})
   elif [ "${#CLI_ARGS[@]}" -eq 9 ]; then
     case "${CLI_ARGS[6]}" in
-      '-u' | '--username')
-        authmode="Login"
+      '-u' | '--user')
+        authtype="User"
         cifstest=$(tools__cifs_test ${CLI_ARGS[4]} ${CLI_ARGS[5]} ${CLI_ARGS[7]} ${CLI_ARGS[8]})
         ;;
       *)
@@ -56,37 +57,82 @@ function storage__cifs_share_add() {
   fi
 
   if [ "$cifstest" == "Success" ]; then
-    mountpoint="/mnt/${CLI_ARGS[4]}/${CLI_ARGS[5]}"
-    mountcheck=$(tools__mountpoint_check $mountpoint)
-    if [ "$mountcheck" == "Available" ]; then
 
-      if [ "$authmode" == "Anonymous" ]; then
-        fstabline="//${CLI_ARGS[4]}/${CLI_ARGS[5]} $mountpoint cifs auto,sec=ntlm 0 0"
-      else
-        fstabline="//${CLI_ARGS[4]}/${CLI_ARGS[5]} $mountpoint cifs auto,sec=ntlm,username=${CLI_ARGS[7]},password=${CLI_ARGS[8]} 0 0"
-      fi
+    share="//${CLI_ARGS[4]}/${CLI_ARGS[5]}"
+    mntpoint="/mnt/${CLI_ARGS[4]}/${CLI_ARGS[5]}"
 
-      sudo mkdir -p $mountpoint
-      sudo su -c "echo -e '$fstabline' >> /etc/fstab"
-      sudo mount $mountpoint
-
-      if [ $? -eq 0 ]; then
-        echo "Mount Successful"
-      else
-        echo "Mount Failed"
-      fi
-
-    else
-        echo $mountcheck
+    if [ "$authtype" == "Anonymous" ]; then
+      mountcmd="$share $mntpoint cifs auto,sec=ntlm 0 0"
+    elif [ "$authtype" == "User" ]; then
+      mountcmd="$share $mntpoint cifs auto,sec=ntlm,username=${CLI_ARGS[7]},password=${CLI_ARGS[8]} 0 0"
     fi
+
+    if tools__share_exists $share $mntpoint; then
+      echo "Error: CIFS share already configured in /etc/fstab"
+      return 1
+    elif tools__mntpoint_exists $mntpoint; then
+      echo "Error: Mount Point already configured in /etc/fstab"
+      return 1
+    fi
+
+    if tools__path_exists $mntpoint; then
+      if [ "$(tools__path_istype $mntpoint)" != "Directory" ]; then
+        echo "Error: Moint Point path already exists and cannot be used"
+        return 1
+      elif ! tools__dir_isempty $mntpoint; then
+        echo "Error: Mount Point is not empty and cannot be used"
+        return 1
+      fi
+    else
+      mkdir -p $mntpoint
+      if [ $? -ne 0 ]; then
+        echo "Error: Failed to create the mount point"
+        return 1
+      fi
+    fi
+    
+    sudo su -c "echo -e '$mountcmd' >> /etc/fstab"
+    sudo mount $mntpoint
+    if [ $? -eq 0 ]; then
+      echo "CIFS share added"
+    else
+      echo "Error: Failed to mount $mntpoint"
+      return 1
+    fi
+
   else
-    echo $cifstest
+    echo "Error: $cifstest"
+    return 1
   fi
 }
 
 function storage__cifs_share_del() {
   if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
-    echo "Debug: storage__del_cifs code goes here!"
+    share="//${CLI_ARGS[4]}/${CLI_ARGS[5]}"
+    mntpoint="/mnt/${CLI_ARGS[4]}/${CLI_ARGS[5]}"
+
+    if tools__share_exists $share $mntpoint; then
+
+      if tools__share_isactive $share $mntpoint; then
+        sudo umount $mntpoint
+        if [ $? -ne 0 ]; then
+          echo "Error: Could not unmount the share"
+          return 1
+        fi
+      fi
+
+      sudo sed -i '\#^'"$share"' '"$mntpoint"'#d' /etc/fstab
+      if ! tools__share_exists $share $mntpoint; then
+        echo "Cifs share removed"
+      else
+        echo "Error: Could not remove the share from /etc/fstab"
+        return 1
+      fi
+
+    else
+      echo "Error: Share not found"
+    fi
+
   else
     help__storage
   fi

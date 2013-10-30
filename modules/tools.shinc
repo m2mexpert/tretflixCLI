@@ -19,36 +19,78 @@ function tools__cifs_test() {
     elif echo $output | grep -q "Connection to.*failed.*Error NT_STATUS_BAD_NETWORK_NAME"; then
       result="Cannot resolve hostname"
     elif echo $output | grep -q "tree connect failed.*NT_STATUS_BAD_NETWORK_NAME"; then
-      result="Share not found"
+      result="Share not found on host"
     elif echo $output | grep -q "tree connect failed.*NT_STATUS_ACCESS_DENIED"; then
       result="Guest access denied"
     elif echo $output | grep -q "session setup failed.*NT_STATUS_LOGON_FAILURE"; then
       result="Login failed"
     else
-      result="Unknown error"
+      result="Unknown connection error"
     fi
   fi
   echo $result
 }
 
 #function tools__nfs_test() {
-#
 #}
 
-#function tools__fstab_check() {
-#
-#}
-
-function tools__mountpoint_check() {
-  if df | grep -q "$1"; then
-    result="Path/Dir '$1' is in Use (Mounted)"
-  elif cat /etc/fstab | grep -q "$1"; then
-    result="Path/Dir '$1' is in Use (Unmounted)"
-  elif [ -d "$1" ] && [ "$(ls -A $1)" ]; then
-    result="Path/Dir '$1' is in Use (Not Empty)"
+function tools__path_exists() {
+  if [ "$(tools__path_istype $1)" != "No such file or directory" ]; then
+    true
   else
-    result="Available"
+    false
+  fi
+}
+
+function tools__path_istype() {
+  if [ -d "$1" ]; then
+    result="Directory"
+  elif [ -f "$1" ]; then
+    result="File"
+  elif [ -L "$1" ]; then
+    result="Symlink"
+  else
+    result="No such file or directory"
   fi
   echo $result
 }
 
+function tools__dir_isempty() {
+  if [ ! "$(ls -A $1 2> /dev/null)" ]; then
+    true
+  else
+    false
+  fi
+}
+
+function tools__share_exists() {
+  if cat /etc/fstab | grep -q "^$1.*$2"; then
+    true
+  else
+    false
+  fi
+}
+
+function tools__share_isactive() {
+  if df | grep -q "^$1.*$2$"; then
+    true
+  else
+    false
+  fi
+}
+
+function tools__mntpoint_exists() {
+  if cat /etc/fstab | grep -q " $1"; then
+    true
+  else
+    false
+  fi
+}
+
+function tools__mntpoint_isactive() {
+  if df | grep -q "$1$"; then
+    true
+  else
+    false
+  fi
+}
