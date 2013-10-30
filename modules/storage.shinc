@@ -7,17 +7,17 @@ storage__imported=1
 function storage__root() {
   if test "${CLI_ARGS[3]+isset}"; then
     case "${CLI_ARGS[1]} ${CLI_ARGS[2]} ${CLI_ARGS[3]}" in
-    	'cifs share add')
-    	  storage__cifs_share_add
+    	'cifs mount add')
+    	  storage__cifs_mount_add
     	  ;;
-    	'cifs share del')
-    	  storage__cifs_share_del
+    	'cifs mount del')
+    	  storage__cifs_mount_del
     	  ;;
-    	'nfs share add')
-    	  storage__nfs_share_add
+    	'nfs mount add')
+    	  storage__nfs_mount_add
     	  ;;
-    	'nfs share del')
-    	  storage__nfs_share_del
+    	'nfs mount del')
+    	  storage__nfs_mount_del
     	  ;;
     	*)
         help__storage
@@ -27,9 +27,6 @@ function storage__root() {
       'show config')
         storage__show_config
         ;;
-      'reset config')
-        storage__reset_config
-        ;;
       *)
         help__storage
     esac
@@ -38,7 +35,7 @@ function storage__root() {
   fi
 }
 
-function storage__cifs_share_add() {
+function storage__cifs_mount_add() {
   cifstest=""
   if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
     authtype="Anonymous"
@@ -106,7 +103,7 @@ function storage__cifs_share_add() {
   fi
 }
 
-function storage__cifs_share_del() {
+function storage__cifs_mount_del() {
   if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
     share="//${CLI_ARGS[4]}/${CLI_ARGS[5]}"
     mntpoint="/mnt/${CLI_ARGS[4]}/${CLI_ARGS[5]}"
@@ -138,7 +135,7 @@ function storage__cifs_share_del() {
   fi
 }
 
-function storage__nfs_share_add() {
+function storage__nfs_mount_add() {
   if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
     echo "Debug: storage__add_nfs code goes here!"
   else
@@ -146,7 +143,7 @@ function storage__nfs_share_add() {
   fi
 }
 
-function storage__nfs_share_del() {
+function storage__nfs_mount_del() {
   if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
     echo "Debug: storage__del_nfs code goes here!"
   else
@@ -156,15 +153,7 @@ function storage__nfs_share_del() {
 
 function storage__show_config() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    echo "Debug: storage__show_config code goes here!"
-  else
-    help__storage
-  fi
-}
-
-function storage__reset_config() {
-  if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    echo "Debug: storage__reset_config code goes here!"
+    df -h | egrep "Filesystem.*Size.*Used|^/dev/sd|^//"
   else
     help__storage
   fi
