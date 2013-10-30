@@ -84,6 +84,6 @@ function help__storage() {
   echo "  tretflix storage reset config"
   echo
   echo "OPTIONS:"
-  echo "  -u, --username [USERNAME] [PASSWORD]"
+  echo "  -u, --user [USERNAME] [PASSWORD]"
   echo
 }
