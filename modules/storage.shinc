@@ -68,19 +68,19 @@ function storage__cifs_share_add() {
     fi
 
     if tools__share_exists $share $mntpoint; then
-      echo "Error: CIFS share already configured in /etc/fstab"
+      echo "Error: The CIFS share is already configured in /etc/fstab"
       return 1
     elif tools__mntpoint_exists $mntpoint; then
-      echo "Error: Mount Point already configured in /etc/fstab"
+      echo "Error: The mount point path is already configured in /etc/fstab"
       return 1
     fi
 
     if tools__path_exists $mntpoint; then
       if [ "$(tools__path_istype $mntpoint)" != "Directory" ]; then
-        echo "Error: Moint Point path already exists and cannot be used"
+        echo "Error: The moint point path already exists and cannot be used"
         return 1
       elif ! tools__dir_isempty $mntpoint; then
-        echo "Error: Mount Point is not empty and cannot be used"
+        echo "Error: The mount point directory is not empty and cannot be used"
         return 1
       fi
     else
@@ -116,7 +116,7 @@ function storage__cifs_share_del() {
       if tools__share_isactive $share $mntpoint; then
         sudo umount $mntpoint
         if [ $? -ne 0 ]; then
-          echo "Error: Could not unmount the share"
+          echo "Error: Failed to unmount the share"
           return 1
         fi
       fi
@@ -125,12 +125,12 @@ function storage__cifs_share_del() {
       if ! tools__share_exists $share $mntpoint; then
         echo "Cifs share removed"
       else
-        echo "Error: Could not remove the share from /etc/fstab"
+        echo "Error: Failed to remove the share from /etc/fstab"
         return 1
       fi
 
     else
-      echo "Error: Share not found"
+      echo "Error: The share could not be found"
     fi
 
   else
