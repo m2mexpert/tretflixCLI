@@ -142,7 +142,7 @@ function storage__unmount_share() {
 
 function storage__show_shares() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    if df -h | grep "^//"; then
+    if df -h | grep -q "^//"; then
       df -h | egrep "Filesystem.*Size.*Used|^//"
     else
       echo "There are no mounted shares"
