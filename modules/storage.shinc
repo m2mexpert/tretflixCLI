@@ -13,9 +13,12 @@ function storage__root() {
     	'mount nfs share')
     	  storage__mount_nfs_share
     	  ;;
-    	'unmount share'?*)
-    	  storage__unmount_share
+    	'unmount cifs share')
+    	  storage__unmount_cifs_share
     	  ;;
+    	'unmount nfs share')
+    	  storage__unmount_nfs_share
+    	  ;;    	  
     	*)
         help__storage
     esac
@@ -102,37 +105,41 @@ function storage__mount_cifs_share() {
 
 function storage__mount_nfs_share() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
-    echo "Debug: storage__add_nfs code goes here!"
+    nfstest=$(tools__cifs_test ${CLI_ARGS[3]} ${CLI_ARGS[4]})
+    if [ "$nfstest" == "Success" ]; then
+      echo "do mount nfs stuff here"
+    else
+      echo "Error: $nfstest"
   else
     help__storage
   fi
 }
 
-function storage__unmount_share() {
-  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
-    share="//${CLI_ARGS[3]}/${CLI_ARGS[4]}"
-    mntpoint="/mnt/${CLI_ARGS[3]}/${CLI_ARGS[4]}"
+function storage__unmount_cifs_share() {
+  if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
+    share="//${CLI_ARGS[4]}/${CLI_ARGS[5]}"
+    mntpoint="/mnt/${CLI_ARGS[4]}/${CLI_ARGS[5]}"
 
     if tools__share_exists $share $mntpoint; then
 
       if tools__share_isactive $share $mntpoint; then
         sudo umount $mntpoint
         if [ $? -ne 0 ]; then
-          echo "Error: Failed to unmount the share"
+          echo "Error: Failed to unmount the CIFS share"
           return 1
         fi
       fi
 
       sudo sed -i '\#^'"$share"' '"$mntpoint"'#d' /etc/fstab
       if ! tools__share_exists $share $mntpoint; then
-        echo "Share removed"
+        echo "CIFS share removed"
       else
-        echo "Error: Failed to remove the share from /etc/fstab"
+        echo "Error: Failed to remove the CIFS share from /etc/fstab"
         return 1
       fi
 
     else
-      echo "Error: No such share"
+      echo "Error: No such CIFS share"
     fi
 
   else
@@ -140,10 +147,18 @@ function storage__unmount_share() {
   fi
 }
 
+function storage__unmount_nfs_share() {
+  if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
+    echo "do unmount nfs stuff here"
+  else
+    help__storage
+  fi
+}
+
 function storage__show_shares() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    if df -h | grep -q "^//"; then
-      df -h | egrep "Filesystem.*Size.*Used|^//"
+    if df -h | egrep -q "^//|^*.:/"; then
+      df -h | egrep "Filesystem.*Size.*Used|^//|^*.:/"
     else
       echo "There are no mounted shares"
     fi
