@@ -10,6 +10,9 @@ function misc__root() {
       'set download path')
         misc__set_download_path
         ;;
+      'show download path')
+        misc__show_download_path
+        ;;
       *)
         help__misc
         return 1
@@ -22,4 +25,8 @@ function misc__root() {
 
 function misc__set_download_path() {
   echo "do download path stuff"
+}
+
+function misc__show_download_path() {
+  echo "show download path stuff"
 }

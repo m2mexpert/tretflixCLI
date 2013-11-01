@@ -124,11 +124,9 @@ if test "${CLI_ARGS[0]+isset}"; then
       ;;
     *)
       help__root
-      return 1
   esac
 else
   help__root
-  return 1
 fi
 
 exit

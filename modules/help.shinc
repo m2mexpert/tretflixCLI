@@ -96,6 +96,7 @@ function help__misc() {
   echo
   echo "COMMANDS:"
   echo "  tretflix misc set download path [OPTION] [PATH]"
+  echo "  tretflix misc show download path"
   echo
   echo "OPTIONS:"
   echo "  -l, --link-only"
