@@ -23,6 +23,10 @@ function help__root() {
   echo "--------------------------------------------------"
   help__storage
   echo
+  echo "Misc Commands:"
+  echo "--------------------------------------------------"
+  help__misc
+  echo
 }
 
 function help__appliance() {
@@ -48,7 +52,7 @@ function help__application() {
   echo "  tretflix application [OPTION] show config"
   echo "  tretflix application [OPTION] reset config"
   echo
-  echo "OPTIONS:"
+  echo "APPLICATION OPTIONS:"
   echo "  -a, --all"
   echo "  -b, --sickbeard"
   echo "  -c, --couchpotato"
@@ -84,5 +88,20 @@ function help__storage() {
   echo
   echo "OPTIONS:"
   echo "  -u, --user [USERNAME] [PASSWORD]"
+  echo
+}
+
+function help__misc() {
+  echo "Usage: tretflix misc [COMMAND] [OPTION] [INPUT]"
+  echo
+  echo "COMMANDS:"
+  echo "  tretflix misc set download path [OPTION] [PATH]"
+  echo
+  echo "OPTIONS:"
+  echo "  -l, --link-only"
+  echo
+  echo "  Note: The current download path contents are synced to the new path"
+  echo "        by default. Use the '-l' option to change the download path w/o"
+  echo "        syncing the contents."
   echo
 }

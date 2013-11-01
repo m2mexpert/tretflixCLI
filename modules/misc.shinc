@@ -1,0 +1,25 @@
+# avoid double inclusion
+if test "${misc__imported+defined}" == "defined"; then
+  return 0
+fi
+misc__imported=1
+
+function misc__root() {
+  if test "${CLI_ARGS[3]+isset}"; then
+    case "${CLI_ARGS[1]} ${CLI_ARGS[2]} ${CLI_ARGS[3]}" in
+      'set download path')
+        misc__set_download_path
+        ;;
+      *)
+        help__misc
+        return 1
+    esac
+  else
+    help__misc
+    return 1
+  fi
+}
+
+function misc__set_download_path() {
+  echo "do download path stuff"
+}

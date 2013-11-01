@@ -92,6 +92,7 @@ import "modules/couchpotato"
 import "modules/headphones"
 import "modules/help"
 import "modules/maraschino"
+import "modules/misc"
 import "modules/network"
 import "modules/plex"
 import "modules/restore"
@@ -112,6 +113,9 @@ if test "${CLI_ARGS[0]+isset}"; then
     application)
       application__root
       ;;
+    misc)
+      misc__root
+      ;;
     network)
       network__root
       ;;
@@ -120,9 +124,11 @@ if test "${CLI_ARGS[0]+isset}"; then
       ;;
     *)
       help__root
+      return 1
   esac
 else
   help__root
+  return 1
 fi
 
 exit
