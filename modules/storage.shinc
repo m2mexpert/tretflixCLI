@@ -224,8 +224,8 @@ function storage__unmount_nfs_share() {
 
 function storage__show_shares() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    if df -h | egrep -q "^//|^*.:/"; then
-      df -h | egrep "Filesystem.*Size.*Used|^//|^*.:/"
+    if df -hT | egrep -q "[[:space:]]cifs[[:space:]]|[[:space:]]nfs[[:space:]]"; then
+      df -hT | egrep "^Filesystem[[:space:]]|[[:space:]]cifs[[:space:]]|[[:space:]]nfs[[:space:]]"
     else
       echo "There are no mounted shares"
     fi
