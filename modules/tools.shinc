@@ -5,34 +5,113 @@ fi
 tools__imported=1
 
 function tools__cifs_test() {
-  if [ $# -eq 2 ]; then
-    output=$(smbclient \\\\$1\\$2 -N -g -c quit 2> /dev/null)
-  else
-    output=$(smbclient \\\\$1\\$2 -U $3 $4 -g -c quit 2> /dev/null)
-  fi
+  # Prepare the share and test mountpoint variables for the test using arguments passed into the function
+  host="$1"
+  share="//$1/$2"
+  mntpoint="/mnt/.test"
 
-  if [ $? -eq 0 ]; then
-    result="Success"
-  else
-    if echo $output | grep -q "Connection to.*failed.*Error NT_STATUS_HOST_UNREACHABLE"; then
-      result="Cannot reach host"
-    elif echo $output | grep -q "Connection to.*failed.*Error NT_STATUS_BAD_NETWORK_NAME"; then
-      result="Cannot resolve hostname"
-    elif echo $output | grep -q "tree connect failed.*NT_STATUS_BAD_NETWORK_NAME"; then
-      result="Share not found on host"
-    elif echo $output | grep -q "tree connect failed.*NT_STATUS_ACCESS_DENIED"; then
-      result="Guest access denied"
-    elif echo $output | grep -q "session setup failed.*NT_STATUS_LOGON_FAILURE"; then
-      result="Login failed"
-    else
-      result="Unknown connection error"
+  # If the test mountpoint is already in use, unmount it
+  if tools__mntpoint_isactive $mntpoint; then
+    umount $mntpoint > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+      echo "Failed to unmount the test mount path"
+      return 1
     fi
   fi
-  echo $result
+
+  # Verify that the host is reachable and/or hostname can be resolved
+  tools__host_ping $host
+  if [ $? -ne 0 ]; then
+    return 1
+  fi
+
+  # Verify that the CIFS services are available on the host
+  smbclient -L $host -N > /dev/null 2>&1
+  if [ $? -ne 0 ]; then
+    echo "Unable to connect to CIFS services on the host"
+    return 1
+  fi
+
+  # Perform the test mount, output errors if unsuccessful
+  if [ $# -eq 2 ]; then
+    output=$(mount -t cifs $share $mntpoint -o guest,sec=ntlm 2>&1)
+  else
+    output=$(mount -t cifs $share $mntpoint -o user=$3,pass=$4,sec=ntlm 2>&1)
+  fi
+  if [ $? -eq 0 ]; then
+    umount $mntpoint
+    return 0
+  else
+    if echo $output | grep -q "Retrying with upper case share name.*No such device or address"; then
+      echo "No such share found on the host"
+    elif echo $output | grep -q "mount error.*Permission denied"; then
+      echo "Access denied, a valid login/password is required"
+    else
+      echo "$output"
+    fi
+    return 1
+  fi
 }
 
-#function tools__nfs_test() {
-#}
+function tools__nfs_test() {
+  # Prepare the share and test mountpoint variables for the test using arguments passed into the function
+  host="$1"
+  share="$1:$2"
+  mntpoint="/mnt/.test"
+
+  # If the test mountpoint is already in use, unmount it
+  if tools__mntpoint_isactive $mntpoint; then
+    umount $mntpoint > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+      echo "Failed to unmount the test mount path"
+      return 1
+    fi
+  fi
+  
+  # Verify that the host is reachable and/or hostname can be resolved
+  tools__host_ping $host
+  if [ $? -ne 0 ]; then
+    return 1
+  fi
+
+  # Verify that the NFS services are available on the host
+  rpcinfo -t $host nfs > /dev/null 2>&1
+  if [ $? -ne 0 ]; then
+    echo "Unable to connect to NFS services on the host"
+    return 1
+  fi
+  
+  # Perform the test mount, output errors if unsuccessful
+  output=$(mount -t nfs $share $mntpoint 2>&1)
+  if [ $? -eq 0 ]; then
+    umount $mntpoint
+    return 0
+  else
+    if echo $output | grep -q "access denied by server while mounting"; then
+      echo "Access denied, share access is restricted or no such share found on the host"
+    else
+      echo "$output"
+    fi
+    return 1
+  fi
+}
+
+function tools__host_ping() {
+  output=$(ping -c 1 "$1" 2>&1)
+  exitcode=$?
+  if [ $exitcode -eq 0 ]; then
+    return 0
+  else
+    if [ $exitcode -eq 1 ]; then
+      echo "Unable to ping the host"
+    elif [ $exitcode -eq 2 ]; then
+      echo "Unable to resolve the hostname"
+    else
+      echo "$output"
+    fi
+    return 1
+  fi
+}
 
 function tools__path_exists() {
   if [ "$(tools__path_istype $1)" != "No such file or directory" ]; then
