@@ -13,11 +13,11 @@ function storage__root() {
     	'mount nfs share')
     	  storage__mount_nfs_share
     	  ;;
-    	'unmount cifs share')
-    	  storage__unmount_cifs_share
+    	'umount cifs share')
+    	  storage__umount_cifs_share
     	  ;;
-    	'unmount nfs share')
-    	  storage__unmount_nfs_share
+    	'umount nfs share')
+    	  storage__umount_nfs_share
     	  ;;    	  
     	*)
         help__storage
@@ -158,7 +158,7 @@ function storage__mount_nfs_share() {
   fi
 }
 
-function storage__unmount_cifs_share() {
+function storage__umount_cifs_share() {
   if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
     share="//${CLI_ARGS[4]}/${CLI_ARGS[5]}"
     mntpoint="/mnt/${CLI_ARGS[4]}/${CLI_ARGS[5]}"
@@ -190,7 +190,7 @@ function storage__unmount_cifs_share() {
   fi
 }
 
-function storage__unmount_nfs_share() {
+function storage__umount_nfs_share() {
   if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
     share="${CLI_ARGS[4]}:${CLI_ARGS[5]}"
     mntpoint="/mnt/${CLI_ARGS[4]}${CLI_ARGS[5]}"
