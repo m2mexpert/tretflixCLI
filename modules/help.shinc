@@ -80,10 +80,10 @@ function help__storage() {
   echo "Usage: tretflix storage [COMMAND] [INPUT] [OPTION]"
   echo
   echo "COMMANDS:"
-  echo "  tretflix storage mount cifs share [ADDRESS] [SHARE] [OPTION] ..."
-  echo "  tretflix storage mount nfs share [ADDRESS] [SHARE]"
-  echo "  tretflix storage umount cifs share [ADDRESS] [SHARE]"
-  echo "  tretflix storage umount nfs share [ADDRESS] [SHARE]"
+  echo "  tretflix storage mount cifs share [HOST] [SHARE] [OPTION] ..."
+  echo "  tretflix storage mount nfs share [HOST] [SHARE]"
+  echo "  tretflix storage umount cifs share [HOST] [SHARE]"
+  echo "  tretflix storage umount nfs share [HOST] [SHARE]"
   echo "  tretflix storage show shares"
   echo
   echo "OPTIONS:"
