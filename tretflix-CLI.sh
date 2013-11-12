@@ -82,7 +82,7 @@ getScriptAbsoluteDir "$script_invoke_path"
 script_absolute_dir=$FCN_RESULT
 
 # get config variables from config file
-# source config
+source config
 
 # Import modules
 import "modules/appliance"

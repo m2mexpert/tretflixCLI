@@ -28,5 +28,5 @@ function misc__set_download_path() {
 }
 
 function misc__show_download_path() {
-  echo "show download path stuff"
+  readlink $downloads_symlink
 }

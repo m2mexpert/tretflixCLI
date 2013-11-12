@@ -1,0 +1,32 @@
+# Symlink Paths
+downloads_symlink='/opt/tretflix/downloads'
+tmp_symlink='/opt/tretflix/tmp'
+
+# Path to application data directories (config files and other runtime data)
+maraschino_appdata='/opt/tretflix/appdata/maraschino'
+sickbeard_appdata='/opt/tretflix/appdata/sickbeard'
+couchpotato_appdata='/opt/tretflix/appdata/couchpotato'
+sabnzbd_appdata='/opt/tretflix/appdata/sabnzbd'
+transmission_appdata='/opt/tretflix/appdata/transmission'
+
+
+# Path to application config files
+tretflix_database=$script_absolute_dir'/tretflix.db'
+maraschino_database=$maraschino_appdata'/maraschino.db'
+sickbeard_config_file=$sickbeard_appdata'/config.ini'
+couchpotato_config_file=$couchpotato_appdata'/settings.conf'
+sabnzbd_config_file=$sabnzbd_appdata'/sabnzbd.ini'
+transmission_config_file=$transmission_appdata'/settings.json'
+
+
+# Path to script config files (for sabnzbd post processing scripts)
+sickbeard_script_settings=$sickbeard_appdata'/autoProcessTV/autoProcessTV.cfg'
+sabnzbd_script_settings=$sabnzbd_appdata'/scripts/settings.ini'
+
+
+# Path to script executables (for sabnzbd post processing scripts)
+sickbeard_script_exe=$sickbeard_appdata'/autoProcessTV/sabToSickBeard.py'
+
+
+# Path to application init scripts
+sabnzbd_init_script=$sabnzbd_appdata'/init/ubuntu'

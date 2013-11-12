@@ -95,14 +95,14 @@ function help__misc() {
   echo "Usage: tretflix misc [COMMAND] [OPTION] [INPUT]"
   echo
   echo "COMMANDS:"
-  echo "  tretflix misc set download path [OPTION] [PATH]"
-  echo "  tretflix misc show download path"
+  echo "  tretflix misc set downloads path [OPTION] [PATH]"
+  echo "  tretflix misc show downloads path"
   echo
   echo "OPTIONS:"
   echo "  -l, --link-only"
   echo
-  echo "  Note: The current download path contents are synced to the new path"
-  echo "        by default. Use the '-l' option to change the download path w/o"
-  echo "        syncing the contents."
+  echo "  Note: The current download path's contents are synced to the new path"
+  echo "        by default. Use the '-l' option to change the download path"
+  echo "        without syncing the contents."
   echo
 }
