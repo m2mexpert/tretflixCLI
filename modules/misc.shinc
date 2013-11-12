@@ -7,11 +7,11 @@ misc__imported=1
 function misc__root() {
   if test "${CLI_ARGS[3]+isset}"; then
     case "${CLI_ARGS[1]} ${CLI_ARGS[2]} ${CLI_ARGS[3]}" in
-      'set download path')
-        misc__set_download_path
+      'set downloads path')
+        misc__set_downloads_path
         ;;
-      'show download path')
-        misc__show_download_path
+      'show downloads path')
+        misc__show_downloads_path
         ;;
       *)
         help__misc
@@ -23,10 +23,10 @@ function misc__root() {
   fi
 }
 
-function misc__set_download_path() {
+function misc__set_downloads_path() {
   echo "do download path stuff"
 }
 
-function misc__show_download_path() {
+function misc__show_downloads_path() {
   readlink $downloads_symlink
 }
