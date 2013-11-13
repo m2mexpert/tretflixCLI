@@ -24,9 +24,34 @@ function misc__root() {
 }
 
 function misc__set_downloads_path() {
-  echo "do download path stuff"
+  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
+    option="sync"
+  elif [ "${#CLI_ARGS[@]}" -eq 6 ]; then
+    case "${CLI_ARGS[4]}" in
+      '-l' | '--link-only')
+        option="link"
+        ;;
+      *)
+        help__misc
+        return 1
+    esac
+  else
+    help__misc
+    return 1
+  fi
+  
+  if [ "$option" == "sync" ]; then
+  	echo "Do Sync Mode"
+  else
+    echo "Do Link Mode"
+  fi
 }
 
 function misc__show_downloads_path() {
-  readlink $downloads_symlink
+	if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
+    readlink $downloads_symlink
+  else
+    help__misc
+    return 1
+  fi
 }
