@@ -61,8 +61,8 @@ function storage__mount_cifs_share() {
     share="//${CLI_ARGS[4]}/${CLI_ARGS[5]}"
     mountPoint="/mnt/${CLI_ARGS[4]}/${CLI_ARGS[5]}"
     
-    share="$(echo $share | tr '[:upper:]' '[:lower:]')"
-    mountPoint="$(echo $mountPoint | tr '[:upper:]' '[:lower:]')"
+    share=$(echo "$share" | tr '[:upper:]' '[:lower:]')
+    mountPoint=$(echo "$mountPoint" | tr '[:upper:]' '[:lower:]')
 
     if [ "$authType" == "Anonymous" ]; then
       mountCmd="$share $mountPoint cifs auto,sec=ntlm 0 0"
@@ -121,8 +121,8 @@ function storage__mount_nfs_share() {
     share="${CLI_ARGS[4]}:${CLI_ARGS[5]}"
     mountPoint="/mnt/${CLI_ARGS[4]}${CLI_ARGS[5]}"
     
-    share="$(echo $share | tr '[:upper:]' '[:lower:]')"
-    mountPoint="$(echo $mountPoint | tr '[:upper:]' '[:lower:]')"
+    share=$(echo "$share" | tr '[:upper:]' '[:lower:]')
+    mountPoint=$(echo "$mountPoint" | tr '[:upper:]' '[:lower:]')
 
     mountCmd="$share $mountPoint nfs auto 0 0"
 
@@ -169,8 +169,8 @@ function storage__umount_cifs_share() {
     share="//${CLI_ARGS[4]}/${CLI_ARGS[5]}"
     mountPoint="/mnt/${CLI_ARGS[4]}/${CLI_ARGS[5]}"
     
-    share="$(echo $share | tr '[:upper:]' '[:lower:]')"
-    mountPoint="$(echo $mountPoint | tr '[:upper:]' '[:lower:]')"
+    share=$(echo "$share" | tr '[:upper:]' '[:lower:]')
+    mountPoint=$(echo "$mountPoint" | tr '[:upper:]' '[:lower:]')
 
     if tools__share_exists $share $mountPoint; then
 
@@ -204,8 +204,8 @@ function storage__umount_nfs_share() {
     share="${CLI_ARGS[4]}:${CLI_ARGS[5]}"
     mountPoint="/mnt/${CLI_ARGS[4]}${CLI_ARGS[5]}"
     
-    share="$(echo $share | tr '[:upper:]' '[:lower:]')"
-    mountPoint="$(echo $mountPoint | tr '[:upper:]' '[:lower:]')"
+    share=$(echo "$share" | tr '[:upper:]' '[:lower:]')
+    mountPoint=$(echo "$mountPoint" | tr '[:upper:]' '[:lower:]')
 
     if tools__share_exists $share $mountPoint; then
 
