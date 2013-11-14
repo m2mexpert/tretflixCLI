@@ -1,6 +1,6 @@
 # Symlink Paths
-downloads_symlink='/opt/tretflix/downloads'
-tmp_symlink='/opt/tretflix/tmp'
+downloadsSymLink='/opt/tretflix/downloads'
+tmpSymLink='/opt/tretflix/tmp'
 
 # Path to application data directories (config files and other runtime data)
 maraschino_appdata='/opt/tretflix/appdata/maraschino'

@@ -26,12 +26,12 @@ function misc__root() {
 function misc__set_downloads_path() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
     option="sync"
-    newpath="${CLI_ARGS[4]}"
+    newPath="${CLI_ARGS[4]}"
   elif [ "${#CLI_ARGS[@]}" -eq 6 ]; then
     case "${CLI_ARGS[4]}" in
       '-l' | '--link-only')
         option="link"
-        newpath="${CLI_ARGS[5]}"
+        newPath="${CLI_ARGS[5]}"
         ;;
       *)
         help__misc
@@ -42,29 +42,26 @@ function misc__set_downloads_path() {
     return 1
   fi
 
-		if tools__path_exists $newpath; then
-      if ! tools__dir_isempty $mntpoint; then
-        echo "The mount point '$mntpoint' is not empty and cannot be used"
-        return 1
-      fi
-    else
-      mkdir -p $mntpoint
-      if [ $? -ne 0 ]; then
-        echo "Failed to create the mount point '$mntpoint'"
-        return 1
-      fi
-    fi
-
+  currentPath="$(readlink $downloadsSymLink)"
+  
   if [ "$option" == "sync" ]; then
-  	echo "Do Sync Mode"
+		syncSize=$(du -c "$downloadsSymLink" | grep total | awk '{ print $1 }')
+		newPathAvail=$(df -k "$newPath" | awk '{ print $4 }' | grep -v "Available")
+		if [ "$syncSize" -lt "newPathAvail" ]; then
+		  "Good Space"
+		else
+		  "Not Enough Space"
+		fi
   else
     echo "Do Link Mode"
+    echo $newPath
+  	echo $currentPath
   fi
 }
 
 function misc__show_downloads_path() {
 	if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
-    readlink $downloads_symlink
+    readlink $downloadsSymLink
   else
     help__misc
     return 1
