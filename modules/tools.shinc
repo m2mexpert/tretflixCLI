@@ -8,11 +8,11 @@ function tools__cifs_test() {
   # Prepare the share and test mountpoint variables for the test using arguments passed into the function
   host="$1"
   share="//$1/$2"
-  mntpoint="/mnt/.test"
+  mountPoint="/mnt/.test"
 
   # If the test mountpoint is already in use, unmount it
-  if tools__mntpoint_isactive $mntpoint; then
-    umount $mntpoint > /dev/null 2>&1
+  if tools__mountpoint_isactive $mountPoint; then
+    umount $mountPoint > /dev/null 2>&1
     if [ $? -ne 0 ]; then
       echo "Failed to unmount the test mount path"
       return 1
@@ -34,12 +34,12 @@ function tools__cifs_test() {
 
   # Perform the test mount, output errors if unsuccessful
   if [ $# -eq 2 ]; then
-    output=$(mount -t cifs $share $mntpoint -o guest,sec=ntlm 2>&1)
+    output=$(mount -t cifs $share $mountPoint -o guest,sec=ntlm 2>&1)
   else
-    output=$(mount -t cifs $share $mntpoint -o user=$3,pass=$4,sec=ntlm 2>&1)
+    output=$(mount -t cifs $share $mountPoint -o user=$3,pass=$4,sec=ntlm 2>&1)
   fi
   if [ $? -eq 0 ]; then
-    umount $mntpoint
+    umount $mountPoint
     return 0
   else
     if echo $output | grep -q "Retrying with upper case share name.*No such device or address"; then
@@ -57,11 +57,11 @@ function tools__nfs_test() {
   # Prepare the share and test mountpoint variables for the test using arguments passed into the function
   host="$1"
   share="$1:$2"
-  mntpoint="/mnt/.test"
+  mountPoint="/mnt/.test"
 
   # If the test mountpoint is already in use, unmount it
-  if tools__mntpoint_isactive $mntpoint; then
-    umount $mntpoint > /dev/null 2>&1
+  if tools__mountpoint_isactive $mountPoint; then
+    umount $mountPoint > /dev/null 2>&1
     if [ $? -ne 0 ]; then
       echo "Failed to unmount the test mount path"
       return 1
@@ -82,9 +82,9 @@ function tools__nfs_test() {
   fi
   
   # Perform the test mount, output errors if unsuccessful
-  output=$(mount -t nfs $share $mntpoint 2>&1)
+  output=$(mount -t nfs $share $mountPoint 2>&1)
   if [ $? -eq 0 ]; then
-    umount $mntpoint
+    umount $mountPoint
     return 0
   else
     if echo $output | grep -q "access denied by server while mounting"; then
@@ -98,13 +98,13 @@ function tools__nfs_test() {
 
 function tools__host_ping() {
   output=$(ping -c 1 "$1" 2>&1)
-  exitcode=$?
-  if [ $exitcode -eq 0 ]; then
+  exitCode=$?
+  if [ $exitCode -eq 0 ]; then
     return 0
   else
-    if [ $exitcode -eq 1 ]; then
+    if [ $exitCode -eq 1 ]; then
       echo "Unable to ping the host"
-    elif [ $exitcode -eq 2 ]; then
+    elif [ $exitCode -eq 2 ]; then
       echo "Unable to resolve the hostname"
     else
       echo "$output"
@@ -158,7 +158,7 @@ function tools__share_isactive() {
   fi
 }
 
-function tools__mntpoint_exists() {
+function tools__mountpoint_exists() {
   if cat /etc/fstab | grep -q " $1"; then
     true
   else
@@ -166,7 +166,7 @@ function tools__mntpoint_exists() {
   fi
 }
 
-function tools__mntpoint_isactive() {
+function tools__mountpoint_isactive() {
   if df | grep -q "$1$"; then
     true
   else

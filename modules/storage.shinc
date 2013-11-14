@@ -39,12 +39,12 @@ function storage__root() {
 
 function storage__mount_cifs_share() {
   if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
-    authtype="Anonymous"
+    authType="Anonymous"
     tools__cifs_test ${CLI_ARGS[4]} ${CLI_ARGS[5]}
   elif [ "${#CLI_ARGS[@]}" -eq 9 ]; then
     case "${CLI_ARGS[6]}" in
       '-u' | '--user')
-        authtype="User"
+        authType="User"
         tools__cifs_test ${CLI_ARGS[4]} ${CLI_ARGS[5]} ${CLI_ARGS[7]} ${CLI_ARGS[8]}
         ;;
       *)
@@ -59,40 +59,40 @@ function storage__mount_cifs_share() {
   if [ $? -eq 0 ]; then
 
     share="//${CLI_ARGS[4]}/${CLI_ARGS[5]}"
-    mntpoint="/mnt/${CLI_ARGS[4]}/${CLI_ARGS[5]}"
+    mountPoint="/mnt/${CLI_ARGS[4]}/${CLI_ARGS[5]}"
 
-    if [ "$authtype" == "Anonymous" ]; then
-      mountcmd="$share $mntpoint cifs auto,sec=ntlm 0 0"
+    if [ "$authType" == "Anonymous" ]; then
+      mountCmd="$share $mountPoint cifs auto,sec=ntlm 0 0"
     else
-      mountcmd="$share $mntpoint cifs auto,sec=ntlm,username=${CLI_ARGS[7]},password=${CLI_ARGS[8]} 0 0"
+      mountCmd="$share $mountPoint cifs auto,sec=ntlm,username=${CLI_ARGS[7]},password=${CLI_ARGS[8]} 0 0"
     fi
 
-    if tools__share_exists $share $mntpoint; then
+    if tools__share_exists $share $mountPoint; then
       echo "The CIFS share '$share' already exists in /etc/fstab"
       return 1
-    elif tools__mntpoint_exists $mntpoint; then
-      echo "The mount point '$mntpoint' already exists in /etc/fstab"
+    elif tools__mountpoint_exists $mountPoint; then
+      echo "The mount point '$mountPoint' already exists in /etc/fstab"
       return 1
     fi
 
-    if tools__path_exists $mntpoint; then
-      if [ "$(tools__path_istype $mntpoint)" != "Directory" ]; then
-        echo "The moint point '$mntpoint' already exists and cannot be used"
+    if tools__path_exists $mountPoint; then
+      if [ "$(tools__path_istype $mountPoint)" != "Directory" ]; then
+        echo "The moint point '$mountPoint' already exists and cannot be used"
         return 1
-      elif ! tools__dir_isempty $mntpoint; then
-        echo "The mount point '$mntpoint' is not empty and cannot be used"
+      elif ! tools__dir_isempty $mountPoint; then
+        echo "The mount point '$mountPoint' is not empty and cannot be used"
         return 1
       fi
     else
-      mkdir -p $mntpoint
+      mkdir -p $mountPoint
       if [ $? -ne 0 ]; then
-        echo "Failed to create the mount point '$mntpoint'"
+        echo "Failed to create the mount point '$mountPoint'"
         return 1
       fi
     fi
     
-    sudo su -c "echo -e '$mountcmd' >> /etc/fstab"
-    sudo mount $mntpoint
+    sudo su -c "echo -e '$mountCmd' >> /etc/fstab"
+    sudo mount $mountPoint
     if [ $? -eq 0 ]; then
       echo "CIFS share added"
       return 0
@@ -116,36 +116,36 @@ function storage__mount_nfs_share() {
   if [ $? -eq 0 ]; then
 
     share="${CLI_ARGS[4]}:${CLI_ARGS[5]}"
-    mntpoint="/mnt/${CLI_ARGS[4]}${CLI_ARGS[5]}"
+    mountPoint="/mnt/${CLI_ARGS[4]}${CLI_ARGS[5]}"
 
-    mountcmd="$share $mntpoint nfs auto 0 0"
+    mountCmd="$share $mountPoint nfs auto 0 0"
 
-    if tools__share_exists $share $mntpoint; then
+    if tools__share_exists $share $mountPoint; then
       echo "The NFS share '$share' already exists in /etc/fstab"
       return 1
-    elif tools__mntpoint_exists $mntpoint; then
-      echo "The mount point '$mntpoint' already exists in /etc/fstab"
+    elif tools__mountpoint_exists $mountPoint; then
+      echo "The mount point '$mountPoint' already exists in /etc/fstab"
       return 1
     fi
 
-    if tools__path_exists $mntpoint; then
-      if [ "$(tools__path_istype $mntpoint)" != "Directory" ]; then
-        echo "The moint point '$mntpoint' already exists and cannot be used"
+    if tools__path_exists $mountPoint; then
+      if [ "$(tools__path_istype $mountPoint)" != "Directory" ]; then
+        echo "The moint point '$mountPoint' already exists and cannot be used"
         return 1
-      elif ! tools__dir_isempty $mntpoint; then
-        echo "The mount point '$mntpoint' is not empty and cannot be used"
+      elif ! tools__dir_isempty $mountPoint; then
+        echo "The mount point '$mountPoint' is not empty and cannot be used"
         return 1
       fi
     else
-      mkdir -p $mntpoint
+      mkdir -p $mountPoint
       if [ $? -ne 0 ]; then
-        echo "Failed to create the mount point '$mntpoint'"
+        echo "Failed to create the mount point '$mountPoint'"
         return 1
       fi
     fi
 
-    sudo su -c "echo -e '$mountcmd' >> /etc/fstab"
-    sudo mount $mntpoint
+    sudo su -c "echo -e '$mountCmd' >> /etc/fstab"
+    sudo mount $mountPoint
     if [ $? -eq 0 ]; then
       echo "NFS share added"
       return 0
@@ -161,20 +161,20 @@ function storage__mount_nfs_share() {
 function storage__umount_cifs_share() {
   if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
     share="//${CLI_ARGS[4]}/${CLI_ARGS[5]}"
-    mntpoint="/mnt/${CLI_ARGS[4]}/${CLI_ARGS[5]}"
+    mountPoint="/mnt/${CLI_ARGS[4]}/${CLI_ARGS[5]}"
 
-    if tools__share_exists $share $mntpoint; then
+    if tools__share_exists $share $mountPoint; then
 
-      if tools__share_isactive $share $mntpoint; then
-        sudo umount $mntpoint
+      if tools__share_isactive $share $mountPoint; then
+        sudo umount $mountPoint
         if [ $? -ne 0 ]; then
           echo "Failed to unmount the CIFS share"
           return 1
         fi
       fi
 
-      sudo sed -i '\#^'"$share"' '"$mntpoint"'#d' /etc/fstab
-      if ! tools__share_exists $share $mntpoint; then
+      sudo sed -i '\#^'"$share"' '"$mountPoint"'#d' /etc/fstab
+      if ! tools__share_exists $share $mountPoint; then
         echo "CIFS share removed"
       else
         echo "Failed to remove the CIFS share entry from /etc/fstab"
@@ -193,20 +193,20 @@ function storage__umount_cifs_share() {
 function storage__umount_nfs_share() {
   if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
     share="${CLI_ARGS[4]}:${CLI_ARGS[5]}"
-    mntpoint="/mnt/${CLI_ARGS[4]}${CLI_ARGS[5]}"
+    mountPoint="/mnt/${CLI_ARGS[4]}${CLI_ARGS[5]}"
 
-    if tools__share_exists $share $mntpoint; then
+    if tools__share_exists $share $mountPoint; then
 
-      if tools__share_isactive $share $mntpoint; then
-        sudo umount $mntpoint
+      if tools__share_isactive $share $mountPoint; then
+        sudo umount $mountPoint
         if [ $? -ne 0 ]; then
           echo "Failed to unmount the NFS share"
           return 1
         fi
       fi
 
-      sudo sed -i '\#^'"$share"' '"$mntpoint"'#d' /etc/fstab
-      if ! tools__share_exists $share $mntpoint; then
+      sudo sed -i '\#^'"$share"' '"$mountPoint"'#d' /etc/fstab
+      if ! tools__share_exists $share $mountPoint; then
         echo "NFS share removed"
       else
         echo "Failed to remove the NFS share entry from /etc/fstab"

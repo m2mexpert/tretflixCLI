@@ -26,10 +26,12 @@ function misc__root() {
 function misc__set_downloads_path() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
     option="sync"
+    newpath="${CLI_ARGS[4]}"
   elif [ "${#CLI_ARGS[@]}" -eq 6 ]; then
     case "${CLI_ARGS[4]}" in
       '-l' | '--link-only')
         option="link"
+        newpath="${CLI_ARGS[5]}"
         ;;
       *)
         help__misc
@@ -39,7 +41,20 @@ function misc__set_downloads_path() {
     help__misc
     return 1
   fi
-  
+
+		if tools__path_exists $newpath; then
+      if ! tools__dir_isempty $mntpoint; then
+        echo "The mount point '$mntpoint' is not empty and cannot be used"
+        return 1
+      fi
+    else
+      mkdir -p $mntpoint
+      if [ $? -ne 0 ]; then
+        echo "Failed to create the mount point '$mntpoint'"
+        return 1
+      fi
+    fi
+
   if [ "$option" == "sync" ]; then
   	echo "Do Sync Mode"
   else
