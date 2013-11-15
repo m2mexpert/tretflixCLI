@@ -1,0 +1,49 @@
+# avoid double inclusion
+if test "${config__imported+defined}" == "defined"; then
+  return 0
+fi
+config__imported=1
+
+function config__root() {
+  if test "${CLI_ARGS[1]+isset}"; then
+    case "${CLI_ARGS[1]}" in
+      setup)
+        config__setup
+        ;;
+      backup)
+        config__backup
+        ;;
+      restore)
+        config__restore
+        ;;
+      *)
+        help__config
+    esac
+  else
+    help__config
+  fi
+}
+
+function config__setup() {
+  if [ "${#CLI_ARGS[@]}" -eq 2 ]; then
+    echo "Debug: config__setup code goes here!"
+  else
+    help__config
+  fi
+}
+
+function config__backup() {
+  if [ "${#CLI_ARGS[@]}" -eq 2 ]; then
+    echo "Debug: config_backup code goes here!"
+  else
+    help__config
+  fi
+}
+
+function config__restore() {
+  if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
+    echo "Debug: config_restore code goes here!"
+  else
+    help__config
+  fi
+}

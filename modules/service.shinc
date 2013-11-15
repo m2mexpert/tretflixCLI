@@ -1,0 +1,109 @@
+# avoid double inclusion
+if test "${service__imported+defined}" == "defined"; then
+  return 0
+fi
+service__imported=1
+
+function service__root() {
+  if test "${CLI_ARGS[3]+isset}"; then
+    case "${CLI_ARGS[2]} ${CLI_ARGS[3]}" in
+      'set username')
+        service__set_username
+        ;;
+      'set password')
+        service__set_password
+        ;;
+      'set port')
+        service__set_port
+        ;;
+      'new apikey')
+        service__new_apikey
+        ;;
+      'show config')
+        service__show_config
+        ;;
+      'reset config')
+        service__reset_config
+        ;;				
+      *)
+        help__service
+    esac
+  elif test "${CLI_ARGS[2]+isset}"; then
+    case "${CLI_ARGS[2]}" in
+      enable)
+        service__enable
+        ;;
+      disable)
+        service__disable
+        ;;
+      *)
+        help__service
+    esac
+  else
+    help__service
+  fi
+}
+
+function service__enable() {
+  if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
+    echo "Debug: service__enable code goes here!"
+  else
+    help__service
+  fi
+}
+
+function service__disable() {
+  if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
+    echo "Debug: service__disable code goes here!"
+  else
+    help__service
+  fi
+}
+
+function service__set_username() {
+  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
+    echo "Debug: service__set_username code goes here!"
+  else
+    help__service
+  fi
+}
+
+function service__set_password() {
+  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
+    echo "Debug: service__set_password code goes here!"
+  else
+    help__service
+  fi
+}
+
+function service__set_port() {
+  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
+    echo "Debug: service__set_port code goes here!"
+  else
+    help__service
+  fi
+}
+
+function service__new_apikey() {
+  if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
+    echo "Debug: service__new_apikey code goes here!"
+  else
+    help__service
+  fi
+}
+
+function service__show_config() {
+  if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
+    echo "Debug: service__show_config code goes here!"
+  else
+    help__service
+  fi
+}
+
+function service__reset_config() {
+  if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
+    echo "Debug: service__reset_config code goes here!"
+  else
+    help__service
+  fi
+}

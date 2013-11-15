@@ -85,21 +85,20 @@ script_absolute_dir=$FCN_RESULT
 source "$script_absolute_dir/config"
 
 # Import modules
-import "modules/appliance"
-import "modules/application"
 import "modules/backup"
+import "modules/config"
 import "modules/couchpotato"
+import "modules/downloads"
 import "modules/headphones"
 import "modules/help"
 import "modules/maraschino"
-import "modules/misc"
 import "modules/network"
 import "modules/plex"
 import "modules/restore"
 import "modules/sabnzbd"
+import "modules/service"
 import "modules/setup"
 import "modules/sickbeard"
-import "modules/storage"
 import "modules/tools"
 import "modules/transmission"
 
@@ -107,20 +106,20 @@ import "modules/transmission"
 if test "${CLI_ARGS[0]+isset}"; then
   shopt -s nocasematch
   case "${CLI_ARGS[0]}" in
-    appliance)
-      appliance__root
+    config)
+      config__root
       ;;
-    application)
-      application__root
-      ;;
-    misc)
-      misc__root
+    downloads)
+      downloads__root
       ;;
     network)
       network__root
       ;;
-    storage)
-      storage__root
+    service)
+      service__root
+      ;;
+    shares)
+      shares__root
       ;;
     *)
       help__root

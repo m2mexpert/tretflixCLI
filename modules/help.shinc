@@ -7,102 +7,90 @@ help__imported=1
 function help__root() {
   echo "tretflix --help"
   echo
-  echo "Appliance Commands:"
-  echo "--------------------------------------------------"
-  help__appliance
-  echo
-  echo "Application Commands:"
-  echo "--------------------------------------------------"
-  help__application
-  echo
-  echo "Network Commands:"
-  echo "--------------------------------------------------"
-  help__network
-  echo
-  echo "Storage Commands:"
-  echo "--------------------------------------------------"
-  help__storage
-  echo
-  echo "Misc Commands:"
-  echo "--------------------------------------------------"
-  help__misc
+  echo "tretflix config"
+  echo "tretflix downloads"
+  echo "tretflix network"
+  echo "tretflix service"
+  echo "tretflix shares"
   echo
 }
 
-function help__appliance() {
-  echo "Usage: tretflix appliance [COMMAND] [INPUT]"
+function help__config() {
+  echo "Usage: tretflix config [COMMAND] [INPUT]"
   echo
   echo "COMMANDS:"
-  echo "  tretflix appliance setup"
-  echo "  tretflix appliance backup"
-  echo "  tretflix appliance restore [FILE]"
+  echo "  tretflix config setup"
+  echo "  tretflix config backup"
+  echo "  tretflix config restore [FILE]"
   echo
 }
 
-function help__application() {
-  echo "Usage: tretflix application [OPTION] [COMMAND] [INPUT]"
+function help__downloads() {
+  echo "Usage: tretflix downloads [COMMAND] [OPTION] [INPUT]"
   echo
   echo "COMMANDS:"
-  echo "  tretflix application [OPTION] enable"
-  echo "  tretflix application [OPTION] disable"
-  echo "  tretflix application [OPTION] set username [USERNAME]"
-  echo "  tretflix application [OPTION] set password [PASSWORD]"
-  echo "  tretflix application [OPTION] set port [PORT]"
-  echo "  tretflix application [OPTION] new apikey"
-  echo "  tretflix application [OPTION] show config"
-  echo "  tretflix application [OPTION] reset config"
+  echo "  tretflix downloads set path [OPTION] [PATH]"
+  echo "  tretflix downloads show config"
   echo
-  echo "APPLICATION OPTIONS:"
-  echo "  -a, --all"
+  echo "OPTIONS:"
+  echo "  -l, --link-only"
+  echo
+  echo "  Note: Downloads are copied to the new path by default. Use the '-l'"
+  echo "        option to change the path without copying the existing files."
+  echo
+}
+
+function help__network() {
+  echo "Usage: tretflix network [COMMAND] [OPTION] [INPUT]"
+  echo
+  echo "COMMANDS:"
+  echo "  tretflix network set eth0 [OPTION]"
+  echo "  tretflix network set dns [SERVER1] [SERVER2] ..."
+  echo "  tretflix network set domain [DOMAIN]"
+  echo "  tretflix network show config"
+  echo
+  echo "OPTIONS:"
+  echo "  -d, --dhcp"
+  echo "  -s, --static <IPV4> <NETMASK> <GATEWAY>"
+  echo
+}
+
+function help__service() {
+  echo "Usage: tretflix service [OPTION] [COMMAND] [INPUT]"
+  echo
+  echo "COMMANDS:"
+  echo "  tretflix service [OPTION] enable"
+  echo "  tretflix service [OPTION] disable"
+  echo "  tretflix service [OPTION] set username [USERNAME]"
+  echo "  tretflix service [OPTION] set password [PASSWORD]"
+  echo "  tretflix service [OPTION] set port [PORT]"
+  echo "  tretflix service [OPTION] new apikey"
+  echo "  tretflix service [OPTION] show config"
+  echo "  tretflix service [OPTION] reset config"
+  echo
+  echo "OPTIONS:"
   echo "  -b, --sickbeard"
   echo "  -c, --couchpotato"
   echo "  -m, --maraschino"
   echo "  -s, --sabnzbd"
   echo "  -t, --transmission"
   echo
-  echo "  Note: 'all' option not available when setting ports."
+  echo "  Note: Service commands will be applied to all applications by default"
+  echo "        except 'set port' which requires the application to be specified."
   echo
 }
 
-function help__network() {
-  echo "Usage: tretflix network [COMMAND] [INPUT]"
+function help__shares() {
+  echo "Usage: tretflix shares [COMMAND] [INPUT] [OPTION]"
   echo
   echo "COMMANDS:"
-  echo "  tretflix network set eth0 [IPV4] [NETMASK] [GATEWAY]"
-  echo "  tretflix network set dns [SERVER1] [SERVER2] ..."
-  echo "  tretflix network set domain [DOMAIN]"
-  echo "  tretflix network show config"
-  echo "  tretflix network reset config"
-  echo
-}
-
-function help__storage() {
-  echo "Usage: tretflix storage [COMMAND] [INPUT] [OPTION]"
-  echo
-  echo "COMMANDS:"
-  echo "  tretflix storage mount cifs share [HOST] [SHARE] [OPTION] ..."
-  echo "  tretflix storage mount nfs share [HOST] [SHARE]"
-  echo "  tretflix storage umount cifs share [HOST] [SHARE]"
-  echo "  tretflix storage umount nfs share [HOST] [SHARE]"
-  echo "  tretflix storage show shares"
+  echo "  tretflix shares add cifs [HOST] [SHARE] [OPTION] ..."
+  echo "  tretflix shares del cifs [HOST] [SHARE]"
+  echo "  tretflix shares add nfs [HOST] [SHARE]"
+  echo "  tretflix shares del nfs [HOST] [SHARE]"
+  echo "  tretflix shares show config"
   echo
   echo "OPTIONS:"
   echo "  -u, --user [USERNAME] [PASSWORD]"
-  echo
-}
-
-function help__misc() {
-  echo "Usage: tretflix misc [COMMAND] [OPTION] [INPUT]"
-  echo
-  echo "COMMANDS:"
-  echo "  tretflix misc set downloads path [OPTION] [PATH]"
-  echo "  tretflix misc show downloads path"
-  echo
-  echo "OPTIONS:"
-  echo "  -l, --link-only"
-  echo
-  echo "  Note: The current download path's contents are synced to the new path"
-  echo "        by default. Use the '-l' option to change the download path"
-  echo "        without syncing the contents."
   echo
 }

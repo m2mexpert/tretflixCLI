@@ -7,7 +7,7 @@ network__imported=1
 function network__root() {
   if test "${CLI_ARGS[2]+isset}"; then
     case "${CLI_ARGS[1]} ${CLI_ARGS[2]}" in
-      'set static')
+      'set eth0')
         network__set_eth0
         ;;
       'set dns')
@@ -18,9 +18,6 @@ function network__root() {
         ;;
       'show config')
         network__show_config
-        ;;
-      'reset config')
-        network__reset_config
         ;;
       *)
         help__network

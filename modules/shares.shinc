@@ -1,65 +1,60 @@
 # avoid double inclusion
-if test "${storage__imported+defined}" == "defined"; then
+if test "${shares__imported+defined}" == "defined"; then
   return 0
 fi
-storage__imported=1
+shares__imported=1
 
-function storage__root() {
-  if test "${CLI_ARGS[3]+isset}"; then
-    case "${CLI_ARGS[1]} ${CLI_ARGS[2]} ${CLI_ARGS[3]}" in
-    	'mount cifs share')
-    	  storage__mount_cifs_share
-    	  ;;
-    	'mount nfs share')
-    	  storage__mount_nfs_share
-    	  ;;
-    	'umount cifs share')
-    	  storage__umount_cifs_share
-    	  ;;
-    	'umount nfs share')
-    	  storage__umount_nfs_share
-    	  ;;    	  
-    	*)
-        help__storage
-    esac
-  elif test "${CLI_ARGS[2]+isset}"; then
+function shares__root() {
+  if test "${CLI_ARGS[2]+isset}"; then
     case "${CLI_ARGS[1]} ${CLI_ARGS[2]}" in
-      'show shares')
-        storage__show_shares
+    	'add cifs')
+    	  shares__add_cifs
+    	  ;;
+    	'del cifs')
+    	  shares__del_cifs
+    	  ;;
+    	'add nfs')
+    	  shares__add_nfs
+    	  ;;
+    	'del nfs')
+    	  shares__del_nfs
+    	  ;;    	  
+      'show config')
+        shares__show_config
         ;;
       *)
-        help__storage
+        help__shares
         return 1
     esac
   else
-    help__storage
+    help__shares
     return 1
   fi
 }
 
-function storage__mount_cifs_share() {
-  if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
+function shares__add_cifs() {
+  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
     authType="Anonymous"
-    tools__cifs_test ${CLI_ARGS[4]} ${CLI_ARGS[5]}
-  elif [ "${#CLI_ARGS[@]}" -eq 9 ]; then
-    case "${CLI_ARGS[6]}" in
+    tools__cifs_test ${CLI_ARGS[3]} ${CLI_ARGS[4]}
+  elif [ "${#CLI_ARGS[@]}" -eq 8 ]; then
+    case "${CLI_ARGS[5]}" in
       '-u' | '--user')
         authType="User"
-        tools__cifs_test ${CLI_ARGS[4]} ${CLI_ARGS[5]} ${CLI_ARGS[7]} ${CLI_ARGS[8]}
+        tools__cifs_test ${CLI_ARGS[3]} ${CLI_ARGS[4]} ${CLI_ARGS[6]} ${CLI_ARGS[7]}
         ;;
       *)
-        help__storage
+        help__shares
         return 1
     esac
   else
-    help__storage
+    help__shares
     return 1
   fi
 
   if [ $? -eq 0 ]; then
 
-    share="//${CLI_ARGS[4]}/${CLI_ARGS[5]}"
-    mountPoint="/mnt/${CLI_ARGS[4]}/${CLI_ARGS[5]}"
+    share="//${CLI_ARGS[3]}/${CLI_ARGS[4]}"
+    mountPoint="/mnt/${CLI_ARGS[3]}/${CLI_ARGS[4]}"
     
     share=$(echo "$share" | tr '[:upper:]' '[:lower:]')
     mountPoint=$(echo "$mountPoint" | tr '[:upper:]' '[:lower:]')
@@ -67,7 +62,7 @@ function storage__mount_cifs_share() {
     if [ "$authType" == "Anonymous" ]; then
       mountCmd="$share $mountPoint cifs auto,sec=ntlm 0 0"
     else
-      mountCmd="$share $mountPoint cifs auto,sec=ntlm,username=${CLI_ARGS[7]},password=${CLI_ARGS[8]} 0 0"
+      mountCmd="$share $mountPoint cifs auto,sec=ntlm,username=${CLI_ARGS[6]},password=${CLI_ARGS[7]} 0 0"
     fi
 
     if tools__share_exists $share $mountPoint; then
@@ -108,18 +103,53 @@ function storage__mount_cifs_share() {
   fi
 }
 
-function storage__mount_nfs_share() {
-  if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
-    tools__nfs_test ${CLI_ARGS[4]} ${CLI_ARGS[5]}
+function shares__del_cifs() {
+  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
+    share="//${CLI_ARGS[3]}/${CLI_ARGS[4]}"
+    mountPoint="/mnt/${CLI_ARGS[3]}/${CLI_ARGS[4]}"
+    
+    share=$(echo "$share" | tr '[:upper:]' '[:lower:]')
+    mountPoint=$(echo "$mountPoint" | tr '[:upper:]' '[:lower:]')
+
+    if tools__share_exists $share $mountPoint; then
+
+      if tools__share_isactive $share $mountPoint; then
+        sudo umount $mountPoint
+        if [ $? -ne 0 ]; then
+          echo "Failed to unmount the CIFS share"
+          return 1
+        fi
+      fi
+
+      sudo sed -i '\#^'"$share"' '"$mountPoint"'#d' /etc/fstab
+      if ! tools__share_exists $share $mountPoint; then
+        echo "CIFS share removed"
+      else
+        echo "Failed to remove the CIFS share entry from /etc/fstab"
+        return 1
+      fi
+
+    else
+      echo "No such CIFS share entry found in /etc/fstab"
+    fi
+
   else
-    help__storage
+    help__shares
+  fi
+}
+
+function shares__add_nfs() {
+  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
+    tools__nfs_test ${CLI_ARGS[3]} ${CLI_ARGS[4]}
+  else
+    help__shares
     return 1
   fi
 
   if [ $? -eq 0 ]; then
 
-    share="${CLI_ARGS[4]}:${CLI_ARGS[5]}"
-    mountPoint="/mnt/${CLI_ARGS[4]}${CLI_ARGS[5]}"
+    share="${CLI_ARGS[3]}:${CLI_ARGS[4]}"
+    mountPoint="/mnt/${CLI_ARGS[3]}${CLI_ARGS[4]}"
     
     share=$(echo "$share" | tr '[:upper:]' '[:lower:]')
     mountPoint=$(echo "$mountPoint" | tr '[:upper:]' '[:lower:]')
@@ -164,45 +194,10 @@ function storage__mount_nfs_share() {
   fi
 }
 
-function storage__umount_cifs_share() {
-  if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
-    share="//${CLI_ARGS[4]}/${CLI_ARGS[5]}"
-    mountPoint="/mnt/${CLI_ARGS[4]}/${CLI_ARGS[5]}"
-    
-    share=$(echo "$share" | tr '[:upper:]' '[:lower:]')
-    mountPoint=$(echo "$mountPoint" | tr '[:upper:]' '[:lower:]')
-
-    if tools__share_exists $share $mountPoint; then
-
-      if tools__share_isactive $share $mountPoint; then
-        sudo umount $mountPoint
-        if [ $? -ne 0 ]; then
-          echo "Failed to unmount the CIFS share"
-          return 1
-        fi
-      fi
-
-      sudo sed -i '\#^'"$share"' '"$mountPoint"'#d' /etc/fstab
-      if ! tools__share_exists $share $mountPoint; then
-        echo "CIFS share removed"
-      else
-        echo "Failed to remove the CIFS share entry from /etc/fstab"
-        return 1
-      fi
-
-    else
-      echo "No such CIFS share entry found in /etc/fstab"
-    fi
-
-  else
-    help__storage
-  fi
-}
-
-function storage__umount_nfs_share() {
-  if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
-    share="${CLI_ARGS[4]}:${CLI_ARGS[5]}"
-    mountPoint="/mnt/${CLI_ARGS[4]}${CLI_ARGS[5]}"
+function shares__del_nfs() {
+  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
+    share="${CLI_ARGS[3]}:${CLI_ARGS[4]}"
+    mountPoint="/mnt/${CLI_ARGS[3]}${CLI_ARGS[4]}"
     
     share=$(echo "$share" | tr '[:upper:]' '[:lower:]')
     mountPoint=$(echo "$mountPoint" | tr '[:upper:]' '[:lower:]')
@@ -230,11 +225,11 @@ function storage__umount_nfs_share() {
     fi
 
   else
-    help__storage
+    help__shares
   fi
 }
 
-function storage__show_shares() {
+function shares__show_config() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
     if df -hT | egrep -q "[[:space:]]cifs[[:space:]]|[[:space:]]nfs[[:space:]]"; then
       df -hT | egrep "^Filesystem[[:space:]]|[[:space:]]cifs[[:space:]]|[[:space:]]nfs[[:space:]]"
@@ -242,6 +237,6 @@ function storage__show_shares() {
       echo "There are no mounted shares"
     fi
   else
-    help__storage
+    help__shares
   fi
 }

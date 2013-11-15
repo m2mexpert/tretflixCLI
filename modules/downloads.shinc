@@ -1,44 +1,44 @@
 # avoid double inclusion
-if test "${misc__imported+defined}" == "defined"; then
+if test "${downloads__imported+defined}" == "defined"; then
   return 0
 fi
-misc__imported=1
+downloads__imported=1
 
-function misc__root() {
-  if test "${CLI_ARGS[3]+isset}"; then
-    case "${CLI_ARGS[1]} ${CLI_ARGS[2]} ${CLI_ARGS[3]}" in
-      'set downloads path')
-        misc__set_downloads_path
+function downloads__root() {
+  if test "${CLI_ARGS[2]+isset}"; then
+    case "${CLI_ARGS[1]} ${CLI_ARGS[2]}" in
+      'set path')
+        downloads__set_path
         ;;
-      'show downloads path')
-        misc__show_downloads_path
+      'show config')
+        downloads__show_config
         ;;
       *)
-        help__misc
+        help__downloads
         return 1
     esac
   else
-    help__misc
+    help__downloads
     return 1
   fi
 }
 
-function misc__set_downloads_path() {
-  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
+function downloads__set_path() {
+  if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
     option="sync"
-    newPath="${CLI_ARGS[4]}"
-  elif [ "${#CLI_ARGS[@]}" -eq 6 ]; then
-    case "${CLI_ARGS[4]}" in
+    newPath="${CLI_ARGS[3]}"
+  elif [ "${#CLI_ARGS[@]}" -eq 5 ]; then
+    case "${CLI_ARGS[3]}" in
       '-l' | '--link-only')
         option="link"
-        newPath="${CLI_ARGS[5]}"
+        newPath="${CLI_ARGS[4]}"
         ;;
       *)
-        help__misc
+        help__downloads
         return 1
     esac
   else
-    help__misc
+    help__downloads
     return 1
   fi
 
@@ -58,11 +58,11 @@ function misc__set_downloads_path() {
   fi
 }
 
-function misc__show_downloads_path() {
-	if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
+function downloads__show_config() {
+	if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
     readlink $downloadsSymLink
   else
-    help__misc
+    help__downloads
     return 1
   fi
 }
