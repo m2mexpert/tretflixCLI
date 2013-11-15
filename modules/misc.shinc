@@ -42,20 +42,19 @@ function misc__set_downloads_path() {
     return 1
   fi
 
-  currentPath="$(readlink $downloadsSymLink)"
-  
   if [ "$option" == "sync" ]; then
 		syncSize=$(du -c "$downloadsSymLink" | grep total | awk '{ print $1 }')
 		newPathAvail=$(df -k "$newPath" | awk '{ print $4 }' | grep -v "Available")
-		if [ "$syncSize" -lt "newPathAvail" ]; then
-		  "Good Space"
-		else
-		  "Not Enough Space"
-		fi
+    if [ "$syncSize" -lt "$newPathAvail" ]; then
+    	sudo su -c -u $osUser "rsync -av $downloadsSymLink/* $newPath/."
+      ln -sfn $newPath $downloadsSymLink
+    else
+    	echo "Not Enough Space"
+    fi
   else
     echo "Do Link Mode"
     echo $newPath
-  	echo $currentPath
+    echo $currentPath
   fi
 }
 

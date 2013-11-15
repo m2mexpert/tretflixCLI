@@ -2,6 +2,9 @@
 downloadsSymLink='/opt/tretflix/downloads'
 tmpSymLink='/opt/tretflix/tmp'
 
+# OS Details
+osUser='sysadmin'
+
 # Path to application data directories (config files and other runtime data)
 maraschino_appdata='/opt/tretflix/appdata/maraschino'
 sickbeard_appdata='/opt/tretflix/appdata/sickbeard'
