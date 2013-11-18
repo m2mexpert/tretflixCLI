@@ -78,9 +78,7 @@ function downloads__set_path() {
 
 function downloads__show_config() {
 	if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-	  echo "Current downloads path:"
-    readlink $downloadsSymLink
-    echo
+	  echo "Downloads path: $(readlink $downloadsSymLink)"
   else
     help__downloads
     return 1
