@@ -58,11 +58,3 @@ function network__show_config() {
     help__network
   fi
 }
-
-function network__reset_config() {
-  if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    echo "Debug: network__reset_config code goes here!"
-  else
-    help__network
-  fi
-}
