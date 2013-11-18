@@ -42,6 +42,11 @@ function downloads__set_path() {
     return 1
   fi
   
+  if [ "$(tools__path_istype $newPath)" != "Directory" ]; then
+    echo "The path does not exist or is not a directory"
+    return 1
+  fi
+  
   sudo su -c -u $osUser "test -w $newPath"
   if [ $? -ne 0 ]; then
     echo "Permission denied, no write permission to the new downloads path"
