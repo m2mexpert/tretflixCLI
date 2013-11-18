@@ -5,13 +5,14 @@ fi
 help__imported=1
 
 function help__root() {
-  echo "tretflix --help"
+  echo "Usage: tretflix [COMMAND] ....."
   echo
-  echo "tretflix config"
-  echo "tretflix downloads"
-  echo "tretflix network"
-  echo "tretflix service"
-  echo "tretflix shares"
+  echo "COMMANDS:"
+  echo "  tretflix config"
+  echo "  tretflix downloads"
+  echo "  tretflix network"
+  echo "  tretflix service"
+  echo "  tretflix shares"
   echo
 }
 
