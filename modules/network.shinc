@@ -7,8 +7,11 @@ network__imported=1
 function network__root() {
   if test "${CLI_ARGS[2]+isset}"; then
     case "${CLI_ARGS[1]} ${CLI_ARGS[2]}" in
-      'set eth0')
-        network__set_eth0
+      'add IP')
+        network__add_IP
+        ;;
+      'del IP')
+        network__del_IP
         ;;
       'set dns')
         network__set_dns
@@ -27,9 +30,58 @@ function network__root() {
   fi
 }
 
-function network__set_eth0() {
+function network__add_IP() {
   if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
-    echo "Debug: network__set_eth0 code goes here!"
+    ifaceIP="${CLI_ARGS[3]}"
+    ifaceNetmask="${CLI_ARGS[4]}"
+    ifaceGateway="${CLI_ARGS[5]}"
+    ifaceBroadcast=$(ipcalc $ifaceIP $ifaceNetmask | egrep "^Broadcast:" | awk '{ print $2}')
+    ifaceNetwork=$(ipcalc $ifaceIP $ifaceNetmask | egrep "^Network:" | awk '{ print $2}' | sed 's/\/.*$//g')
+  else
+    help__network
+    return 1
+  fi
+
+  tools__host_ping $ifaceIP > /dev/null
+  if [ $? -eq 0 ]; then
+    echo "IP address already in use on the network"
+    return 1
+  fi
+
+  ifaceCount=$(cat /etc/network/interfaces | egrep "auto eth[0-9]:[0-9]" | sort | awk -F ":" '{ print $2 }' | wc -l)
+  if [ "$ifaceCount" -eq 0 ]; then
+    ifaceLabel="eth0:1"
+  else
+    ifaceGap=$(cat /etc/network/interfaces | egrep "auto eth[0-9]:[0-9]" | sort | awk -F ":" '{ print $2 }' | awk '($1!=p+1){print p+1} {p=$1}')
+    ifaceLast=$(cat /etc/network/interfaces | egrep "auto eth[0-9]:[0-9]" | sort | awk -F ":" '{ print $2 }' | tail -1)
+    if [ "$ifaceGap" ]; then
+      ifaceLabel="eth0:$ifaceGap"
+    elif [ "$ifaceLast" ]; then
+      ifaceLast=$(( $ifaceLast + 1 ))
+      ifaceLabel="eth0:$ifaceLast"
+    else
+      echo "Unable to determine existing virtual interfaces"
+      return 1
+    fi
+  fi
+
+  echo -e "\n" >> /etc/network/interfaces
+  echo "# Interface added by tretflix" >> /etc/network/interfaces
+  echo "auto $ifaceLabel" >> /etc/network/interfaces
+  echo "iface $ifaceLabel inet static" >> /etc/network/interfaces
+  echo -e "\taddress $ifaceIP" >> /etc/network/interfaces
+  echo -e "\tnetmask $ifaceNetmask" >> /etc/network/interfaces
+  echo -e "\tnetwork $ifaceNetwork" >> /etc/network/interfaces
+  echo -e "\tbroadcast $ifaceBroadcast" >> /etc/network/interfaces
+  echo -e "\tgateway $ifaceGateway" >> /etc/network/interfaces
+
+  service networking restart > /dev/null 2>&1
+  ifconfig $ifaceLabel up
+}
+
+function network__del_IP() {
+  if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
+    echo "Debug: network__set_dns code goes here!"
   else
     help__network
   fi

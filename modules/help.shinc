@@ -45,14 +45,11 @@ function help__network() {
   echo "Usage: tretflix network [COMMAND] [OPTION] [INPUT]"
   echo
   echo "COMMANDS:"
-  echo "  tretflix network set eth0 [OPTION]"
+  echo "  tretflix network add IP [IPv4] [NETMASK] [GATEWAY]"
+  echo "  tretflix network del IP [IPv4]"
   echo "  tretflix network set dns [SERVER1] [SERVER2] ..."
   echo "  tretflix network set domain [DOMAIN]"
   echo "  tretflix network show config"
-  echo
-  echo "OPTIONS:"
-  echo "  -d, --dhcp"
-  echo "  -s, --static <IPV4> <NETMASK> <GATEWAY>"
   echo
 }
 
