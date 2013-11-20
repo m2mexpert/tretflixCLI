@@ -65,8 +65,10 @@ function network__add_ip() {
     fi
   fi
 
+  # Add interface to network config
   echo -e "\n" >> /etc/network/interfaces
-  echo "# Interface added by tretflix" >> /etc/network/interfaces
+  echo "# $ifaceLabel interface section start" >> /etc/network/interfaces
+  echo "# Added by tretflix, do not modify!" >> /etc/network/interfaces
   echo "auto $ifaceLabel" >> /etc/network/interfaces
   echo "iface $ifaceLabel inet static" >> /etc/network/interfaces
   echo -e "\taddress $ifaceIP" >> /etc/network/interfaces
@@ -74,6 +76,10 @@ function network__add_ip() {
   echo -e "\tnetwork $ifaceNetwork" >> /etc/network/interfaces
   echo -e "\tbroadcast $ifaceBroadcast" >> /etc/network/interfaces
   echo -e "\tgateway $ifaceGateway" >> /etc/network/interfaces
+  echo "# $ifaceLabel interface section end" >> /etc/network/interfaces
+
+  # Clean up network config file, remove double (or more) blank lines
+  sed -i 'N;/^\n$/d;P;D' /etc/network/interfaces
 
   service networking restart > /dev/null 2>&1
   ifconfig $ifaceLabel up
