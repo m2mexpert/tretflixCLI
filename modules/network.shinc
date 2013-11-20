@@ -7,11 +7,11 @@ network__imported=1
 function network__root() {
   if test "${CLI_ARGS[2]+isset}"; then
     case "${CLI_ARGS[1]} ${CLI_ARGS[2]}" in
-      'add IP')
-        network__add_IP
+      'add ip')
+        network__add_ip
         ;;
-      'del IP')
-        network__del_IP
+      'del ip')
+        network__del_ip
         ;;
       'set dns')
         network__set_dns
@@ -30,7 +30,7 @@ function network__root() {
   fi
 }
 
-function network__add_IP() {
+function network__add_ip() {
   if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
     ifaceIP="${CLI_ARGS[3]}"
     ifaceNetmask="${CLI_ARGS[4]}"
@@ -79,7 +79,7 @@ function network__add_IP() {
   ifconfig $ifaceLabel up
 }
 
-function network__del_IP() {
+function network__del_ip() {
   if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
     echo "Debug: network__set_dns code goes here!"
   else
