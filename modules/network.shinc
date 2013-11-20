@@ -89,10 +89,38 @@ function network__add_ip() {
 
 function network__del_ip() {
   if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
-    echo "Debug: network__set_dns code goes here!"
+    ifaceIP="${CLI_ARGS[3]}"
   else
     help__network
   fi
+
+  ifaceLabel=$(ifconfig | awk '/'$ifaceIP'/ {print $1}' RS="\n\n")
+  if [ ! "$ifaceLabel" ]; then
+    echo "The IP address specified is not currently configured"
+    return 1
+  fi
+
+  if [ "$ifaceLabel" == "eth0" ]; then
+    echo "The default interface (eth0) cannot be removed"
+    return 1
+  fi
+
+  if [ "$ifaceLabel" == "lo" ]; then
+    echo "The loopback interface (lo) cannot be removed"
+    return 1
+  fi
+
+  if ! cat /etc/network/interfaces | grep -q "^# $ifaceLabel interface section start"; then
+    echo "Only interfaces added by tretflix can be removed using this command"
+  fi
+
+  ifconfig $ifaceLabel down
+  sed -i -n '1h;1!H;${;g;s/# '$ifaceLabel' interface section start.*# '$ifaceLabel' interface section end//g;p;}' \
+    /etc/network/interfaces
+
+  sed -i 'N;/^\n$/d;P;D' /etc/network/interfaces
+
+  service networking restart > /dev/null 2>&1
 }
 
 function network__set_dns() {
