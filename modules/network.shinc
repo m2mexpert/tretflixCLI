@@ -79,9 +79,8 @@ function network__add_ip() {
   echo "# $ifaceLabel interface section end" >> /etc/network/interfaces
   echo -e "\n" >> /etc/network/interfaces
 
-
   # Clean up network config file, remove double (or more) blank lines
-  sed -i 'N;/^\n$/d;P;D' /etc/network/interfaces
+  sed -i '/^$/N;/^\n$/D' /etc/network/interfaces
 
   service networking restart > /dev/null 2>&1
   ifconfig $ifaceLabel up
@@ -118,7 +117,7 @@ function network__del_ip() {
   sed -i -n '1h;1!H;${;g;s/# '$ifaceLabel' interface section start.*# '$ifaceLabel' interface section end//g;p;}' \
     /etc/network/interfaces
 
-  sed -i 'N;/^\n$/d;P;D' /etc/network/interfaces
+  sed -i '/^$/N;/^\n$/D' /etc/network/interfaces
 
   service networking restart > /dev/null 2>&1
 }
