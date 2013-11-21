@@ -16,9 +16,6 @@ function network__root() {
       'set dns')
         network__set_dns
         ;;
-      'set domain')
-        network__set_domain
-        ;;
       'show config')
         network__show_config
         ;;
@@ -130,17 +127,17 @@ function network__set_dns() {
   fi
 }
 
-function network__set_domain() {
-  if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
-    echo "Debug: network__set_domain code goes here!"
-  else
-    help__network
-  fi
-}
-
 function network__show_config() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    ifconfig eth0
+    echo
+    echo "Net Config:"
+    echo "-----------"
+    ifconfig | egrep -A 1 "eth[0-9]|eth[0-9]:[0-9]" | sed 's/^--//g'
+    echo
+    echo "DNS Config:"
+    echo "-----------"
+    cat /etc/resolv.conf | grep -v "^#"
+    echo
   else
     help__network
   fi

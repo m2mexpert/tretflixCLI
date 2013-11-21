@@ -48,7 +48,6 @@ function help__network() {
   echo "  tretflix network add ip [IPv4] [NETMASK] [GATEWAY]"
   echo "  tretflix network del ip [IPv4]"
   echo "  tretflix network set dns [SERVER1] [SERVER2] ..."
-  echo "  tretflix network set domain [DOMAIN]"
   echo "  tretflix network show config"
   echo
 }
