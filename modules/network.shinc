@@ -13,9 +13,6 @@ function network__root() {
       'del ip')
         network__del_ip
         ;;
-      'set dns')
-        network__set_dns
-        ;;
       'show config')
         network__show_config
         ;;
@@ -121,14 +118,6 @@ function network__del_ip() {
   sed -i '/^$/N;/^\n$/D' /etc/network/interfaces
 
   service networking restart > /dev/null 2>&1
-}
-
-function network__set_dns() {
-  if [ "${#CLI_ARGS[@]}" -ge 4 ]; then
-    echo "Debug: network__set_dns code goes here!"
-  else
-    help__network
-  fi
 }
 
 function network__show_config() {
