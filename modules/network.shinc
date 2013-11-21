@@ -63,18 +63,21 @@ function network__add_ip() {
   fi
 
   # Add interface to network config
-  echo -e "\n" >> /etc/network/interfaces
-  echo "# $ifaceLabel interface section start" >> /etc/network/interfaces
-  echo "# Added by tretflix, do not modify!" >> /etc/network/interfaces
-  echo "auto $ifaceLabel" >> /etc/network/interfaces
-  echo "iface $ifaceLabel inet static" >> /etc/network/interfaces
-  echo -e "\taddress $ifaceIP" >> /etc/network/interfaces
-  echo -e "\tnetmask $ifaceNetmask" >> /etc/network/interfaces
-  echo -e "\tnetwork $ifaceNetwork" >> /etc/network/interfaces
-  echo -e "\tbroadcast $ifaceBroadcast" >> /etc/network/interfaces
-  echo -e "\tgateway $ifaceGateway" >> /etc/network/interfaces
-  echo "# $ifaceLabel interface section end" >> /etc/network/interfaces
-  echo -e "\n" >> /etc/network/interfaces
+  echo -e "\n" \
+    "# $ifaceLabel interface section start\n" \
+    "# Added by tretflix, do not modify!\n" \
+    "auto $ifaceLabel\n" \
+    "iface $ifaceLabel inet static\n" \
+    "\taddress $ifaceIP\n" \
+    "\tnetmask $ifaceNetmask\n" \
+    "\tnetwork $ifaceNetwork\n" \
+    "\tbroadcast $ifaceBroadcast\n" \
+    "\tgateway $ifaceGateway\n" \
+    "# $ifaceLabel interface section end\n" \
+    "\n" >> /etc/network/interfaces
+
+  # Clean up network config file, remove start of line spaces
+  sed -i 's/^ //g' /etc/network/interfaces
 
   # Clean up network config file, remove double (or more) blank lines
   sed -i '/^$/N;/^\n$/D' /etc/network/interfaces
