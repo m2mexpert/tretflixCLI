@@ -82,8 +82,18 @@ function downloads__set_path() {
 }
 
 function downloads__show_config() {
-	if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-	  echo "Downloads path: $(readlink $downloadsSymLink)"
+  if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
+    path="$(readlink $downloadsSymLink)"
+    size="$(df -h "$downloadsSymLink" | awk '{ print $2 }' | egrep -v "Size")"
+    used="$(df -h "$downloadsSymLink" | awk '{ print $3 }' | egrep -v "Used")"
+    avail="$(df -h "$downloadsSymLink" | awk '{ print $4 }' | egrep -v "Avail")"
+    uPerc="$(df -h "$downloadsSymLink" | awk '{ print $5 }' | egrep -v "Use%")"
+
+    echo
+    printf "%-40s %-7s %-7s %-7s %-7s\n" "Path" "Size" "Used" "Avail" "Use%"
+    printf "%-40s %-7s %-7s %-7s %-7s\n" "$path" "$size" "$used" "$avail" "$uPerc"
+    echo
+
   else
     help__downloads
     return 1
