@@ -49,7 +49,8 @@ function network__add_ip() {
   if [ "$ifaceCount" -eq 0 ]; then
     ifaceLabel="eth0:1"
   else
-    ifaceGap=$(cat /etc/network/interfaces | egrep "auto eth[0-9]:[0-9]" | sort | awk -F ":" '{ print $2 }' | awk '($1!=p+1){print p+1} {p=$1}')
+    ifaceGap=$(cat /etc/network/interfaces | egrep "auto eth[0-9]:[0-9]" | sort | awk -F ":" '{ print $2 }' | \
+      awk '($1!=p+1){print p+1} {p=$1}')
     ifaceLast=$(cat /etc/network/interfaces | egrep "auto eth[0-9]:[0-9]" | sort | awk -F ":" '{ print $2 }' | tail -1)
     if [ "$ifaceGap" ]; then
       ifaceLabel="eth0:$ifaceGap"
