@@ -232,7 +232,9 @@ function shares__del_nfs() {
 function shares__show_config() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
     if df -hT | egrep -q "[[:space:]]cifs[[:space:]]|[[:space:]]nfs[[:space:]]"; then
+      echo
       df -hT | egrep "^Filesystem[[:space:]]|[[:space:]]cifs[[:space:]]|[[:space:]]nfs[[:space:]]"
+      echo      
     else
       echo "There are no mounted shares"
     fi
