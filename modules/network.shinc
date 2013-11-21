@@ -123,17 +123,7 @@ function network__del_ip() {
 function network__show_config() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
     echo
-    echo "Hostname:"
-    echo "-----------"
-    hostname --fqdn
-    echo
-    echo "Net Config:"
-    echo "-----------"
-    ifconfig | egrep -A 1 "eth[0-9]|eth[0-9]:[0-9]" | sed 's/^--//g'
-    echo
-    echo "DNS Config:"
-    echo "-----------"
-    cat /etc/resolv.conf | egrep "^nameserver|^search"
+    ifconfig | egrep -A 2 "eth[0-9]|eth[0-9]:[0-9]" | sed 's/^--//g'
     echo 
   else
     help__network
