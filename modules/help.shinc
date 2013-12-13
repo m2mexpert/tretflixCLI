@@ -67,9 +67,10 @@ function help__service() {
   echo "OPTIONS:"
   echo "  -b, --sickbeard"
   echo "  -c, --couchpotato"
+  echo "  -h, --headphones"
   echo "  -m, --maraschino"
-  echo "  -s, --sabnzbd"
-  echo "  -t, --transmission"
+  echo "  -s, --sabnzbdplus"
+  echo "  -t, --transmission-daemon"
   echo
   echo "  Note: Service commands will be applied to all applications by default"
   echo "        except 'set port' which requires the application to be specified."
