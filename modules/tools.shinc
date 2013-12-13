@@ -173,3 +173,23 @@ function tools__mountpoint_isactive() {
     false
   fi
 }
+
+function tools__service_isrunning() {
+  output=$(service "$1" status 2>&1)
+  exitCode=$?
+  if [ $exitCode -eq 0 ]; then
+    true
+  else
+  	false
+  fi
+}
+
+function tools_service_isenabled() {
+  output=$(ls /etc/rc?.d/*"$1" 2>&1)
+  exitCode=$?
+  if [ $exitCode -eq 0 ]; then
+    true
+  else
+  	false
+  fi
+}
