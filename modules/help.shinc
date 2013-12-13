@@ -62,7 +62,6 @@ function help__service() {
   echo "  tretflix service [OPTION] set port [PORT]"
   echo "  tretflix service [OPTION] new apikey"
   echo "  tretflix service [OPTION] show config"
-  echo "  tretflix service [OPTION] reset config"
   echo
   echo "OPTIONS:"
   echo "  -a, --all"
