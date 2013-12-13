@@ -179,7 +179,15 @@ function setup__wizard() {
 	sed -i -e '/^\[sabnzbd\]/,/^\[/{/^\[sabnzbd\]/n;/^\[/!{s/^host .*/host = localhost:'$sabnzbdplus_port'/g}}' $couchpotato_config
 	sed -i -e '/^\[sabnzbd\]/,/^\[/{/^\[sabnzbd\]/n;/^\[/!{s/^api_key .*/api_key = '$sabnzbdplus_api'/g}}' $couchpotato_config
 	
-	echo "* Headphones coming soon"
+	echo "* Applying changes to Headphones"
+	sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^http_port .*/http_port = '$headphones_port'/g}}' $headphones_config
+	sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^http_username .*/http_username = '$username'/g}}' $headphones_config
+	sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^http_password .*/http_password = '$password'/g}}' $headphones_config
+	sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^api_key .*/api_key = '$headphones_api'/g}}' $headphones_config
+	sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_host .*/sab_host = localhost:'$sabnzbdplus_port'/g}}' $headphones_config
+	sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_username .*/sab_username = '$username'/g}}' $headphones_config
+	sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_password .*/sab_password = '$password'/g}}' $headphones_config
+	sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_apikey .*/sab_apikey = '$sabnzbdplus_api'/g}}' $headphones_config
 	
 	echo "* Applying changes to Maraschino"
 	sqlite3 $maraschino_config "UPDATE settings SET value='$eth0_ipv4' WHERE key='couchpotato_ip'"
