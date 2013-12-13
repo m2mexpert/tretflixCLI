@@ -277,7 +277,7 @@ function setup__wizard() {
 	echo "CouchPotato: http://"$eth0_ipv4":"$couchpotato_port"/"
 	echo "Headphones: http://"$eth0_ipv4":"$headphones_port"/"
 	echo "Maraschino: http://"$eth0_ipv4":"$maraschino_port"/"
-	echo "Plex Media Server: http://"$eth0_ipv4":32400/"
+	echo "Plex Media Server: http://"$eth0_ipv4":32400/web"
 	echo "SABnzbd+: http://"$eth0_ipv4":"$sabnzbdplus_port"/sabnzbd/"
 	echo "Sick Beard: http://"$eth0_ipv4":"$sickbeard_port"/home/"
 	echo "Transmission: http://"$eth0_ipv4":"$transmission_daemon_port"/transmission/web/"
