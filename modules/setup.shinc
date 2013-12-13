@@ -155,7 +155,7 @@ function setup__wizard() {
 	echo "Applying configuration changes..."
 	echo
 
-	passwordmd5=$(echo -n $web_password | md5sum | awk '{print $1}')
+	passwordmd5=$(echo -n $password | md5sum | awk '{print $1}')
 	eth0_ipv4=$(ifconfig | sed -n '2 p' | awk '{print $2}' | sed 's/addr://g')
 	
 	echo "* Stopping Services"
