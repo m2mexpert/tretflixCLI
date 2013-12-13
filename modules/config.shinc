@@ -26,7 +26,7 @@ function config__root() {
 
 function config__setup() {
   if [ "${#CLI_ARGS[@]}" -eq 2 ]; then
-    echo "Debug: config__setup code goes here!"
+    setup__wizard
   else
     help__config
   fi
