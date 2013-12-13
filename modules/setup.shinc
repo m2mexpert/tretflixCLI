@@ -259,7 +259,8 @@ function setup__wizard() {
 	service maraschino start > /dev/null 2>&1
 	service plexmediaserver start > /dev/null 2>&1
 	service sabnzbdplus start > /dev/null 2>&1
-	service transmission_daemon start > /dev/null 2>&1
+	service sickbeard start > /dev/null 2>&1
+	service transmission-daemon start > /dev/null 2>&1
 	
 	echo
 	echo
