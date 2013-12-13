@@ -196,7 +196,7 @@ function setup__wizard() {
 	sqlite3 $maraschino_config "UPDATE settings SET value='$password' WHERE key='couchpotato_password'"
 	sqlite3 $maraschino_config "UPDATE settings SET value='$couchpotato_api' WHERE key='couchpotato_api'"
 	
-	sqlite3 $maraschino_config "UPDATE settings SET value='$eth0_ipv4' WHERE key='headphones_ip'"
+	sqlite3 $maraschino_config "UPDATE settings SET value='$eth0_ipv4' WHERE key='headphones_host'"
 	sqlite3 $maraschino_config "UPDATE settings SET value='$headphones_port' WHERE key='headphones_port'"
 	sqlite3 $maraschino_config "UPDATE settings SET value='$username' WHERE key='headphones_user'"
 	sqlite3 $maraschino_config "UPDATE settings SET value='$password' WHERE key='headphones_password'"
@@ -264,11 +264,11 @@ function setup__wizard() {
 	echo "* Starting Services"
 	service couchpotato start > /dev/null 2>&1
 	service headphones start > /dev/null 2>&1
-	service maraschino start > /dev/null 2>&1
 	service plexmediaserver start > /dev/null 2>&1
 	service sabnzbdplus start > /dev/null 2>&1
 	service sickbeard start > /dev/null 2>&1
 	service transmission-daemon start > /dev/null 2>&1
+	service maraschino start > /dev/null 2>&1
 	
 	echo
 	echo
