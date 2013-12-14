@@ -69,11 +69,14 @@ function help__service() {
   echo "  -c, --couchpotato"
   echo "  -h, --headphones"
   echo "  -m, --maraschino"
+  echo "  -p, --plexmediaserver"
   echo "  -s, --sabnzbdplus"
   echo "  -t, --transmission-daemon"
   echo
-  echo "  Note: The 'set port' command requires an individual application to"
-  echo "        be specified."
+  echo "  Note: The 'set port' command requires a specific application to be"
+  echo "        specified. The 'new apikey' command is only available for the"
+  echo "        services where api keys are used. Plex Media Server commands"
+  echo "        are limited to 'enable', 'disable' and 'show config'."
   echo
 }
 
