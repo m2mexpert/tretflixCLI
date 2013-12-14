@@ -44,9 +44,42 @@ function service__root() {
   fi
 }
 
+function service_get_option() {
+  case "${CLI_ARGS[2]}" in
+    '-a' | '--all')
+      serviceModuleName="all"
+      ;;
+    '-b' | '--sickbeard')
+      serviceModuleName="sickbeard"
+      ;;    
+    '-c' | '--couchpotato')
+      serviceModuleName="couchpotato"
+      ;;
+    '-h' | '--headphones')
+      serviceModuleName="headphones"
+      ;;
+    '-m' | '--maraschino')
+      serviceModuleName="maraschino"
+      ;;
+    '-p' | '--plexmediaserver')
+      serviceModuleName="plexmediaserver"
+      ;;
+    '-s' | '--sabnzbdplus')
+      serviceModuleName="sabnzbdplus"
+      ;;
+    '-t' | '--transmission')
+      serviceModuleName="transmissiondaemon"
+      ;;
+    *)
+    	help__service
+  esac
+}
+
 function service__enable() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
     echo "Debug: service__enable code goes here!"
+    service_get_option
+    echo $serviceModuleName
   else
     help__service
   fi
