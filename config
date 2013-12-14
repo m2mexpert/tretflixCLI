@@ -21,7 +21,7 @@ maraschino_config="$maraschino_appdata/maraschino.db"
 plexmediaserver_config="$plexmediaserver_appdata/Plex\ Media\ Server/Preferences.xml"
 sabnzbdplus_config="$sabnzbdplus_appdata/sabnzbd.ini"
 sickbeard_config="$sickbeard_appdata/config.ini"
-transmission_config="$transmission_daemon_appdata/settings.json"
+transmission_config="$transmission_appdata/settings.json"
 
 # Path to sickbeard 'autoProcessTV' script config (for sabnzbd post processing scripts)
 autoProcessTV_config="$sickbeard_appdata/autoProcessTV/autoProcessTV.cfg"
