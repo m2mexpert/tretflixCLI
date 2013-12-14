@@ -45,7 +45,7 @@ function service__root() {
 }
 
 function service_get_option() {
-  case "${CLI_ARGS[2]}" in
+  case "${CLI_ARGS[1]}" in
     '-a' | '--all')
       serviceModuleName="all"
       ;;
@@ -68,7 +68,7 @@ function service_get_option() {
       serviceModuleName="sabnzbdplus"
       ;;
     '-t' | '--transmission')
-      serviceModuleName="transmissiondaemon"
+      serviceModuleName="transmission"
       ;;
     *)
     	help__service
