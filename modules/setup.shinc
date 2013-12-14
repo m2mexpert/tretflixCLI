@@ -104,10 +104,10 @@ function setup__wizard() {
 	      	input=""
 	      	read -p "Enter a port number for accessing the Transmission Web UI [Default: 9091]: " input
 	      	if [[ -z "${input}" ]]; then
-	      		transmission_daemon_port="9091"
+	      		transmission_port="9091"
 	       		break
 	      	else
-	      	  transmission_daemon_port="$input"
+	      	  transmission_port="$input"
 	      	  break
 	      	fi
 	      done
@@ -124,7 +124,7 @@ function setup__wizard() {
 				echo "Maraschino Port:" $maraschino_port
 				echo "SABnzbd+ Port:" $sabnzbdplus_port
 				echo "Sick Beard Port:" $sickbeard_port
-				echo "Transmission Port:" $transmission_daemon_port
+				echo "Transmission Port:" $transmission_port
 			
 				while true; do
 					read -p "Apply these changes? (y/n): " input
@@ -163,7 +163,7 @@ function setup__wizard() {
 	service headphones stop > /dev/null 2>&1
 	service maraschino stop > /dev/null 2>&1
 	service sabnzbdplus stop > /dev/null 2>&1
-	service transmission_daemon stop > /dev/null 2>&1
+	service transmission-daemon stop > /dev/null 2>&1
 	
 	echo "* Generating new API Keys"
 	couchpotato_api=$(date +%s | sha256sum | base64 | head -c 32 | tr -s '[:upper:]'  '[:lower:]') && sleep 2
@@ -217,7 +217,7 @@ function setup__wizard() {
 	sqlite3 $maraschino_config "UPDATE settings SET value='$sickbeard_api' WHERE key='sickbeard_api'"
 
 	sqlite3 $maraschino_config "UPDATE settings SET value='$eth0_ipv4' WHERE key='transmission_ip'"
-	sqlite3 $maraschino_config "UPDATE settings SET value='$transmission_daemon_port' WHERE key='transmission_port'"
+	sqlite3 $maraschino_config "UPDATE settings SET value='$transmission_port' WHERE key='transmission_port'"
 	sqlite3 $maraschino_config "UPDATE settings SET value='$username' WHERE key='transmission_user'"
 	sqlite3 $maraschino_config "UPDATE settings SET value='$password' WHERE key='transmission_password'"
 
@@ -225,7 +225,7 @@ function setup__wizard() {
 	sqlite3 $maraschino_config "UPDATE applications SET url='http://$eth0_ipv4:$headphones_port/' WHERE name='Headphones'"
 	sqlite3 $maraschino_config "UPDATE applications SET url='http://$eth0_ipv4:$sabnzbdplus_port/sabnzbd/' WHERE name='SABnzbd+'"
 	sqlite3 $maraschino_config "UPDATE applications SET url='http://$eth0_ipv4:$sickbeard_port/home/' WHERE name='Sick Beard'"
-	sqlite3 $maraschino_config "UPDATE applications SET url='http://$eth0_ipv4:$transmission_daemon_port/transmission/web/' WHERE name='Transmission'"
+	sqlite3 $maraschino_config "UPDATE applications SET url='http://$eth0_ipv4:$transmission_port/transmission/web/' WHERE name='Transmission'"
 	
 	echo "* Applying changes to SABnzbd+"
 	sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/^port .*/port = '$sabnzbdplus_port'/g}}' $sabnzbdplus_config
@@ -248,9 +248,9 @@ function setup__wizard() {
 	sed -i -e '/^\[SickBeard\]/,/^\[/{/^\[SickBeard\]/n;/^\[/!{s/^password.*/password='$password'/g}}' $autoProcessTV_config
 	
 	echo "* Applying changes to Transmission"
-	sed -i -e 's/"rpc-port".*/"rpc-port": '$transmission_daemon_port',/g' $transmission_daemon_config
-	sed -i -e 's/"rpc-username".*/"rpc-username": "'$username'",/g' $transmission_daemon_config
-	sed -i -e 's/"rpc-password".*/"rpc-password": "'$password'",/g' $transmission_daemon_config
+	sed -i -e 's/"rpc-port".*/"rpc-port": '$transmission_port',/g' $transmission_config
+	sed -i -e 's/"rpc-username".*/"rpc-username": "'$username'",/g' $transmission_config
+	sed -i -e 's/"rpc-password".*/"rpc-password": "'$password'",/g' $transmission_config
 	
   # Add services to start/stop runlevels/upstart
   update-rc.d couchpotato defaults > /dev/null 2>&1
@@ -259,7 +259,7 @@ function setup__wizard() {
 	rm /etc/init/plexmediaserver.override > /dev/null 2>&1
   update-rc.d sabnzbdplus defaults > /dev/null 2>&1
   update-rc.d sickbeard defaults > /dev/null 2>&1
-  update-rc.d transmission_daemon defaults > /dev/null 2>&1
+  update-rc.d transmission-daemon defaults > /dev/null 2>&1
 	
 	echo "* Starting Services"
 	service couchpotato start > /dev/null 2>&1
@@ -280,7 +280,7 @@ function setup__wizard() {
 	echo "Plex Media Server: http://"$eth0_ipv4":32400/web"
 	echo "SABnzbd+: http://"$eth0_ipv4":"$sabnzbdplus_port"/sabnzbd/"
 	echo "Sick Beard: http://"$eth0_ipv4":"$sickbeard_port"/home/"
-	echo "Transmission: http://"$eth0_ipv4":"$transmission_daemon_port"/transmission/web/"
+	echo "Transmission: http://"$eth0_ipv4":"$transmission_port"/transmission/web/"
 	echo
 	echo "Enjoy!"
 	echo "- tret"
