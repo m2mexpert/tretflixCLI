@@ -163,6 +163,7 @@ function setup__wizard() {
 	service headphones stop > /dev/null 2>&1
 	service maraschino stop > /dev/null 2>&1
 	service sabnzbdplus stop > /dev/null 2>&1
+	service sickbeard stop > /dev/null 2>&1
 	service transmission-daemon stop > /dev/null 2>&1
 	
 	echo "* Generating new API Keys"
