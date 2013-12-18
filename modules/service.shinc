@@ -58,9 +58,6 @@ function service_get_option() {
     '-h' | '--headphones')
       serviceModuleName="headphones"
       ;;
-    '-m' | '--maraschino')
-      serviceModuleName="maraschino"
-      ;;
     '-p' | '--plexmediaserver')
       serviceModuleName="plexmediaserver"
       ;;

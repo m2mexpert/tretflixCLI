@@ -68,7 +68,6 @@ function help__service() {
   echo "  -b, --sickbeard"
   echo "  -c, --couchpotato"
   echo "  -h, --headphones"
-  echo "  -m, --maraschino"
   echo "  -p, --plexmediaserver"
   echo "  -s, --sabnzbdplus"
   echo "  -t, --transmission-daemon"

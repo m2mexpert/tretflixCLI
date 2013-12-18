@@ -1,6 +1,0 @@
-# avoid double inclusion
-if test "${maraschino__imported+defined}" == "defined"; then
-  return 0
-fi
-maraschino__imported=1
-

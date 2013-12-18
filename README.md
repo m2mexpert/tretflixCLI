@@ -34,7 +34,6 @@
 	  -a, --all
 	  -b, --sickbeard
 	  -c, --couchpotato
-	  -m, --maraschino
 	  -s, --sabnzbd
 	  -t, --transmission
 	  

@@ -92,18 +92,6 @@ function config__wizard() {
 
           while true; do
             input=""
-            read -p "Enter a port number for accessing the Maraschino Web UI [Default: 7000]: " input
-            if [[ -z "${input}" ]]; then
-              maraschino_port="7000"
-              break
-            else
-              maraschino_port="$input"
-              break
-            fi
-          done
-
-          while true; do
-            input=""
             read -p "Enter a port number for accessing the SABnzbd+ Web UI [Default: 8080]: " input
             if [[ -z "${input}" ]]; then
               sabnzbdplus_port="8080"
@@ -147,7 +135,6 @@ function config__wizard() {
           echo
           echo "CouchPotato Port:" $couchpotato_port
           echo "Headphones Port:" $headphones_port
-          echo "Maraschino Port:" $maraschino_port
           echo "SABnzbd+ Port:" $sabnzbdplus_port
           echo "Sick Beard Port:" $sickbeard_port
           echo "Transmission Port:" $transmission_port
@@ -186,7 +173,6 @@ function config__wizard() {
     echo "* Stopping Services"
     service couchpotato stop > /dev/null 2>&1
     service headphones stop > /dev/null 2>&1
-    service maraschino stop > /dev/null 2>&1
     service sabnzbdplus stop > /dev/null 2>&1
     service sickbeard stop > /dev/null 2>&1
     service transmission-daemon stop > /dev/null 2>&1
@@ -214,44 +200,6 @@ function config__wizard() {
     sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_username .*/sab_username = '$username'/g}}' $headphones_config
     sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_password .*/sab_password = '$password'/g}}' $headphones_config
     sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_apikey .*/sab_apikey = '$sabnzbdplus_api'/g}}' $headphones_config
-
-    echo "* Applying changes to Maraschino"
-    sqlite3 $maraschino_config "UPDATE settings SET value='$eth0_ipv4' WHERE key='couchpotato_ip'"
-    sqlite3 $maraschino_config "UPDATE settings SET value='$couchpotato_port' WHERE key='couchpotato_port'"
-    sqlite3 $maraschino_config "UPDATE settings SET value='$username' WHERE key='couchpotato_user'"
-    sqlite3 $maraschino_config "UPDATE settings SET value='$password' WHERE key='couchpotato_password'"
-    sqlite3 $maraschino_config "UPDATE settings SET value='$couchpotato_api' WHERE key='couchpotato_api'"
-
-    sqlite3 $maraschino_config "UPDATE settings SET value='$eth0_ipv4' WHERE key='headphones_host'"
-    sqlite3 $maraschino_config "UPDATE settings SET value='$headphones_port' WHERE key='headphones_port'"
-    sqlite3 $maraschino_config "UPDATE settings SET value='$username' WHERE key='headphones_user'"
-    sqlite3 $maraschino_config "UPDATE settings SET value='$password' WHERE key='headphones_password'"
-    sqlite3 $maraschino_config "UPDATE settings SET value='$headphones_api' WHERE key='headphones_api'"
-	
-    sqlite3 $maraschino_config "UPDATE settings SET value='$maraschino_port' WHERE key='maraschino_port'"
-    sqlite3 $maraschino_config "UPDATE settings SET value='$username' WHERE key='maraschino_username'"
-    sqlite3 $maraschino_config "UPDATE settings SET value='$password' WHERE key='maraschino_password'"
-
-    sqlite3 $maraschino_config "UPDATE settings SET value='$eth0_ipv4' WHERE key='sabnzbd_host'"
-    sqlite3 $maraschino_config "UPDATE settings SET value='$sabnzbdplus_port' WHERE key='sabnzbd_port'"
-    sqlite3 $maraschino_config "UPDATE settings SET value='$sabnzbdplus_api' WHERE key='sabnzbd_api'"
-	
-    sqlite3 $maraschino_config "UPDATE settings SET value='$eth0_ipv4' WHERE key='sickbeard_ip'"
-    sqlite3 $maraschino_config "UPDATE settings SET value='$sickbeard_port' WHERE key='sickbeard_port'"
-    sqlite3 $maraschino_config "UPDATE settings SET value='$username' WHERE key='sickbeard_user'"
-    sqlite3 $maraschino_config "UPDATE settings SET value='$password' WHERE key='sickbeard_password'"
-    sqlite3 $maraschino_config "UPDATE settings SET value='$sickbeard_api' WHERE key='sickbeard_api'"
-
-    sqlite3 $maraschino_config "UPDATE settings SET value='$eth0_ipv4' WHERE key='transmission_ip'"
-    sqlite3 $maraschino_config "UPDATE settings SET value='$transmission_port' WHERE key='transmission_port'"
-    sqlite3 $maraschino_config "UPDATE settings SET value='$username' WHERE key='transmission_user'"
-    sqlite3 $maraschino_config "UPDATE settings SET value='$password' WHERE key='transmission_password'"
-
-    sqlite3 $maraschino_config "UPDATE applications SET url='http://$eth0_ipv4:$couchpotato_port/' WHERE name='CouchPotato'"
-    sqlite3 $maraschino_config "UPDATE applications SET url='http://$eth0_ipv4:$headphones_port/' WHERE name='Headphones'"
-    sqlite3 $maraschino_config "UPDATE applications SET url='http://$eth0_ipv4:$sabnzbdplus_port/sabnzbd/' WHERE name='SABnzbd+'"
-    sqlite3 $maraschino_config "UPDATE applications SET url='http://$eth0_ipv4:$sickbeard_port/home/' WHERE name='Sick Beard'"
-    sqlite3 $maraschino_config "UPDATE applications SET url='http://$eth0_ipv4:$transmission_port/transmission/web/' WHERE name='Transmission'"
 
     echo "* Applying changes to SABnzbd+"
     sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/^port .*/port = '$sabnzbdplus_port'/g}}' $sabnzbdplus_config
@@ -281,7 +229,6 @@ function config__wizard() {
     # Add services to start/stop runlevels/upstart
     update-rc.d couchpotato defaults > /dev/null 2>&1
     update-rc.d headphones defaults > /dev/null 2>&1
-    update-rc.d maraschino defaults > /dev/null 2>&1
     rm /etc/init/plexmediaserver.override > /dev/null 2>&1
     update-rc.d sabnzbdplus defaults > /dev/null 2>&1
     update-rc.d sickbeard defaults > /dev/null 2>&1
@@ -294,7 +241,6 @@ function config__wizard() {
     service sabnzbdplus start > /dev/null 2>&1
     service sickbeard start > /dev/null 2>&1
     service transmission-daemon start > /dev/null 2>&1
-    service maraschino start > /dev/null 2>&1
 
     echo
     echo
@@ -302,7 +248,6 @@ function config__wizard() {
     echo
     echo "CouchPotato: http://"$eth0_ipv4":"$couchpotato_port"/"
     echo "Headphones: http://"$eth0_ipv4":"$headphones_port"/"
-    echo "Maraschino: http://"$eth0_ipv4":"$maraschino_port"/"
     echo "Plex Media Server: http://"$eth0_ipv4":32400/web"
     echo "SABnzbd+: http://"$eth0_ipv4":"$sabnzbdplus_port"/sabnzbd/"
     echo "Sick Beard: http://"$eth0_ipv4":"$sickbeard_port"/home/"
