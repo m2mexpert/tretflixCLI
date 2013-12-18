@@ -20,7 +20,7 @@ function help__config() {
   echo "Usage: tretflix config [COMMAND] [INPUT]"
   echo
   echo "COMMANDS:"
-  echo "  tretflix config setup"
+  echo "  tretflix config wizard"
   echo "  tretflix config backup"
   echo "  tretflix config restore [FILE]"
   echo
