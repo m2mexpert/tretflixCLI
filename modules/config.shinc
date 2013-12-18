@@ -151,6 +151,7 @@ function config__wizard() {
           echo "SABnzbd+ Port:" $sabnzbdplus_port
           echo "Sick Beard Port:" $sickbeard_port
           echo "Transmission Port:" $transmission_port
+          echo
 			
           while true; do
             read -p "Apply these changes? (y/n): " input
