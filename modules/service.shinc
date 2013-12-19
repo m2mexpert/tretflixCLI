@@ -21,10 +21,7 @@ function service__root() {
         ;;
       'show config')
         service__show_config
-        ;;
-      'reset config')
-        service__reset_config
-        ;;				
+        ;;			
       *)
         help__service
     esac
