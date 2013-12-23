@@ -8,25 +8,25 @@ function couchpotato__enable() {
   if ! tools__service_isenabled couchpotato; then
     update-rc.d couchpotato defaults > /dev/null 2>&1
     couchpotato__start
-    echo "CouchPotato Enabled"
   fi
+  echo "CouchPotato is Enabled"
 }
 
 function couchpotato__disable() {
   if tools__service_isenabled couchpotato; then
     couchpotato__stop
     update-rc.d -f couchpotato remove > /dev/null 2>&1
-    echo "CouchPotato Disabled"
   fi
+  echo "CouchPotato is Disabled"
 }
 
 function couchpotato__set_username() {
   username="$1"
   
   couchpotato__stop
-  echo "Configuring CouchPotato..."
   sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^username .*/username = '$username'/g}}' $couchpotato_config
   couchpotato__start
+  echo "Done"
 }
 
 function couchpotato__set_password() {
@@ -34,31 +34,31 @@ function couchpotato__set_password() {
   passwordmd5=$(echo -n $password | md5sum | awk '{print $1}')
   
   couchpotato__stop
-  echo "Configuring CouchPotato..."
   sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^password .*/password = '$passwordmd5'/g}}' $couchpotato_config
   couchpotato__start
+  echo "Done"
 }
 
 function couchpotato__set_port() {
   port="$1"
   
   couchpotato__stop
-  echo "Configuring CouchPotato..."
   sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^port .*/port = '$port'/g}}' $couchpotato_config
   couchpotato__start
+  echo "Done"
 }
 
 function couchpotato__new_apikey() {
   apikey=$(date +%s | sha256sum | base64 | head -c 32 | tr -s '[:upper:]'  '[:lower:]')
   
   couchpotato__stop
-  echo "Configuring CouchPotato..."
   sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $couchpotato_config
   couchpotato__start
+  echo "Done"
 }
 
 function couchpotato__show_config() {
-  echo "Show Config Here"
+  echo "Under Construction"
 }
 
 function couchpotato__start() {
