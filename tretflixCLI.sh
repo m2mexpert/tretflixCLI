@@ -116,19 +116,19 @@ if test "${CLI_ARGS[0]+isset}"; then
   shopt -s nocasematch
   case "${CLI_ARGS[0]}" in
     config)
-      config__root
+      config__command_handler
       ;;
     downloads)
-      downloads__root
+      downloads__command_handler
       ;;
     network)
-      network__root
+      network__command_handler
       ;;
     service)
-      service__root
+      service__command_handler
       ;;
     shares)
-      shares__root
+      shares__command_handler
       ;;
     *)
       help

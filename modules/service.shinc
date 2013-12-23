@@ -33,7 +33,7 @@ function service__help() {
   exit 1
 }
 
-function service__root() {
+function service__command_handler() {
   if test "${CLI_ARGS[3]+isset}"; then
     case "${CLI_ARGS[2]} ${CLI_ARGS[3]}" in
       'set username')
@@ -70,28 +70,28 @@ function service__root() {
   fi
 }
 
-function service_get_option() {
+function service__option_handler() {
   case "${CLI_ARGS[1]}" in
     '-a' | '--all')
-      serviceOption="all"
+      service="all"
       ;;
     '-b' | '--sickbeard')
-      serviceOption="sickbeard"
+      service="sickbeard"
       ;;    
     '-c' | '--couchpotato')
-      serviceOption="couchpotato"
+      service="couchpotato"
       ;;
     '-h' | '--headphones')
-      serviceOption="headphones"
+      service="headphones"
       ;;
     '-p' | '--plexmediaserver')
-      serviceOption="plexmediaserver"
+      service="plexmediaserver"
       ;;
     '-s' | '--sabnzbdplus')
-      serviceOption="sabnzbdplus"
+      service="sabnzbdplus"
       ;;
     '-t' | '--transmission')
-      serviceOption="transmission"
+      service="transmission"
       ;;
     *)
     	service__help
@@ -100,8 +100,8 @@ function service_get_option() {
 
 function service__enable() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    service_get_option
-    ${serviceOption}__enable
+    service__option_handler
+    ${service}__enable
   else
     service__help
   fi
@@ -109,8 +109,8 @@ function service__enable() {
 
 function service__disable() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    service_get_option
-    ${serviceOption}__disable
+    service__option_handler
+    ${service}__disable
   else
     service__help
   fi
@@ -118,8 +118,8 @@ function service__disable() {
 
 function service__set_username() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
-    service_get_option
-    ${serviceOption}__set_username "${CLI_ARGS[4]}"
+    service__option_handler
+    ${service}__set_username "${CLI_ARGS[4]}"
   else
     service__help
   fi
@@ -127,8 +127,8 @@ function service__set_username() {
 
 function service__set_password() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
-    service_get_option
-    ${serviceOption}__set_password "${CLI_ARGS[4]}"
+    service__option_handler
+    ${service}__set_password "${CLI_ARGS[4]}"
   else
     service__help
   fi
@@ -136,8 +136,8 @@ function service__set_password() {
 
 function service__set_port() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
-    service_get_option
-    ${serviceOption}__set_port "${CLI_ARGS[4]}"
+    service__option_handler
+    ${service}__set_port "${CLI_ARGS[4]}"
   else
     service__help
   fi
@@ -145,8 +145,8 @@ function service__set_port() {
 
 function service__new_apikey() {
   if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
-    service_get_option
-    ${serviceOption}__new_apikey
+    service__option_handler
+    ${service}__new_apikey
   else
     service__help
   fi
@@ -154,8 +154,8 @@ function service__new_apikey() {
 
 function service__show_config() {
   if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
-    service_get_option
-    ${serviceOption}__show_config
+    service__option_handler
+    ${service}__show_config
   else
     service__help
   fi
