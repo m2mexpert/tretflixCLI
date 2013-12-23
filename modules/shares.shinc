@@ -47,6 +47,7 @@ function shares__add_cifs() {
         ;;
       *)
         shares__invalid
+    esac
   else
     shares__invalid
   fi
