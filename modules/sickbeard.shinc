@@ -4,3 +4,33 @@ if test "${sickbeard__imported+defined}" == "defined"; then
 fi
 sickbeard__imported=1
 
+function sickbeard__enable() {
+
+}
+
+function sickbeard__disable() {
+  
+}
+
+function sickbeard__set_username() {
+  input="$1"
+
+}
+
+function sickbeard__set_password() {
+  input="$1"
+  
+}
+
+function sickbeard__set_port() {
+  input="$1"
+  
+}
+
+function sickbeard__new_apikey() {
+  
+}
+
+function sickbeard__show_config() {
+
+}

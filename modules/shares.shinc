@@ -23,13 +23,16 @@ function shares__root() {
         shares__show_config
         ;;
       *)
-        help__shares
-        return 1
+        shares__invalid
     esac
   else
-    help__shares
-    return 1
+    shares__invalid
   fi
+}
+
+function shares__invalid() {
+  help__shares
+  exit 1
 }
 
 function shares__add_cifs() {
@@ -43,12 +46,9 @@ function shares__add_cifs() {
         tools__cifs_test ${CLI_ARGS[3]} ${CLI_ARGS[4]} ${CLI_ARGS[6]} ${CLI_ARGS[7]}
         ;;
       *)
-        help__shares
-        return 1
-    esac
+        shares__invalid
   else
-    help__shares
-    return 1
+    shares__invalid
   fi
 
   if [ $? -eq 0 ]; then
@@ -67,25 +67,25 @@ function shares__add_cifs() {
 
     if tools__share_exists $share $mountPoint; then
       echo "The CIFS share '$share' already exists in /etc/fstab"
-      return 1
+      exit 1
     elif tools__mountpoint_exists $mountPoint; then
       echo "The mount point '$mountPoint' already exists in /etc/fstab"
-      return 1
+      exit 1
     fi
 
     if tools__path_exists $mountPoint; then
       if [ "$(tools__path_istype $mountPoint)" != "Directory" ]; then
         echo "The moint point '$mountPoint' already exists and cannot be used"
-        return 1
+        exit 1
       elif ! tools__dir_isempty $mountPoint; then
         echo "The mount point '$mountPoint' is not empty and cannot be used"
-        return 1
+        exit 1
       fi
     else
       mkdir -p $mountPoint
       if [ $? -ne 0 ]; then
         echo "Failed to create the mount point '$mountPoint'"
-        return 1
+        exit 1
       fi
     fi
     
@@ -93,13 +93,12 @@ function shares__add_cifs() {
     sudo mount $mountPoint
     if [ $? -eq 0 ]; then
       echo "CIFS share added"
-      return 0
     else
       echo "Failed to mount the CIFS share '$share'"
-      return 1
+      exit 1
     fi
   else
-    return 1
+    exit 1
   fi
 }
 
@@ -117,7 +116,7 @@ function shares__del_cifs() {
         sudo umount $mountPoint
         if [ $? -ne 0 ]; then
           echo "Failed to unmount the CIFS share"
-          return 1
+          exit 1
         fi
       fi
 
@@ -126,15 +125,16 @@ function shares__del_cifs() {
         echo "CIFS share removed"
       else
         echo "Failed to remove the CIFS share entry from /etc/fstab"
-        return 1
+        exit 1
       fi
 
     else
       echo "No such CIFS share entry found in /etc/fstab"
+      exit 1
     fi
 
   else
-    help__shares
+    shares__invalid
   fi
 }
 
@@ -142,8 +142,7 @@ function shares__add_nfs() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
     tools__nfs_test ${CLI_ARGS[3]} ${CLI_ARGS[4]}
   else
-    help__shares
-    return 1
+    shares__invalid
   fi
 
   if [ $? -eq 0 ]; then
@@ -158,25 +157,25 @@ function shares__add_nfs() {
 
     if tools__share_exists $share $mountPoint; then
       echo "The NFS share '$share' already exists in /etc/fstab"
-      return 1
+      exit 1
     elif tools__mountpoint_exists $mountPoint; then
       echo "The mount point '$mountPoint' already exists in /etc/fstab"
-      return 1
+      exit 1
     fi
 
     if tools__path_exists $mountPoint; then
       if [ "$(tools__path_istype $mountPoint)" != "Directory" ]; then
         echo "The moint point '$mountPoint' already exists and cannot be used"
-        return 1
+        exit 1
       elif ! tools__dir_isempty $mountPoint; then
         echo "The mount point '$mountPoint' is not empty and cannot be used"
-        return 1
+        exit 1
       fi
     else
       mkdir -p $mountPoint
       if [ $? -ne 0 ]; then
         echo "Failed to create the mount point '$mountPoint'"
-        return 1
+        exit 1
       fi
     fi
 
@@ -184,13 +183,12 @@ function shares__add_nfs() {
     sudo mount $mountPoint
     if [ $? -eq 0 ]; then
       echo "NFS share added"
-      return 0
     else
       echo "Failed to mount the NFS share '$share'"
-      return 1
+      exit 1
     fi
   else
-    return 1
+    exit 1
   fi
 }
 
@@ -208,7 +206,7 @@ function shares__del_nfs() {
         sudo umount $mountPoint
         if [ $? -ne 0 ]; then
           echo "Failed to unmount the NFS share"
-          return 1
+          exit 1
         fi
       fi
 
@@ -217,15 +215,16 @@ function shares__del_nfs() {
         echo "NFS share removed"
       else
         echo "Failed to remove the NFS share entry from /etc/fstab"
-        return 1
+        exit 1
       fi
 
     else
       echo "No such NFS share entry found in /etc/fstab"
+      exit 1
     fi
 
   else
-    help__shares
+    shares__invalid
   fi
 }
 
@@ -237,8 +236,9 @@ function shares__show_config() {
       echo      
     else
       echo "There are no mounted shares"
+      exit 1
     fi
   else
-    help__shares
+    shares__invalid
   fi
 }

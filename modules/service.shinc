@@ -23,7 +23,7 @@ function service__root() {
         service__show_config
         ;;			
       *)
-        help__service
+        service__invalid
     esac
   elif test "${CLI_ARGS[2]+isset}"; then
     case "${CLI_ARGS[2]}" in
@@ -34,11 +34,16 @@ function service__root() {
         service__disable
         ;;
       *)
-        help__service
+        service__invalid
     esac
   else
-    help__service
+    service__invalid
   fi
+}
+
+function service__invalid() {
+  help__service
+  exit 1
 }
 
 function service_get_option() {
@@ -65,7 +70,7 @@ function service_get_option() {
       serviceModuleName="transmission"
       ;;
     *)
-    	help__service
+    	service__invalid
   esac
 }
 
@@ -74,63 +79,68 @@ function service__enable() {
     echo "Debug: service__enable code goes here!"
     service_get_option
     echo $serviceModuleName
+    $serviceModuleName__enable
   else
-    help__service
+    service__invalid
   fi
 }
 
 function service__disable() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    echo "Debug: service__disable code goes here!"
+    service_get_option
+    echo $serviceModuleName
+    $serviceModuleName__disable
   else
-    help__service
+    service__invalid
   fi
 }
 
 function service__set_username() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
-    echo "Debug: service__set_username code goes here!"
+    service_get_option
+    echo $serviceModuleName
+    $serviceModuleName__set_username
   else
-    help__service
+    service__invalid
   fi
 }
 
 function service__set_password() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
-    echo "Debug: service__set_password code goes here!"
+    service_get_option
+    echo $serviceModuleName
+    $serviceModuleName__set_password
   else
-    help__service
+    service__invalid
   fi
 }
 
 function service__set_port() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
-    echo "Debug: service__set_port code goes here!"
+    service_get_option
+    echo $serviceModuleName
+    $serviceModuleName__set_port
   else
-    help__service
+    service__invalid
   fi
 }
 
 function service__new_apikey() {
   if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
-    echo "Debug: service__new_apikey code goes here!"
+    service_get_option
+    echo $serviceModuleName
+    $serviceModuleName__new_apikey
   else
-    help__service
+    service__invalid
   fi
 }
 
 function service__show_config() {
   if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
-    echo "Debug: service__show_config code goes here!"
+    service_get_option
+    echo $serviceModuleName
+    $serviceModuleName__show_config
   else
-    help__service
-  fi
-}
-
-function service__reset_config() {
-  if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
-    echo "Debug: service__reset_config code goes here!"
-  else
-    help__service
+    service__invalid
   fi
 }

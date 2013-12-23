@@ -4,3 +4,14 @@ if test "${plexmediaserver__imported+defined}" == "defined"; then
 fi
 plexmediaserver__imported=1
 
+function plexmediaserver__enable() {
+
+}
+
+function plexmediaserver__disable() {
+  
+}
+
+function plexmediaserver__show_config() {
+
+}

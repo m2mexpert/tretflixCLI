@@ -13,7 +13,7 @@ if [[ $(whoami) != "root" ]]; then
   echo
   echo "!! ERROR: This script must be run as root..."
   echo
-  exit
+  exit 1
 fi
 
 function getScriptAbsoluteDir {
@@ -122,9 +122,11 @@ if test "${CLI_ARGS[0]+isset}"; then
       ;;
     *)
       help__root
+      exit 1
   esac
 else
   help__root
+  exit 1
 fi
 
 exit

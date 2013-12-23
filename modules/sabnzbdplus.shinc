@@ -4,3 +4,33 @@ if test "${sabnzbdplus__imported+defined}" == "defined"; then
 fi
 sabnzbdplus__imported=1
 
+function sabnzbdplus__enable() {
+
+}
+
+function sabnzbdplus__disable() {
+  
+}
+
+function sabnzbdplus__set_username() {
+  input="$1"
+
+}
+
+function sabnzbdplus__set_password() {
+  input="$1"
+  
+}
+
+function sabnzbdplus__set_port() {
+  input="$1"
+  
+}
+
+function sabnzbdplus__new_apikey() {
+  
+}
+
+function sabnzbdplus__show_config() {
+
+}

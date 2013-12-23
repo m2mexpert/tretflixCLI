@@ -17,11 +17,16 @@ function config__root() {
         config__restore
         ;;
       *)
-        help__config
+        config__invalid
     esac
   else
-    help__config
+    config__invalid
   fi
+}
+
+function config__invalid() {
+  help__config
+  exit 1
 }
 
 function config__wizard() {
@@ -260,7 +265,7 @@ function config__wizard() {
     read -p "Press any key to exit" input
     
   else
-    help__config
+    config__invalid
   fi
 }
 
@@ -268,7 +273,7 @@ function config__backup() {
   if [ "${#CLI_ARGS[@]}" -eq 2 ]; then
     echo "Debug: config_backup code goes here!"
   else
-    help__config
+    config__invalid
   fi
 }
 
@@ -276,6 +281,6 @@ function config__restore() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
     echo "Debug: config_restore code goes here!"
   else
-    help__config
+    config__invalid
   fi
 }

@@ -70,7 +70,7 @@ function help__service() {
   echo "  -h, --headphones"
   echo "  -p, --plexmediaserver"
   echo "  -s, --sabnzbdplus"
-  echo "  -t, --transmission-daemon"
+  echo "  -t, --transmission"
   echo
   echo "  Note: The 'set port' command requires a specific application to be"
   echo "        specified. The 'new apikey' command is only available for the"

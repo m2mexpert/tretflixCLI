@@ -4,3 +4,33 @@ if test "${headphones__imported+defined}" == "defined"; then
 fi
 headphones__imported=1
 
+function headphones__enable() {
+
+}
+
+function headphones__disable() {
+  
+}
+
+function headphones__set_username() {
+  input="$1"
+
+}
+
+function headphones__set_password() {
+  input="$1"
+  
+}
+
+function headphones__set_port() {
+  input="$1"
+  
+}
+
+function headphones__new_apikey() {
+  
+}
+
+function headphones__show_config() {
+
+}

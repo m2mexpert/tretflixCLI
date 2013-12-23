@@ -17,11 +17,16 @@ function network__root() {
         network__show_config
         ;;
       *)
-        help__network
+        network__invalid
     esac	
   else
-    help__network
+    network__invalid
   fi
+}
+
+function network__invalid() {
+  help__network
+  exit 1
 }
 
 function network__add_ip() {
@@ -32,14 +37,13 @@ function network__add_ip() {
     ifaceBroadcast=$(ipcalc $ifaceIP $ifaceNetmask | egrep "^Broadcast:" | awk '{ print $2}')
     ifaceNetwork=$(ipcalc $ifaceIP $ifaceNetmask | egrep "^Network:" | awk '{ print $2}' | sed 's/\/.*$//g')
   else
-    help__network
-    return 1
+    network__invalid
   fi
 
   tools__host_ping $ifaceIP > /dev/null
   if [ $? -eq 0 ]; then
     echo "IP address already in use on the network"
-    return 1
+    exit 1
   fi
 
   ifaceCount=$(cat /etc/network/interfaces | egrep "auto eth[0-9]:[0-9]" | sort | awk -F ":" '{ print $2 }' | wc -l)
@@ -56,7 +60,7 @@ function network__add_ip() {
       ifaceLabel="eth0:$ifaceLast"
     else
       echo "Unable to determine existing virtual interfaces"
-      return 1
+      exit 1
     fi
   fi
 
@@ -88,27 +92,28 @@ function network__del_ip() {
   if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
     ifaceIP="${CLI_ARGS[3]}"
   else
-    help__network
+    network__invalid
   fi
 
   ifaceLabel=$(ifconfig | awk '/'$ifaceIP'/ {print $1}' RS="\n\n")
   if [ ! "$ifaceLabel" ]; then
     echo "The IP address specified is not currently configured"
-    return 1
+    exit 1
   fi
 
   if [ "$ifaceLabel" == "eth0" ]; then
     echo "The default interface (eth0) cannot be removed"
-    return 1
+    exit 1
   fi
 
   if [ "$ifaceLabel" == "lo" ]; then
     echo "The loopback interface (lo) cannot be removed"
-    return 1
+    exit 1
   fi
 
   if ! cat /etc/network/interfaces | grep -q "^# $ifaceLabel interface section start"; then
     echo "Only interfaces added by tretflix can be removed using this command"
+    exit 1
   fi
 
   ifconfig $ifaceLabel down
@@ -126,6 +131,6 @@ function network__show_config() {
     ifconfig | grep -v "inet6" | egrep -A 2 "eth[0-9]|eth[0-9]:[0-9]" | sed 's/^--//g'
     echo 
   else
-    help__network
+    network__invalid
   fi
 }

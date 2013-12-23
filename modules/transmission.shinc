@@ -4,3 +4,29 @@ if test "${transmission__imported+defined}" == "defined"; then
 fi
 transmission__imported=1
 
+function transmission__enable() {
+
+}
+
+function transmission__disable() {
+  
+}
+
+function transmission__set_username() {
+  input="$1"
+
+}
+
+function transmission__set_password() {
+  input="$1"
+  
+}
+
+function transmission__set_port() {
+  input="$1"
+  
+}
+
+function transmission__show_config() {
+
+}

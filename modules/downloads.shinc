@@ -14,13 +14,16 @@ function downloads__root() {
         downloads__show_config
         ;;
       *)
-        help__downloads
-        return 1
+        downloads__invalid
     esac
   else
-    help__downloads
-    return 1
+    downloads__invalid
   fi
+}
+
+function downloads__invalid() {
+  help__downloads
+  exit 1
 }
 
 function downloads__set_path() {
@@ -34,23 +37,21 @@ function downloads__set_path() {
         newPath="${CLI_ARGS[4]}"
         ;;
       *)
-        help__downloads
-        return 1
+        downloads__invalid
     esac
   else
-    help__downloads
-    return 1
+    downloads__invalid
   fi
   
   if [ "$(tools__path_istype $newPath)" != "Directory" ]; then
     echo "The path does not exist or is not a directory"
-    return 1
+    exit 1
   fi
   
   sudo su -c -u $osUser "test -w $newPath"
   if [ $? -ne 0 ]; then
     echo "Permission denied, no write permission to the new downloads path"
-    return 1
+    exit 1
   fi
 
   if [ "$option" == "sync" ]; then
@@ -59,25 +60,21 @@ function downloads__set_path() {
 		
     if [ "$syncSize" -ge "$newPathAvail" ]; then
       echo "There is not enough available space to copy the current downloads to the new downloads path"
-      return 1
+      exit 1
     fi
     
     sudo su -c -u $osUser "rsync -av --progress --human-readable $downloadsSymLink/* $newPath/."
     if [ $? -ne 0 ]; then
       echo "There were errors while copying the current downloads to the new downloads path"
-      return 1
-    fi
-    
-    ln -sfn $newPath $downloadsSymLink
-    if [ $? -ne 0 ]; then
-    	echo "Failed to set the new downloads path"
+      exit 1
     fi
 
-  else
-		ln -sfn $newPath $downloadsSymLink
-    if [ $? -ne 0 ]; then
-    	echo "Failed to set the new downloads path"
-    fi
+  fi
+  
+	ln -sfn $newPath $downloadsSymLink
+  if [ $? -ne 0 ]; then
+    echo "Failed to set the new downloads path"
+    exit 1
   fi
 }
 
@@ -95,7 +92,6 @@ function downloads__show_config() {
     echo
 
   else
-    help__downloads
-    return 1
+    downloads__invalid
   fi
 }
