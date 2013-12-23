@@ -14,7 +14,7 @@ function sickbeard__enable() {
 function sickbeard__disable() {
   if tools__service_isenabled sickbeard; then
     sickbeard__stop
-    update-rc.d sickbeard -f remove > /dev/null 2>&1
+    update-rc.d -f sickbeard remove > /dev/null 2>&1
   fi
 }
 

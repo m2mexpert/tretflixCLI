@@ -14,7 +14,7 @@ function headphones__enable() {
 function headphones__disable() {
   if tools__service_isenabled headphones; then
     headphones__stop
-    update-rc.d headphones -f remove > /dev/null 2>&1
+    update-rc.d -f headphones remove > /dev/null 2>&1
   fi
 }
 

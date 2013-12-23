@@ -14,7 +14,7 @@ function transmission__enable() {
 function transmission__disable() {
   if tools__service_isenabled transmission-daemon; then
     transmission__stop
-    update-rc.d transmission-daemon -f remove > /dev/null 2>&1
+    update-rc.d -f transmission-daemon remove > /dev/null 2>&1
   fi
 }
 

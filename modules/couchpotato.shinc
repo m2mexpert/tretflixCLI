@@ -14,7 +14,7 @@ function couchpotato__enable() {
 function couchpotato__disable() {
   if tools__service_isenabled couchpotato; then
     couchpotato__stop
-    update-rc.d couchpotato -f remove > /dev/null 2>&1
+    update-rc.d -f couchpotato remove > /dev/null 2>&1
   fi
 }
 

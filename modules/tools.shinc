@@ -184,7 +184,7 @@ function tools__service_isrunning() {
   fi
 }
 
-function tools_service_isenabled() {
+function tools__service_isenabled() {
   output=$(ls /etc/rc?.d/*"$1" 2>&1)
   exitCode=$?
   if [ $exitCode -eq 0 ]; then

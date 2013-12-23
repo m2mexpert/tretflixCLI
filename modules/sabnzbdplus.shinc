@@ -14,7 +14,7 @@ function sabnzbdplus__enable() {
 function sabnzbdplus__disable() {
   if tools__service_isenabled sabnzbdplus; then
     sabnzbdplus__stop
-    update-rc.d sabnzbdplus -f remove > /dev/null 2>&1
+    update-rc.d -f sabnzbdplus remove > /dev/null 2>&1
   fi
 }
 
