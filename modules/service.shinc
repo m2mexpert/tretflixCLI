@@ -76,9 +76,7 @@ function service_get_option() {
 
 function service__enable() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    echo "Debug: service__enable code goes here!"
     service_get_option
-    echo $serviceOption
     ${serviceOption}__enable
   else
     service__invalid
@@ -88,7 +86,6 @@ function service__enable() {
 function service__disable() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
     service_get_option
-    echo $serviceOption
     ${serviceOption}__disable
   else
     service__invalid
@@ -98,8 +95,7 @@ function service__disable() {
 function service__set_username() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
     service_get_option
-    echo $serviceOption
-    ${serviceOption}__set_username
+    ${serviceOption}__set_username "${CLI_ARGS[4]}"
   else
     service__invalid
   fi
@@ -108,8 +104,7 @@ function service__set_username() {
 function service__set_password() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
     service_get_option
-    echo $serviceOption
-    ${serviceOption}__set_password
+    ${serviceOption}__set_password "${CLI_ARGS[4]}"
   else
     service__invalid
   fi
@@ -118,8 +113,7 @@ function service__set_password() {
 function service__set_port() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
     service_get_option
-    echo $serviceOption
-    ${serviceOption}__set_port
+    ${serviceOption}__set_port "${CLI_ARGS[4]}"
   else
     service__invalid
   fi
@@ -128,7 +122,6 @@ function service__set_port() {
 function service__new_apikey() {
   if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
     service_get_option
-    echo $serviceOption
     ${serviceOption}__new_apikey
   else
     service__invalid
@@ -138,7 +131,6 @@ function service__new_apikey() {
 function service__show_config() {
   if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
     service_get_option
-    echo $serviceOption
     ${serviceOption}__show_config
   else
     service__invalid
