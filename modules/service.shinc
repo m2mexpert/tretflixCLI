@@ -4,6 +4,35 @@ if test "${service__imported+defined}" == "defined"; then
 fi
 service__imported=1
 
+function service__help() {
+  echo "Usage: tretflix service [OPTION] [COMMAND] [INPUT]"
+  echo
+  echo "COMMANDS:"
+  echo "  tretflix service [OPTION] enable"
+  echo "  tretflix service [OPTION] disable"
+  echo "  tretflix service [OPTION] set username [USERNAME]"
+  echo "  tretflix service [OPTION] set password [PASSWORD]"
+  echo "  tretflix service [OPTION] set port [PORT]"
+  echo "  tretflix service [OPTION] new apikey"
+  echo "  tretflix service [OPTION] show config"
+  echo
+  echo "OPTIONS:"
+  echo "  -a, --all"
+  echo "  -b, --sickbeard"
+  echo "  -c, --couchpotato"
+  echo "  -h, --headphones"
+  echo "  -p, --plexmediaserver"
+  echo "  -s, --sabnzbdplus"
+  echo "  -t, --transmission"
+  echo
+  echo "  Note: The 'set port' command requires a specific application to be"
+  echo "        specified. The 'new apikey' command is only available for the"
+  echo "        services where api keys are used. Plex Media Server commands"
+  echo "        are limited to 'enable', 'disable' and 'show config'."
+  echo
+  exit 1
+}
+
 function service__root() {
   if test "${CLI_ARGS[3]+isset}"; then
     case "${CLI_ARGS[2]} ${CLI_ARGS[3]}" in
@@ -23,7 +52,7 @@ function service__root() {
         service__show_config
         ;;			
       *)
-        service__invalid
+        service__help
     esac
   elif test "${CLI_ARGS[2]+isset}"; then
     case "${CLI_ARGS[2]}" in
@@ -34,16 +63,11 @@ function service__root() {
         service__disable
         ;;
       *)
-        service__invalid
+        service__help
     esac
   else
-    service__invalid
+    service__help
   fi
-}
-
-function service__invalid() {
-  help__service
-  exit 1
 }
 
 function service_get_option() {
@@ -70,7 +94,7 @@ function service_get_option() {
       serviceOption="transmission"
       ;;
     *)
-    	service__invalid
+    	service__help
   esac
 }
 
@@ -79,7 +103,7 @@ function service__enable() {
     service_get_option
     ${serviceOption}__enable
   else
-    service__invalid
+    service__help
   fi
 }
 
@@ -88,7 +112,7 @@ function service__disable() {
     service_get_option
     ${serviceOption}__disable
   else
-    service__invalid
+    service__help
   fi
 }
 
@@ -97,7 +121,7 @@ function service__set_username() {
     service_get_option
     ${serviceOption}__set_username "${CLI_ARGS[4]}"
   else
-    service__invalid
+    service__help
   fi
 }
 
@@ -106,7 +130,7 @@ function service__set_password() {
     service_get_option
     ${serviceOption}__set_password "${CLI_ARGS[4]}"
   else
-    service__invalid
+    service__help
   fi
 }
 
@@ -115,7 +139,7 @@ function service__set_port() {
     service_get_option
     ${serviceOption}__set_port "${CLI_ARGS[4]}"
   else
-    service__invalid
+    service__help
   fi
 }
 
@@ -124,7 +148,7 @@ function service__new_apikey() {
     service_get_option
     ${serviceOption}__new_apikey
   else
-    service__invalid
+    service__help
   fi
 }
 
@@ -133,6 +157,6 @@ function service__show_config() {
     service_get_option
     ${serviceOption}__show_config
   else
-    service__invalid
+    service__help
   fi
 }

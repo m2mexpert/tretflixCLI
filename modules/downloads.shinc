@@ -4,6 +4,22 @@ if test "${downloads__imported+defined}" == "defined"; then
 fi
 downloads__imported=1
 
+function downloads__help() {
+  echo "Usage: tretflix downloads [COMMAND] [OPTION] [INPUT]"
+  echo
+  echo "COMMANDS:"
+  echo "  tretflix downloads set path [OPTION] [PATH]"
+  echo "  tretflix downloads show config"
+  echo
+  echo "OPTIONS:"
+  echo "  -l, --link-only"
+  echo
+  echo "  Note: Downloads are copied to the new path by default. Use the '-l'"
+  echo "        option to change the path without copying the existing files."
+  echo
+  exit 1
+}
+
 function downloads__root() {
   if test "${CLI_ARGS[2]+isset}"; then
     case "${CLI_ARGS[1]} ${CLI_ARGS[2]}" in
@@ -14,16 +30,11 @@ function downloads__root() {
         downloads__show_config
         ;;
       *)
-        downloads__invalid
+        downloads__help
     esac
   else
-    downloads__invalid
+    downloads__help
   fi
-}
-
-function downloads__invalid() {
-  help__downloads
-  exit 1
 }
 
 function downloads__set_path() {
@@ -37,10 +48,10 @@ function downloads__set_path() {
         newPath="${CLI_ARGS[4]}"
         ;;
       *)
-        downloads__invalid
+        downloads__help
     esac
   else
-    downloads__invalid
+    downloads__help
   fi
   
   if [ "$(tools__path_istype $newPath)" != "Directory" ]; then
@@ -92,6 +103,6 @@ function downloads__show_config() {
     echo
 
   else
-    downloads__invalid
+    downloads__help
   fi
 }

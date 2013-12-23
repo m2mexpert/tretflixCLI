@@ -75,6 +75,19 @@ function import() {
   exit 1
 }
 
+function help() {
+  echo "Usage: tretflix [COMMAND] ....."
+  echo
+  echo "COMMANDS:"
+  echo "  tretflix config"
+  echo "  tretflix downloads"
+  echo "  tretflix network"
+  echo "  tretflix service"
+  echo "  tretflix shares"
+  echo
+  exit 1
+}
+
 # get script name and path (Required for import function)
 script_invoke_path="$0"
 script_name=`basename "$0"`
@@ -85,15 +98,12 @@ script_absolute_dir=$FCN_RESULT
 source "$script_absolute_dir/config"
 
 # Import modules
-import "modules/backup"
 import "modules/config"
 import "modules/couchpotato"
 import "modules/downloads"
 import "modules/headphones"
-import "modules/help"
 import "modules/network"
 import "modules/plexmediaserver"
-import "modules/restore"
 import "modules/sabnzbdplus"
 import "modules/service"
 import "modules/shares"
@@ -121,12 +131,10 @@ if test "${CLI_ARGS[0]+isset}"; then
       shares__root
       ;;
     *)
-      help__root
-      exit 1
+      help
   esac
 else
-  help__root
-  exit 1
+  help
 fi
 
 exit

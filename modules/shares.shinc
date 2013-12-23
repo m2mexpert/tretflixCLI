@@ -4,6 +4,22 @@ if test "${shares__imported+defined}" == "defined"; then
 fi
 shares__imported=1
 
+function shares__help() {
+  echo "Usage: tretflix shares [COMMAND] [INPUT] [OPTION]"
+  echo
+  echo "COMMANDS:"
+  echo "  tretflix shares add cifs [HOST] [SHARE] [OPTION] ..."
+  echo "  tretflix shares del cifs [HOST] [SHARE]"
+  echo "  tretflix shares add nfs [HOST] [SHARE]"
+  echo "  tretflix shares del nfs [HOST] [SHARE]"
+  echo "  tretflix shares show config"
+  echo
+  echo "OPTIONS:"
+  echo "  -u, --user [USERNAME] [PASSWORD]"
+  echo
+  exit 1
+}
+
 function shares__root() {
   if test "${CLI_ARGS[2]+isset}"; then
     case "${CLI_ARGS[1]} ${CLI_ARGS[2]}" in
@@ -23,16 +39,11 @@ function shares__root() {
         shares__show_config
         ;;
       *)
-        shares__invalid
+        shares__help
     esac
   else
-    shares__invalid
+    shares__help
   fi
-}
-
-function shares__invalid() {
-  help__shares
-  exit 1
 }
 
 function shares__add_cifs() {
@@ -46,10 +57,10 @@ function shares__add_cifs() {
         tools__cifs_test ${CLI_ARGS[3]} ${CLI_ARGS[4]} ${CLI_ARGS[6]} ${CLI_ARGS[7]}
         ;;
       *)
-        shares__invalid
+        shares__help
     esac
   else
-    shares__invalid
+    shares__help
   fi
 
   if [ $? -eq 0 ]; then
@@ -135,7 +146,7 @@ function shares__del_cifs() {
     fi
 
   else
-    shares__invalid
+    shares__help
   fi
 }
 
@@ -143,7 +154,7 @@ function shares__add_nfs() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
     tools__nfs_test ${CLI_ARGS[3]} ${CLI_ARGS[4]}
   else
-    shares__invalid
+    shares__help
   fi
 
   if [ $? -eq 0 ]; then
@@ -225,7 +236,7 @@ function shares__del_nfs() {
     fi
 
   else
-    shares__invalid
+    shares__help
   fi
 }
 
@@ -240,6 +251,6 @@ function shares__show_config() {
       exit 1
     fi
   else
-    shares__invalid
+    shares__help
   fi
 }

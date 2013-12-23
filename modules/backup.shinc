@@ -1,6 +1,0 @@
-# avoid double inclusion
-if test "${backup__imported+defined}" == "defined"; then
-  return 0
-fi
-backup__imported=1
-

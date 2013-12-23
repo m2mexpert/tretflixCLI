@@ -4,6 +4,17 @@ if test "${network__imported+defined}" == "defined"; then
 fi
 network__imported=1
 
+function network__help() {
+  echo "Usage: tretflix network [COMMAND] [INPUT]"
+  echo
+  echo "COMMANDS:"
+  echo "  tretflix network add ip [IPv4] [NETMASK] [GATEWAY]"
+  echo "  tretflix network del ip [IPv4]"
+  echo "  tretflix network show config"
+  echo
+  exit 1
+}
+
 function network__root() {
   if test "${CLI_ARGS[2]+isset}"; then
     case "${CLI_ARGS[1]} ${CLI_ARGS[2]}" in
@@ -17,16 +28,11 @@ function network__root() {
         network__show_config
         ;;
       *)
-        network__invalid
+        network__help
     esac	
   else
-    network__invalid
+    network__help
   fi
-}
-
-function network__invalid() {
-  help__network
-  exit 1
 }
 
 function network__add_ip() {
@@ -37,7 +43,7 @@ function network__add_ip() {
     ifaceBroadcast=$(ipcalc $ifaceIP $ifaceNetmask | egrep "^Broadcast:" | awk '{ print $2}')
     ifaceNetwork=$(ipcalc $ifaceIP $ifaceNetmask | egrep "^Network:" | awk '{ print $2}' | sed 's/\/.*$//g')
   else
-    network__invalid
+    network__help
   fi
 
   tools__host_ping $ifaceIP > /dev/null
@@ -92,7 +98,7 @@ function network__del_ip() {
   if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
     ifaceIP="${CLI_ARGS[3]}"
   else
-    network__invalid
+    network__help
   fi
 
   ifaceLabel=$(ifconfig | awk '/'$ifaceIP'/ {print $1}' RS="\n\n")
@@ -131,6 +137,6 @@ function network__show_config() {
     ifconfig | grep -v "inet6" | egrep -A 2 "eth[0-9]|eth[0-9]:[0-9]" | sed 's/^--//g'
     echo 
   else
-    network__invalid
+    network__help
   fi
 }

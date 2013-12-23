@@ -4,6 +4,17 @@ if test "${config__imported+defined}" == "defined"; then
 fi
 config__imported=1
 
+function config__help() {
+  echo "Usage: tretflix config [COMMAND] [INPUT]"
+  echo
+  echo "COMMANDS:"
+  echo "  tretflix config wizard"
+  echo "  tretflix config backup"
+  echo "  tretflix config restore [FILE]"
+  echo
+  exit 1
+}
+
 function config__root() {
   if test "${CLI_ARGS[1]+isset}"; then
     case "${CLI_ARGS[1]}" in
@@ -17,16 +28,11 @@ function config__root() {
         config__restore
         ;;
       *)
-        config__invalid
+        config__help
     esac
   else
-    config__invalid
+    config__help
   fi
-}
-
-function config__invalid() {
-  help__config
-  exit 1
 }
 
 function config__wizard() {
@@ -265,7 +271,7 @@ function config__wizard() {
     read -p "Press any key to exit" input
     
   else
-    config__invalid
+    config__help
   fi
 }
 
@@ -273,7 +279,7 @@ function config__backup() {
   if [ "${#CLI_ARGS[@]}" -eq 2 ]; then
     echo "Debug: config_backup code goes here!"
   else
-    config__invalid
+    config__help
   fi
 }
 
@@ -281,6 +287,6 @@ function config__restore() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
     echo "Debug: config_restore code goes here!"
   else
-    config__invalid
+    config__help
   fi
 }
