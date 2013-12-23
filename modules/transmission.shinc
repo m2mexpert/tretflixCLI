@@ -5,28 +5,61 @@ fi
 transmission__imported=1
 
 function transmission__enable() {
-
+  if ! tools__service_isenabled transmission-daemon; then
+    update-rc.d transmission-daemon defaults > /dev/null 2>&1
+    transmission__start
+  fi
 }
 
 function transmission__disable() {
-  
+  if tools__service_isenabled transmission-daemon; then
+    transmission__stop
+    update-rc.d transmission-daemon -f remove > /dev/null 2>&1
+  fi
 }
 
 function transmission__set_username() {
-  input="$1"
-
+  username="$1"
+  
+  transmission__stop
+  sed -i -e 's/"rpc-username".*/"rpc-username": "'$username'",/g' $transmission_config
+  transmission__start
 }
 
 function transmission__set_password() {
-  input="$1"
+  password="$1"
   
+  transmission__stop
+  sed -i -e 's/"rpc-password".*/"rpc-password": "'$password'",/g' $transmission_config
+  transmission__start
 }
 
 function transmission__set_port() {
-  input="$1"
+  port="$1"
   
+  transmission__stop
+  sed -i -e 's/"rpc-port".*/"rpc-port": '$transmission_port',/g' $transmission_config
+  transmission__start
+}
+
+function transmission__new_apikey() {
+  echo "Invalid Command"
 }
 
 function transmission__show_config() {
+  echo "Show Config Here"
+}
 
+function transmission__start() {
+  if tools__service_isenabled transmission-daemon; then
+    if ! tools__service_isrunning transmission-daemon; then
+      service transmission-daemon start > /dev/null 2>&1
+    fi
+  fi
+}
+
+function transmission__stop() {
+  if tools__service_isrunning transmission-daemon; then
+    service transmission-daemon stop > /dev/null 2>&1
+  fi
 }

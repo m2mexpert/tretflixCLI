@@ -5,13 +5,49 @@ fi
 plexmediaserver__imported=1
 
 function plexmediaserver__enable() {
-
+  if ls -l /etc/init/plexmediaserver.override > /dev/null 2>&1; then
+    rm /etc/init/plexmediaserver.override > /dev/null 2>&1
+    plexmediaserver__start
+  fi
 }
 
 function plexmediaserver__disable() {
-  
+  if ! ls -l /etc/init/plexmediaserver.override > /dev/null 2>&1; then
+    plexmediaserver__stop
+    echo -e "manual" >> /etc/init/plexmediaserver.override
+  fi
+}
+
+function plexmediaserver__set_username() {
+  echo "Invalid Command"
+}
+
+function plexmediaserver__set_password() {
+  echo "Invalid Command"
+}
+
+function plexmediaserver__set_port() {
+  echo "Invalid Command"
+}
+
+function plexmediaserver__new_apikey() {
+  echo "Invalid Command"
 }
 
 function plexmediaserver__show_config() {
+  echo "Show Config Here"
+}
 
+function plexmediaserver__start() {
+  if ! ls -l /etc/init/plexmediaserver.override > /dev/null 2>&1; then
+    if ! tools__service_isrunning plexmediaserver; then
+      service plexmediaserver start > /dev/null 2>&1
+    fi
+  fi
+}
+
+function plexmediaserver__stop() {
+  if tools__service_isrunning plexmediaserver; then
+    service plexmediaserver stop > /dev/null 2>&1
+  fi
 }

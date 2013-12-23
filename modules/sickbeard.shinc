@@ -5,32 +5,68 @@ fi
 sickbeard__imported=1
 
 function sickbeard__enable() {
-
+  if ! tools__service_isenabled sickbeard; then
+    update-rc.d sickbeard defaults > /dev/null 2>&1
+    sickbeard__start
+  fi
 }
 
 function sickbeard__disable() {
-  
+  if tools__service_isenabled sickbeard; then
+    sickbeard__stop
+    update-rc.d sickbeard -f remove > /dev/null 2>&1
+  fi
 }
 
 function sickbeard__set_username() {
-  input="$1"
-
+  username="$1"
+  
+  sickbeard__stop
+  sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^web_username .*/web_username = '$username'/g}}' $sickbeard_config
+  sed -i -e '/^\[SickBeard\]/,/^\[/{/^\[SickBeard\]/n;/^\[/!{s/^username.*/username='$username'/g}}' $autoProcessTV_config
+  sickbeard__start
 }
 
 function sickbeard__set_password() {
-  input="$1"
+  password="$1"
   
+  sickbeard__stop
+  sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^web_password .*/web_password = '$password'/g}}' $sickbeard_config
+  sed -i -e '/^\[SickBeard\]/,/^\[/{/^\[SickBeard\]/n;/^\[/!{s/^password.*/password='$password'/g}}' $autoProcessTV_config
+  sickbeard__start
 }
 
 function sickbeard__set_port() {
-  input="$1"
+  port="$1"
   
+  sickbeard__stop
+  sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^web_port .*/web_port = '$port'/g}}' $sickbeard_config
+  sed -i -e '/^\[SickBeard\]/,/^\[/{/^\[SickBeard\]/n;/^\[/!{s/^port.*/port='$port'/g}}' $autoProcessTV_config
+  sickbeard__start
 }
 
 function sickbeard__new_apikey() {
+  apikey=$(date +%s | sha256sum | base64 | head -c 32 | tr -s '[:upper:]'  '[:lower:]')
   
+  sickbeard__stop
+  sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $sickbeard_config
+  sickbeard__start
 }
 
 function sickbeard__show_config() {
+  echo "Show Config Here"
+}
 
+function sickbeard__start() {
+  if tools__service_isenabled sickbeard; then
+    if ! tools__service_isrunning sickbeard; then
+      service sickbeard start > /dev/null 2>&1
+    fi
+  fi
+}
+
+function sickbeard__stop() {
+  if tools__service_isrunning sickbeard; then
+    service sickbeard stop > /dev/null 2>&1
+  fi
 }

@@ -49,25 +49,25 @@ function service__invalid() {
 function service_get_option() {
   case "${CLI_ARGS[1]}" in
     '-a' | '--all')
-      serviceModuleName="all"
+      serviceOption="all"
       ;;
     '-b' | '--sickbeard')
-      serviceModuleName="sickbeard"
+      serviceOption="sickbeard"
       ;;    
     '-c' | '--couchpotato')
-      serviceModuleName="couchpotato"
+      serviceOption="couchpotato"
       ;;
     '-h' | '--headphones')
-      serviceModuleName="headphones"
+      serviceOption="headphones"
       ;;
     '-p' | '--plexmediaserver')
-      serviceModuleName="plexmediaserver"
+      serviceOption="plexmediaserver"
       ;;
     '-s' | '--sabnzbdplus')
-      serviceModuleName="sabnzbdplus"
+      serviceOption="sabnzbdplus"
       ;;
     '-t' | '--transmission')
-      serviceModuleName="transmission"
+      serviceOption="transmission"
       ;;
     *)
     	service__invalid
@@ -78,8 +78,8 @@ function service__enable() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
     echo "Debug: service__enable code goes here!"
     service_get_option
-    echo $serviceModuleName
-    $serviceModuleName__enable
+    echo $serviceOption
+    ${serviceOption}__enable
   else
     service__invalid
   fi
@@ -88,8 +88,8 @@ function service__enable() {
 function service__disable() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
     service_get_option
-    echo $serviceModuleName
-    $serviceModuleName__disable
+    echo $serviceOption
+    ${serviceOption}__disable
   else
     service__invalid
   fi
@@ -98,8 +98,8 @@ function service__disable() {
 function service__set_username() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
     service_get_option
-    echo $serviceModuleName
-    $serviceModuleName__set_username
+    echo $serviceOption
+    ${serviceOption}__set_username
   else
     service__invalid
   fi
@@ -108,8 +108,8 @@ function service__set_username() {
 function service__set_password() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
     service_get_option
-    echo $serviceModuleName
-    $serviceModuleName__set_password
+    echo $serviceOption
+    ${serviceOption}__set_password
   else
     service__invalid
   fi
@@ -118,8 +118,8 @@ function service__set_password() {
 function service__set_port() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
     service_get_option
-    echo $serviceModuleName
-    $serviceModuleName__set_port
+    echo $serviceOption
+    ${serviceOption}__set_port
   else
     service__invalid
   fi
@@ -128,8 +128,8 @@ function service__set_port() {
 function service__new_apikey() {
   if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
     service_get_option
-    echo $serviceModuleName
-    $serviceModuleName__new_apikey
+    echo $serviceOption
+    ${serviceOption}__new_apikey
   else
     service__invalid
   fi
@@ -138,8 +138,8 @@ function service__new_apikey() {
 function service__show_config() {
   if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
     service_get_option
-    echo $serviceModuleName
-    $serviceModuleName__show_config
+    echo $serviceOption
+    ${serviceOption}__show_config
   else
     service__invalid
   fi

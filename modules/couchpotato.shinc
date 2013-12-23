@@ -5,13 +5,17 @@ fi
 couchpotato__imported=1
 
 function couchpotato__enable() {
-  update-rc.d couchpotato defaults > /dev/null 2>&1
-  couchpotato__start
+  if ! tools__service_isenabled couchpotato; then
+    update-rc.d couchpotato defaults > /dev/null 2>&1
+    couchpotato__start
+  fi
 }
 
 function couchpotato__disable() {
-  couchpotato__stop
-  update-rc.d couchpotato -f remove > /dev/null 2>&1
+  if tools__service_isenabled couchpotato; then
+    couchpotato__stop
+    update-rc.d couchpotato -f remove > /dev/null 2>&1
+  fi
 }
 
 function couchpotato__set_username() {
@@ -35,7 +39,7 @@ function couchpotato__set_port() {
   port="$1"
   
   couchpotato__stop
-  sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^port .*/port = '$couchpotato_port'/g}}' $couchpotato_config
+  sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^port .*/port = '$port'/g}}' $couchpotato_config
   couchpotato__start
 }
 
@@ -52,10 +56,16 @@ function couchpotato__show_config() {
 }
 
 function couchpotato__start() {
-  service couchpotato start > /dev/null 2>&1
+  if tools__service_isenabled couchpotato; then
+    if ! tools__service_isrunning couchpotato; then
+      service couchpotato start > /dev/null 2>&1
+    fi
+  fi
 }
 
 function couchpotato__stop() {
-  service couchpotato stop > /dev/null 2>&1
+  if tools__service_isrunning couchpotato; then
+    service couchpotato stop > /dev/null 2>&1
+  fi
 }
 
