@@ -1,0 +1,47 @@
+# avoid double inclusion
+if test "${all__imported+defined}" == "defined"; then
+  return 0
+fi
+all__imported=1
+
+function all__enable() {
+  echo "Under Construction"
+}
+
+function all__disable() {
+  echo "Under Construction"
+}
+
+function all__set_username() {
+  username="$1"
+  
+  echo "Under Construction"
+}
+
+function all__set_password() {
+  password="$1"
+  
+  echo "Under Construction"
+}
+
+function all__set_port() {
+  port="$1"
+
+  echo "Under Construction"
+}
+
+function all__new_apikey() {
+  echo "Under Construction"
+}
+
+function all__show_config() {
+  echo "Under Construction"
+}
+
+function all__start() {
+  echo "Under Construction"
+}
+
+function all__stop() {
+  echo "Under Construction"
+}

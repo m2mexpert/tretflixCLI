@@ -70,38 +70,33 @@ function service__command_handler() {
   fi
 }
 
-function service__option_handler() {
-  case "${CLI_ARGS[1]}" in
-    '-a' | '--all')
-      service="all"
-      ;;
-    '-b' | '--sickbeard')
-      service="sickbeard"
-      ;;    
-    '-c' | '--couchpotato')
-      service="couchpotato"
-      ;;
-    '-h' | '--headphones')
-      service="headphones"
-      ;;
-    '-p' | '--plexmediaserver')
-      service="plexmediaserver"
-      ;;
-    '-s' | '--sabnzbdplus')
-      service="sabnzbdplus"
-      ;;
-    '-t' | '--transmission')
-      service="transmission"
-      ;;
-    *)
-    	service__help
-  esac
-}
-
 function service__enable() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    service__option_handler
-    ${service}__enable
+    case "${CLI_ARGS[1]}" in
+      '-a' | '--all')
+        all__enable
+        ;;
+      '-b' | '--sickbeard')
+        sickbeard__enable
+        ;;    
+      '-c' | '--couchpotato')
+        couchpotato__enable
+        ;;
+      '-h' | '--headphones')
+        headphones__enable
+        ;;
+      '-p' | '--plexmediaserver')
+        plexmediaserver__enable
+        ;;
+      '-s' | '--sabnzbdplus')
+        sabnzbdplus__enable
+        ;;
+      '-t' | '--transmission')
+        transmission__enable
+        ;;
+      *)
+      	service__help
+    esac
   else
     service__help
   fi
@@ -109,8 +104,31 @@ function service__enable() {
 
 function service__disable() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    service__option_handler
-    ${service}__disable
+    case "${CLI_ARGS[1]}" in
+      '-a' | '--all')
+        all__disable
+        ;;
+      '-b' | '--sickbeard')
+        sickbeard__disable
+        ;;    
+      '-c' | '--couchpotato')
+        couchpotato__disable
+        ;;
+      '-h' | '--headphones')
+        headphones__disable
+        ;;
+      '-p' | '--plexmediaserver')
+        plexmediaserver__disable
+        ;;
+      '-s' | '--sabnzbdplus')
+        sabnzbdplus__disable
+        ;;
+      '-t' | '--transmission')
+        transmission__disable
+        ;;
+      *)
+      	service__help
+    esac
   else
     service__help
   fi
@@ -118,8 +136,31 @@ function service__disable() {
 
 function service__set_username() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
-    service__option_handler
-    ${service}__set_username "${CLI_ARGS[4]}"
+    case "${CLI_ARGS[1]}" in
+      '-a' | '--all')
+        all__set_username "${CLI_ARGS[4]}"
+        ;;
+      '-b' | '--sickbeard')
+        sickbeard__set_username "${CLI_ARGS[4]}"
+        ;;    
+      '-c' | '--couchpotato')
+        couchpotato__set_username "${CLI_ARGS[4]}"
+        ;;
+      '-h' | '--headphones')
+        headphones__set_username "${CLI_ARGS[4]}"
+        ;;
+      '-p' | '--plexmediaserver')
+        plexmediaserver__set_username "${CLI_ARGS[4]}"
+        ;;
+      '-s' | '--sabnzbdplus')
+        sabnzbdplus__set_username "${CLI_ARGS[4]}"
+        ;;
+      '-t' | '--transmission')
+        transmission__set_username "${CLI_ARGS[4]}"
+        ;;
+      *)
+      	service__help
+    esac
   else
     service__help
   fi
@@ -127,8 +168,31 @@ function service__set_username() {
 
 function service__set_password() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
-    service__option_handler
-    ${service}__set_password "${CLI_ARGS[4]}"
+    case "${CLI_ARGS[1]}" in
+      '-a' | '--all')
+        all__set_password "${CLI_ARGS[4]}"
+        ;;
+      '-b' | '--sickbeard')
+        sickbeard__set_password "${CLI_ARGS[4]}"
+        ;;    
+      '-c' | '--couchpotato')
+        couchpotato__set_password "${CLI_ARGS[4]}"
+        ;;
+      '-h' | '--headphones')
+        headphones__set_password "${CLI_ARGS[4]}"
+        ;;
+      '-p' | '--plexmediaserver')
+        plexmediaserver__set_password "${CLI_ARGS[4]}"
+        ;;
+      '-s' | '--sabnzbdplus')
+        sabnzbdplus__set_password "${CLI_ARGS[4]}"
+        ;;
+      '-t' | '--transmission')
+        transmission__set_password "${CLI_ARGS[4]}"
+        ;;
+      *)
+      	service__help
+    esac
   else
     service__help
   fi
@@ -136,8 +200,31 @@ function service__set_password() {
 
 function service__set_port() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
-    service__option_handler
-    ${service}__set_port "${CLI_ARGS[4]}"
+    case "${CLI_ARGS[1]}" in
+      '-a' | '--all')
+        all__set_port "${CLI_ARGS[4]}"
+        ;;
+      '-b' | '--sickbeard')
+        sickbeard__set_port "${CLI_ARGS[4]}"
+        ;;    
+      '-c' | '--couchpotato')
+        couchpotato__set_port "${CLI_ARGS[4]}"
+        ;;
+      '-h' | '--headphones')
+        headphones__set_port "${CLI_ARGS[4]}"
+        ;;
+      '-p' | '--plexmediaserver')
+        plexmediaserver__set_port "${CLI_ARGS[4]}"
+        ;;
+      '-s' | '--sabnzbdplus')
+        sabnzbdplus__set_port "${CLI_ARGS[4]}"
+        ;;
+      '-t' | '--transmission')
+        transmission__set_port "${CLI_ARGS[4]}"
+        ;;
+      *)
+      	service__help
+    esac
   else
     service__help
   fi
@@ -145,8 +232,31 @@ function service__set_port() {
 
 function service__new_apikey() {
   if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
-    service__option_handler
-    ${service}__new_apikey
+    case "${CLI_ARGS[1]}" in
+      '-a' | '--all')
+        all__new_apikey
+        ;;
+      '-b' | '--sickbeard')
+        sickbeard__new_apikey
+        ;;    
+      '-c' | '--couchpotato')
+        couchpotato__new_apikey
+        ;;
+      '-h' | '--headphones')
+        headphones__new_apikey
+        ;;
+      '-p' | '--plexmediaserver')
+        plexmediaserver__new_apikey
+        ;;
+      '-s' | '--sabnzbdplus')
+        sabnzbdplus__new_apikey
+        ;;
+      '-t' | '--transmission')
+        transmission__new_apikey
+        ;;
+      *)
+      	service__help
+    esac
   else
     service__help
   fi
@@ -154,8 +264,31 @@ function service__new_apikey() {
 
 function service__show_config() {
   if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
-    service__option_handler
-    ${service}__show_config
+    case "${CLI_ARGS[1]}" in
+      '-a' | '--all')
+        all__show_config
+        ;;
+      '-b' | '--sickbeard')
+        sickbeard__show_config
+        ;;    
+      '-c' | '--couchpotato')
+        couchpotato__show_config
+        ;;
+      '-h' | '--headphones')
+        headphones__show_config
+        ;;
+      '-p' | '--plexmediaserver')
+        plexmediaserver__show_config
+        ;;
+      '-s' | '--sabnzbdplus')
+        sabnzbdplus__show_config
+        ;;
+      '-t' | '--transmission')
+        transmission__show_config
+        ;;
+      *)
+      	service__help
+    esac
   else
     service__help
   fi

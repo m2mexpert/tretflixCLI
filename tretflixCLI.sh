@@ -98,6 +98,7 @@ script_absolute_dir=$FCN_RESULT
 source "$script_absolute_dir/config"
 
 # Import modules
+import "modules/all"
 import "modules/config"
 import "modules/couchpotato"
 import "modules/downloads"
