@@ -50,7 +50,7 @@ function transmission__set_port() {
   echo "Configuring Transmission"
   
   transmission__stop
-  sed -i -e 's/"rpc-port".*/"rpc-port": '$transmission_port',/g' $transmission_config
+  sed -i -e 's/"rpc-port".*/"rpc-port": '$port',/g' $transmission_config
   transmission__start
   
   echo "Done"
