@@ -9,6 +9,7 @@ function transmission__enable() {
     update-rc.d transmission-daemon defaults > /dev/null 2>&1
     transmission__start
   fi
+  echo "Transmission is Enabled"
 }
 
 function transmission__disable() {
@@ -16,44 +17,60 @@ function transmission__disable() {
     transmission__stop
     update-rc.d -f transmission-daemon remove > /dev/null 2>&1
   fi
+  echo "Transmission is Disabled"
 }
 
 function transmission__set_username() {
   username="$1"
   
+  echo "Configuring Transmission"
+  
   transmission__stop
   sed -i -e 's/"rpc-username".*/"rpc-username": "'$username'",/g' $transmission_config
   transmission__start
+  
+  echo "Done"
 }
 
 function transmission__set_password() {
   password="$1"
   
+  echo "Configuring Transmission"
+  
   transmission__stop
   sed -i -e 's/"rpc-password".*/"rpc-password": "'$password'",/g' $transmission_config
   transmission__start
+  
+  echo "Done"
 }
 
 function transmission__set_port() {
   port="$1"
   
+  echo "Configuring Transmission"
+  
   transmission__stop
   sed -i -e 's/"rpc-port".*/"rpc-port": '$transmission_port',/g' $transmission_config
   transmission__start
+  
+  echo "Done"
 }
 
 function transmission__new_apikey() {
-  echo "Invalid Command"
+  echo "This command is not available for Transmission"
+  echo
+  exit 1
 }
 
 function transmission__show_config() {
-  echo "Show Config Here"
+  echo "Under Construction"
 }
 
 function transmission__start() {
   if tools__service_isenabled transmission-daemon; then
     if ! tools__service_isrunning transmission-daemon; then
       service transmission-daemon start > /dev/null 2>&1
+      echo "Transmission Started"
     fi
   fi
 }
@@ -61,5 +78,6 @@ function transmission__start() {
 function transmission__stop() {
   if tools__service_isrunning transmission-daemon; then
     service transmission-daemon stop > /dev/null 2>&1
+    echo "Transmission Stopped"
   fi
 }

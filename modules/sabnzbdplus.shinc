@@ -9,6 +9,7 @@ function sabnzbdplus__enable() {
     update-rc.d sabnzbdplus defaults > /dev/null 2>&1
     sabnzbdplus__start
   fi
+  echo "SABnzbd+ is Enabled"
 }
 
 function sabnzbdplus__disable() {
@@ -16,11 +17,14 @@ function sabnzbdplus__disable() {
     sabnzbdplus__stop
     update-rc.d -f sabnzbdplus remove > /dev/null 2>&1
   fi
+  echo "SABnzbd+ is Disabled"
 }
 
 function sabnzbdplus__set_username() {
   username="$1"
-  
+
+  echo "Configuring SABnzbd+"
+
   sabnzbdplus__stop
   sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/^username .*/username = '$username'/g}}' $sabnzbdplus_config
   sabnzbdplus__start
@@ -32,10 +36,14 @@ function sabnzbdplus__set_username() {
   sickbeard__stop
   sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_username .*/sab_username = '$username'/g}}' $sickbeard_config
   sickbeard__start
+  
+  echo "Done"
 }
 
 function sabnzbdplus__set_password() {
   password="$1"
+  
+  echo "Configuring SABnzbd+"
   
   sabnzbdplus__stop
   sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/^password .*/password = '$password'/g}}' $sabnzbdplus_config
@@ -48,10 +56,14 @@ function sabnzbdplus__set_password() {
   sickbeard__stop
   sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_password .*/sab_password = '$password'/g}}' $sickbeard_config
   sickbeard__start
+  
+  echo "Done"
 }
 
 function sabnzbdplus__set_port() {
   port="$1"
+  
+  echo "Configuring SABnzbd+"
   
   sabnzbdplus__stop
   sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/^port .*/port = '$port'/g}}' $sabnzbdplus_config
@@ -68,10 +80,14 @@ function sabnzbdplus__set_port() {
   sickbeard__stop
   sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_host .*/sab_host = http:\/\/localhost:'$port'\//g}}' $sickbeard_config
   sickbeard__start
+  
+  echo "Done"
 }
 
 function sabnzbdplus__new_apikey() {
   apikey=$(date +%s | sha256sum | base64 | head -c 32 | tr -s '[:upper:]'  '[:lower:]')
+  
+  echo "Configuring SABnzbd+"
   
   sabnzbdplus__stop
   sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $sabnzbdplus_config
@@ -88,16 +104,19 @@ function sabnzbdplus__new_apikey() {
   sickbeard__stop
   sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_apikey .*/sab_apikey = '$apikey'/g}}' $sickbeard_config
   sickbeard__start
+  
+  echo "Done"
 }
 
 function sabnzbdplus__show_config() {
-  echo "Show Config Here"
+  echo "Under Construction"
 }
 
 function sabnzbdplus__start() {
   if tools__service_isenabled sabnzbdplus; then
     if ! tools__service_isrunning sabnzbdplus; then
       service sabnzbdplus start > /dev/null 2>&1
+      echo "SABnzbd+ Started"
     fi
   fi
 }
@@ -105,5 +124,6 @@ function sabnzbdplus__start() {
 function sabnzbdplus__stop() {
   if tools__service_isrunning sabnzbdplus; then
     service sabnzbdplus stop > /dev/null 2>&1
+    echo "SABnzbd+ Stopped"
   fi
 }

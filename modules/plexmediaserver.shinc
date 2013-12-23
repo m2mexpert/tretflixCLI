@@ -9,6 +9,7 @@ function plexmediaserver__enable() {
     rm /etc/init/plexmediaserver.override > /dev/null 2>&1
     plexmediaserver__start
   fi
+  echo "Plex Media Server is Enabled"
 }
 
 function plexmediaserver__disable() {
@@ -16,32 +17,42 @@ function plexmediaserver__disable() {
     plexmediaserver__stop
     echo -e "manual" >> /etc/init/plexmediaserver.override
   fi
+  echo "Plex Media Server is Disabled"
 }
 
 function plexmediaserver__set_username() {
-  echo "Invalid Command"
+  echo "This command is not available for Plex Media Server"
+  echo
+  exit 1
 }
 
 function plexmediaserver__set_password() {
-  echo "Invalid Command"
+  echo "This command is not available for Plex Media Server"
+  echo
+  exit 1
 }
 
 function plexmediaserver__set_port() {
-  echo "Invalid Command"
+  echo "This command is not available for Plex Media Server"
+  echo
+  exit 1
 }
 
 function plexmediaserver__new_apikey() {
-  echo "Invalid Command"
+  echo "This command is not available for Plex Media Server"
+  echo
+  exit 1
 }
 
 function plexmediaserver__show_config() {
-  echo "Show Config Here"
+  echo "Under Construction"
 }
 
 function plexmediaserver__start() {
   if ! ls -l /etc/init/plexmediaserver.override > /dev/null 2>&1; then
     if ! tools__service_isrunning plexmediaserver; then
       service plexmediaserver start > /dev/null 2>&1
+      echo "Plex Media Server Started"
     fi
   fi
 }
@@ -49,5 +60,6 @@ function plexmediaserver__start() {
 function plexmediaserver__stop() {
   if tools__service_isrunning plexmediaserver; then
     service plexmediaserver stop > /dev/null 2>&1
+    echo "Plex Media Server Stopped"
   fi
 }

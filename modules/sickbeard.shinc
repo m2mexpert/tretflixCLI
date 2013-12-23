@@ -9,6 +9,7 @@ function sickbeard__enable() {
     update-rc.d sickbeard defaults > /dev/null 2>&1
     sickbeard__start
   fi
+  echo "Sick Beard is Enabled"
 }
 
 function sickbeard__disable() {
@@ -16,51 +17,69 @@ function sickbeard__disable() {
     sickbeard__stop
     update-rc.d -f sickbeard remove > /dev/null 2>&1
   fi
+  echo "Sick Beard is Disabled"
 }
 
 function sickbeard__set_username() {
   username="$1"
   
+  echo "Configuring Sick Beard"
+  
   sickbeard__stop
   sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^web_username .*/web_username = '$username'/g}}' $sickbeard_config
   sed -i -e '/^\[SickBeard\]/,/^\[/{/^\[SickBeard\]/n;/^\[/!{s/^username.*/username='$username'/g}}' $autoProcessTV_config
   sickbeard__start
+  
+  echo "Done"
 }
 
 function sickbeard__set_password() {
   password="$1"
   
+  echo "Configuring Sick Beard"
+  
   sickbeard__stop
   sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^web_password .*/web_password = '$password'/g}}' $sickbeard_config
   sed -i -e '/^\[SickBeard\]/,/^\[/{/^\[SickBeard\]/n;/^\[/!{s/^password.*/password='$password'/g}}' $autoProcessTV_config
   sickbeard__start
+  
+  echo "Done"
 }
 
 function sickbeard__set_port() {
   port="$1"
   
+  echo "Configuring Sick Beard"
+  
   sickbeard__stop
   sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^web_port .*/web_port = '$port'/g}}' $sickbeard_config
   sed -i -e '/^\[SickBeard\]/,/^\[/{/^\[SickBeard\]/n;/^\[/!{s/^port.*/port='$port'/g}}' $autoProcessTV_config
   sickbeard__start
+  
+  echo "Done"
 }
 
 function sickbeard__new_apikey() {
   apikey=$(date +%s | sha256sum | base64 | head -c 32 | tr -s '[:upper:]'  '[:lower:]')
   
+  echo "Configuring Sick Beard"
+  
   sickbeard__stop
   sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $sickbeard_config
   sickbeard__start
+  
+  echo "Done"
 }
 
 function sickbeard__show_config() {
-  echo "Show Config Here"
+  echo "Under Construction"
 }
 
 function sickbeard__start() {
   if tools__service_isenabled sickbeard; then
     if ! tools__service_isrunning sickbeard; then
       service sickbeard start > /dev/null 2>&1
+      echo "Sick Beard Started"
     fi
   fi
 }
@@ -68,5 +87,6 @@ function sickbeard__start() {
 function sickbeard__stop() {
   if tools__service_isrunning sickbeard; then
     service sickbeard stop > /dev/null 2>&1
+    echo "Sick Beard Stopped"
   fi
 }
