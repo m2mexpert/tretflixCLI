@@ -255,7 +255,23 @@ function config__wizard() {
 
 function config__backup() {
   if [ "${#CLI_ARGS[@]}" -eq 2 ]; then
-    echo "Debug: config_backup code goes here!"
+    couchpotato__stop
+    headphones__stop
+    plexmediaserver__stop
+    sabnzbdplus__stop
+    sickbeard__stop
+    transmission__stop
+    
+    timestamp=$(date "+%Y_%m_%d")
+    tar cf /opt/tretflix/backup-$timestamp.tar /opt/tretflix/appdata/
+    
+    couchpotato__enable
+    headphones__enable
+    plexmediaserver__enable
+    sabnzbdplus__enable
+    sickbeard__enable
+    transmission__enable
+    echo "Done."
   else
     config__help
   fi
@@ -263,7 +279,22 @@ function config__backup() {
 
 function config__restore() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    echo "Debug: config_restore code goes here!"
+    couchpotato__stop
+    headphones__stop
+    plexmediaserver__stop
+    sabnzbdplus__stop
+    sickbeard__stop
+    transmission__stop
+    
+    rm -rf /opt/tretflix/appdata/
+    tar -xf $1 -C /opt/tretflix/
+    
+    couchpotato__enable
+    headphones__enable
+    plexmediaserver__enable
+    sabnzbdplus__enable
+    sickbeard__enable
+    transmission__enable
   else
     config__help
   fi
