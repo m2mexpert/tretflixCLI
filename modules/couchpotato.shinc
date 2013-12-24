@@ -56,7 +56,14 @@ function couchpotato__set_sabnzbdplus_apikey() {
 }
 
 function couchpotato__show_config() {
-  echo "Under Construction"
+  echo "CouchPotato Config:"
+  echo
+	echo "Status: "
+	echo "Web UI: "
+  echo
+  echo "Username: "
+  echo "Password: "
+  echo "API Key: "
 }
 
 function couchpotato__start() {

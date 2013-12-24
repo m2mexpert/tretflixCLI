@@ -37,7 +37,13 @@ function transmission__set_port() {
 }
 
 function transmission__show_config() {
-  echo "Under Construction"
+  echo "Transmission Config:"
+  echo
+	echo "Status: "
+	echo "Web UI: "
+  echo
+  echo "Username: "
+  echo "Password: "
 }
 
 function transmission__start() {

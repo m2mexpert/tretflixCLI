@@ -67,7 +67,14 @@ function headphones__set_sabnzbdplus_apikey() {
 }
 
 function headphones__show_config() {
-  echo "Under Construction"
+  echo "Headphones Config:"
+  echo
+	echo "Status: "
+	echo "Web UI: "
+  echo
+  echo "Username: "
+  echo "Password: "
+  echo "API Key: "
 }
 
 function headphones__start() {

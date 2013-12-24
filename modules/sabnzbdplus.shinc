@@ -43,7 +43,14 @@ function sabnzbdplus__set_apikey() {
 }
 
 function sabnzbdplus__show_config() {
-  echo "Under Construction"
+  echo "SABnzbd+ Config:"
+  echo
+	echo "Status: "
+	echo "Web UI: "
+  echo
+  echo "Username: "
+  echo "Password: "
+  echo "API Key: "
 }
 
 function sabnzbdplus__start() {
