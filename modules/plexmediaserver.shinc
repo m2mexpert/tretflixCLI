@@ -7,8 +7,8 @@ plexmediaserver__imported=1
 function plexmediaserver__enable() {
   if ls -l /etc/init/plexmediaserver.override > /dev/null 2>&1; then
     rm /etc/init/plexmediaserver.override > /dev/null 2>&1
-    plexmediaserver__start
   fi
+  plexmediaserver__start
 }
 
 function plexmediaserver__disable() {

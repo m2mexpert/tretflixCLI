@@ -7,8 +7,8 @@ couchpotato__imported=1
 function couchpotato__enable() {
   if ! tools__service_isenabled couchpotato; then
     update-rc.d couchpotato defaults > /dev/null 2>&1
-    couchpotato__start
   fi
+  couchpotato__start
 }
 
 function couchpotato__disable() {

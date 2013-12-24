@@ -7,8 +7,8 @@ sabnzbdplus__imported=1
 function sabnzbdplus__enable() {
   if ! tools__service_isenabled sabnzbdplus; then
     update-rc.d sabnzbdplus defaults > /dev/null 2>&1
-    sabnzbdplus__start
   fi
+  sabnzbdplus__start
 }
 
 function sabnzbdplus__disable() {

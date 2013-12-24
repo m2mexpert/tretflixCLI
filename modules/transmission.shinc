@@ -7,8 +7,8 @@ transmission__imported=1
 function transmission__enable() {
   if ! tools__service_isenabled transmission-daemon; then
     update-rc.d transmission-daemon defaults > /dev/null 2>&1
-    transmission__start
   fi
+  transmission__start
 }
 
 function transmission__disable() {

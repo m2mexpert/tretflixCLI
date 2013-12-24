@@ -7,8 +7,8 @@ sickbeard__imported=1
 function sickbeard__enable() {
   if ! tools__service_isenabled sickbeard; then
     update-rc.d sickbeard defaults > /dev/null 2>&1
-    sickbeard__start
   fi
+  sickbeard__start
 }
 
 function sickbeard__disable() {

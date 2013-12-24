@@ -45,214 +45,188 @@ function config__wizard() {
     echo " |__|  |__|    \_____/__|  |__|  |____/__/__/\__\\"
     echo
     echo
-    
+
     while true; do
-      echo
-      read -p "Do you want to (re)configure tretflix? (y/n): " case_input1
-      case "$case_input1" in
-        [yY] | [yY][Ee][Ss] )
-          echo
-          while true; do
-            input=""
-            read -p "Enter a username for accessing Web UI services [Default: admin]: " input
-            if [[ -z "${input}" ]]; then
-              username="admin"
-              break
-            else
-              username="$input"
-              break
-            fi
-          done
-
-          while true; do
-            input=""
-            read -p "Enter a password for accessing Web UI services [Default: admin]: " input
-            if [[ -z "${input}" ]]; then
-              password="admin"
-              break
-            else
-              password="$input"
-              break
-            fi
-          done
-
-          echo
-          while true; do
-            input=""
-            read -p "Enter a port number for accessing the CouchPotato Web UI [Default: 5000]: " input
-            if [[ -z "${input}" ]]; then
-              couchpotato_port="5000"
-              break
-            else
-              couchpotato_port="$input"
-              break
-            fi
-          done
-
-          while true; do
-            input=""
-            read -p "Enter a port number for accessing the Headphones Web UI [Default: 8181]: " input
-            if [[ -z "${input}" ]]; then
-              headphones_port="8181"
-              break
-            else
-              headphones_port="$input"
-              break
-            fi
-          done
-
-          while true; do
-            input=""
-            read -p "Enter a port number for accessing the SABnzbd+ Web UI [Default: 8080]: " input
-            if [[ -z "${input}" ]]; then
-              sabnzbdplus_port="8080"
-              break
-            else
-              sabnzbdplus_port="$input"
-              break
-            fi
-          done
-
-          while true; do
-            input=""
-            read -p "Enter a port number for accessing the Sick Beard Web UI [Default: 8081]: " input
-            if [[ -z "${input}" ]]; then
-              sickbeard_port="8081"
-              break
-            else
-              sickbeard_port="$input"
-              break
-            fi
-          done
-
-          while true; do
-            input=""
-            read -p "Enter a port number for accessing the Transmission Web UI [Default: 9091]: " input
-            if [[ -z "${input}" ]]; then
-              transmission_port="9091"
-              break
-            else
-              transmission_port="$input"
-              break
-            fi
-          done
-
-          echo
-          echo
-          echo "Configuration Summary:"
-          echo
-          echo "WEB UI login:" $username
-          echo "WEB UI password:" $password
-          echo
-          echo "CouchPotato Port:" $couchpotato_port
-          echo "Headphones Port:" $headphones_port
-          echo "SABnzbd+ Port:" $sabnzbdplus_port
-          echo "Sick Beard Port:" $sickbeard_port
-          echo "Transmission Port:" $transmission_port
-          echo
-			
-          while true; do
-            read -p "Apply these changes? (y/n): " input
-            case "$input" in
-              [yY] | [yY][Ee][Ss] )
-                break 2;;
-              [nN] | [n|N][O|o] )
-                setup__wizard;;
-              * )
-                echo "!! ERROR: Invalid entry."
-                echo;;
-            esac
-          done;;
-
-        [nN] | [n|N][O|o] )
-          exit;;
-        * )
-          echo "!! ERROR: Invalid entry. Press any key to continue..."
-          read -n 1 keypress;;
-      esac
+      input=""
+      read -p "Enter a username for accessing Web UI services [Default: admin]: " input
+      if [[ -z "${input}" ]]; then
+        username="admin"
+        break
+      else
+        username="$input"
+        break
+      fi
     done
+
+    while true; do
+      input=""
+      read -p "Enter a password for accessing Web UI services [Default: admin]: " input
+      if [[ -z "${input}" ]]; then
+        password="admin"
+        break
+      else
+        password="$input"
+        break
+      fi
+    done
+
+    echo
+    while true; do
+      input=""
+      read -p "Enter a port number for accessing the CouchPotato Web UI [Default: 5000]: " input
+      if [[ -z "${input}" ]]; then
+        couchpotato_port="5000"
+        break
+      else
+        couchpotato_port="$input"
+        break
+      fi
+    done
+
+    while true; do
+      input=""
+      read -p "Enter a port number for accessing the Headphones Web UI [Default: 8181]: " input
+      if [[ -z "${input}" ]]; then
+        headphones_port="8181"
+        break
+      else
+        headphones_port="$input"
+        break
+      fi
+    done
+
+    while true; do
+      input=""
+      read -p "Enter a port number for accessing the SABnzbd+ Web UI [Default: 8080]: " input
+      if [[ -z "${input}" ]]; then
+        sabnzbdplus_port="8080"
+        break
+      else
+        sabnzbdplus_port="$input"
+        break
+      fi
+    done
+
+    while true; do
+      input=""
+      read -p "Enter a port number for accessing the Sick Beard Web UI [Default: 8081]: " input
+      if [[ -z "${input}" ]]; then
+        sickbeard_port="8081"
+        break
+      else
+        sickbeard_port="$input"
+        break
+      fi
+    done
+
+    while true; do
+      input=""
+      read -p "Enter a port number for accessing the Transmission Web UI [Default: 9091]: " input
+      if [[ -z "${input}" ]]; then
+        transmission_port="9091"
+        break
+      else
+        transmission_port="$input"
+        break
+      fi
+    done
+
+    echo
+    echo
+    echo "Configuration Summary:"
+    echo
+    echo "WEB UI login:" $username
+    echo "WEB UI password:" $password
+    echo
+    echo "CouchPotato Port:" $couchpotato_port
+    echo "Headphones Port:" $headphones_port
+    echo "SABnzbd+ Port:" $sabnzbdplus_port
+    echo "Sick Beard Port:" $sickbeard_port
+    echo "Transmission Port:" $transmission_port
+    echo
+			
+    while true; do
+      read -p "Apply these changes? (y/n): " input
+      case "$input" in
+        [yY] | [yY][Ee][Ss] )
+          break;;
+        [nN] | [n|N][O|o] )
+          exit 1;;
+        * )
+          echo "!! ERROR: Invalid entry."
+          echo;;
+      esac
+    done;;
 
     clear
     echo
     echo
     echo "Applying configuration changes..."
     echo
-
-    passwordmd5=$(echo -n $password | md5sum | awk '{print $1}')
-    eth0_ipv4=$(ifconfig | sed -n '2 p' | awk '{print $2}' | sed 's/addr://g')
 	
     echo "* Stopping Services"
-    service couchpotato stop > /dev/null 2>&1
-    service headphones stop > /dev/null 2>&1
-    service sabnzbdplus stop > /dev/null 2>&1
-    service sickbeard stop > /dev/null 2>&1
-    service transmission-daemon stop > /dev/null 2>&1
+    couchpotato__stop
+    headphones__stop
+    plexmediaserver__stop
+    sabnzbdplus__stop
+    sickbeard__stop
+    transmission__stop
 	
     echo "* Generating new API Keys"
-    couchpotato_api=$(date +%s | sha256sum | base64 | head -c 32 | tr -s '[:upper:]'  '[:lower:]') && sleep 2
-    headphones_api=$(date +%s | sha256sum | base64 | head -c 32 | tr -s '[:upper:]'  '[:lower:]') && sleep 2
-    sabnzbdplus_api=$(date +%s | sha256sum | base64 | head -c 32 | tr -s '[:upper:]'  '[:lower:]') && sleep 2
-    sickbeard_api=$(date +%s | sha256sum | base64 | head -c 32 | tr -s '[:upper:]'  '[:lower:]')
+    couchpotato_apikey="$(tools__gen_apikey)" && sleep 2
+    headphones_apikey="$(tools__gen_apikey)" && sleep 2
+    sabnzbdplus_apikey="$(tools__gen_apikey)" && sleep 2
+    sickbeard_apikey="$(tools__gen_apikey)"
 
     echo "* Applying changes to CouchPotato"
-    sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^port .*/port = '$couchpotato_port'/g}}' $couchpotato_config
-    sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^username .*/username = '$username'/g}}' $couchpotato_config
-    sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^password .*/password = '$passwordmd5'/g}}' $couchpotato_config
-    sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^api_key .*/api_key = '$couchpotato_api'/g}}' $couchpotato_config
-    sed -i -e '/^\[sabnzbd\]/,/^\[/{/^\[sabnzbd\]/n;/^\[/!{s/^host .*/host = localhost:'$sabnzbdplus_port'/g}}' $couchpotato_config
-    sed -i -e '/^\[sabnzbd\]/,/^\[/{/^\[sabnzbd\]/n;/^\[/!{s/^api_key .*/api_key = '$sabnzbdplus_api'/g}}' $couchpotato_config
-
+    couchpotato__set_username "$username"
+    couchpotato__set_password "$password"
+    couchpotato__set_port "$couchpotato_port"
+    couchpotato__set_apikey "$couchpotato_apikey"
+    couchpotato__set_sabnzbdplus_port "$sabnzbdplus_port"
+    couchpotato__set_sabnzbdplus_apikey "$sabnzbdplus_apikey"
+    
     echo "* Applying changes to Headphones"
-    sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^http_port .*/http_port = '$headphones_port'/g}}' $headphones_config
-    sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^http_username .*/http_username = '$username'/g}}' $headphones_config
-    sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^http_password .*/http_password = '$password'/g}}' $headphones_config
-    sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^api_key .*/api_key = '$headphones_api'/g}}' $headphones_config
-    sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_host .*/sab_host = http:\/\/localhost:'$sabnzbdplus_port'\//g}}' $headphones_config
-    sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_username .*/sab_username = '$username'/g}}' $headphones_config
-    sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_password .*/sab_password = '$password'/g}}' $headphones_config
-    sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_apikey .*/sab_apikey = '$sabnzbdplus_api'/g}}' $headphones_config
+    headphones__set_username "$username"
+    headphones__set_password "$password"
+    headphones__set_port "$headphones_port"
+    headphones__set_apikey "$headphones_apikey"
+    headphones__set_sabnzbdplus_username "$username"
+    headphones__set_sabnzbdplus_password "$password"
+    headphones__set_sabnzbdplus_port "$sabnzbdplus_port"
+    headphones__set_sabnzbdplus_apikey "$sabnzbdplus_apikey"
 
     echo "* Applying changes to SABnzbd+"
-    sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/^port .*/port = '$sabnzbdplus_port'/g}}' $sabnzbdplus_config
-    sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/^username .*/username = '$username'/g}}' $sabnzbdplus_config
-    sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/^password .*/password = '$password'/g}}' $sabnzbdplus_config
-    sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/^api_key .*/api_key = '$sabnzbdplus_api'/g}}' $sabnzbdplus_config
+    sabnzbdplus__set_username "$username"
+    sabnzbdplus__set_password "$password"
+    sabnzbdplus__set_port "$sabnzbdplus_port"
+    sabnzbdplus__set_apikey "$sabnzbdplus_apikey"
 
     echo "* Applying changes to Sick Beard"
-    sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^web_port .*/web_port = '$sickbeard_port'/g}}' $sickbeard_config
-    sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^web_username .*/web_username = '$username'/g}}' $sickbeard_config
-    sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^web_password .*/web_password = '$password'/g}}' $sickbeard_config
-    sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^api_key .*/api_key = '$sickbeard_api'/g}}' $sickbeard_config
-    sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_host .*/sab_host = http:\/\/localhost:'$sabnzbdplus_port'\//g}}' $sickbeard_config
-    sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_username .*/sab_username = '$username'/g}}' $sickbeard_config
-    sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_password .*/sab_password = '$password'/g}}' $sickbeard_config
-    sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_apikey .*/sab_apikey = '$sabnzbdplus_api'/g}}' $sickbeard_config
-
-    sed -i -e '/^\[SickBeard\]/,/^\[/{/^\[SickBeard\]/n;/^\[/!{s/^port.*/port='$sickbeard_port'/g}}' $autoProcessTV_config
-    sed -i -e '/^\[SickBeard\]/,/^\[/{/^\[SickBeard\]/n;/^\[/!{s/^username.*/username='$username'/g}}' $autoProcessTV_config
-    sed -i -e '/^\[SickBeard\]/,/^\[/{/^\[SickBeard\]/n;/^\[/!{s/^password.*/password='$password'/g}}' $autoProcessTV_config
+    sickbeard__set_username "$username"
+    sickbeard__set_password "$password"
+    sickbeard__set_port "$sickbeard_port"
+    sickbeard__set_apikey "$sickbeard_apikey"
+    sickbeard__set_sabnzbdplus_username "$username"
+    sickbeard__set_sabnzbdplus_password "$password"
+    sickbeard__set_sabnzbdplus_port "$sabnzbdplus_port"
+    sickbeard__set_sabnzbdplus_apikey "$sabnzbdplus_apikey"
 
     echo "* Applying changes to Transmission"
-    sed -i -e 's/"rpc-port".*/"rpc-port": '$transmission_port',/g' $transmission_config
-    sed -i -e 's/"rpc-username".*/"rpc-username": "'$username'",/g' $transmission_config
-    sed -i -e 's/"rpc-password".*/"rpc-password": "'$password'",/g' $transmission_config
-
-    # Add services to start/stop runlevels/upstart
-    update-rc.d couchpotato defaults > /dev/null 2>&1
-    update-rc.d headphones defaults > /dev/null 2>&1
-    rm /etc/init/plexmediaserver.override > /dev/null 2>&1
-    update-rc.d sabnzbdplus defaults > /dev/null 2>&1
-    update-rc.d sickbeard defaults > /dev/null 2>&1
-    update-rc.d transmission-daemon defaults > /dev/null 2>&1
+    transmission__set_username "$username"
+    transmission__set_password "$password"
+    transmission__set_port "$transmission_port"
 
     echo "* Starting Services"
-    service couchpotato start > /dev/null 2>&1
-    service headphones start > /dev/null 2>&1
-    service plexmediaserver start > /dev/null 2>&1
-    service sabnzbdplus start > /dev/null 2>&1
-    service sickbeard start > /dev/null 2>&1
-    service transmission-daemon start > /dev/null 2>&1
+    couchpotato__enable
+    headphones__enable
+    plexmediaserver__enable
+    sabnzbdplus__enable
+    sickbeard__enable
+    transmission__enable
 
+    eth0_ipv4=$(ifconfig | sed -n '2 p' | awk '{print $2}' | sed 's/addr://g')
+    
     echo
     echo
     echo "WEB UI URL's:"

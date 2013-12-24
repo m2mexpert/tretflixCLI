@@ -7,8 +7,8 @@ headphones__imported=1
 function headphones__enable() {
   if ! tools__service_isenabled headphones; then
     update-rc.d headphones defaults > /dev/null 2>&1
-    headphones__start
   fi
+  headphones__start
 }
 
 function headphones__disable() {
