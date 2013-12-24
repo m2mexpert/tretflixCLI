@@ -255,9 +255,9 @@ function config__wizard() {
 function config__backup() {
   if [ "${#CLI_ARGS[@]}" -eq 2 ]; then
     echo "Stopping Services..."
-    plexmediaserver__stop
     couchpotato__stop
     headphones__stop
+    plexmediaserver__stop
     sabnzbdplus__stop
     sickbeard__stop
     transmission__stop
@@ -269,10 +269,10 @@ function config__backup() {
     echo "Starting Services..."
     couchpotato__start
     headphones__start
+    plexmediaserver__start
     sabnzbdplus__start
     sickbeard__start
     transmission__start
-    plexmediaserver__start
     echo "Done."
   else
     config__help
@@ -284,10 +284,10 @@ function config__restore() {
     echo "Stopping Services..."
     couchpotato__stop
     headphones__stop
+    plexmediaserver__stop
     sabnzbdplus__stop
     sickbeard__stop
     transmission__stop
-    plexmediaserver__stop
     
     echo "Restoring Backup..."
     rm -rf /opt/tretflix/appdata/
@@ -296,10 +296,10 @@ function config__restore() {
     echo "Starting Services..."
     couchpotato__start
     headphones__start
+    plexmediaserver__start
     sabnzbdplus__start
     sickbeard__start
     transmission__start
-    plexmediaserver__start
     echo "Done."
   else
     config__help
