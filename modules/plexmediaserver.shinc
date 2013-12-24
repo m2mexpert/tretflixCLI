@@ -27,14 +27,14 @@ function plexmediaserver__show_config() {
 
 function plexmediaserver__start() {
   if ! ls -l /etc/init/plexmediaserver.override > /dev/null 2>&1; then
-    if service plexmediaserver status | egrep "stop|waiting"; then
+    if service plexmediaserver status | egrep "stop|waiting" > /dev/null 2>&1; then
       service plexmediaserver start > /dev/null 2>&1
     fi
   fi
 }
 
 function plexmediaserver__stop() {
-  if service plexmediaserver status | egrep "start|running"; then
+  if service plexmediaserver status | egrep "start|running" > /dev/null 2>&1; then
     service plexmediaserver stop > /dev/null 2>&1
   fi
 }
