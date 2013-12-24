@@ -255,6 +255,7 @@ function config__wizard() {
 
 function config__backup() {
   if [ "${#CLI_ARGS[@]}" -eq 2 ]; then
+    echo "Stopping Services..."
     couchpotato__stop
     headphones__stop
     plexmediaserver__stop
@@ -262,9 +263,11 @@ function config__backup() {
     sickbeard__stop
     transmission__stop
     
+    echo "Creating Backup..."
     timestamp=$(date "+%Y_%m_%d")
-    tar cf /opt/tretflix/backup-$timestamp.tar /opt/tretflix/appdata/
+    sudo su -c -u $osUser "cd /opt/tretflix/ && tar cf backup-$timestamp.tar appdata/"
     
+    echo "Starting Services..."
     couchpotato__enable
     headphones__enable
     plexmediaserver__enable
