@@ -193,3 +193,8 @@ function tools__service_isenabled() {
   	false
   fi
 }
+  
+function tools__gen_apikey() {
+  apikey=$(date +%s | sha256sum | base64 | head -c 32 | tr -s '[:upper:]'  '[:lower:]')
+  echo $apikey
+}

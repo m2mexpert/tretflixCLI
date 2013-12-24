@@ -74,26 +74,37 @@ function service__enable() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
     case "${CLI_ARGS[1]}" in
       '-a' | '--all')
-        all__enable
+        echo "Under Construction"
         ;;
       '-b' | '--sickbeard')
+      	echo "Applying changes to Sick Beard..."
         sickbeard__enable
+        echo "Done."
         ;;    
       '-c' | '--couchpotato')
+        echo "Applying changes to CouchPotato..."
         couchpotato__enable
-        echo "CouchPotato is Enabled"
+        echo "Done."
         ;;
       '-h' | '--headphones')
+        echo "Applying changes to Headphones..."
         headphones__enable
+        echo "Done."
         ;;
       '-p' | '--plexmediaserver')
+        echo "Applying changes to Plex Media Server..."
         plexmediaserver__enable
+        echo "Done."
         ;;
       '-s' | '--sabnzbdplus')
+        echo "Applying changes to SABnzbd+..."
         sabnzbdplus__enable
+        echo "Done."
         ;;
       '-t' | '--transmission')
+        echo "Applying changes to Transmission..."
         transmission__enable
+        echo "Done."
         ;;
       *)
       	service__help
@@ -107,26 +118,37 @@ function service__disable() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
     case "${CLI_ARGS[1]}" in
       '-a' | '--all')
-        all__disable
+        echo "Under Construction"
         ;;
       '-b' | '--sickbeard')
+      	echo "Applying changes to Sick Beard..."
         sickbeard__disable
+        echo "Done."
         ;;    
       '-c' | '--couchpotato')
+        echo "Applying changes to CouchPotato..."
         couchpotato__disable
-        echo "CouchPotato is Disabled"
+        echo "Done."
         ;;
       '-h' | '--headphones')
+        echo "Applying changes to Headphones..."
         headphones__disable
+        echo "Done."
         ;;
       '-p' | '--plexmediaserver')
+        echo "Applying changes to Plex Media Server..."
         plexmediaserver__disable
+        echo "Done."
         ;;
       '-s' | '--sabnzbdplus')
+        echo "Applying changes to SABnzbd+..."
         sabnzbdplus__disable
+        echo "Done."
         ;;
       '-t' | '--transmission')
+        echo "Applying changes to Transmission..."
         transmission__disable
+        echo "Done."
         ;;
       *)
       	service__help
@@ -140,28 +162,55 @@ function service__set_username() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
     case "${CLI_ARGS[1]}" in
       '-a' | '--all')
-        all__set_username "${CLI_ARGS[4]}"
+        echo "Under Construction"
         ;;
       '-b' | '--sickbeard')
+        echo "Applying changes to Sick Beard..."
+        sickbeard__stop
         sickbeard__set_username "${CLI_ARGS[4]}"
+        sickbeard__start
+        echo "Done."
         ;;    
       '-c' | '--couchpotato')
+        echo "Applying changes to CouchPotato..."
         couchpotato__stop
-        echo "Applying changes to CouchPotato"
         couchpotato__set_username "${CLI_ARGS[4]}"
         couchpotato__start
+        echo "Done."
         ;;
       '-h' | '--headphones')
+        echo "Applying changes to Headphones..."
+        headphones__stop
         headphones__set_username "${CLI_ARGS[4]}"
+        headphones__start
+        echo "Done."
         ;;
       '-p' | '--plexmediaserver')
-        plexmediaserver__set_username "${CLI_ARGS[4]}"
+        echo "This command is not available for Plex Media Server"
+        echo
+        exit 1
         ;;
       '-s' | '--sabnzbdplus')
+        echo "Applying changes to SABnzbd+..."
+        sabnzbdplus__stop
         sabnzbdplus__set_username "${CLI_ARGS[4]}"
+        sabnzbdplus__start
+        echo "Applying changes to Headphones..."
+        headphones__stop
+        headphones__set_sabnzbdplus_username "${CLI_ARGS[4]}"
+        headphones__start
+        echo "Applying changes to Sick Beard..."
+        sickbeard__stop
+        sickbeard__set_sabnzbdplus_username "${CLI_ARGS[4]}"
+        sickbeard__start     
+        echo "Done."
         ;;
       '-t' | '--transmission')
+        echo "Applying changes to Transmission..."
+        transmission__stop
         transmission__set_username "${CLI_ARGS[4]}"
+        transmission__start
+        echo "Done."
         ;;
       *)
       	service__help
@@ -175,28 +224,55 @@ function service__set_password() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
     case "${CLI_ARGS[1]}" in
       '-a' | '--all')
-        all__set_password "${CLI_ARGS[4]}"
+        echo "Under Construction"
         ;;
       '-b' | '--sickbeard')
+        echo "Applying changes to Sick Beard..."
+        sickbeard__stop
         sickbeard__set_password "${CLI_ARGS[4]}"
+        sickbeard__start
+        echo "Done."
         ;;    
       '-c' | '--couchpotato')
+        echo "Applying changes to CouchPotato..."
         couchpotato__stop
-        echo "Applying changes to CouchPotato"
         couchpotato__set_password "${CLI_ARGS[4]}"
         couchpotato__start
+        echo "Done."
         ;;
       '-h' | '--headphones')
+        echo "Applying changes to Headphones..."
+        headphones__stop
         headphones__set_password "${CLI_ARGS[4]}"
+        headphones__start
+        echo "Done."
         ;;
       '-p' | '--plexmediaserver')
-        plexmediaserver__set_password "${CLI_ARGS[4]}"
+        echo "This command is not available for Plex Media Server"
+        echo
+        exit 1
         ;;
       '-s' | '--sabnzbdplus')
+        echo "Applying changes to SABnzbd+..."
+        sabnzbdplus__stop
         sabnzbdplus__set_password "${CLI_ARGS[4]}"
+        sabnzbdplus__start
+        echo "Applying changes to Headphones..."
+        headphones__stop
+        headphones__set_sabnzbdplus_password "${CLI_ARGS[4]}"
+        headphones__start
+        echo "Applying changes to Sick Beard..."
+        sickbeard__stop
+        sickbeard__set_sabnzbdplus_password "${CLI_ARGS[4]}"
+        sickbeard__start
+        echo "Done."
         ;;
       '-t' | '--transmission')
+        echo "Applying changes to Transmission..."
+        transmission__stop
         transmission__set_password "${CLI_ARGS[4]}"
+        transmission__start
+        echo "Done."
         ;;
       *)
       	service__help
@@ -210,28 +286,59 @@ function service__set_port() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
     case "${CLI_ARGS[1]}" in
       '-a' | '--all')
-        all__set_port "${CLI_ARGS[4]}"
+        echo "Under Construction"
         ;;
       '-b' | '--sickbeard')
+        echo "Applying changes to Sick Beard..."
+        sickbeard__stop
         sickbeard__set_port "${CLI_ARGS[4]}"
+        sickbeard__start
+        echo "Done."
         ;;    
       '-c' | '--couchpotato')
+        echo "Applying changes to CouchPotato..."
         couchpotato__stop
-        echo "Applying changes to CouchPotato"
         couchpotato__set_port "${CLI_ARGS[4]}"
         couchpotato__start
+        echo "Done."
         ;;
       '-h' | '--headphones')
+        echo "Applying changes to Headphones..."
+        headphones__stop
         headphones__set_port "${CLI_ARGS[4]}"
+        headphones__start
+        echo "Done."
         ;;
       '-p' | '--plexmediaserver')
-        plexmediaserver__set_port "${CLI_ARGS[4]}"
+        echo "This command is not available for Plex Media Server"
+        echo
+        exit 1
         ;;
       '-s' | '--sabnzbdplus')
+        echo "Applying changes to SABnzbd+..."
+        sabnzbdplus__stop
         sabnzbdplus__set_port "${CLI_ARGS[4]}"
+        sabnzbdplus__start
+        echo "Applying changes to CouchPotato..."
+        couchpotato__stop
+        couchpotato__set_sabnzbdplus_port "${CLI_ARGS[4]}"
+        couchpotato__start
+        echo "Applying changes to Headphones..."
+        headphones__stop
+        headphones__set_sabnzbdplus_port "${CLI_ARGS[4]}"
+        headphones__start
+        echo "Applying changes to Sick Beard..."
+        sickbeard__stop
+        sickbeard__set_sabnzbdplus_port "${CLI_ARGS[4]}"
+        sickbeard__start
+        echo "Done."
         ;;
       '-t' | '--transmission')
+        echo "Applying changes to Transmission..."
+        transmission__stop
         transmission__set_port "${CLI_ARGS[4]}"
+        transmission__start
+        echo "Done."
         ;;
       *)
       	service__help
@@ -243,30 +350,60 @@ function service__set_port() {
 
 function service__new_apikey() {
   if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
+    apikey="$(tools__gen_apikey)"
     case "${CLI_ARGS[1]}" in
       '-a' | '--all')
-        all__new_apikey
+        echo "Under Construction"
         ;;
       '-b' | '--sickbeard')
-        sickbeard__new_apikey
+        echo "Applying changes to Sick Beard..."
+        sickbeard__stop
+        sickbeard__set_apikey "$apikey"
+        sickbeard__start
+        echo "Done."
         ;;    
       '-c' | '--couchpotato')
+        echo "Applying changes to CouchPotato..."
         couchpotato__stop
-        echo "Applying changes to CouchPotato"
-        couchpotato__new_apikey
+        couchpotato__set_apikey "$apikey"
         couchpotato__start
+        echo "Done."
         ;;
       '-h' | '--headphones')
-        headphones__new_apikey
+        echo "Applying changes to Headphones..."
+        headphones__stop
+        headphones__set_apikey "$apikey"
+        headphones__start
+        echo "Done."
         ;;
       '-p' | '--plexmediaserver')
-        plexmediaserver__new_apikey
+        echo "This command is not available for Plex Media Server"
+        echo
+        exit 1
         ;;
       '-s' | '--sabnzbdplus')
-        sabnzbdplus__new_apikey
+        echo "Applying changes to SABnzbd+..."
+        sabnzbdplus__stop
+        sabnzbdplus__set_apikey "$apikey"
+        sabnzbdplus__start
+        echo "Applying changes to CouchPotato..."
+        couchpotato__stop
+        couchpotato__set_sabnzbdplus_apikey "$apikey"
+        couchpotato__start
+        echo "Applying changes to Headphones..."
+        headphones__stop
+        headphones__set_sabnzbdplus_apikey "$apikey"
+        headphones__start
+        echo "Applying changes to Sick Beard..."
+        sickbeard__stop
+        sickbeard__set_sabnzbdplus_apikey "$apikey"
+        sickbeard__start
+        echo "Done."
         ;;
       '-t' | '--transmission')
-        transmission__new_apikey
+        echo "This command is not available for Transmission"
+        echo
+        exit 1
         ;;
       *)
       	service__help

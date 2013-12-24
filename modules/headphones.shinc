@@ -9,7 +9,6 @@ function headphones__enable() {
     update-rc.d headphones defaults > /dev/null 2>&1
     headphones__start
   fi
-  echo "Headphones is Enabled"
 }
 
 function headphones__disable() {
@@ -17,55 +16,54 @@ function headphones__disable() {
     headphones__stop
     update-rc.d -f headphones remove > /dev/null 2>&1
   fi
-  echo "Headphones is Disabled"
 }
 
 function headphones__set_username() {
   username="$1"
-  
-  echo "Configuring Headphones"
-  
-  headphones__stop
+
   sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^http_username .*/http_username = '$username'/g}}' $headphones_config
-  headphones__start
-  
-  echo "Done"
 }
 
 function headphones__set_password() {
   password="$1"
   
-  echo "Configuring Headphones"
-  
-  headphones__stop
   sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^http_password .*/http_password = '$password'/g}}' $headphones_config
-  headphones__start
-  
-  echo "Done"
 }
 
 function headphones__set_port() {
   port="$1"
-  
-  echo "Configuring Headphones"
-  
-  headphones__stop
+
   sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^http_port .*/http_port = '$port'/g}}' $headphones_config
-  headphones__start
-  
-  echo "Done"
 }
 
-function headphones__new_apikey() {
-  apikey=$(date +%s | sha256sum | base64 | head -c 32 | tr -s '[:upper:]'  '[:lower:]')
-  
-  echo "Configuring Headphones"
-  
-  headphones__stop
+function headphones__set_apikey() {
+  apikey="$1"
+
   sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $headphones_config
-  headphones__start
+}
+
+function headphones__set_sabnzbdplus_username() {
+  username="$1"
   
-  echo "Done"
+  sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_username .*/sab_username = '$username'/g}}' $headphones_config
+}
+
+function headphones__set_sabnzbdplus_password() {
+  password="$1"
+  
+  sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_password .*/sab_password = '$password'/g}}' $headphones_config
+}
+
+function headphones__set_sabnzbdplus_port() {
+  port="$1"
+  
+  sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_host .*/sab_host = http:\/\/localhost:'$port'\//g}}' $headphones_config
+}
+
+function headphones__set_sabnzbdplus_apikey() {
+  apikey="$1"
+  
+  sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_apikey .*/sab_apikey = '$apikey'/g}}' $headphones_config
 }
 
 function headphones__show_config() {
@@ -76,7 +74,6 @@ function headphones__start() {
   if tools__service_isenabled headphones; then
     if ! tools__service_isrunning headphones; then
       service headphones start > /dev/null 2>&1
-      echo "Headphones Started"
     fi
   fi
 }
@@ -84,6 +81,5 @@ function headphones__start() {
 function headphones__stop() {
   if tools__service_isrunning headphones; then
     service headphones stop > /dev/null 2>&1
-    echo "Headphones Stopped"
   fi
 }
