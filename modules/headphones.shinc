@@ -79,14 +79,28 @@ function headphones__show_config() {
 
 function headphones__start() {
   if tools__service_isenabled headphones; then
-    if ! tools__service_isrunning headphones; then
-      service headphones start > /dev/null 2>&1
-    fi
+    for i in {1..3}; do
+      if ! tools__service_isrunning headphones; then
+        if [ $i -gt 1 ]; then
+          sleep 2
+        fi
+        service headphones start > /dev/null 2>&1
+      else
+        break
+      fi
+    done
   fi
 }
 
 function headphones__stop() {
-  if tools__service_isrunning headphones; then
-    service headphones stop > /dev/null 2>&1
-  fi
+  for i in {1..3}; do
+    if tools__service_isrunning headphones; then
+      if [ $i -gt 1 ]; then
+        sleep 2
+      fi
+      service headphones stop > /dev/null 2>&1
+    else
+      break
+    fi
+  done
 }

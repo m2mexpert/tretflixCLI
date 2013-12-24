@@ -48,14 +48,28 @@ function transmission__show_config() {
 
 function transmission__start() {
   if tools__service_isenabled transmission-daemon; then
-    if ! tools__service_isrunning transmission-daemon; then
-      service transmission-daemon start > /dev/null 2>&1
-    fi
+    for i in {1..3}; do
+      if ! tools__service_isrunning transmission-daemon; then
+        if [ $i -gt 1 ]; then
+          sleep 2
+        fi
+        service transmission-daemon start > /dev/null 2>&1
+      else
+        break
+      fi
+    done
   fi
 }
 
 function transmission__stop() {
-  if tools__service_isrunning transmission-daemon; then
-    service transmission-daemon stop > /dev/null 2>&1
-  fi
+  for i in {1..3}; do
+    if tools__service_isrunning transmission-daemon; then
+      if [ $i -gt 1 ]; then
+        sleep 2
+      fi
+      service transmission-daemon stop > /dev/null 2>&1
+    else
+      break
+    fi
+  done
 }

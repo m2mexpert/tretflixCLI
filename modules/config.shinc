@@ -158,7 +158,6 @@ function config__wizard() {
       esac
     done
 
-    clear
     echo
     echo
     echo "Applying configuration changes..."

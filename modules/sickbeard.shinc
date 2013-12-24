@@ -82,14 +82,28 @@ function sickbeard__show_config() {
 
 function sickbeard__start() {
   if tools__service_isenabled sickbeard; then
-    if ! tools__service_isrunning sickbeard; then
-      service sickbeard start > /dev/null 2>&1
-    fi
+    for i in {1..3}; do
+      if ! tools__service_isrunning sickbeard; then
+        if [ $i -gt 1 ]; then
+          sleep 2
+        fi
+        service sickbeard start > /dev/null 2>&1
+      else
+        break
+      fi
+    done
   fi
 }
 
 function sickbeard__stop() {
-  if tools__service_isrunning sickbeard; then
-    service sickbeard stop > /dev/null 2>&1
-  fi
+  for i in {1..3}; do
+    if tools__service_isrunning sickbeard; then
+      if [ $i -gt 1 ]; then
+        sleep 2
+      fi
+      service sickbeard stop > /dev/null 2>&1
+    else
+      break
+    fi
+  done
 }

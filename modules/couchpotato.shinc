@@ -68,15 +68,29 @@ function couchpotato__show_config() {
 
 function couchpotato__start() {
   if tools__service_isenabled couchpotato; then
-    if ! tools__service_isrunning couchpotato; then
-      service couchpotato start > /dev/null 2>&1
-    fi
+    for i in {1..3}; do
+      if ! tools__service_isrunning couchpotato; then
+        if [ $i -gt 1 ]; then
+          sleep 2
+        fi
+        service couchpotato start > /dev/null 2>&1
+      else
+        break
+      fi
+    done
   fi
 }
 
 function couchpotato__stop() {
-  if tools__service_isrunning couchpotato; then
-    service couchpotato stop > /dev/null 2>&1
-  fi
+  for i in {1..3}; do
+    if tools__service_isrunning couchpotato; then
+      if [ $i -gt 1 ]; then
+        sleep 2
+      fi
+      service couchpotato stop > /dev/null 2>&1
+    else
+      break
+    fi
+  done
 }
 
