@@ -81,6 +81,7 @@ function service__enable() {
         ;;    
       '-c' | '--couchpotato')
         couchpotato__enable
+        echo "CouchPotato is Enabled"
         ;;
       '-h' | '--headphones')
         headphones__enable
@@ -113,6 +114,7 @@ function service__disable() {
         ;;    
       '-c' | '--couchpotato')
         couchpotato__disable
+        echo "CouchPotato is Disabled"
         ;;
       '-h' | '--headphones')
         headphones__disable
@@ -144,7 +146,10 @@ function service__set_username() {
         sickbeard__set_username "${CLI_ARGS[4]}"
         ;;    
       '-c' | '--couchpotato')
+        couchpotato__stop
+        echo "Applying changes to CouchPotato"
         couchpotato__set_username "${CLI_ARGS[4]}"
+        couchpotato__start
         ;;
       '-h' | '--headphones')
         headphones__set_username "${CLI_ARGS[4]}"
@@ -176,7 +181,10 @@ function service__set_password() {
         sickbeard__set_password "${CLI_ARGS[4]}"
         ;;    
       '-c' | '--couchpotato')
+        couchpotato__stop
+        echo "Applying changes to CouchPotato"
         couchpotato__set_password "${CLI_ARGS[4]}"
+        couchpotato__start
         ;;
       '-h' | '--headphones')
         headphones__set_password "${CLI_ARGS[4]}"
@@ -208,7 +216,10 @@ function service__set_port() {
         sickbeard__set_port "${CLI_ARGS[4]}"
         ;;    
       '-c' | '--couchpotato')
+        couchpotato__stop
+        echo "Applying changes to CouchPotato"
         couchpotato__set_port "${CLI_ARGS[4]}"
+        couchpotato__start
         ;;
       '-h' | '--headphones')
         headphones__set_port "${CLI_ARGS[4]}"
@@ -240,7 +251,10 @@ function service__new_apikey() {
         sickbeard__new_apikey
         ;;    
       '-c' | '--couchpotato')
+        couchpotato__stop
+        echo "Applying changes to CouchPotato"
         couchpotato__new_apikey
+        couchpotato__start
         ;;
       '-h' | '--headphones')
         headphones__new_apikey

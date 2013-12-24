@@ -9,7 +9,6 @@ function couchpotato__enable() {
     update-rc.d couchpotato defaults > /dev/null 2>&1
     couchpotato__start
   fi
-  echo "CouchPotato is Enabled"
 }
 
 function couchpotato__disable() {
@@ -17,56 +16,31 @@ function couchpotato__disable() {
     couchpotato__stop
     update-rc.d -f couchpotato remove > /dev/null 2>&1
   fi
-  echo "CouchPotato is Disabled"
 }
 
 function couchpotato__set_username() {
   username="$1"
   
-  echo "Configuring CouchPotato"
-  
-  couchpotato__stop
   sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^username .*/username = '$username'/g}}' $couchpotato_config
-  couchpotato__start
-  
-  echo "Done"
 }
 
 function couchpotato__set_password() {
   password="$1"
   passwordmd5=$(echo -n $password | md5sum | awk '{print $1}')
-  
-  echo "Configuring CouchPotato"  
 
-  couchpotato__stop
   sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^password .*/password = '$passwordmd5'/g}}' $couchpotato_config
-  couchpotato__start
-  
-  echo "Done"
 }
 
 function couchpotato__set_port() {
   port="$1"
-  
-  echo "Configuring CouchPotato"
-  
-  couchpotato__stop
+
   sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^port .*/port = '$port'/g}}' $couchpotato_config
-  couchpotato__start
-  
-  echo "Done"
 }
 
 function couchpotato__new_apikey() {
   apikey=$(date +%s | sha256sum | base64 | head -c 32 | tr -s '[:upper:]'  '[:lower:]')
-  
-  echo "Configuring CouchPotato"
-  
-  couchpotato__stop
+
   sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $couchpotato_config
-  couchpotato__start
-  
-  echo "Done"
 }
 
 function couchpotato__show_config() {
@@ -77,7 +51,6 @@ function couchpotato__start() {
   if tools__service_isenabled couchpotato; then
     if ! tools__service_isrunning couchpotato; then
       service couchpotato start > /dev/null 2>&1
-      echo "CouchPotato Started"
     fi
   fi
 }
@@ -85,7 +58,6 @@ function couchpotato__start() {
 function couchpotato__stop() {
   if tools__service_isrunning couchpotato; then
     service couchpotato stop > /dev/null 2>&1
-    echo "CouchPotato Stopped"
   fi
 }
 
