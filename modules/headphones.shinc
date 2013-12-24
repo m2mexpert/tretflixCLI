@@ -68,7 +68,7 @@ function headphones__set_sabnzbdplus_apikey() {
 
 function headphones__show_config() {
   echo "Headphones Config:"
-  echo
+  echo "----------------------------"
 	echo "Status: "
 	echo "Web UI: "
   echo

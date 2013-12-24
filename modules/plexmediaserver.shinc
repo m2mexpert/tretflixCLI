@@ -20,7 +20,7 @@ function plexmediaserver__disable() {
 
 function plexmediaserver__show_config() {
   echo "Plex Media Server Config:"
-  echo
+  echo "----------------------------"
 	echo "Status: "
 	echo "Web UI: "
 }

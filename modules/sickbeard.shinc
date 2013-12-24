@@ -71,7 +71,7 @@ function sickbeard__set_sabnzbdplus_apikey() {
 
 function sickbeard__show_config() {
   echo "Sick Beard Config:"
-  echo
+  echo "----------------------------"
 	echo "Status: "
 	echo "Web UI: "
   echo

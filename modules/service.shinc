@@ -506,21 +506,15 @@ function service__show_config() {
       '-a' | '--all')
         couchpotato__show_config
         echo
-        echo
         headphones__show_config
-        echo
         echo
         plexmediaserver__show_config
         echo
-        echo
         sabnzbdplus__show_config
-        echo
         echo
         sickbeard__show_config
         echo
-        echo
         transmission__show_config
-        echo
         ;;
       '-b' | '--sickbeard')
         sickbeard__show_config

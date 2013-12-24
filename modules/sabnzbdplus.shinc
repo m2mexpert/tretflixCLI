@@ -44,7 +44,7 @@ function sabnzbdplus__set_apikey() {
 
 function sabnzbdplus__show_config() {
   echo "SABnzbd+ Config:"
-  echo
+  echo "----------------------------"
 	echo "Status: "
 	echo "Web UI: "
   echo

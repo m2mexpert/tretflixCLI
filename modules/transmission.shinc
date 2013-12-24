@@ -38,7 +38,7 @@ function transmission__set_port() {
 
 function transmission__show_config() {
   echo "Transmission Config:"
-  echo
+  echo "----------------------------"
 	echo "Status: "
 	echo "Web UI: "
   echo
