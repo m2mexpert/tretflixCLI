@@ -154,9 +154,9 @@ function config__wizard() {
           exit 1;;
         * )
           echo "!! ERROR: Invalid entry."
-          echo;;
+          echo
       esac
-    done;;
+    done
 
     clear
     echo
