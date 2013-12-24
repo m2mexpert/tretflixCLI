@@ -133,7 +133,8 @@ function config__wizard() {
 
     echo
     echo
-    echo "Configuration Summary:"
+    echo "Config Summary:"
+    echo "------------------"
     echo
     echo "Web UI Username:" $username
     echo "Web UI Password:" $password
@@ -230,6 +231,7 @@ function config__wizard() {
     echo
     echo
     echo "Web UI URL's:"
+    echo "------------------"
     echo
     echo "CouchPotato:"
     echo "http://"$eth0_ipv4":"$couchpotato_port"/"
@@ -248,8 +250,6 @@ function config__wizard() {
     echo
     echo "Transmission:"
     echo "http://"$eth0_ipv4":"$transmission_port"/transmission/web/"
-    echo
-    echo "Enjoy!"
     
   else
     config__help
