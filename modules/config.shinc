@@ -135,8 +135,8 @@ function config__wizard() {
     echo
     echo "Configuration Summary:"
     echo
-    echo "WEB UI login:" $username
-    echo "WEB UI password:" $password
+    echo "Web UI Username:" $username
+    echo "Web UI Password:" $password
     echo
     echo "CouchPotato Port:" $couchpotato_port
     echo "Headphones Port:" $headphones_port
@@ -229,14 +229,25 @@ function config__wizard() {
     
     echo
     echo
-    echo "WEB UI URL's:"
+    echo "Web UI URL's:"
     echo
-    echo "CouchPotato: http://"$eth0_ipv4":"$couchpotato_port"/"
-    echo "Headphones: http://"$eth0_ipv4":"$headphones_port"/"
-    echo "Plex Media Server: http://"$eth0_ipv4":32400/web"
-    echo "SABnzbd+: http://"$eth0_ipv4":"$sabnzbdplus_port"/sabnzbd/"
-    echo "Sick Beard: http://"$eth0_ipv4":"$sickbeard_port"/home/"
-    echo "Transmission: http://"$eth0_ipv4":"$transmission_port"/transmission/web/"
+    echo "CouchPotato:"
+    echo "http://"$eth0_ipv4":"$couchpotato_port"/"
+    echo
+    echo "Headphones:"
+    echo "http://"$eth0_ipv4":"$headphones_port"/"
+    echo
+    echo "Plex Media Server:"
+    echo "http://"$eth0_ipv4":32400/web"
+    echo
+    echo "SABnzbd+:"
+    echo "http://"$eth0_ipv4":"$sabnzbdplus_port"/sabnzbd/"
+    echo
+    echo "Sick Beard:"
+    echo "http://"$eth0_ipv4":"$sickbeard_port"/home/"
+    echo
+    echo "Transmission:"
+    echo "http://"$eth0_ipv4":"$transmission_port"/transmission/web/"
     echo
     echo "Enjoy!"
     echo
