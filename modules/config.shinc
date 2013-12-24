@@ -250,10 +250,6 @@ function config__wizard() {
     echo "http://"$eth0_ipv4":"$transmission_port"/transmission/web/"
     echo
     echo "Enjoy!"
-    echo
-
-    input=""
-    read -p "Press any key to exit" input
     
   else
     config__help
