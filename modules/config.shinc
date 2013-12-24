@@ -167,7 +167,6 @@ function config__wizard() {
     echo "* Stopping Services"
     couchpotato__stop
     headphones__stop
-    plexmediaserver__stop
     sabnzbdplus__stop
     sickbeard__stop
     transmission__stop
