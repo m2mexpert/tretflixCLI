@@ -219,10 +219,10 @@ function config__wizard() {
     echo "* Starting Services"
     couchpotato__enable
     headphones__enable
-    plexmediaserver__enable
     sabnzbdplus__enable
     sickbeard__enable
     transmission__enable
+    plexmediaserver__enable
 
     eth0_ipv4=$(ifconfig | sed -n '2 p' | awk '{print $2}' | sed 's/addr://g')
     
@@ -256,9 +256,9 @@ function config__wizard() {
 function config__backup() {
   if [ "${#CLI_ARGS[@]}" -eq 2 ]; then
     echo "Stopping Services..."
+    plexmediaserver__stop
     couchpotato__stop
     headphones__stop
-    plexmediaserver__stop
     sabnzbdplus__stop
     sickbeard__stop
     transmission__stop
@@ -268,12 +268,12 @@ function config__backup() {
     sudo su -c -u $osUser "cd /opt/tretflix/ && tar cf backup-$timestamp.tar appdata/"
     
     echo "Starting Services..."
-    couchpotato__enable
-    headphones__enable
-    plexmediaserver__enable
-    sabnzbdplus__enable
-    sickbeard__enable
-    transmission__enable
+    couchpotato__start
+    headphones__start
+    sabnzbdplus__start
+    sickbeard__start
+    transmission__start
+    plexmediaserver__start
     echo "Done."
   else
     config__help
@@ -285,22 +285,22 @@ function config__restore() {
     echo "Stopping Services..."
     couchpotato__stop
     headphones__stop
-    plexmediaserver__stop
     sabnzbdplus__stop
     sickbeard__stop
     transmission__stop
+    plexmediaserver__stop
     
     echo "Restoring Backup..."
     rm -rf /opt/tretflix/appdata/
     sudo su -c -u $osUser "cd /opt/tretflix/ && tar -xf $1"
     
     echo "Starting Services..."
-    couchpotato__enable
-    headphones__enable
-    plexmediaserver__enable
-    sabnzbdplus__enable
-    sickbeard__enable
-    transmission__enable
+    couchpotato__start
+    headphones__start
+    sabnzbdplus__start
+    sickbeard__start
+    transmission__start
+    plexmediaserver__start
     echo "Done."
   else
     config__help
