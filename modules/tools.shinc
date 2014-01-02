@@ -200,7 +200,7 @@ function tools__gen_apikey() {
 }
 
 function tools__get_ip() {
-  if ifconfig eth0:1 | grep "inet addr" > /dev/null 2&>1; then
+  if ifconfig eth0:1 | grep "inet addr" > /dev/null 2>&1; then
     result=$(ifconfig eth0:1 | grep "inet addr" | awk '{print $2}' | sed 's/addr://g')
   else
     result=$(ifconfig eth0 | grep "inet addr" | awk '{print $2}' | sed 's/addr://g')
