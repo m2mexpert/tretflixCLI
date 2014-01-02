@@ -67,14 +67,19 @@ function headphones__set_sabnzbdplus_apikey() {
 }
 
 function headphones__show_config() {
+  username=$(sed -n '/^\[General\]/,/^\[/p' $headphones_config | grep "^http_username" | awk '{ print $3 }')
+  password=$(sed -n '/^\[General\]/,/^\[/p' $headphones_config | grep "^http_password" | awk '{ print $3 }')
+  port=$(sed -n '/^\[General\]/,/^\[/p' $headphones_config | grep "^http_port" | awk '{ print $3 }')
+  apikey=$(sed -n '/^\[General\]/,/^\[/p' $headphones_config | grep "^api_key" | awk '{ print $3 }')
+
   echo "Headphones Config:"
   echo "----------------------------"
 	echo "Status: "
-	echo "Web UI: "
+	echo "Web UI: $port"
   echo
-  echo "Username: "
-  echo "Password: "
-  echo "API Key: "
+  echo "Username: $username"
+  echo "Password: $password"
+  echo "API Key: $apikey"
 }
 
 function headphones__start() {
