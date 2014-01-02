@@ -56,14 +56,20 @@ function couchpotato__set_sabnzbdplus_apikey() {
 }
 
 function couchpotato__show_config() {
+  ipv4=$(tools__get_ip)
+  username=$(sed -n '/^\[core\]/,/^\[/p' $couchpotato_config | grep "^username" | awk '{ print $3 }')
+  password="N/A (ENCRYPTED)"
+  port=$(sed -n '/^\[core\]/,/^\[/p' $couchpotato_config | grep "^port" | awk '{ print $3 }')
+  apikey=$(sed -n '/^\[core\]/,/^\[/p' $couchpotato_config | grep "^api_key" | awk '{ print $3 }')
+
   echo "CouchPotato Config:"
   echo "----------------------------"
-	echo "Status: "
-	echo "Web UI: "
+  echo "Status: "
+  echo "Web UI: http://$ipv4:$port/"
   echo
-  echo "Username: "
-  echo "Password: "
-  echo "API Key: "
+  echo "Username: $username"
+  echo "Password: $password"
+  echo "API Key: $apikey"
 }
 
 function couchpotato__start() {

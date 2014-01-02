@@ -67,6 +67,7 @@ function headphones__set_sabnzbdplus_apikey() {
 }
 
 function headphones__show_config() {
+  ipv4=$(tools__get_ip)
   username=$(sed -n '/^\[General\]/,/^\[/p' $headphones_config | grep "^http_username" | awk '{ print $3 }')
   password=$(sed -n '/^\[General\]/,/^\[/p' $headphones_config | grep "^http_password" | awk '{ print $3 }')
   port=$(sed -n '/^\[General\]/,/^\[/p' $headphones_config | grep "^http_port" | awk '{ print $3 }')
@@ -74,8 +75,8 @@ function headphones__show_config() {
 
   echo "Headphones Config:"
   echo "----------------------------"
-	echo "Status: "
-	echo "Web UI: $port"
+  echo "Status: "
+  echo "Web UI: http://$ipv4:$port/"
   echo
   echo "Username: $username"
   echo "Password: $password"

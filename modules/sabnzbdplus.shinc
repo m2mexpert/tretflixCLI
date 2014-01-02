@@ -43,14 +43,20 @@ function sabnzbdplus__set_apikey() {
 }
 
 function sabnzbdplus__show_config() {
+  ipv4=$(tools__get_ip)
+  username=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdplus_config | grep "^username" | awk '{ print $3 }')
+  password=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdplus_config | grep "^password" | awk '{ print $3 }')
+  port=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdplus_config | grep "^port" | awk '{ print $3 }')
+  apikey=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdplus_config | grep "^api_key" | awk '{ print $3 }')
+
   echo "SABnzbd+ Config:"
   echo "----------------------------"
-	echo "Status: "
-	echo "Web UI: "
+  echo "Status: "
+  echo "Web UI: http://$ipv4:$port/sabnzbd/"
   echo
-  echo "Username: "
-  echo "Password: "
-  echo "API Key: "
+  echo "Username: $username"
+  echo "Password: $password"
+  echo "API Key: $apikey"
 }
 
 function sabnzbdplus__start() {

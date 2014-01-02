@@ -215,7 +215,7 @@ function config__wizard() {
     transmission__set_password "$password"
     transmission__set_port "$transmission_port"
 
-    echo "* Starting Services"
+    echo "* Enabling & Starting Services"
     couchpotato__enable
     headphones__enable
     sabnzbdplus__enable
@@ -223,29 +223,29 @@ function config__wizard() {
     transmission__enable
     plexmediaserver__enable
 
-    eth0_ipv4=$(ifconfig | sed -n '2 p' | awk '{print $2}' | sed 's/addr://g')
+    ipv4=$(tools__get_ip)
     
     echo
     echo
     echo "Web UI URL's:"
     echo "------------------"
     echo "CouchPotato:"
-    echo "http://"$eth0_ipv4":"$couchpotato_port"/"
+    echo "http://"$ipv4":"$couchpotato_port"/"
     echo
     echo "Headphones:"
-    echo "http://"$eth0_ipv4":"$headphones_port"/"
+    echo "http://"$ipv4":"$headphones_port"/"
     echo
     echo "Plex Media Server:"
-    echo "http://"$eth0_ipv4":32400/web"
+    echo "http://"$ipv4":32400/web"
     echo
     echo "SABnzbd+:"
-    echo "http://"$eth0_ipv4":"$sabnzbdplus_port"/sabnzbd/"
+    echo "http://"$ipv4":"$sabnzbdplus_port"/sabnzbd/"
     echo
     echo "Sick Beard:"
-    echo "http://"$eth0_ipv4":"$sickbeard_port"/home/"
+    echo "http://"$ipv4":"$sickbeard_port"/home/"
     echo
     echo "Transmission:"
-    echo "http://"$eth0_ipv4":"$transmission_port"/transmission/web/"
+    echo "http://"$ipv4":"$transmission_port"/transmission/web/"
     
   else
     config__help

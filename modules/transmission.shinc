@@ -37,13 +37,18 @@ function transmission__set_port() {
 }
 
 function transmission__show_config() {
+  ipv4=$(tools__get_ip)
+  username=$(grep "rpc-username" $transmission_config | awk '{ print $2 }' | awk -F '"' '{ print $2 }')
+  password="N/A (ENCRYPTED)"
+  port=$(grep "rpc-port" $transmission_config | sed 's/,$//g')
+
   echo "Transmission Config:"
   echo "----------------------------"
-	echo "Status: "
-	echo "Web UI: "
+  echo "Status: "
+  echo "Web UI: http://$ipv4:$port/transmission/web/"
   echo
-  echo "Username: "
-  echo "Password: "
+  echo "Username: $username"
+  echo "Password: $password"
 }
 
 function transmission__start() {
