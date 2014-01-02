@@ -266,7 +266,7 @@ function config__backup() {
     timestamp=$(date "+%Y%m%d%H%M%S")
     sudo su -c -u $osUser "cd /opt/tretflix/ && tar cf backup-$timestamp.tar appdata/"
     
-    echo "Starting Services..."
+    echo "Starting Enabled Services..."
     couchpotato__start
     headphones__start
     plexmediaserver__start
@@ -293,7 +293,7 @@ function config__restore() {
     rm -rf /opt/tretflix/appdata/
     sudo su -c -u $osUser "cd /opt/tretflix/ && tar -xf ${CLI_ARGS[2]}"
     
-    echo "Starting Services..."
+    echo "Starting Enabled Services..."
     couchpotato__start
     headphones__start
     plexmediaserver__start
