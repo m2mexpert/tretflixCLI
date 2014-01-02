@@ -71,10 +71,10 @@ function sickbeard__set_sabnzbdplus_apikey() {
 
 function sickbeard__show_config() {
   ipv4=$(tools__get_ip)
-  username=$(sed -n '/^\[General\]/,/^\[/p' $sickbeard_config | grep "^web_username" | awk '{ print $3 }')
-  password=$(sed -n '/^\[General\]/,/^\[/p' $sickbeard_config | grep "^web_password" | awk '{ print $3 }')
-  port=$(sed -n '/^\[General\]/,/^\[/p' $sickbeard_config | grep "^web_port" | awk '{ print $3 }')
-  apikey=$(sed -n '/^\[General\]/,/^\[/p' $sickbeard_config | grep "^api_key" | awk '{ print $3 }')
+  username=$(sed -n '/^\[General\]/,/^\[/p' $sickbeard_config | grep "^web_username " | awk '{ print $3 }')
+  password=$(sed -n '/^\[General\]/,/^\[/p' $sickbeard_config | grep "^web_password " | awk '{ print $3 }')
+  port=$(sed -n '/^\[General\]/,/^\[/p' $sickbeard_config | grep "^web_port " | awk '{ print $3 }')
+  apikey=$(sed -n '/^\[General\]/,/^\[/p' $sickbeard_config | grep "^api_key " | awk '{ print $3 }')
 
   echo "Sick Beard Config:"
   echo "----------------------------"
