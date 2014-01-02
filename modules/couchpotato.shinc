@@ -4,18 +4,57 @@ if test "${couchpotato__imported+defined}" == "defined"; then
 fi
 couchpotato__imported=1
 
+function couchpotato__get_status() {
+  if service couchpotato status > /dev/null 2>&1; then
+    result="Enabled and Running"
+  elif ls /etc/rc?.d/*couchpotato > /dev/null 2>&1; then
+    result="Not Running"
+  else
+    result="Disabled"
+  fi
+  echo "$result"
+}
+
 function couchpotato__enable() {
-  if ! tools__service_isenabled couchpotato; then
+  if [ "$(couchpotato__get_status)" == "Disabled" ]; then
     update-rc.d couchpotato defaults > /dev/null 2>&1
   fi
   couchpotato__start
 }
 
 function couchpotato__disable() {
-  if tools__service_isenabled couchpotato; then
+  if [ "$(couchpotato__get_status)" != "Disabled" ]; then
     couchpotato__stop
     update-rc.d -f couchpotato remove > /dev/null 2>&1
   fi
+}
+
+function couchpotato__start() {
+  if [ "$(couchpotato__get_status)" != "Disabled" ]; then
+    for i in {1..3}; do
+      if [ "$(couchpotato__get_status)" != "Enabled and Running" ]; then
+        if [ $i -gt 1 ]; then
+          sleep 2
+        fi
+        service couchpotato start > /dev/null 2>&1
+      else
+        break
+      fi
+    done
+  fi
+}
+
+function couchpotato__stop() {
+  for i in {1..3}; do
+    if [ "$(couchpotato__get_status)" == "Enabled and Running" ]; then
+      if [ $i -gt 1 ]; then
+        sleep 2
+      fi
+      service couchpotato stop > /dev/null 2>&1
+    else
+      break
+    fi
+  done
 }
 
 function couchpotato__set_username() {
@@ -56,6 +95,7 @@ function couchpotato__set_sabnzbdplus_apikey() {
 }
 
 function couchpotato__show_config() {
+  status="$(couchpotato__get_status)"
   ipv4=$(tools__get_ip)
   username=$(sed -n '/^\[core\]/,/^\[/p' $couchpotato_config | grep "^username " | awk '{ print $3 }')
   password="N/A (ENCRYPTED)"
@@ -64,39 +104,10 @@ function couchpotato__show_config() {
 
   echo "CouchPotato Config:"
   echo "----------------------------"
-  echo "Status: "
+  echo "Status: $status"
   echo "Web UI: http://$ipv4:$port/"
   echo
   echo "Username: $username"
   echo "Password: $password"
   echo "API Key: $apikey"
 }
-
-function couchpotato__start() {
-  if tools__service_isenabled couchpotato; then
-    for i in {1..3}; do
-      if ! tools__service_isrunning couchpotato; then
-        if [ $i -gt 1 ]; then
-          sleep 2
-        fi
-        service couchpotato start > /dev/null 2>&1
-      else
-        break
-      fi
-    done
-  fi
-}
-
-function couchpotato__stop() {
-  for i in {1..3}; do
-    if tools__service_isrunning couchpotato; then
-      if [ $i -gt 1 ]; then
-        sleep 2
-      fi
-      service couchpotato stop > /dev/null 2>&1
-    else
-      break
-    fi
-  done
-}
-

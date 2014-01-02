@@ -4,18 +4,57 @@ if test "${headphones__imported+defined}" == "defined"; then
 fi
 headphones__imported=1
 
+function headphones__get_status() {
+  if service headphones status > /dev/null 2>&1; then
+    result="Enabled and Running"
+  elif ls /etc/rc?.d/*headphones > /dev/null 2>&1; then
+    result="Not Running"
+  else
+    result="Disabled"
+  fi
+  echo "$result"
+}
+
 function headphones__enable() {
-  if ! tools__service_isenabled headphones; then
+  if [ "$(headphones__get_status)" == "Disabled" ]; then
     update-rc.d headphones defaults > /dev/null 2>&1
   fi
   headphones__start
 }
 
 function headphones__disable() {
-  if tools__service_isenabled headphones; then
+  if [ "$(headphones__get_status)" != "Disabled" ]; then
     headphones__stop
     update-rc.d -f headphones remove > /dev/null 2>&1
   fi
+}
+
+function headphones__start() {
+  if [ "$(headphones__get_status)" != "Disabled" ]; then
+    for i in {1..3}; do
+      if [ "$(headphones__get_status)" != "Enabled and Running" ]; then
+        if [ $i -gt 1 ]; then
+          sleep 2
+        fi
+        service headphones start > /dev/null 2>&1
+      else
+        break
+      fi
+    done
+  fi
+}
+
+function headphones__stop() {
+  for i in {1..3}; do
+    if [ "$(headphones__get_status)" == "Enabled and Running" ]; then
+      if [ $i -gt 1 ]; then
+        sleep 2
+      fi
+      service headphones stop > /dev/null 2>&1
+    else
+      break
+    fi
+  done
 }
 
 function headphones__set_username() {
@@ -67,6 +106,7 @@ function headphones__set_sabnzbdplus_apikey() {
 }
 
 function headphones__show_config() {
+  status="$(headphones__get_status)"
   ipv4=$(tools__get_ip)
   username=$(sed -n '/^\[General\]/,/^\[/p' $headphones_config | grep "^http_username " | awk '{ print $3 }')
   password=$(sed -n '/^\[General\]/,/^\[/p' $headphones_config | grep "^http_password " | awk '{ print $3 }')
@@ -75,38 +115,10 @@ function headphones__show_config() {
 
   echo "Headphones Config:"
   echo "----------------------------"
-  echo "Status: "
+  echo "Status: $status"
   echo "Web UI: http://$ipv4:$port/"
   echo
   echo "Username: $username"
   echo "Password: $password"
   echo "API Key: $apikey"
-}
-
-function headphones__start() {
-  if tools__service_isenabled headphones; then
-    for i in {1..3}; do
-      if ! tools__service_isrunning headphones; then
-        if [ $i -gt 1 ]; then
-          sleep 2
-        fi
-        service headphones start > /dev/null 2>&1
-      else
-        break
-      fi
-    done
-  fi
-}
-
-function headphones__stop() {
-  for i in {1..3}; do
-    if tools__service_isrunning headphones; then
-      if [ $i -gt 1 ]; then
-        sleep 2
-      fi
-      service headphones stop > /dev/null 2>&1
-    else
-      break
-    fi
-  done
 }

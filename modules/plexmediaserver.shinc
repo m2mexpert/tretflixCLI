@@ -4,34 +4,35 @@ if test "${plexmediaserver__imported+defined}" == "defined"; then
 fi
 plexmediaserver__imported=1
 
+function plexmediaserver__get_status() {
+  if service plexmediaserver status | egrep "start|running" > /dev/null 2>&1; then
+    result="Enabled and Running"
+  elif ! ls -l /etc/init/plexmediaserver.override > /dev/null 2>&1; then
+    result="Not Running"
+  else
+    result="Disabled"
+  fi
+  echo "$result"
+}
+
 function plexmediaserver__enable() {
-  if ls -l /etc/init/plexmediaserver.override > /dev/null 2>&1; then
+  if [ "$(plexmediaserver__get_status)" == "Disabled" ]; then
     rm /etc/init/plexmediaserver.override > /dev/null 2>&1
   fi
   plexmediaserver__start
 }
 
 function plexmediaserver__disable() {
-  if ! ls -l /etc/init/plexmediaserver.override > /dev/null 2>&1; then
+  if [ "$(plexmediaserver__get_status)" != "Disabled" ]; then
     plexmediaserver__stop
     echo -e "manual" >> /etc/init/plexmediaserver.override
   fi
 }
 
-function plexmediaserver__show_config() {
-  ipv4=$(tools__get_ip)
-  port="32400"
-
-  echo "Plex Media Server Config:"
-  echo "----------------------------"
-	echo "Status: "
-  echo "Web UI: http://$ipv4:$port/web"
-}
-
 function plexmediaserver__start() {
-  if ! ls -l /etc/init/plexmediaserver.override > /dev/null 2>&1; then
+  if [ "$(plexmediaserver__get_status)" != "Disabled" ]; then
     for i in {1..3}; do
-      if service plexmediaserver status | egrep "stop|waiting" > /dev/null 2>&1; then
+      if [ "$(plexmediaserver__get_status)" != "Enabled and Running" ]; then
         if [ $i -gt 1 ]; then
           sleep 2
         fi
@@ -45,7 +46,7 @@ function plexmediaserver__start() {
 
 function plexmediaserver__stop() {
   for i in {1..3}; do
-    if service plexmediaserver status | egrep "start|running" > /dev/null 2>&1; then
+    if [ "$(plexmediaserver__get_status)" == "Enabled and Running" ]; then
       if [ $i -gt 1 ]; then
         sleep 2
       fi
@@ -54,4 +55,15 @@ function plexmediaserver__stop() {
       break
     fi
   done
+}
+
+function plexmediaserver__show_config() {
+  status="$(plexmediaserver__get_status)"
+  ipv4=$(tools__get_ip)
+  port="32400"
+
+  echo "Plex Media Server Config:"
+  echo "----------------------------"
+	echo "Status: $status"
+  echo "Web UI: http://$ipv4:$port/web"
 }

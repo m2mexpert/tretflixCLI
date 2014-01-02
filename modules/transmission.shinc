@@ -4,18 +4,57 @@ if test "${transmission__imported+defined}" == "defined"; then
 fi
 transmission__imported=1
 
+function transmission__get_status() {
+  if service transmission-daemon status > /dev/null 2>&1; then
+    result="Enabled and Running"
+  elif ls /etc/rc?.d/*transmission-daemon > /dev/null 2>&1; then
+    result="Not Running"
+  else
+    result="Disabled"
+  fi
+  echo "$result"
+}
+
 function transmission__enable() {
-  if ! tools__service_isenabled transmission-daemon; then
+  if [ "$(transmission__get_status)" == "Disabled" ]; then
     update-rc.d transmission-daemon defaults > /dev/null 2>&1
   fi
   transmission__start
 }
 
 function transmission__disable() {
-  if tools__service_isenabled transmission-daemon; then
+  if [ "$(transmission__get_status)" != "Disabled" ]; then
     transmission__stop
     update-rc.d -f transmission-daemon remove > /dev/null 2>&1
   fi
+}
+
+function transmission__start() {
+  if [ "$(transmission__get_status)" != "Disabled" ]; then
+    for i in {1..3}; do
+      if [ "$(transmission__get_status)" != "Enabled and Running" ]; then
+        if [ $i -gt 1 ]; then
+          sleep 2
+        fi
+        service transmission-daemon start > /dev/null 2>&1
+      else
+        break
+      fi
+    done
+  fi
+}
+
+function transmission__stop() {
+  for i in {1..3}; do
+    if [ "$(transmission__get_status)" == "Enabled and Running" ]; then
+      if [ $i -gt 1 ]; then
+        sleep 2
+      fi
+      service transmission-daemon stop > /dev/null 2>&1
+    else
+      break
+    fi
+  done
 }
 
 function transmission__set_username() {
@@ -37,6 +76,7 @@ function transmission__set_port() {
 }
 
 function transmission__show_config() {
+  status="$(transmission__get_status)"
   ipv4=$(tools__get_ip)
   username=$(grep "rpc-username" $transmission_config | awk '{ print $2 }' | awk -F '"' '{ print $2 }')
   password="N/A (ENCRYPTED)"
@@ -44,37 +84,9 @@ function transmission__show_config() {
 
   echo "Transmission Config:"
   echo "----------------------------"
-  echo "Status: "
+  echo "Status: $status"
   echo "Web UI: http://$ipv4:$port/transmission/web/"
   echo
   echo "Username: $username"
   echo "Password: $password"
-}
-
-function transmission__start() {
-  if tools__service_isenabled transmission-daemon; then
-    for i in {1..3}; do
-      if ! tools__service_isrunning transmission-daemon; then
-        if [ $i -gt 1 ]; then
-          sleep 2
-        fi
-        service transmission-daemon start > /dev/null 2>&1
-      else
-        break
-      fi
-    done
-  fi
-}
-
-function transmission__stop() {
-  for i in {1..3}; do
-    if tools__service_isrunning transmission-daemon; then
-      if [ $i -gt 1 ]; then
-        sleep 2
-      fi
-      service transmission-daemon stop > /dev/null 2>&1
-    else
-      break
-    fi
-  done
 }

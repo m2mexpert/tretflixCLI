@@ -4,18 +4,57 @@ if test "${sickbeard__imported+defined}" == "defined"; then
 fi
 sickbeard__imported=1
 
+function sickbeard__get_status() {
+  if service sickbeard status > /dev/null 2>&1; then
+    result="Enabled and Running"
+  elif ls /etc/rc?.d/*sickbeard > /dev/null 2>&1; then
+    result="Not Running"
+  else
+    result="Disabled"
+  fi
+  echo "$result"
+}
+
 function sickbeard__enable() {
-  if ! tools__service_isenabled sickbeard; then
+  if [ "$(sickbeard__get_status)" == "Disabled" ]; then
     update-rc.d sickbeard defaults > /dev/null 2>&1
   fi
   sickbeard__start
 }
 
 function sickbeard__disable() {
-  if tools__service_isenabled sickbeard; then
+  if [ "$(sickbeard__get_status)" != "Disabled" ]; then
     sickbeard__stop
     update-rc.d -f sickbeard remove > /dev/null 2>&1
   fi
+}
+
+function sickbeard__start() {
+  if [ "$(sickbeard__get_status)" != "Disabled" ]; then
+    for i in {1..3}; do
+      if [ "$(sickbeard__get_status)" != "Enabled and Running" ]; then
+        if [ $i -gt 1 ]; then
+          sleep 2
+        fi
+        service sickbeard start > /dev/null 2>&1
+      else
+        break
+      fi
+    done
+  fi
+}
+
+function sickbeard__stop() {
+  for i in {1..3}; do
+    if [ "$(sickbeard__get_status)" == "Enabled and Running" ]; then
+      if [ $i -gt 1 ]; then
+        sleep 2
+      fi
+      service sickbeard stop > /dev/null 2>&1
+    else
+      break
+    fi
+  done
 }
 
 function sickbeard__set_username() {
@@ -70,6 +109,7 @@ function sickbeard__set_sabnzbdplus_apikey() {
 }
 
 function sickbeard__show_config() {
+  status="$(sickbeard__get_status)"
   ipv4=$(tools__get_ip)
   username=$(sed -n '/^\[General\]/,/^\[/p' $sickbeard_config | grep "^web_username " | awk '{ print $3 }')
   password=$(sed -n '/^\[General\]/,/^\[/p' $sickbeard_config | grep "^web_password " | awk '{ print $3 }')
@@ -78,38 +118,10 @@ function sickbeard__show_config() {
 
   echo "Sick Beard Config:"
   echo "----------------------------"
-  echo "Status: "
+  echo "Status: $status"
   echo "Web UI: http://$ipv4:$port/home/"
   echo
   echo "Username: $username"
   echo "Password: $password"
   echo "API Key: $apikey"
-}
-
-function sickbeard__start() {
-  if tools__service_isenabled sickbeard; then
-    for i in {1..3}; do
-      if ! tools__service_isrunning sickbeard; then
-        if [ $i -gt 1 ]; then
-          sleep 2
-        fi
-        service sickbeard start > /dev/null 2>&1
-      else
-        break
-      fi
-    done
-  fi
-}
-
-function sickbeard__stop() {
-  for i in {1..3}; do
-    if tools__service_isrunning sickbeard; then
-      if [ $i -gt 1 ]; then
-        sleep 2
-      fi
-      service sickbeard stop > /dev/null 2>&1
-    else
-      break
-    fi
-  done
 }
