@@ -49,6 +49,7 @@ function network__add_ip() {
   tools__host_ping $ifaceIP > /dev/null
   if [ $? -eq 0 ]; then
     echo "IP address already in use on the network"
+    echo
     exit 1
   fi
 
@@ -66,10 +67,12 @@ function network__add_ip() {
       ifaceLabel="eth0:$ifaceLast"
     else
       echo "Unable to determine existing virtual interfaces"
+      echo
       exit 1
     fi
   fi
 
+  echo "Applying changes to the network..."
   # Add interface to network config
   echo -e "\n" \
     "# $ifaceLabel interface section start\n" \
@@ -91,7 +94,9 @@ function network__add_ip() {
   sed -i '/^$/N;/^\n$/D' /etc/network/interfaces
 
   service networking restart > /dev/null 2>&1
-  ifconfig $ifaceLabel up
+  ifconfig $ifaceLabel up > /dev/null 2>&1
+  
+  echo "Done."
 }
 
 function network__del_ip() {
@@ -104,38 +109,42 @@ function network__del_ip() {
   ifaceLabel=$(ifconfig | awk '/'$ifaceIP'/ {print $1}' RS="\n\n")
   if [ ! "$ifaceLabel" ]; then
     echo "The IP address specified is not currently configured"
+    echo
     exit 1
   fi
 
   if [ "$ifaceLabel" == "eth0" ]; then
     echo "The default interface (eth0) cannot be removed"
+    echo
     exit 1
   fi
 
   if [ "$ifaceLabel" == "lo" ]; then
     echo "The loopback interface (lo) cannot be removed"
+    echo
     exit 1
   fi
 
   if ! cat /etc/network/interfaces | grep -q "^# $ifaceLabel interface section start"; then
     echo "Only interfaces added by tretflix can be removed using this command"
+    echo
     exit 1
   fi
 
-  ifconfig $ifaceLabel down
+  echo "Applying changes to the network..."
+  ifconfig $ifaceLabel down > /dev/null 2>&1
   sed -i -n '1h;1!H;${;g;s/# '$ifaceLabel' interface section start.*# '$ifaceLabel' interface section end//g;p;}' \
     /etc/network/interfaces
 
   sed -i '/^$/N;/^\n$/D' /etc/network/interfaces
 
   service networking restart > /dev/null 2>&1
+  echo "Done."
 }
 
 function network__show_config() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    echo
     ifconfig | grep -v "inet6" | egrep -A 2 "eth[0-9]|eth[0-9]:[0-9]" | sed 's/^--//g'
-    echo 
   else
     network__help
   fi
