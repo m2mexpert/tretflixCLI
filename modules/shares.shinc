@@ -79,36 +79,43 @@ function shares__add_cifs() {
 
     if tools__share_exists $share $mountPoint; then
       echo "The CIFS share '$share' already exists in /etc/fstab"
+      echo
       exit 1
     elif tools__mountpoint_exists $mountPoint; then
       echo "The mount point '$mountPoint' already exists in /etc/fstab"
+      echo
       exit 1
     fi
 
     if tools__path_exists $mountPoint; then
       if [ "$(tools__path_istype $mountPoint)" != "Directory" ]; then
         echo "The moint point '$mountPoint' already exists and cannot be used"
+        echo
         exit 1
       elif ! tools__dir_isempty $mountPoint; then
         echo "The mount point '$mountPoint' is not empty and cannot be used"
+        echo
         exit 1
       fi
     else
       mkdir -p $mountPoint
       if [ $? -ne 0 ]; then
         echo "Failed to create the mount point '$mountPoint'"
+        echo
         exit 1
       fi
     fi
-    
+
+    echo "Applying changes to /etc/fstab..."
     sudo su -c "echo -e '$mountCmd' >> /etc/fstab"
+    echo "Mounting share..."
     sudo mount $mountPoint
-    if [ $? -eq 0 ]; then
-      echo "CIFS share added"
-    else
+    if [ $? -ne 0 ]; then
       echo "Failed to mount the CIFS share '$share'"
+      echo
       exit 1
     fi
+    echo "Done."
   else
     exit 1
   fi
@@ -125,23 +132,28 @@ function shares__del_cifs() {
     if tools__share_exists $share $mountPoint; then
 
       if tools__share_isactive $share $mountPoint; then
+        echo "Unmounting share..."
         sudo umount $mountPoint
         if [ $? -ne 0 ]; then
           echo "Failed to unmount the CIFS share"
+          echo
           exit 1
         fi
       fi
 
+      echo "Applying changes to /etc/fstab..."
       sudo sed -i '\#^'"$share"' '"$mountPoint"'#d' /etc/fstab
       if ! tools__share_exists $share $mountPoint; then
-        echo "CIFS share removed"
+        echo "Done."
       else
         echo "Failed to remove the CIFS share entry from /etc/fstab"
+        echo
         exit 1
       fi
 
     else
       echo "No such CIFS share entry found in /etc/fstab"
+      echo
       exit 1
     fi
 
@@ -169,36 +181,43 @@ function shares__add_nfs() {
 
     if tools__share_exists $share $mountPoint; then
       echo "The NFS share '$share' already exists in /etc/fstab"
+      echo
       exit 1
     elif tools__mountpoint_exists $mountPoint; then
       echo "The mount point '$mountPoint' already exists in /etc/fstab"
+      echo
       exit 1
     fi
 
     if tools__path_exists $mountPoint; then
       if [ "$(tools__path_istype $mountPoint)" != "Directory" ]; then
         echo "The moint point '$mountPoint' already exists and cannot be used"
+        echo
         exit 1
       elif ! tools__dir_isempty $mountPoint; then
         echo "The mount point '$mountPoint' is not empty and cannot be used"
+        echo
         exit 1
       fi
     else
       mkdir -p $mountPoint
       if [ $? -ne 0 ]; then
         echo "Failed to create the mount point '$mountPoint'"
+        echo
         exit 1
       fi
     fi
 
+    echo "Applying changes to /etc/fstab..."
     sudo su -c "echo -e '$mountCmd' >> /etc/fstab"
+    echo "Mounting share..."
     sudo mount $mountPoint
-    if [ $? -eq 0 ]; then
-      echo "NFS share added"
-    else
+    if [ $? -ne 0 ]; then
       echo "Failed to mount the NFS share '$share'"
+      echo
       exit 1
     fi
+    echo "Done."
   else
     exit 1
   fi
@@ -215,23 +234,28 @@ function shares__del_nfs() {
     if tools__share_exists $share $mountPoint; then
 
       if tools__share_isactive $share $mountPoint; then
+        echo "Unmounting share..."
         sudo umount $mountPoint
         if [ $? -ne 0 ]; then
           echo "Failed to unmount the NFS share"
+          echo
           exit 1
         fi
       fi
 
+      echo "Applying changes to /etc/fstab..."
       sudo sed -i '\#^'"$share"' '"$mountPoint"'#d' /etc/fstab
       if ! tools__share_exists $share $mountPoint; then
-        echo "NFS share removed"
+        echo "Done."
       else
         echo "Failed to remove the NFS share entry from /etc/fstab"
+        echo
         exit 1
       fi
 
     else
       echo "No such NFS share entry found in /etc/fstab"
+      echo
       exit 1
     fi
 
@@ -243,11 +267,10 @@ function shares__del_nfs() {
 function shares__show_config() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
     if df -hT | egrep -q "[[:space:]]cifs[[:space:]]|[[:space:]]nfs[[:space:]]"; then
-      echo
-      df -hT | egrep "^Filesystem[[:space:]]|[[:space:]]cifs[[:space:]]|[[:space:]]nfs[[:space:]]"
-      echo      
+      df -hT | egrep "^Filesystem[[:space:]]|[[:space:]]cifs[[:space:]]|[[:space:]]nfs[[:space:]]"   
     else
-      echo "There are no mounted shares"
+      echo "There are no shares mounted"
+      echo
       exit 1
     fi
   else
