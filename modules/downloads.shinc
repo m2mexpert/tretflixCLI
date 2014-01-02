@@ -83,6 +83,12 @@ function downloads__set_path() {
       echo
       exit 1
     fi
+	  ln -sfn $newPath $downloadsSymLink
+    if [ $? -ne 0 ]; then
+      echo "Failed to set the new downloads path"
+      echo
+      exit 1
+    fi
 
   else
     echo "Applying changes to the downloads path..."
