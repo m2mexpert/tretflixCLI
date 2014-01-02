@@ -56,12 +56,14 @@ function downloads__set_path() {
   
   if [ "$(tools__path_istype $newPath)" != "Directory" ]; then
     echo "The path does not exist or is not a directory"
+    echo
     exit 1
   fi
   
   sudo su -c -u $osUser "test -w $newPath"
   if [ $? -ne 0 ]; then
     echo "Permission denied, no write permission to the new downloads path"
+    echo
     exit 1
   fi
 
@@ -71,22 +73,27 @@ function downloads__set_path() {
 		
     if [ "$syncSize" -ge "$newPathAvail" ]; then
       echo "There is not enough available space to copy the current downloads to the new downloads path"
+      echo
       exit 1
     fi
     
     sudo su -c -u $osUser "rsync -av --progress --human-readable $downloadsSymLink/* $newPath/."
     if [ $? -ne 0 ]; then
       echo "There were errors while copying the current downloads to the new downloads path"
+      echo
       exit 1
     fi
 
   fi
   
+  echo "Applying changes to the downloads path..."
 	ln -sfn $newPath $downloadsSymLink
   if [ $? -ne 0 ]; then
     echo "Failed to set the new downloads path"
+    echo
     exit 1
   fi
+  echo "Done."
 }
 
 function downloads__show_config() {
@@ -97,11 +104,8 @@ function downloads__show_config() {
     avail="$(df -h "$downloadsSymLink" | awk '{ print $4 }' | egrep -v "Avail")"
     uPerc="$(df -h "$downloadsSymLink" | awk '{ print $5 }' | egrep -v "Use%")"
 
-    echo
     printf "%-40s %-7s %-7s %-7s %-7s\n" "Path" "Size" "Used" "Avail" "Use%"
     printf "%-40s %-7s %-7s %-7s %-7s\n" "$path" "$size" "$used" "$avail" "$uPerc"
-    echo
-
   else
     downloads__help
   fi
