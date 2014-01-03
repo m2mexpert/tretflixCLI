@@ -257,7 +257,7 @@ function config__wizard() {
   fi
 }
 
-function config__backup_appdata() {
+function config__backup_app_data() {
   if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
     echo "Stopping Services..."
     couchpotato__stop
