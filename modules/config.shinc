@@ -281,6 +281,12 @@ function config__backup() {
 
 function config__restore() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
+    if [ "$(tools__path_istype ${CLI_ARGS[2]})" != "File" ]; then
+      echo "The file specified cannot be found. Try including the full path"
+      echo
+      exit 1
+    fi
+    
     echo "Stopping Services..."
     couchpotato__stop
     headphones__stop
@@ -291,7 +297,7 @@ function config__restore() {
     
     echo "Restoring Backup..."
     rm -rf /opt/tretflix/appdata/
-    sudo su -c -u $osUser "cd /opt/tretflix/ && tar -xf ${CLI_ARGS[2]}"
+    sudo su -c -u $osUser "tar -xf ${CLI_ARGS[2]} -C /opt/tretflix/"
     
     echo "Starting Enabled Services..."
     couchpotato__start
