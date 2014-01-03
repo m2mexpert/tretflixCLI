@@ -9,23 +9,28 @@ function config__help() {
   echo
   echo "COMMANDS:"
   echo "  tretflix config wizard"
-  echo "  tretflix config backup"
-  echo "  tretflix config restore [FILE]"
+  echo "  tretflix config backup app data"
+  echo "  tretflix config restore app data [FILE]"
   echo
   exit 1
 }
 
 function config__command_handler() {
-  if test "${CLI_ARGS[1]+isset}"; then
+  if test "${CLI_ARGS[3]+isset}"; then
+    case "${CLI_ARGS[1]} ${CLI_ARGS[2]} ${CLI_ARGS[3]}" in
+      'backup app data')
+        config__backup_app_data
+        ;;
+      'restore app data')
+        config__restore_app_data
+        ;;
+      *)
+        config__help
+    esac    
+  elif test "${CLI_ARGS[1]+isset}"; then
     case "${CLI_ARGS[1]}" in
       wizard)
         config__wizard
-        ;;
-      backup)
-        config__backup
-        ;;
-      restore)
-        config__restore
         ;;
       *)
         config__help
@@ -252,8 +257,8 @@ function config__wizard() {
   fi
 }
 
-function config__backup() {
-  if [ "${#CLI_ARGS[@]}" -eq 2 ]; then
+function config__backup_appdata() {
+  if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
     echo "Stopping Services..."
     couchpotato__stop
     headphones__stop
@@ -279,9 +284,9 @@ function config__backup() {
   fi
 }
 
-function config__restore() {
-  if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    if [ "$(tools__path_istype ${CLI_ARGS[2]})" != "File" ]; then
+function config__restore_app_data() {
+  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
+    if [ "$(tools__path_istype ${CLI_ARGS[4]})" != "File" ]; then
       echo "The file specified cannot be found. Try including the full path"
       echo
       exit 1
@@ -297,7 +302,7 @@ function config__restore() {
     
     echo "Restoring Backup..."
     rm -rf /opt/tretflix/appdata/
-    sudo su -c -u $osUser "tar -xf ${CLI_ARGS[2]} -C /opt/tretflix/"
+    sudo su -c -u $osUser "tar -xf ${CLI_ARGS[3]} -C /opt/tretflix/"
     
     echo "Starting Enabled Services..."
     couchpotato__start
