@@ -171,6 +171,7 @@ function config__wizard() {
     echo "* Stopping Services"
     couchpotato__stop
     headphones__stop
+    plexmediaserver__stop
     sabnzbdplus__stop
     sickbeard__stop
     transmission__stop
@@ -223,10 +224,10 @@ function config__wizard() {
     echo "* Enabling & Starting Services"
     couchpotato__enable
     headphones__enable
+    plexmediaserver__enable
     sabnzbdplus__enable
     sickbeard__enable
     transmission__enable
-    plexmediaserver__enable
 
     ipv4=$(tools__get_ip)
     
@@ -286,11 +287,14 @@ function config__backup_app_data() {
 
 function config__restore_app_data() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
+ 
     if [ "$(tools__path_istype ${CLI_ARGS[4]})" != "File" ]; then
-      echo "The file specified cannot be found. Try including the full path"
+      echo "The specified file cannot be found."
       echo
       exit 1
     fi
+    
+    file="$(realpath ${CLI_ARGS[4]})"
     
     echo "Stopping Services..."
     couchpotato__stop
@@ -301,8 +305,10 @@ function config__restore_app_data() {
     transmission__stop
     
     echo "Restoring Backup..."
+    timestamp=$(date "+%Y%m%d%H%M%S")
+    sudo su -c -u $osUser "cd /opt/tretflix/ && tar cf removed-$timestamp.tar appdata/"
     rm -rf /opt/tretflix/appdata/
-    sudo su -c -u $osUser "tar -xf ${CLI_ARGS[3]} -C /opt/tretflix/"
+    sudo su -c -u $osUser "tar -xf $file -C /opt/tretflix/"
     
     echo "Starting Enabled Services..."
     couchpotato__start
