@@ -73,9 +73,9 @@ function config__wizard() {
     echo
     while true; do
       input=""
-      read -p "Enter a port number for accessing the CouchPotato Web UI [Default: 5000]: " input
+      read -p "Enter a port number for accessing the CouchPotato Web UI [Default: 5050]: " input
       if [[ -z "${input}" ]]; then
-        couchpotato_port="5000"
+        couchpotato_port="5050"
         break
       else
         couchpotato_port="$input"
