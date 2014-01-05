@@ -25,13 +25,6 @@ function tools__cifs_test() {
     return 1
   fi
 
-  # Verify that the CIFS services are available on the host
-  smbclient -L $host -N > /dev/null 2>&1
-  if [ $? -ne 0 ]; then
-    echo "Unable to connect to CIFS services on the host"
-    return 1
-  fi
-
   # Perform the test mount, output errors if unsuccessful
   if [ $# -eq 2 ]; then
     output=$(mount -t cifs $share $mountPoint -o guest,sec=ntlm 2>&1)
@@ -71,13 +64,6 @@ function tools__nfs_test() {
   # Verify that the host is reachable and/or hostname can be resolved
   tools__host_ping $host
   if [ $? -ne 0 ]; then
-    return 1
-  fi
-
-  # Verify that the NFS services are available on the host
-  rpcinfo -t $host nfs > /dev/null 2>&1
-  if [ $? -ne 0 ]; then
-    echo "Unable to connect to NFS services on the host"
     return 1
   fi
   
