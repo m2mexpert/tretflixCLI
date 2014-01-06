@@ -110,6 +110,7 @@ import "modules/shares"
 import "modules/sickbeard"
 import "modules/tools"
 import "modules/transmission"
+import "modules/update"
 
 # call appropriate module based on options entered by the user via CLI
 if test "${CLI_ARGS[0]+isset}"; then
@@ -129,6 +130,9 @@ if test "${CLI_ARGS[0]+isset}"; then
       ;;
     shares)
       shares__command_handler
+      ;;
+    update)
+      update__command_handler
       ;;
     *)
       help
