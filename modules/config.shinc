@@ -244,7 +244,7 @@ function config__wizard() {
     echo
     echo "CouchPotato:" $couchpotato_state
     if [ "$couchpotato_state" == "Enabled" ]; then
-      echo "---------------------"
+      echo "----------------------------"
       echo "Username:" $couchpotato_username
       echo "Password:" $couchpotato_password
       echo "Port:" $couchpotato_port
@@ -253,7 +253,7 @@ function config__wizard() {
     
     echo "Headphones:" $headphones_state
     if [ "$headphones_state" == "Enabled" ]; then
-      echo "---------------------"
+      echo "----------------------------"
       echo "Username:" $headphones_username
       echo "Password:" $headphones_password
       echo "Port:" $headphones_port
@@ -262,7 +262,7 @@ function config__wizard() {
     
     echo "Plex Media Server:" $plexmediaserver_state
     if [ "$plexmediaserver_state" == "Enabled" ]; then
-      echo "---------------------"
+      echo "----------------------------"
       echo "Username: N/A"
       echo "Password: N/A"
       echo "Port:" $plexmediaserver_port    
@@ -271,7 +271,7 @@ function config__wizard() {
     
     echo "SABnzbd+:" $sabnzbdplus_state
     if [ "$sabnzbdplus_state" == "Enabled" ]; then
-      echo "---------------------"
+      echo "----------------------------"
       echo "Username:" $sabnzbdplus_username
       echo "Password:" $sabnzbdplus_password
       echo "Port:" $sabnzbdplus_port
@@ -280,7 +280,7 @@ function config__wizard() {
 
     echo "Sick Beard:" $sickbeard_state
     if [ "$sickbeard_state" == "Enabled" ]; then
-      echo "---------------------"
+      echo "----------------------------"
       echo "Username:" $sickbeard_username
       echo "Password:" $sickbeard_password
       echo "Port:" $sickbeard_port
@@ -289,7 +289,7 @@ function config__wizard() {
 
     echo "Transmission:" $transmission_state
     if [ "$transmission_state" == "Enabled" ]; then
-      echo "---------------------"
+      echo "----------------------------"
       echo "Username:" $transmission_username
       echo "Password:" $transmission_password
       echo "Port:" $transmission_port
@@ -404,8 +404,8 @@ function config__wizard() {
     
     echo
     echo
-    echo "Web UI URL List:"
-    echo "------------------"
+    echo "Web UI URL's:"
+    echo "----------------------------"
     if [ "$couchpotato_state" == "Enabled" ]; then
       echo "CouchPotato: http://"$ipv4":"$couchpotato_port"/"
     fi
