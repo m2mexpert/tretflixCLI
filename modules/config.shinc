@@ -243,7 +243,7 @@ function config__wizard() {
     echo "Config Summary"
     echo
     echo "CouchPotato:" $couchpotato_state
-    if [ "$couchpotato_state == "Enabled" ]; then
+    if [ "$couchpotato_state" == "Enabled" ]; then
       echo "---------------------"
       echo "Username:" $couchpotato_username
       echo "Password:" $couchpotato_password
@@ -252,7 +252,7 @@ function config__wizard() {
     echo
     
     echo "Headphones:" $headphones_state
-    if [ "$headphones_state == "Enabled" ]; then
+    if [ "$headphones_state" == "Enabled" ]; then
       echo "---------------------"
       echo "Username:" $headphones_username
       echo "Password:" $headphones_password
@@ -264,7 +264,7 @@ function config__wizard() {
     echo
     
     echo "SABnzbd+:" $sabnzbdplus_state
-    if [ "$sabnzbdplus_state == "Enabled" ]; then
+    if [ "$sabnzbdplus_state" == "Enabled" ]; then
       echo "---------------------"
       echo "Username:" $sabnzbdplus_username
       echo "Password:" $sabnzbdplus_password
@@ -273,7 +273,7 @@ function config__wizard() {
     echo
 
     echo "Sick Beard:" $sickbeard_state
-    if [ "$sickbeard_state == "Enabled" ]; then
+    if [ "$sickbeard_state" == "Enabled" ]; then
       echo "---------------------"
       echo "Username:" $sickbeard_username
       echo "Password:" $sickbeard_password
@@ -282,7 +282,7 @@ function config__wizard() {
     echo
 
     echo "Transmission:" $transmission_state
-    if [ "$transmission_state == "Enabled" ]; then
+    if [ "$transmission_state" == "Enabled" ]; then
       echo "---------------------"
       echo "Username:" $transmission_username
       echo "Password:" $transmission_password
@@ -323,7 +323,7 @@ function config__wizard() {
     sickbeard_apikey="$(tools__gen_apikey)"
 
     echo "* Configuring CouchPotato"
-    if [ "$couchpotato_state == "Enabled" ]; then
+    if [ "$couchpotato_state" == "Enabled" ]; then
       couchpotato__set_username "$couchpotato_username"
       couchpotato__set_password "$couchpotato_password"
       couchpotato__set_port "$couchpotato_port"
@@ -336,7 +336,7 @@ function config__wizard() {
     fi
     
     echo "* Configuring Headphones"
-    if [ "$headphones_state == "Enabled" ]; then
+    if [ "$headphones_state" == "Enabled" ]; then
       headphones__set_username "$headphones_username"
       headphones__set_password "$headphones_password"
       headphones__set_port "$headphones_port"
@@ -351,14 +351,14 @@ function config__wizard() {
     fi
 
     echo "* Configuring Plex Media Server"
-    if [ "$plexmediaserver_state == "Enabled" ]; then
+    if [ "$plexmediaserver_state" == "Enabled" ]; then
       plexmediaserver__enable
     else
       plexmediaserver__disable
     fi
     
     echo "* Configuring SABnzbd+"
-    if [ "$sabnzbdplus_state == "Enabled" ]; then
+    if [ "$sabnzbdplus_state" == "Enabled" ]; then
       sabnzbdplus__set_username "$sabnzbdplus_username"
       sabnzbdplus__set_password "$sabnzbdplus_password"
       sabnzbdplus__set_port "$sabnzbdplus_port"
@@ -369,7 +369,7 @@ function config__wizard() {
     fi
 
     echo "* Configuring Sick Beard"
-    if [ "$sickbeard_state == "Enabled" ]; then
+    if [ "$sickbeard_state" == "Enabled" ]; then
       sickbeard__set_username "$sickbeard_username"
       sickbeard__set_password "$sickbeard_password"
       sickbeard__set_port "$sickbeard_port"
@@ -384,7 +384,7 @@ function config__wizard() {
     fi
 
     echo "* Configuring Transmission"
-    if [ "$transmission_state == "Enabled" ]; then
+    if [ "$transmission_state" == "Enabled" ]; then
       transmission__set_username "$transmission_username"
       transmission__set_password "$transmission_password"
       transmission__set_port "$transmission_port"
@@ -397,21 +397,22 @@ function config__wizard() {
     echo
     echo "Web UI URL List:"
     echo "------------------"
-    if [ "$couchpotato_state == "Enabled" ]; then
+    if [ "$couchpotato_state" == "Enabled" ]; then
       echo "CouchPotato: http://"$ipv4":"$couchpotato_port"/"
     fi
-    if [ "$headphones_state == "Enabled" ]; then
+    if [ "$headphones_state" == "Enabled" ]; then
       echo "Headphones: http://"$ipv4":"$headphones_port"/"
     fi
-    if [ "$plexmediaserver_state == "Enabled" ]; then
+    if [ "$plexmediaserver_state" == "Enabled" ]; then
       echo "Plex Media Server: http://"$ipv4":"$plexmediaserver_port"/web"
     fi
-    if [ "$sabnzbdplus_state == "Enabled" ]; then
+    if [ "$sabnzbdplus_state" == "Enabled" ]; then
       echo "SABnzbd+: http://"$ipv4":"$sabnzbdplus_port"/sabnzbd/"
     fi
-    if [ "$sickbeard_state == "Enabled" ]; then
+    if [ "$sickbeard_state" == "Enabled" ]; then
       echo "Sick Beard: http://"$ipv4":"$sickbeard_port"/home/"
-    if [ "$transmission_state == "Enabled" ]; then
+    fi
+    if [ "$transmission_state" == "Enabled" ]; then
       echo "Transmission: http://"$ipv4":"$transmission_port"/transmission/web/"
     fi
     
