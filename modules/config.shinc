@@ -264,12 +264,6 @@ function config__wizard() {
     sickbeard__stop
     transmission__stop
     
-    sudo service couchpotato status
-    sudo service headphones status
-    sudo service plexmediaserver status
-    sudo service sabnzbdplus status
-    sudo service transmission-daemon status
-    
     echo "* Generating new API Keys"
     couchpotato_apikey="$(tools__gen_apikey)" && sleep 2
     headphones_apikey="$(tools__gen_apikey)" && sleep 2
@@ -282,6 +276,10 @@ function config__wizard() {
       couchpotato__set_password "$couchpotato_password"
       couchpotato__set_port "$couchpotato_port"
       couchpotato__set_apikey "$couchpotato_apikey"
+      if [ "$sabnzbdplus_state" == "Enabled" ]; then
+        couchpotato__set_sabnzbdplus_port "$sabnzbdplus_port"
+        couchpotato__set_sabnzbdplus_apikey "$sabnzbdplus_apikey"     
+      fi
       couchpotato__enable
     else
       couchpotato__disable
@@ -293,6 +291,12 @@ function config__wizard() {
       headphones__set_password "$headphones_password"
       headphones__set_port "$headphones_port"
       headphones__set_apikey "$headphones_apikey"
+      if [ "$sabnzbdplus_state" == "Enabled" ]; then
+        headphones__set_sabnzbdplus_username "$sabnzbdplus_username"
+        headphones__set_sabnzbdplus_password "$sabnzbdplus_password"
+        headphones__set_sabnzbdplus_port "$sabnzbdplus_port"
+        headphones__set_sabnzbdplus_apikey "$sabnzbdplus_apikey"      
+      fi
       headphones__enable
     else
       headphones__disable
@@ -312,18 +316,6 @@ function config__wizard() {
       sabnzbdplus__set_port "$sabnzbdplus_port"
       sabnzbdplus__set_apikey "$sabnzbdplus_apikey"
       sabnzbdplus__enable
-      
-      # Update other app configs to keep in sync w/ SABnzbd+
-      couchpotato__set_sabnzbdplus_port "$sabnzbdplus_port"
-      couchpotato__set_sabnzbdplus_apikey "$sabnzbdplus_apikey"
-      headphones__set_sabnzbdplus_username "$sabnzbdplus_username"
-      headphones__set_sabnzbdplus_password "$sabnzbdplus_password"
-      headphones__set_sabnzbdplus_port "$sabnzbdplus_port"
-      headphones__set_sabnzbdplus_apikey "$sabnzbdplus_apikey"
-      sickbeard__set_sabnzbdplus_username "$sabnzbdplus_username"
-      sickbeard__set_sabnzbdplus_password "$sabnzbdplus_password"
-      sickbeard__set_sabnzbdplus_port "$sabnzbdplus_port"
-      sickbeard__set_sabnzbdplus_apikey "$sabnzbdplus_apikey"
     else
       sabnzbdplus__disable
     fi
@@ -334,6 +326,12 @@ function config__wizard() {
       sickbeard__set_password "$sickbeard_password"
       sickbeard__set_port "$sickbeard_port"
       sickbeard__set_apikey "$sickbeard_apikey"
+      if [ "$sabnzbdplus_state" == "Enabled" ]; then
+        sickbeard__set_sabnzbdplus_username "$sabnzbdplus_username"
+        sickbeard__set_sabnzbdplus_password "$sabnzbdplus_password"
+        sickbeard__set_sabnzbdplus_port "$sabnzbdplus_port"
+        sickbeard__set_sabnzbdplus_apikey "$sabnzbdplus_apikey"      
+      fi
       sickbeard__enable
     else
       sickbeard__disable
