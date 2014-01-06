@@ -49,7 +49,6 @@ function config__wizard() {
     echo " |  |  |  | \/\  ___/|  |  |  |  |  |_|  |>    < "
     echo " |__|  |__|    \_____/__|  |__|  |____/__/__/\__\\"
     echo
-
     echo
     while true; do
       read -p "Do you want to use CouchPotato? (y/n): " input
@@ -251,6 +250,12 @@ function config__wizard() {
       esac
     done
 
+    clear
+    echo "  __                  __    _____ __   __        "
+    echo "_/  |________   _____/  |__/ ____\  | |__|__  ___"
+    echo "\   __\_  __ \_/ __ \   __\   __\|  | |  \  \/  /"
+    echo " |  |  |  | \/\  ___/|  |  |  |  |  |_|  |>    < "
+    echo " |__|  |__|    \_____/__|  |__|  |____/__/__/\__\\"
     echo
     echo
     echo "Applying configuration changes..."
