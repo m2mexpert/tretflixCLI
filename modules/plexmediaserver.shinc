@@ -34,7 +34,7 @@ function plexmediaserver__start() {
     for i in {1..3}; do
       if [ "$(plexmediaserver__get_status)" != "Enabled and Running" ]; then
         if [ $i -gt 1 ]; then
-          sleep 2
+          sleep 3
         fi
         service plexmediaserver start > /dev/null 2>&1
       else
