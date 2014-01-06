@@ -253,6 +253,9 @@ function config__wizard() {
     echo "Transmission:"
     echo "http://"$ipv4":"$transmission_port"/transmission/web/"
     
+    timestamp=$(date "+%Y%m%d%H%M%S")
+    sudo su -c -u $osUser "echo $timestamp >> /opt/tretflix/.sys/.configured"
+    
   else
     config__help
   fi
