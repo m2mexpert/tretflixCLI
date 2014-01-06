@@ -34,6 +34,7 @@ function update__cli() {
   if [ "${#CLI_ARGS[@]}" -eq 2 ]; then
     sudo su -c -u $osUser "git reset --hard origin/master"
     sudo su -c -u $osUser "git pull origin master"
+    chmod +x "$0"
   elif [ "${#CLI_ARGS[@]}" -eq 4 ]; then
     case "${CLI_ARGS[2]}" in
       '-b' | '--branch')
@@ -42,6 +43,7 @@ function update__cli() {
         if [ "$branch" == "master" ] || [ "$branch" == "develop" ]; then
           sudo su -c -u $osUser "git reset --hard origin/$branch"
           sudo su -c -u $osUser "git pull origin $branch"
+          chmod +x "$0"
         else
           echo "Invalid branch name."
           echo
