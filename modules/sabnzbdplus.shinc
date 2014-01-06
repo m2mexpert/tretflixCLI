@@ -32,10 +32,10 @@ function sabnzbdplus__disable() {
 function sabnzbdplus__start() {
   if [ "$(sabnzbdplus__get_status)" != "Disabled" ]; then
     for i in {1..3}; do
+      if [ $i -gt 1 ]; then
+        sleep 3
+      fi
       if [ "$(sabnzbdplus__get_status)" != "Enabled and Running" ]; then
-        if [ $i -gt 1 ]; then
-          sleep 2
-        fi
         service sabnzbdplus start > /dev/null 2>&1
       else
         break
@@ -46,10 +46,10 @@ function sabnzbdplus__start() {
 
 function sabnzbdplus__stop() {
   for i in {1..3}; do
+    if [ $i -gt 1 ]; then
+      sleep 3
+    fi
     if [ "$(sabnzbdplus__get_status)" == "Enabled and Running" ]; then
-      if [ $i -gt 1 ]; then
-        sleep 2
-      fi
       service sabnzbdplus stop > /dev/null 2>&1
     else
       break

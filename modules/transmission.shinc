@@ -32,10 +32,10 @@ function transmission__disable() {
 function transmission__start() {
   if [ "$(transmission__get_status)" != "Disabled" ]; then
     for i in {1..3}; do
+      if [ $i -gt 1 ]; then
+        sleep 3
+      fi
       if [ "$(transmission__get_status)" != "Enabled and Running" ]; then
-        if [ $i -gt 1 ]; then
-          sleep 2
-        fi
         service transmission-daemon start > /dev/null 2>&1
       else
         break
@@ -46,10 +46,10 @@ function transmission__start() {
 
 function transmission__stop() {
   for i in {1..3}; do
+    if [ $i -gt 1 ]; then
+      sleep 3
+    fi
     if [ "$(transmission__get_status)" == "Enabled and Running" ]; then
-      if [ $i -gt 1 ]; then
-        sleep 2
-      fi
       service transmission-daemon stop > /dev/null 2>&1
     else
       break

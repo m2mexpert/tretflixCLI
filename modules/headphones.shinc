@@ -32,10 +32,10 @@ function headphones__disable() {
 function headphones__start() {
   if [ "$(headphones__get_status)" != "Disabled" ]; then
     for i in {1..3}; do
+      if [ $i -gt 1 ]; then
+        sleep 3
+      fi
       if [ "$(headphones__get_status)" != "Enabled and Running" ]; then
-        if [ $i -gt 1 ]; then
-          sleep 2
-        fi
         service headphones start > /dev/null 2>&1
       else
         break
@@ -46,10 +46,10 @@ function headphones__start() {
 
 function headphones__stop() {
   for i in {1..3}; do
+    if [ $i -gt 1 ]; then
+      sleep 3
+    fi
     if [ "$(headphones__get_status)" == "Enabled and Running" ]; then
-      if [ $i -gt 1 ]; then
-        sleep 2
-      fi
       service headphones stop > /dev/null 2>&1
     else
       break
