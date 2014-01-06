@@ -85,8 +85,10 @@ function transmission__show_config() {
   echo "Transmission Config:"
   echo "----------------------------"
   echo "Status: $status"
-  echo "Web UI: http://$ipv4:$port/transmission/web/"
-  echo
-  echo "Username: $username"
-  echo "Password: $password"
+  if [ "$status" == "Enabled and Running" ]; then
+    echo "Web UI: http://$ipv4:$port/transmission/web/"
+    echo
+    echo "Username: $username"
+    echo "Password: $password"
+  fi
 }

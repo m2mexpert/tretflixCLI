@@ -116,9 +116,11 @@ function headphones__show_config() {
   echo "Headphones Config:"
   echo "----------------------------"
   echo "Status: $status"
-  echo "Web UI: http://$ipv4:$port/"
-  echo
-  echo "Username: $username"
-  echo "Password: $password"
-  echo "API Key: $apikey"
+  if [ "$status" == "Enabled and Running" ]; then
+    echo "Web UI: http://$ipv4:$port/"
+    echo
+    echo "Username: $username"
+    echo "Password: $password"
+    echo "API Key: $apikey"
+  fi
 }

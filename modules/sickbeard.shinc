@@ -119,9 +119,11 @@ function sickbeard__show_config() {
   echo "Sick Beard Config:"
   echo "----------------------------"
   echo "Status: $status"
-  echo "Web UI: http://$ipv4:$port/home/"
-  echo
-  echo "Username: $username"
-  echo "Password: $password"
-  echo "API Key: $apikey"
+  if [ "$status" == "Enabled and Running" ]; then
+    echo "Web UI: http://$ipv4:$port/home/"
+    echo
+    echo "Username: $username"
+    echo "Password: $password"
+    echo "API Key: $apikey"
+  fi
 }

@@ -64,6 +64,8 @@ function plexmediaserver__show_config() {
 
   echo "Plex Media Server Config:"
   echo "----------------------------"
-	echo "Status: $status"
-  echo "Web UI: http://$ipv4:$port/web"
+  echo "Status: $status"
+  if [ "$status" == "Enabled and Running" ]; then
+    echo "Web UI: http://$ipv4:$port/web"
+  fi
 }
