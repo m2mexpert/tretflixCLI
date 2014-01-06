@@ -49,105 +49,245 @@ function config__wizard() {
     echo " |  |  |  | \/\  ___/|  |  |  |  |  |_|  |>    < "
     echo " |__|  |__|    \_____/__|  |__|  |____/__/__/\__\\"
     echo
-    echo
-
-    while true; do
-      input=""
-      read -p "Enter a username for accessing Web UI services [Default: admin]: " input
-      if [[ -z "${input}" ]]; then
-        username="admin"
-        break
-      else
-        username="$input"
-        break
-      fi
-    done
-
-    while true; do
-      input=""
-      read -p "Enter a password for accessing Web UI services [Default: admin]: " input
-      if [[ -z "${input}" ]]; then
-        password="admin"
-        break
-      else
-        password="$input"
-        break
-      fi
-    done
 
     echo
     while true; do
-      input=""
-      read -p "Enter a port number for accessing the CouchPotato Web UI [Default: 5050]: " input
-      if [[ -z "${input}" ]]; then
-        couchpotato_port="5050"
-        break
-      else
-        couchpotato_port="$input"
-        break
-      fi
-    done
-
-    while true; do
-      input=""
-      read -p "Enter a port number for accessing the Headphones Web UI [Default: 8181]: " input
-      if [[ -z "${input}" ]]; then
-        headphones_port="8181"
-        break
-      else
-        headphones_port="$input"
-        break
-      fi
-    done
-
-    while true; do
-      input=""
-      read -p "Enter a port number for accessing the SABnzbd+ Web UI [Default: 8080]: " input
-      if [[ -z "${input}" ]]; then
-        sabnzbdplus_port="8080"
-        break
-      else
-        sabnzbdplus_port="$input"
-        break
-      fi
-    done
-
-    while true; do
-      input=""
-      read -p "Enter a port number for accessing the Sick Beard Web UI [Default: 8081]: " input
-      if [[ -z "${input}" ]]; then
-        sickbeard_port="8081"
-        break
-      else
-        sickbeard_port="$input"
-        break
-      fi
-    done
-
-    while true; do
-      input=""
-      read -p "Enter a port number for accessing the Transmission Web UI [Default: 9091]: " input
-      if [[ -z "${input}" ]]; then
-        transmission_port="9091"
-        break
-      else
-        transmission_port="$input"
-        break
-      fi
+      read -p "Do you want to use CouchPotato? (y/n): " input
+      case "$input" in
+        [yY] | [yY][Ee][Ss] )
+          couchpotato_state="Enabled"
+          read -p "Enter a username for accessing the CouchPotato Web UI [Default: admin]: " input
+          if [[ -z "${input}" ]]; then
+            couchpotato_username="admin"
+          else
+            couchpotato_username="$input"
+          fi
+          read -p "Enter a password for accessing the CouchPotato Web UI [Default: admin]: " input
+          if [[ -z "${input}" ]]; then
+            couchpotato_password="admin"
+          else
+            couchpotato_password="$input"
+          fi
+          read -p "Enter a port number for accessing the CouchPotato Web UI [Default: 5050]: " input
+          if [[ -z "${input}" ]]; then
+            couchpotato_port="5050"
+          else
+            couchpotato_port="$input"
+          fi
+          break;;
+        [nN] | [n|N][O|o] )
+          couchpotato_state="Disabled"
+          break;;
+        * )
+          echo "!! ERROR: Invalid entry."
+          echo
+      esac      
     done
 
     echo
+    while true; do
+      read -p "Do you want to use Headphones? (y/n): " input
+      case "$input" in
+        [yY] | [yY][Ee][Ss] )
+          headphones_state="Enabled"
+          read -p "Enter a username for accessing the Headphones Web UI [Default: admin]: " input
+          if [[ -z "${input}" ]]; then
+            headphones_username="admin"
+          else
+            headphones_username="$input"
+          fi
+          read -p "Enter a password for accessing the Headphones Web UI [Default: admin]: " input
+          if [[ -z "${input}" ]]; then
+            headphones_password="admin"
+          else
+            headphones_password="$input"
+          fi
+          read -p "Enter a port number for accessing the Headphones Web UI [Default: 8181]: " input
+          if [[ -z "${input}" ]]; then
+            headphones_port="8181"
+          else
+            headphones_port="$input"
+          fi
+          break;;
+        [nN] | [n|N][O|o] )
+          headphones_state="Disabled"
+          break;;
+        * )
+          echo "!! ERROR: Invalid entry."
+          echo
+      esac      
+    done    
+      
     echo
-    echo "Config Summary:"
-    echo "------------------"
-    echo "Web UI Username:" $username
-    echo "Web UI Password:" $password
+    while true; do
+      read -p "Do you want to use Plex Media Server? (y/n): " input
+      case "$input" in
+        [yY] | [yY][Ee][Ss] )
+          plexmediaserver_state="Enabled"
+          plexmediaserver_port="32400"
+          break;;
+        [nN] | [n|N][O|o] )
+          plexmediaserver_state="Disabled"
+          break;;
+        * )
+          echo "!! ERROR: Invalid entry."
+          echo
+      esac      
+    done  
+
     echo
-    echo "CouchPotato Port:" $couchpotato_port
-    echo "Headphones Port:" $headphones_port
-    echo "SABnzbd+ Port:" $sabnzbdplus_port
-    echo "Sick Beard Port:" $sickbeard_port
-    echo "Transmission Port:" $transmission_port
+    while true; do
+      read -p "Do you want to use SABnzbd+? (y/n): " input
+      case "$input" in
+        [yY] | [yY][Ee][Ss] )
+          sabnzbdplus_state="Enabled"
+          read -p "Enter a username for accessing the SABnbzd+ Web UI [Default: admin]: " input
+          if [[ -z "${input}" ]]; then
+            sabnzbdplus_username="admin"
+          else
+            sabnzbdplus_username="$input"
+          fi
+          read -p "Enter a password for accessing the SABnbzd+ Web UI [Default: admin]: " input
+          if [[ -z "${input}" ]]; then
+            sabnzbdplus_password="admin"
+          else
+            sabnzbdplus_password="$input"
+          fi
+          read -p "Enter a port number for accessing the SABnbzd+ Web UI [Default: 8080]: " input
+          if [[ -z "${input}" ]]; then
+            sabnzbdplus_port="8080"
+          else
+            sabnzbdplus_port="$input"
+          fi
+          break;;
+        [nN] | [n|N][O|o] )
+          sabnzbdplus_state="Disabled"
+          break;;
+        * )
+          echo "!! ERROR: Invalid entry."
+          echo
+      esac      
+    done
+
+    echo
+    while true; do
+      read -p "Do you want to use Sick Beard? (y/n): " input
+      case "$input" in
+        [yY] | [yY][Ee][Ss] )
+          sickbeard_state="Enabled"
+          read -p "Enter a username for accessing the Sick Beard Web UI [Default: admin]: " input
+          if [[ -z "${input}" ]]; then
+            sickbeard_username="admin"
+          else
+            sickbeard_username="$input"
+          fi
+          read -p "Enter a password for accessing the Sick Beard Web UI [Default: admin]: " input
+          if [[ -z "${input}" ]]; then
+            sickbeard_password="admin"
+          else
+            sickbeard_password="$input"
+          fi
+          read -p "Enter a port number for accessing the Sick Beard Web UI [Default: 8081]: " input
+          if [[ -z "${input}" ]]; then
+            sickbeard_port="8081"
+          else
+            sickbeard_port="$input"
+          fi
+          break;;
+        [nN] | [n|N][O|o] )
+          sickbeard_state="Disabled"
+          break;;
+        * )
+          echo "!! ERROR: Invalid entry."
+          echo
+      esac      
+    done
+
+    echo
+    while true; do
+      read -p "Do you want to use Transmission? (y/n): " input
+      case "$input" in
+        [yY] | [yY][Ee][Ss] )
+          transmission_state="Enabled"
+          read -p "Enter a username for accessing the Transmission Web UI [Default: admin]: " input
+          if [[ -z "${input}" ]]; then
+            transmission_username="admin"
+          else
+            transmission_username="$input"
+          fi
+          read -p "Enter a password for accessing the Transmission Web UI [Default: admin]: " input
+          if [[ -z "${input}" ]]; then
+            transmission_password="admin"
+          else
+            transmission_password="$input"
+          fi
+          read -p "Enter a port number for accessing the Transmission Web UI [Default: 9091]: " input
+          if [[ -z "${input}" ]]; then
+            transmission_port="9091"
+          else
+            transmission_port="$input"
+          fi
+          break;;
+        [nN] | [n|N][O|o] )
+          transmission_state="Disabled"
+          break;;
+        * )
+          echo "!! ERROR: Invalid entry."
+          echo
+      esac      
+    done
+
+
+    echo
+    echo
+    echo "Config Summary"
+    echo
+    echo "CouchPotato:" $couchpotato_state
+    if [ "$couchpotato_state == "Enabled" ]; then
+      echo "---------------------"
+      echo "Username:" $couchpotato_username
+      echo "Password:" $couchpotato_password
+      echo "Port:" $couchpotato_port
+    fi
+    echo
+    
+    echo "Headphones:" $headphones_state
+    if [ "$headphones_state == "Enabled" ]; then
+      echo "---------------------"
+      echo "Username:" $headphones_username
+      echo "Password:" $headphones_password
+      echo "Port:" $headphones_port
+    fi
+    echo
+    
+    echo "Plex Media Server:" $plexmediaserver_state
+    echo
+    
+    echo "SABnzbd+:" $sabnzbdplus_state
+    if [ "$sabnzbdplus_state == "Enabled" ]; then
+      echo "---------------------"
+      echo "Username:" $sabnzbdplus_username
+      echo "Password:" $sabnzbdplus_password
+      echo "Port:" $sabnzbdplus_port
+    fi
+    echo
+
+    echo "Sick Beard:" $sickbeard_state
+    if [ "$sickbeard_state == "Enabled" ]; then
+      echo "---------------------"
+      echo "Username:" $sickbeard_username
+      echo "Password:" $sickbeard_password
+      echo "Port:" $sickbeard_port
+    fi
+    echo
+
+    echo "Transmission:" $transmission_state
+    if [ "$transmission_state == "Enabled" ]; then
+      echo "---------------------"
+      echo "Username:" $transmission_username
+      echo "Password:" $transmission_password
+      echo "Port:" $transmission_port
+    fi
     echo
 			
     while true; do
@@ -182,76 +322,98 @@ function config__wizard() {
     sabnzbdplus_apikey="$(tools__gen_apikey)" && sleep 2
     sickbeard_apikey="$(tools__gen_apikey)"
 
-    echo "* Applying changes to CouchPotato"
-    couchpotato__set_username "$username"
-    couchpotato__set_password "$password"
-    couchpotato__set_port "$couchpotato_port"
-    couchpotato__set_apikey "$couchpotato_apikey"
-    couchpotato__set_sabnzbdplus_port "$sabnzbdplus_port"
-    couchpotato__set_sabnzbdplus_apikey "$sabnzbdplus_apikey"
+    echo "* Configuring CouchPotato"
+    if [ "$couchpotato_state == "Enabled" ]; then
+      couchpotato__set_username "$couchpotato_username"
+      couchpotato__set_password "$couchpotato_password"
+      couchpotato__set_port "$couchpotato_port"
+      couchpotato__set_apikey "$couchpotato_apikey"
+      couchpotato__set_sabnzbdplus_port "$sabnzbdplus_port"
+      couchpotato__set_sabnzbdplus_apikey "$sabnzbdplus_apikey"
+      couchpotato__enable
+    else
+      couchpotato__disable
+    fi
     
-    echo "* Applying changes to Headphones"
-    headphones__set_username "$username"
-    headphones__set_password "$password"
-    headphones__set_port "$headphones_port"
-    headphones__set_apikey "$headphones_apikey"
-    headphones__set_sabnzbdplus_username "$username"
-    headphones__set_sabnzbdplus_password "$password"
-    headphones__set_sabnzbdplus_port "$sabnzbdplus_port"
-    headphones__set_sabnzbdplus_apikey "$sabnzbdplus_apikey"
+    echo "* Configuring Headphones"
+    if [ "$headphones_state == "Enabled" ]; then
+      headphones__set_username "$headphones_username"
+      headphones__set_password "$headphones_password"
+      headphones__set_port "$headphones_port"
+      headphones__set_apikey "$headphones_apikey"
+      headphones__set_sabnzbdplus_username "$sabnzbdplus_username"
+      headphones__set_sabnzbdplus_password "$sabnzbdplus_password"
+      headphones__set_sabnzbdplus_port "$sabnzbdplus_port"
+      headphones__set_sabnzbdplus_apikey "$sabnzbdplus_apikey"
+      headphones__enable
+    else
+      headphones__disable
+    fi
 
-    echo "* Applying changes to SABnzbd+"
-    sabnzbdplus__set_username "$username"
-    sabnzbdplus__set_password "$password"
-    sabnzbdplus__set_port "$sabnzbdplus_port"
-    sabnzbdplus__set_apikey "$sabnzbdplus_apikey"
+    echo "* Configuring Plex Media Server"
+    if [ "$plexmediaserver_state == "Enabled" ]; then
+      plexmediaserver__enable
+    else
+      plexmediaserver__disable
+    fi
+    
+    echo "* Configuring SABnzbd+"
+    if [ "$sabnzbdplus_state == "Enabled" ]; then
+      sabnzbdplus__set_username "$sabnzbdplus_username"
+      sabnzbdplus__set_password "$sabnzbdplus_password"
+      sabnzbdplus__set_port "$sabnzbdplus_port"
+      sabnzbdplus__set_apikey "$sabnzbdplus_apikey"
+      sabnzbdplus__enable
+    else
+      sabnzbdplus__disable
+    fi
 
-    echo "* Applying changes to Sick Beard"
-    sickbeard__set_username "$username"
-    sickbeard__set_password "$password"
-    sickbeard__set_port "$sickbeard_port"
-    sickbeard__set_apikey "$sickbeard_apikey"
-    sickbeard__set_sabnzbdplus_username "$username"
-    sickbeard__set_sabnzbdplus_password "$password"
-    sickbeard__set_sabnzbdplus_port "$sabnzbdplus_port"
-    sickbeard__set_sabnzbdplus_apikey "$sabnzbdplus_apikey"
+    echo "* Configuring Sick Beard"
+    if [ "$sickbeard_state == "Enabled" ]; then
+      sickbeard__set_username "$sickbeard_username"
+      sickbeard__set_password "$sickbeard_password"
+      sickbeard__set_port "$sickbeard_port"
+      sickbeard__set_apikey "$sickbeard_apikey"
+      sickbeard__set_sabnzbdplus_username "$sabnzbdplus_username"
+      sickbeard__set_sabnzbdplus_password "$sabnzbdplus_password"
+      sickbeard__set_sabnzbdplus_port "$sabnzbdplus_port"
+      sickbeard__set_sabnzbdplus_apikey "$sabnzbdplus_apikey"
+      sickbeard__enable
+    else
+      sickbeard__disable
+    fi
 
-    echo "* Applying changes to Transmission"
-    transmission__set_username "$username"
-    transmission__set_password "$password"
-    transmission__set_port "$transmission_port"
-
-    echo "* Enabling & Starting Services"
-    couchpotato__enable
-    headphones__enable
-    plexmediaserver__enable
-    sabnzbdplus__enable
-    sickbeard__enable
-    transmission__enable
-
-    ipv4=$(tools__get_ip)
+    echo "* Configuring Transmission"
+    if [ "$transmission_state == "Enabled" ]; then
+      transmission__set_username "$transmission_username"
+      transmission__set_password "$transmission_password"
+      transmission__set_port "$transmission_port"
+      transmission__enable
+    else
+      transmission__disable
+    fi
     
     echo
     echo
-    echo "Web UI URL's:"
+    echo "Web UI URL List:"
     echo "------------------"
-    echo "CouchPotato:"
-    echo "http://"$ipv4":"$couchpotato_port"/"
-    echo
-    echo "Headphones:"
-    echo "http://"$ipv4":"$headphones_port"/"
-    echo
-    echo "Plex Media Server:"
-    echo "http://"$ipv4":32400/web"
-    echo
-    echo "SABnzbd+:"
-    echo "http://"$ipv4":"$sabnzbdplus_port"/sabnzbd/"
-    echo
-    echo "Sick Beard:"
-    echo "http://"$ipv4":"$sickbeard_port"/home/"
-    echo
-    echo "Transmission:"
-    echo "http://"$ipv4":"$transmission_port"/transmission/web/"
+    if [ "$couchpotato_state == "Enabled" ]; then
+      echo "CouchPotato: http://"$ipv4":"$couchpotato_port"/"
+    fi
+    if [ "$headphones_state == "Enabled" ]; then
+      echo "Headphones: http://"$ipv4":"$headphones_port"/"
+    fi
+    if [ "$plexmediaserver_state == "Enabled" ]; then
+      echo "Plex Media Server: http://"$ipv4":"$plexmediaserver_port"/web"
+    fi
+    if [ "$sabnzbdplus_state == "Enabled" ]; then
+      echo "SABnzbd+: http://"$ipv4":"$sabnzbdplus_port"/sabnzbd/"
+    fi
+    if [ "$sickbeard_state == "Enabled" ]; then
+      echo "Sick Beard: http://"$ipv4":"$sickbeard_port"/home/"
+    if [ "$transmission_state == "Enabled" ]; then
+      echo "Transmission: http://"$ipv4":"$transmission_port"/transmission/web/"
+    fi
     
     timestamp=$(date "+%Y%m%d%H%M%S")
     sudo su -c -u $osUser "echo $timestamp >> /opt/tretflix/.sys/.configured"
