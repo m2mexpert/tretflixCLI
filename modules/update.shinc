@@ -32,8 +32,8 @@ function update__command_handler() {
 
 function update__cli() {
   if [ "${#CLI_ARGS[@]}" -eq 2 ]; then
-    sudo su -c -u $osUser "cd /opt/tretflix/.sys/cli && git fetch"
-    sudo su -c -u $osUser "cd /opt/tretflix/.sys/cli && git reset --hard origin/master"
+    sudo su -c -u $osUser "cd $tretflixCLIRepo && git fetch"
+    sudo su -c -u $osUser "cd $tretflixCLIRepo && git reset --hard origin/master"
     chmod +x "$0"
   elif [ "${#CLI_ARGS[@]}" -eq 4 ]; then
     case "${CLI_ARGS[2]}" in
@@ -41,8 +41,8 @@ function update__cli() {
         branch="${CLI_ARGS[3]}"
         branch=$(echo "$branch" | tr '[:upper:]' '[:lower:]')
         if [ "$branch" == "master" ] || [ "$branch" == "develop" ]; then
-          sudo su -c -u $osUser "cd /opt/tretflix/.sys/cli && git fetch"
-          sudo su -c -u $osUser "cd /opt/tretflix/.sys/cli && git reset --hard origin/$branch"
+          sudo su -c -u $osUser "cd $tretflixCLIRepo && git fetch"
+          sudo su -c -u $osUser "cd $tretflixCLIRepo && git reset --hard origin/$branch"
           chmod +x "$0"
         else
           echo "Invalid branch name."

@@ -426,7 +426,7 @@ function config__wizard() {
     fi
     
     timestamp=$(date "+%Y%m%d%H%M%S")
-    sudo su -c -u $osUser "echo $timestamp >> /opt/tretflix/.sys/.configured"
+    sudo su -c -u $osUser "echo $timestamp >> $configDoneMarker"
     
   else
     config__help
@@ -445,7 +445,7 @@ function config__backup_app_data() {
     
     echo "Creating Backup..."
     timestamp=$(date "+%Y%m%d%H%M%S")
-    sudo su -c -u $osUser "cd /opt/tretflix/ && tar cf backup-$timestamp.tar appdata/"
+    sudo su -c -u $osUser "cd $tretflixDataDir && tar cf backup-$timestamp.tar appdata/"
     
     echo "Starting Enabled Services..."
     couchpotato__start
@@ -481,9 +481,9 @@ function config__restore_app_data() {
     
     echo "Restoring Backup..."
     timestamp=$(date "+%Y%m%d%H%M%S")
-    sudo su -c -u $osUser "cd /opt/tretflix/ && tar cf removed-$timestamp.tar appdata/"
+    sudo su -c -u $osUser "cd $tretflixDataDir && tar cf removed-$timestamp.tar appdata/"
     rm -rf /opt/tretflix/appdata/
-    sudo su -c -u $osUser "tar -xf $file -C /opt/tretflix/"
+    sudo su -c -u $osUser "tar -xf $file -C $tretflixDataDir/"
     
     echo "Starting Enabled Services..."
     couchpotato__start
