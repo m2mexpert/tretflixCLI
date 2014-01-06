@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Relaunch as root if user didn't use "sudo"
-[ `whoami` = root ] || exec sudo /bin/bash $0 "$@"
+[ `whoami` = root ] || exec sudo $0 "$@"
 
 set -o nounset
 
