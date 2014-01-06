@@ -261,6 +261,12 @@ function config__wizard() {
     echo
     
     echo "Plex Media Server:" $plexmediaserver_state
+    if [ "$plexmediaserver_state" == "Enabled" ]; then
+      echo "---------------------"
+      echo "Username: N/A"
+      echo "Password: N/A"
+      echo "Port:" $plexmediaserver_port    
+    fi
     echo
     
     echo "SABnzbd+:" $sabnzbdplus_state
@@ -392,6 +398,9 @@ function config__wizard() {
     else
       transmission__disable
     fi
+    
+    # Used for output below
+    ipv4=$(tools__get_ip)
     
     echo
     echo
