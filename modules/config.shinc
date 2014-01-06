@@ -264,6 +264,12 @@ function config__wizard() {
     sickbeard__stop
     transmission__stop
     
+    sudo service couchpotato status
+    sudo service headphones status
+    sudo service plexmediaserver status
+    sudo service sabnzbdplus status
+    sudo service transmission-daemon status
+    
     echo "* Generating new API Keys"
     couchpotato_apikey="$(tools__gen_apikey)" && sleep 2
     headphones_apikey="$(tools__gen_apikey)" && sleep 2
