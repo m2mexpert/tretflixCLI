@@ -352,24 +352,43 @@ function config__wizard() {
       transmission__disable
     fi
     
-    echo
-    echo
-    couchpotato__show_config
-    echo
-    echo
-    headphones__show_config
-    echo
-    echo
-    plexmediaserver__show_config
-    echo
-    echo
-    sabnzbdplus__show_config
-    echo
-    echo
-    sickbeard__show_config
-    echo
-    echo
-    transmission__show_config
+		echo	
+    while true; do
+      read -p "Do you want to see a config summary? (y/n): " input
+      case "$input" in
+        [yY] | [yY][Ee][Ss] )
+          clear
+          echo "  __                  __    _____ __   __        "
+          echo "_/  |________   _____/  |__/ ____\  | |__|__  ___"
+          echo "\   __\_  __ \_/ __ \   __\   __\|  | |  \  \/  /"
+          echo " |  |  |  | \/\  ___/|  |  |  |  |  |_|  |>    < "
+          echo " |__|  |__|    \_____/__|  |__|  |____/__/__/\__\\"
+          echo
+          echo    
+          couchpotato__show_config
+          echo
+          echo
+          headphones__show_config
+          echo
+          echo
+          plexmediaserver__show_config
+          echo
+          echo
+          sabnzbdplus__show_config
+          echo
+          echo
+          sickbeard__show_config
+          echo
+          echo
+          transmission__show_config
+          break;;
+        [nN] | [n|N][O|o] )
+          break;;
+        * )
+          echo "!! ERROR: Invalid entry."
+          echo
+      esac
+    done
     
     timestamp=$(date "+%Y%m%d%H%M%S")
     sudo su -c -u $osUser "echo $timestamp >> $configDone"
