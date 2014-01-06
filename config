@@ -6,9 +6,9 @@ tmpSymLink="/opt/tretflix/tmp"
 osUser="sysadmin"
 
 # Path to tretflix files/directories
-tretflixDataDir="/opt/tretflix"
-tretflixCLIRepo="/opt/tretflix/.sys/cli"
-configDoneMarker="/opt/tretflix/.sys/.configured"
+tretflixDir="/opt/tretflix"
+CLIRepoDir="/opt/tretflix/.sys/cli"
+configDone="/opt/tretflix/.sys/.configured"
 
 # Path to application data directories (config files and other runtime data)
 couchpotato_appdata="/opt/tretflix/appdata/couchpotato"
