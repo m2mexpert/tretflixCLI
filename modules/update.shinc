@@ -32,24 +32,26 @@ function update__command_handler() {
 
 function update__cli() {
   if [ "${#CLI_ARGS[@]}" -eq 2 ]; then
-    git="git clone git@github.com:tretneo/tretflixCLI.git /opt/tretflix/.sys/cli"
+    git="git reset --hard origin/master"
     echo $git
   elif [ "${#CLI_ARGS[@]}" -eq 4 ]; then
     case "${CLI_ARGS[2]}" in
       '-b' | '--branch')
         branch="${CLI_ARGS[3]}"
         branch=$(echo "$branch" | tr '[:upper:]' '[:lower:]')
-        if [ "$branch" == "master" || "$branch" == "develop" ]; then
-          git="git clone -b $branch git@github.com:tretneo/tretflixCLI.git /opt/tretflix/.sys/cli"
+        if [ "$branch" == "master" ] || [ "$branch" == "develop" ]; then
+          git="git reset --hard origin/$branch"
           echo $git
         else
-          shares__help
+          echo "Invalid branch name."
+          echo
+          exit 1
         fi
         ;;
       *)
-        shares__help
+        update__help
     esac
   else
-    shares__help
+    update__help
   fi
 }
