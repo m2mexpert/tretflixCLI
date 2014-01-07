@@ -91,7 +91,7 @@ function network__add_ip() {
   # Clean up network config file, remove double (or more) blank lines
   sed -i '/^$/N;/^\n$/D' /etc/network/interfaces
 
-  service networking restart > /dev/null 2>&1
+  sudo /etc/init.d/networking restart > /dev/null 2>&1
   ifconfig $ifaceLabel up > /dev/null 2>&1
   
   echo "Done."
@@ -136,7 +136,7 @@ function network__del_ip() {
 
   sed -i '/^$/N;/^\n$/D' /etc/network/interfaces
 
-  service networking restart > /dev/null 2>&1
+  sudo /etc/init.d/networking restart > /dev/null 2>&1
   echo "Done."
 }
 
