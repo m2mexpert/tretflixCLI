@@ -48,6 +48,7 @@ function update__cli() {
           if git fetch -v --dry-run 2>&1 | grep "$branch" | grep -q "up to date"; then
             echo "Tretflix CLI is already up to date."
           else
+            echo "Why is this happening?"
             sudo su -c -u $osUser "cd $CLIRepoDir && git fetch"
             sudo su -c -u $osUser "cd $CLIRepoDir && git reset --hard origin/$branch"
             chmod +x "$0"
