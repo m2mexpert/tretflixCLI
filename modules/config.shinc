@@ -73,6 +73,8 @@ function config__wizard() {
           else
             couchpotato_port="$input"
           fi
+          couchpotato_apikey="$(tools__gen_apikey)"
+          echo "New CouchPotato API key randomly generated for increased security."
           break;;
         [nN] | [n|N][O|o] )
           couchpotato_state="Disabled"
@@ -107,6 +109,8 @@ function config__wizard() {
           else
             headphones_port="$input"
           fi
+          headphones_apikey="$(tools__gen_apikey)"
+          echo "New Headphones API key randomly generated for increased security."
           break;;
         [nN] | [n|N][O|o] )
           headphones_state="Disabled"
@@ -158,6 +162,8 @@ function config__wizard() {
           else
             sabnzbdplus_port="$input"
           fi
+          sabnzbdplus_apikey="$(tools__gen_apikey)"
+          echo "New SABnzbd+ API key randomly generated for increased security."
           break;;
         [nN] | [n|N][O|o] )
           sabnzbdplus_state="Disabled"
@@ -192,6 +198,8 @@ function config__wizard() {
           else
             sickbeard_port="$input"
           fi
+          sickbeard_apikey="$(tools__gen_apikey)"
+          echo "New Sick Beard API key randomly generated for increased security."
           break;;
         [nN] | [n|N][O|o] )
           sickbeard_state="Disabled"
@@ -260,22 +268,9 @@ function config__wizard() {
     echo
     echo "Applying configuration changes..."
     echo
-	
-    echo "* Stopping Running Services"
-    couchpotato__stop
-    headphones__stop
-    plexmediaserver__stop
-    sabnzbdplus__stop
-    sickbeard__stop
-    transmission__stop
-    
-    echo "* Generating new API Keys"
-    couchpotato_apikey="$(tools__gen_apikey)" && sleep 2
-    headphones_apikey="$(tools__gen_apikey)" && sleep 2
-    sabnzbdplus_apikey="$(tools__gen_apikey)" && sleep 2
-    sickbeard_apikey="$(tools__gen_apikey)"
 
     echo "* Configuring CouchPotato"
+    couchpotato__stop
     if [ "$couchpotato_state" == "Enabled" ]; then
       couchpotato__set_username "$couchpotato_username"
       couchpotato__set_password "$couchpotato_password"
@@ -291,6 +286,7 @@ function config__wizard() {
     fi
     
     echo "* Configuring Headphones"
+    headphones__stop
     if [ "$headphones_state" == "Enabled" ]; then
       headphones__set_username "$headphones_username"
       headphones__set_password "$headphones_password"
@@ -308,6 +304,7 @@ function config__wizard() {
     fi
 
     echo "* Configuring Plex Media Server"
+    # No need to stop Plex Media Server if already running
     if [ "$plexmediaserver_state" == "Enabled" ]; then
       plexmediaserver__enable
     else
@@ -315,6 +312,7 @@ function config__wizard() {
     fi
     
     echo "* Configuring SABnzbd+"
+    sabnzbdplus__stop
     if [ "$sabnzbdplus_state" == "Enabled" ]; then
       sabnzbdplus__set_username "$sabnzbdplus_username"
       sabnzbdplus__set_password "$sabnzbdplus_password"
@@ -326,6 +324,7 @@ function config__wizard() {
     fi
 
     echo "* Configuring Sick Beard"
+    sickbeard__stop
     if [ "$sickbeard_state" == "Enabled" ]; then
       sickbeard__set_username "$sickbeard_username"
       sickbeard__set_password "$sickbeard_password"
@@ -343,6 +342,7 @@ function config__wizard() {
     fi
 
     echo "* Configuring Transmission"
+    transmission__stop
     if [ "$transmission_state" == "Enabled" ]; then
       transmission__set_username "$transmission_username"
       transmission__set_password "$transmission_password"
