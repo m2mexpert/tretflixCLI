@@ -32,6 +32,7 @@ function update__command_handler() {
 
 function update__cli() {
   if [ "${#CLI_ARGS[@]}" -eq 2 ]; then
+    # comment
     sudo su -c -u $osUser "cd $CLIRepoDir && git fetch"
     sudo su -c -u $osUser "cd $CLIRepoDir && git reset --hard origin/master"
     chmod +x "$0"
