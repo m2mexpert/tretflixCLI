@@ -45,6 +45,7 @@ function update__cli() {
         branch="${CLI_ARGS[3]}"
         branch=$(echo "$branch" | tr '[:upper:]' '[:lower:]')
         if [ "$branch" == "master" ] || [ "$branch" == "develop" ]; then
+          cd $CLIRepoDir && git fetch -v --dry-run 2>&1
           if cd $CLIRepoDir && git fetch -v --dry-run 2>&1 | grep "$branch" | grep -q "up to date"; then
             echo "Tretflix CLI is already up to date."
           else
