@@ -36,7 +36,7 @@ function update__cli() {
       echo "Tretflix CLI is up-to-date."
     else
       while true; do
-        read -p "There is an update available for the Tretflix CLI. Would you like to update now? (y/n): " input
+        read -p "There is an update available for Tretflix CLI. Update now? (y/n): " input
         case "$input" in
           [yY] | [yY][Ee][Ss] )
             sudo su -c -u $osUser "cd $CLIRepoDir && git fetch" > /dev/null 2>&1
