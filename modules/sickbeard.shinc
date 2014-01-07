@@ -33,7 +33,7 @@ function sickbeard__start() {
   if [ "$(sickbeard__get_status)" != "Disabled" ]; then
     for i in {1..3}; do
       if [ $i -gt 1 ]; then
-        sleep 3
+        sleep 2
       fi
       if [ "$(sickbeard__get_status)" != "Enabled and Running" ]; then
         service sickbeard start > /dev/null 2>&1
@@ -47,7 +47,7 @@ function sickbeard__start() {
 function sickbeard__stop() {
   for i in {1..3}; do
     if [ $i -gt 1 ]; then
-      sleep 3
+      sleep 2
     fi
     if [ "$(sickbeard__get_status)" == "Enabled and Running" ]; then
       service sickbeard stop > /dev/null 2>&1
