@@ -7,6 +7,7 @@ set -o nounset
 
 CLI_ARGS=("$@")
 DEFAULT_IFS=$IFS
+CLI_Version="1.0.1-dev"
 
 # Verify that the user has run the script using "sudo" user
 if [[ $(whoami) != "root" ]]; then
@@ -116,6 +117,9 @@ import "modules/update"
 if test "${CLI_ARGS[0]+isset}"; then
   shopt -s nocasematch
   case "${CLI_ARGS[0]}" in
+    about)
+      about__command_handler
+      ;;
     config)
       config__command_handler
       ;;
