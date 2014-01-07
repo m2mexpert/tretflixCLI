@@ -4,6 +4,6 @@ if test "${about__imported+defined}" == "defined"; then
 fi
 about__imported=1
 
-function update__command_handler() {
+function about__command_handler() {
   echo "$CLI_Version"
 }
