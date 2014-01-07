@@ -35,8 +35,8 @@ function update__cli() {
     if git fetch -v --dry-run 2>&1 | grep "master" | grep -q "up to date"; then
       echo "Tretflix CLI is already up to date."
     else
-      sudo su -c -u $osUser "cd $CLIRepoDir && git reset --hard origin/master"
       sudo su -c -u $osUser "cd $CLIRepoDir && git fetch"
+      sudo su -c -u $osUser "cd $CLIRepoDir && git reset --hard origin/master"
       chmod +x "$0"
     fi
   elif [ "${#CLI_ARGS[@]}" -eq 4 ]; then
@@ -48,8 +48,8 @@ function update__cli() {
           if git fetch -v --dry-run 2>&1 | grep "$branch" | grep -q "up to date"; then
             echo "Tretflix CLI is already up to date."
           else
-            sudo su -c -u $osUser "cd $CLIRepoDir && git reset --hard origin/$branch"
             sudo su -c -u $osUser "cd $CLIRepoDir && git fetch"
+            sudo su -c -u $osUser "cd $CLIRepoDir && git reset --hard origin/$branch"
             chmod +x "$0"
           fi
         else
