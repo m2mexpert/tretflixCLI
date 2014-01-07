@@ -16,8 +16,6 @@ function plexmediaserver__get_status() {
 }
 
 function plexmediaserver__enable() {
-  echo "Enabling Plex Media Server"
-  service plexmediaserver status
   if [ "$(plexmediaserver__get_status)" == "Disabled" ]; then
     rm /etc/init/plexmediaserver.override > /dev/null 2>&1
   fi
@@ -25,8 +23,6 @@ function plexmediaserver__enable() {
 }
 
 function plexmediaserver__disable() {
-  echo "Disabling Plex Media Server"
-  service plexmediaserver status
   if [ "$(plexmediaserver__get_status)" != "Disabled" ]; then
     plexmediaserver__stop
     echo -e "manual" >> /etc/init/plexmediaserver.override
@@ -34,23 +30,16 @@ function plexmediaserver__disable() {
 }
 
 function plexmediaserver__start() {
-  service plexmediaserver status
   if [ "$(plexmediaserver__get_status)" != "Disabled" ]; then
     for i in {1..4}; do
-      echo "Plex Media Server Start Loop #$i"
       if [ $i -eq 2 ]; then
-        echo "Sleeping for 3 seconds"
         sleep 3
       elif [ $i -eq 3 ]; then
-        echo "Sleeping for 4 seconds"
         sleep 4
       elif [ $i -eq 4 ]; then
-        echo "Sleeping for 5 seconds"
         sleep 5
       fi
-      service plexmediaserver status
       if [ "$(plexmediaserver__get_status)" != "Enabled and Running" ]; then
-        echo "Starting Plex Media Server"
         service plexmediaserver start > /dev/null 2>&1
       else
         break
@@ -61,20 +50,14 @@ function plexmediaserver__start() {
 
 function plexmediaserver__stop() {
   for i in {1..4}; do
-    echo "Entering Plex Media Server Stop Loop #$i"
     if [ $i -eq 2 ]; then
-      echo "Sleeping for 3 seconds"
       sleep 3
     elif [ $i -eq 3 ]; then
-      echo "Sleeping for 4 seconds"
       sleep 4
     elif [ $i -eq 4 ]; then
-      echo "Sleeping for 5 seconds"
       sleep 5
     fi
-    service plexmediaserver status
     if [ "$(plexmediaserver__get_status)" == "Enabled and Running" ]; then
-      echo "Stopping Plex Media Server"
       service plexmediaserver stop > /dev/null 2>&1
     else
       break
