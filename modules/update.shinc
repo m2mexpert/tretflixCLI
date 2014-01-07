@@ -44,7 +44,7 @@ function update__cli() {
             chmod +x "$0"
             break;;
           [nN] | [n|N][O|o] )
-            echo "Tretflix CLI update aborted.
+            echo "Tretflix CLI update aborted."
             echo
             exit 1;;
           * )
