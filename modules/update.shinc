@@ -60,9 +60,9 @@ function update__cli() {
         branch="${CLI_ARGS[3]}"
         branch=$(echo "$branch" | tr '[:upper:]' '[:lower:]')
         if [ "$branch" == "master" ] || [ "$branch" == "develop" ]; then
-          sudo su -c -u $osUser "cd $CLIRepoDir && git fetch"
-          sudo su -c -u $osUser "cd $CLIRepoDir && git checkout -f $branch" > /dev/null 2>&1
-          sudo su -c -u $osUser "cd $CLIRepoDir && git reset --hard origin/$branch"  > /dev/null 2>&1
+          sudo su -c -u $osUser "cd $CLIRepoDir && git fetch -v"
+          sudo su -c -u $osUser "cd $CLIRepoDir && git checkout -f $branch"
+          sudo su -c -u $osUser "cd $CLIRepoDir && git reset --hard origin/$branch" 
           chmod +x "$0"
         else
           echo "Invalid branch name."
