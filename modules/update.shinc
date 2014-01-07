@@ -39,6 +39,7 @@ function update__cli() {
         read -p "There is an update available for the Tretflix CLI. Would you like to update now? (y/n): " input
         case "$input" in
           [yY] | [yY][Ee][Ss] )
+            sudo su -c -u $osUser "cd $CLIRepoDir && git checkout master" > /dev/null 2>&1
             sudo su -c -u $osUser "cd $CLIRepoDir && git fetch origin master" > /dev/null 2>&1
             sudo su -c -u $osUser "cd $CLIRepoDir && git reset --hard origin/master" > /dev/null 2>&1
             chmod +x "$0"
@@ -59,6 +60,7 @@ function update__cli() {
         branch="${CLI_ARGS[3]}"
         branch=$(echo "$branch" | tr '[:upper:]' '[:lower:]')
         if [ "$branch" == "master" ] || [ "$branch" == "develop" ]; then
+          sudo su -c -u $osUser "cd $CLIRepoDir && git checkout $branch" > /dev/null 2>&1
           sudo su -c -u $osUser "cd $CLIRepoDir && git fetch origin $branch" > /dev/null 2>&1
           sudo su -c -u $osUser "cd $CLIRepoDir && git reset --hard origin/$branch"
           chmod +x "$0"
