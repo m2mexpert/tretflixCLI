@@ -9,6 +9,7 @@ osUser="sysadmin"
 tretflixDir="/opt/tretflix"
 CLIRepoDir="/opt/tretflix/.sys/cli"
 configDone="/opt/tretflix/.sys/.configured"
+restoreDone="/opt/tretflix/.sys/.restored"
 
 # Path to application data directories (config files and other runtime data)
 couchpotato_appdata="/opt/tretflix/appdata/couchpotato"

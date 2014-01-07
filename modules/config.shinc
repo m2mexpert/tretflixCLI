@@ -458,6 +458,9 @@ function config__restore_appdata() {
     transmission__start
     plexmediaserver__start
     echo "Done."
+    
+    timestamp=$(date "+%Y%m%d%H%M%S")
+    sudo su -c -u $osUser "echo $timestamp >> $restoreDone"
   else
     config__help
   fi
