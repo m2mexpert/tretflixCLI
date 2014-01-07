@@ -5,5 +5,5 @@ fi
 about__imported=1
 
 function about__command_handler() {
-  echo "$CLI_Version"
+  echo "Tretflix CLI version $CLI_Version"
 }
