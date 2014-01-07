@@ -9,20 +9,20 @@ function config__help() {
   echo
   echo "COMMANDS:"
   echo "  tretflix config wizard"
-  echo "  tretflix config backup app data"
-  echo "  tretflix config restore app data [FILE]"
+  echo "  tretflix config backup appdata"
+  echo "  tretflix config restore appdata [FILE]"
   echo
   exit 1
 }
 
 function config__command_handler() {
-  if test "${CLI_ARGS[3]+isset}"; then
-    case "${CLI_ARGS[1]} ${CLI_ARGS[2]} ${CLI_ARGS[3]}" in
+  if test "${CLI_ARGS[2]+isset}"; then
+    case "${CLI_ARGS[1]} ${CLI_ARGS[2]}" in
       'backup app data')
-        config__backup_app_data
+        config__backup_appdata
         ;;
       'restore app data')
-        config__restore_app_data
+        config__restore_appdata
         ;;
       *)
         config__help
@@ -398,8 +398,8 @@ function config__wizard() {
   fi
 }
 
-function config__backup_app_data() {
-  if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
+function config__backup_appdata() {
+  if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
     echo "Stopping Services..."
     couchpotato__stop
     headphones__stop
@@ -425,16 +425,16 @@ function config__backup_app_data() {
   fi
 }
 
-function config__restore_app_data() {
-  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
+function config__restore_appdata() {
+  if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
  
-    if [ "$(tools__path_istype ${CLI_ARGS[4]})" != "File" ]; then
+    if [ "$(tools__path_istype ${CLI_ARGS[3]})" != "File" ]; then
       echo "The specified file cannot be found."
       echo
       exit 1
     fi
     
-    file="$(realpath ${CLI_ARGS[4]})"
+    file="$(realpath ${CLI_ARGS[3]})"
     
     echo "Stopping Services..."
     couchpotato__stop
