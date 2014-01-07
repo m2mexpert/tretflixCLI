@@ -8,7 +8,7 @@ function network__help() {
   echo "Usage: tretflix network [COMMAND] [INPUT]"
   echo
   echo "COMMANDS:"
-  echo "  tretflix network add ip [IPv4] [NETMASK] [GATEWAY]"
+  echo "  tretflix network add ip [IPv4]"
   echo "  tretflix network del ip [IPv4]"
   echo "  tretflix network show config"
   echo
@@ -36,10 +36,9 @@ function network__command_handler() {
 }
 
 function network__add_ip() {
-  if [ "${#CLI_ARGS[@]}" -eq 6 ]; then
+  if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
     ifaceIP="${CLI_ARGS[3]}"
-    ifaceNetmask="${CLI_ARGS[4]}"
-    ifaceGateway="${CLI_ARGS[5]}"
+    ifaceNetmask="$(ifconfig eth0 | sed -rn '2s/ .*:(.*)$/\1/p')"
     ifaceBroadcast=$(ipcalc $ifaceIP $ifaceNetmask | egrep "^Broadcast:" | awk '{ print $2}')
     ifaceNetwork=$(ipcalc $ifaceIP $ifaceNetmask | egrep "^Network:" | awk '{ print $2}' | sed 's/\/.*$//g')
   else
@@ -83,7 +82,6 @@ function network__add_ip() {
     "\tnetmask $ifaceNetmask\n" \
     "\tnetwork $ifaceNetwork\n" \
     "\tbroadcast $ifaceBroadcast\n" \
-    "\tgateway $ifaceGateway\n" \
     "# $ifaceLabel interface section end\n" \
     "\n" >> /etc/network/interfaces
 
