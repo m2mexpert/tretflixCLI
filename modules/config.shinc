@@ -401,9 +401,9 @@ function config__wizard() {
 function config__backup_appdata() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
     echo "Stopping Services..."
+    plexmediaserver__stop
     couchpotato__stop
     headphones__stop
-    plexmediaserver__stop
     sabnzbdplus__stop
     sickbeard__stop
     transmission__stop
@@ -412,13 +412,13 @@ function config__backup_appdata() {
     timestamp=$(date "+%Y%m%d%H%M%S")
     sudo su -c -u $osUser "cd $tretflixDir && tar cf backup-$timestamp.tar appdata/"
     
-    echo "Starting Enabled Services..."
+    echo "Starting Services..."
     couchpotato__start
     headphones__start
-    plexmediaserver__start
     sabnzbdplus__start
     sickbeard__start
     transmission__start
+    plexmediaserver__start
     echo "Done."
   else
     config__help
@@ -437,9 +437,9 @@ function config__restore_appdata() {
     file="$(realpath ${CLI_ARGS[3]})"
     
     echo "Stopping Services..."
+    plexmediaserver__stop
     couchpotato__stop
     headphones__stop
-    plexmediaserver__stop
     sabnzbdplus__stop
     sickbeard__stop
     transmission__stop
@@ -450,13 +450,13 @@ function config__restore_appdata() {
     rm -rf /opt/tretflix/appdata/
     sudo su -c -u $osUser "tar -xf $file -C $tretflixDir/"
     
-    echo "Starting Enabled Services..."
+    echo "Starting Services..."
     couchpotato__start
     headphones__start
-    plexmediaserver__start
     sabnzbdplus__start
     sickbeard__start
     transmission__start
+    plexmediaserver__start
     echo "Done."
   else
     config__help
