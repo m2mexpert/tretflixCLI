@@ -408,6 +408,9 @@ function config__wizard() {
 
 function config__backup_appdata() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
+    timestamp=$(date "+%Y%m%d%H%M%S")
+  
+    echo "Creating Backup $tretflixDir/backup-$timestamp.tar"
     echo "Stopping Services..."
     plexmediaserver__stop
     couchpotato__stop
@@ -416,9 +419,7 @@ function config__backup_appdata() {
     sickbeard__stop
     transmission__stop
     
-    timestamp=$(date "+%Y%m%d%H%M%S")
-    
-    echo "Creating Backup $tretflixDir/backup-$timestamp.tar"
+    echo "Creating Backup..."
     sudo su -c -u $osUser "cd $tretflixDir && tar cf backup-$timestamp.tar appdata/"
     
     echo "Starting Services..."
@@ -447,17 +448,16 @@ function config__restore_appdata() {
     case "${CLI_ARGS[3]}" in
       '-f' | '--file')
         if [ "$(tools__path_istype $tretflixDir/${CLI_ARGS[4]})" == "File" ]; then
-          file="$tretflixDir/${CLI_ARGS[4]}"
+          file="$(realpath $tretflixDir/${CLI_ARGS[4]})"
         elif [ "$(tools__path_istype ${CLI_ARGS[4]})" == "File" ]; then
-          file="${CLI_ARGS[4]}"
+          file="$(realpath ${CLI_ARGS[4]})"
         else
           echo "The specified file cannot be found."
           echo
           exit 1
         fi
-    
-        file="$(realpath $file)"
-    
+        
+        echo "Restoring Backup from $file"
         echo "Stopping Services..."
         plexmediaserver__stop
         couchpotato__stop
@@ -466,9 +466,9 @@ function config__restore_appdata() {
         sickbeard__stop
         transmission__stop
     
-        echo "Restoring Backup $file"
+        echo "Restoring Backup..."
         timestamp=$(date "+%Y%m%d%H%M%S")
-        sudo su -c -u $osUser "cd $tretflixDir && tar cf removed-$timestamp.tar appdata/"
+        sudo su -c -u $osUser "cd $tretflixDir && tar cf replaced-$timestamp.tar appdata/"
         rm -rf /opt/tretflix/appdata/
         sudo su -c -u $osUser "tar -xf $file -C $tretflixDir/"
     
@@ -480,9 +480,6 @@ function config__restore_appdata() {
         transmission__start
         plexmediaserver__start
         echo "Done."
-        echo
-        echo "Note: You may need to manually enable any 'disabled' services"
-        echo "      w/ the 'tretflix service [OPTION] enable' command."
 
         timestamp=$(date "+%Y%m%d%H%M%S")
         sudo su -c -u $osUser "echo $timestamp >> $restoreDone"
