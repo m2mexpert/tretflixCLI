@@ -437,7 +437,7 @@ function config__restore_appdata() {
   if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
     case "${CLI_ARGS[3]}" in
       '-l' | '--list')
-        ls | grep --color="none" "$tretflixDir/backup-.*tar" 2> /dev/null
+        ls "$tretflixDir" | grep --color="none" "backup-.*tar" 2> /dev/null
         ;;
       *)
         config__help
