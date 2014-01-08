@@ -457,7 +457,7 @@ function config__restore_appdata() {
           exit 1
         fi
         
-        echo "Restoring Backup from $file"
+        echo "Restoring Backup $file"
         echo "Stopping Services..."
         plexmediaserver__stop
         couchpotato__stop
