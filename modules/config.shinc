@@ -445,13 +445,17 @@ function config__restore_appdata() {
   elif [ "${#CLI_ARGS[@]}" -eq 5 ]; then
     case "${CLI_ARGS[4]}" in
       '-f' | '--file')
-        if [ "$(tools__path_istype ${CLI_ARGS[4]})" != "File" ]; then
+        if [ "$(tools__path_istype $tretflixDir/${CLI_ARGS[4]})" == "File" ]; then
+          file="$tretflixDir/${CLI_ARGS[4]}"
+        elif [ "$(tools__path_istype ${CLI_ARGS[4]})" == "File" ]; then
+          file="${CLI_ARGS[4]}"
+        else
           echo "The specified file cannot be found."
           echo
           exit 1
         fi
     
-        file="$(realpath ${CLI_ARGS[4]})"
+        file="$(realpath $file)"
     
         echo "Stopping Enabled Services..."
         plexmediaserver__stop
