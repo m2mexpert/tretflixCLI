@@ -7,7 +7,7 @@ set -o nounset
 
 CLI_ARGS=("$@")
 DEFAULT_IFS=$IFS
-CLI_Version="1.0.4-dev"
+CLI_Version="1.0.4"
 
 # Verify that the user has run the script using "sudo" user
 if [[ $(whoami) != "root" ]]; then
