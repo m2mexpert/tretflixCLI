@@ -5,12 +5,20 @@ fi
 config__imported=1
 
 function config__help() {
-  echo "Usage: tretflix config [COMMAND] [INPUT]"
+  echo "Usage: tretflix config [COMMAND] [OPTION]"
   echo
   echo "COMMANDS:"
   echo "  tretflix config wizard"
   echo "  tretflix config backup appdata"
-  echo "  tretflix config restore appdata [FILE]"
+  echo "  tretflix config restore appdata [OPTION] ..."
+  echo
+  echo "OPTIONS:"
+  echo "  -l, --list"
+  echo "  -f, --file [FILE]"
+  echo
+  echo "  Note: Backups will be saved in '/opt/tretflix'. When restoring a" 
+  echo "        backup, provide the backup filename or the full backup file"
+  echo "        path if the file is somewhere other than '/opt/tretflix'."
   echo
   exit 1
 }
@@ -427,43 +435,56 @@ function config__backup_appdata() {
 
 function config__restore_appdata() {
   if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
- 
-    if [ "$(tools__path_istype ${CLI_ARGS[3]})" != "File" ]; then
-      echo "The specified file cannot be found."
-      echo
-      exit 1
-    fi
+    case "${CLI_ARGS[3]}" in
+      '-l' | '--list')
+        ls | grep --color="none" "$tretflixDir/backup-.*tar" 2> /dev/null
+        ;;
+      *)
+        config__help
+    esac
+  elif [ "${#CLI_ARGS[@]}" -eq 5 ]; then
+    case "${CLI_ARGS[4]}" in
+      '-f' | '--file')
+        if [ "$(tools__path_istype ${CLI_ARGS[4]})" != "File" ]; then
+          echo "The specified file cannot be found."
+          echo
+          exit 1
+        fi
     
-    file="$(realpath ${CLI_ARGS[3]})"
+        file="$(realpath ${CLI_ARGS[4]})"
     
-    echo "Stopping Enabled Services..."
-    plexmediaserver__stop
-    couchpotato__stop
-    headphones__stop
-    sabnzbdplus__stop
-    sickbeard__stop
-    transmission__stop
+        echo "Stopping Enabled Services..."
+        plexmediaserver__stop
+        couchpotato__stop
+        headphones__stop
+        sabnzbdplus__stop
+        sickbeard__stop
+        transmission__stop
     
-    echo "Restoring Backup..."
-    timestamp=$(date "+%Y%m%d%H%M%S")
-    sudo su -c -u $osUser "cd $tretflixDir && tar cf removed-$timestamp.tar appdata/"
-    rm -rf /opt/tretflix/appdata/
-    sudo su -c -u $osUser "tar -xf $file -C $tretflixDir/"
+        echo "Restoring Backup..."
+        timestamp=$(date "+%Y%m%d%H%M%S")
+        sudo su -c -u $osUser "cd $tretflixDir && tar cf removed-$timestamp.tar appdata/"
+        rm -rf /opt/tretflix/appdata/
+        sudo su -c -u $osUser "tar -xf $file -C $tretflixDir/"
     
-    echo "Starting Enabled Services..."
-    couchpotato__start
-    headphones__start
-    sabnzbdplus__start
-    sickbeard__start
-    transmission__start
-    plexmediaserver__start
-    echo "Done."
-    echo
-    echo "Note: You may need to manually enable any 'disabled' services"
-    echo "      w/ the 'tretflix service [OPTION] enable' command."
-    
-    timestamp=$(date "+%Y%m%d%H%M%S")
-    sudo su -c -u $osUser "echo $timestamp >> $restoreDone"
+        echo "Starting Enabled Services..."
+        couchpotato__start
+        headphones__start
+        sabnzbdplus__start
+        sickbeard__start
+        transmission__start
+        plexmediaserver__start
+        echo "Done."
+        echo
+        echo "Note: You may need to manually enable any 'disabled' services"
+        echo "      w/ the 'tretflix service [OPTION] enable' command."
+
+        timestamp=$(date "+%Y%m%d%H%M%S")
+        sudo su -c -u $osUser "echo $timestamp >> $restoreDone"
+        ;;
+      *)
+        config__help
+    esac
   else
     config__help
   fi
