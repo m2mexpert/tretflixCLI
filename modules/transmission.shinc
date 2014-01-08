@@ -18,6 +18,11 @@ function transmission__get_status() {
 function transmission__enable() {
   if [ "$(transmission__get_status)" == "Disabled" ]; then
     update-rc.d transmission-daemon defaults > /dev/null 2>&1
+    if [ "$(tools__path_istype $transmission_appdata/.disabled)" == "File" ]; then
+      rm -f $transmission_appdata/.disabled > /dev/null 2>&1
+    fi
+    timestamp=$(date "+%Y%m%d%H%M%S")
+    sudo su -c -u $osUser "echo $timestamp > $transmission_appdata/.enabled"
   fi
   transmission__start
 }
@@ -26,6 +31,11 @@ function transmission__disable() {
   if [ "$(transmission__get_status)" != "Disabled" ]; then
     transmission__stop
     update-rc.d -f transmission-daemon remove > /dev/null 2>&1
+    if [ "$(tools__path_istype $transmission_appdata/.enabled)" == "File" ]; then
+      rm -f $transmission_appdata/.enabled > /dev/null 2>&1
+    fi
+    timestamp=$(date "+%Y%m%d%H%M%S")
+    sudo su -c -u $osUser "echo $timestamp > $transmission_appdata/.disabled"
   fi
 }
 
