@@ -16,9 +16,9 @@ function config__help() {
   echo "  -l, --list"
   echo "  -f, --file [FILE]"
   echo
-  echo "  Note: Backups will be saved in '/opt/tretflix'. When restoring a" 
-  echo "        backup, provide the backup filename or the full backup file"
-  echo "        path if the file is somewhere other than '/opt/tretflix'."
+  echo "  Note: Backups will be saved in /opt/tretflix. When restoring a" 
+  echo "        backup, provide the backup filename or the full path to"
+  echo "        the backup file if it's not in /opt/tretflix."
   echo
   exit 1
 }
