@@ -443,7 +443,7 @@ function config__restore_appdata() {
         config__help
     esac
   elif [ "${#CLI_ARGS[@]}" -eq 5 ]; then
-    case "${CLI_ARGS[4]}" in
+    case "${CLI_ARGS[3]}" in
       '-f' | '--file')
         if [ "$(tools__path_istype $tretflixDir/${CLI_ARGS[4]})" == "File" ]; then
           file="$tretflixDir/${CLI_ARGS[4]}"
