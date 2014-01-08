@@ -419,7 +419,7 @@ function config__backup_appdata() {
     sickbeard__stop
     transmission__stop
     
-    echo "Creating Backup..."
+    echo "Creating Archive..."
     sudo su -c -u $osUser "cd $tretflixDir && tar cf backup-$timestamp.tar appdata/"
     
     echo "Starting Services..."
@@ -466,7 +466,7 @@ function config__restore_appdata() {
         sickbeard__stop
         transmission__stop
     
-        echo "Restoring Backup..."
+        echo "Unpacking Archive..."
         timestamp=$(date "+%Y%m%d%H%M%S")
         sudo su -c -u $osUser "cd $tretflixDir && tar cf replaced-$timestamp.tar appdata/"
         rm -rf /opt/tretflix/appdata/
