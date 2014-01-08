@@ -376,22 +376,7 @@ function config__wizard() {
           echo " |__|  |__|    \_____/__|  |__|  |____/__/__/\__\\"
           echo
           echo    
-          couchpotato__show_config
-          echo
-          echo
-          headphones__show_config
-          echo
-          echo
-          plexmediaserver__show_config
-          echo
-          echo
-          sabnzbdplus__show_config
-          echo
-          echo
-          sickbeard__show_config
-          echo
-          echo
-          transmission__show_config
+          allservices__show_config
           break;;
         [nN] | [n|N][O|o] )
           break;;

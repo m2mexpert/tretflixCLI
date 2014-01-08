@@ -135,20 +135,26 @@ function allservices__set_apikey() {
 }
 
 function allservices__show_config() {
-  couchpotato__show_config
-  echo
-  echo
-  headphones__show_config
-  echo
-  echo
-  plexmediaserver__show_config
-  echo
-  echo
-  sabnzbdplus__show_config
-  echo
-  echo
-  sickbeard__show_config
-  echo
-  echo
-  transmission__show_config
+  timestamp=$(date "+%Y%m%d%H%M%S")
+  tmpfile="/tmp/showconfig-$timestamp.out"
+  
+  (couchpotato__show_config) > $tmpfile
+  echo >> $tmpfile
+  echo >> $tmpfile
+  (headphones__show_config) >> $tmpfile
+  echo >> $tmpfile
+  echo >> $tmpfile
+  (plexmediaserver__show_config) >> $tmpfile
+  echo >> $tmpfile
+  echo >> $tmpfile
+  (sabnzbdplus__show_config) >> $tmpfile
+  echo >> $tmpfile
+  echo >> $tmpfile
+  (sickbeard__show_config) >> $tmpfile
+  echo >> $tmpfile
+  echo >> $tmpfile
+  (transmission__show_config) >> $tmpfile
+  
+  cat $tmpfile | more
+  rm -f $tmpfile
 }
