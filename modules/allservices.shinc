@@ -121,7 +121,7 @@ function allservices__set_apikey() {
   echo "Applying changes to Headphones..."
   headphones__stop
   headphones__set_apikey "$headphones_apikey"
-  couchpotato__set_sabnzbdplus_apikey "$sabnzbdplus_apikey"
+  headphones__set_sabnzbdplus_apikey "$sabnzbdplus_apikey"
   headphones__start
   echo "Applying changes to SABnzbd+..."
   sabnzbdplus__stop
@@ -130,7 +130,7 @@ function allservices__set_apikey() {
   echo "Applying changes to Sick Beard..."
   sickbeard__stop
   sickbeard__set_apikey "$sickbeard_apikey"
-  couchpotato__set_sabnzbdplus_apikey "$sabnzbdplus_apikey"
+  sickbeard__set_sabnzbdplus_apikey "$sabnzbdplus_apikey"
   sickbeard__start
 }
 
