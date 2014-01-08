@@ -473,12 +473,36 @@ function config__restore_appdata() {
         sudo su -c -u $osUser "tar -xf $file -C $tretflixDir/"
     
         echo "Starting Services..."
-        couchpotato__start
-        headphones__start
-        sabnzbdplus__start
-        sickbeard__start
-        transmission__start
-        plexmediaserver__start
+        if [ "$(tools__path_istype $couchpotato_appdata/.enabled)" == "File" ]; then
+          couchpotato__enable
+        elif [ "$(tools__path_istype $couchpotato_appdata/.disabled)" == "File" ]; then
+          couchpotato__disable
+        fi
+        if [ "$(tools__path_istype $headphones_appdata/.enabled)" == "File" ]; then
+          headphones__enable
+        elif [ "$(tools__path_istype $headphones_appdata/.disabled)" == "File" ]; then
+          headphones__disable
+        fi
+        if [ "$(tools__path_istype $sabnzbdplus_appdata/.enabled)" == "File" ]; then
+          sabnzbdplus__enable
+        elif [ "$(tools__path_istype $sabnzbdplus_appdata/.disabled)" == "File" ]; then
+          sabnzbdplus__disable
+        fi
+        if [ "$(tools__path_istype $sickbeard_appdata/.enabled)" == "File" ]; then
+          sickbeard__enable
+        elif [ "$(tools__path_istype $sickbeard_appdata/.disabled)" == "File" ]; then
+          sickbeard__disable
+        fi
+        if [ "$(tools__path_istype $transmission_appdata/.enabled)" == "File" ]; then
+          transmission__enable
+        elif [ "$(tools__path_istype $transmission_appdata/.disabled)" == "File" ]; then
+          transmission__disable
+        fi
+        if [ "$(tools__path_istype $plexmediaserver_appdata/.enabled)" == "File" ]; then
+          plexmediaserver__enable
+        elif [ "$(tools__path_istype $plexmediaserver_appdata/.disabled)" == "File" ]; then
+          plexmediaserver__disable
+        fi
         echo "Done."
 
         timestamp=$(date "+%Y%m%d%H%M%S")
