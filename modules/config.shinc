@@ -63,19 +63,19 @@ function config__wizard() {
       case "$input" in
         [yY] | [yY][Ee][Ss] )
           couchpotato_state="Enabled"
-          read -p "Enter a username for accessing the CouchPotato Web UI [Default: admin]: " input
+          read -p "Enter a username for the CouchPotato Web UI [Default: admin]: " input
           if [[ -z "${input}" ]]; then
             couchpotato_username="admin"
           else
             couchpotato_username="$input"
           fi
-          read -p "Enter a password for accessing the CouchPotato Web UI [Default: admin]: " input
+          read -p "Enter a password for the CouchPotato Web UI [Default: admin]: " input
           if [[ -z "${input}" ]]; then
             couchpotato_password="admin"
           else
             couchpotato_password="$input"
           fi
-          read -p "Enter a port number for accessing the CouchPotato Web UI [Default: 5050]: " input
+          read -p "Enter a port number for the CouchPotato Web UI [Default: 5050]: " input
           if [[ -z "${input}" ]]; then
             couchpotato_port="5050"
           else
@@ -99,19 +99,19 @@ function config__wizard() {
       case "$input" in
         [yY] | [yY][Ee][Ss] )
           headphones_state="Enabled"
-          read -p "Enter a username for accessing the Headphones Web UI [Default: admin]: " input
+          read -p "Enter a username for the Headphones Web UI [Default: admin]: " input
           if [[ -z "${input}" ]]; then
             headphones_username="admin"
           else
             headphones_username="$input"
           fi
-          read -p "Enter a password for accessing the Headphones Web UI [Default: admin]: " input
+          read -p "Enter a password for the Headphones Web UI [Default: admin]: " input
           if [[ -z "${input}" ]]; then
             headphones_password="admin"
           else
             headphones_password="$input"
           fi
-          read -p "Enter a port number for accessing the Headphones Web UI [Default: 8181]: " input
+          read -p "Enter a port number for the Headphones Web UI [Default: 8181]: " input
           if [[ -z "${input}" ]]; then
             headphones_port="8181"
           else
@@ -152,19 +152,19 @@ function config__wizard() {
       case "$input" in
         [yY] | [yY][Ee][Ss] )
           sabnzbdplus_state="Enabled"
-          read -p "Enter a username for accessing the SABnbzd+ Web UI [Default: admin]: " input
+          read -p "Enter a username for the SABnbzd+ Web UI [Default: admin]: " input
           if [[ -z "${input}" ]]; then
             sabnzbdplus_username="admin"
           else
             sabnzbdplus_username="$input"
           fi
-          read -p "Enter a password for accessing the SABnbzd+ Web UI [Default: admin]: " input
+          read -p "Enter a password for the SABnbzd+ Web UI [Default: admin]: " input
           if [[ -z "${input}" ]]; then
             sabnzbdplus_password="admin"
           else
             sabnzbdplus_password="$input"
           fi
-          read -p "Enter a port number for accessing the SABnbzd+ Web UI [Default: 8080]: " input
+          read -p "Enter a port number for the SABnbzd+ Web UI [Default: 8080]: " input
           if [[ -z "${input}" ]]; then
             sabnzbdplus_port="8080"
           else
@@ -188,19 +188,19 @@ function config__wizard() {
       case "$input" in
         [yY] | [yY][Ee][Ss] )
           sickbeard_state="Enabled"
-          read -p "Enter a username for accessing the Sick Beard Web UI [Default: admin]: " input
+          read -p "Enter a username for the Sick Beard Web UI [Default: admin]: " input
           if [[ -z "${input}" ]]; then
             sickbeard_username="admin"
           else
             sickbeard_username="$input"
           fi
-          read -p "Enter a password for accessing the Sick Beard Web UI [Default: admin]: " input
+          read -p "Enter a password for the Sick Beard Web UI [Default: admin]: " input
           if [[ -z "${input}" ]]; then
             sickbeard_password="admin"
           else
             sickbeard_password="$input"
           fi
-          read -p "Enter a port number for accessing the Sick Beard Web UI [Default: 8081]: " input
+          read -p "Enter a port number for the Sick Beard Web UI [Default: 8081]: " input
           if [[ -z "${input}" ]]; then
             sickbeard_port="8081"
           else
@@ -224,19 +224,19 @@ function config__wizard() {
       case "$input" in
         [yY] | [yY][Ee][Ss] )
           transmission_state="Enabled"
-          read -p "Enter a username for accessing the Transmission Web UI [Default: admin]: " input
+          read -p "Enter a username for the Transmission Web UI [Default: admin]: " input
           if [[ -z "${input}" ]]; then
             transmission_username="admin"
           else
             transmission_username="$input"
           fi
-          read -p "Enter a password for accessing the Transmission Web UI [Default: admin]: " input
+          read -p "Enter a password for the Transmission Web UI [Default: admin]: " input
           if [[ -z "${input}" ]]; then
             transmission_password="admin"
           else
             transmission_password="$input"
           fi
-          read -p "Enter a port number for accessing the Transmission Web UI [Default: 9091]: " input
+          read -p "Enter a port number for the Transmission Web UI [Default: 9091]: " input
           if [[ -z "${input}" ]]; then
             transmission_port="9091"
           else
