@@ -74,18 +74,7 @@ function service__enable() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
     case "${CLI_ARGS[1]}" in
       '-a' | '--all')
-        echo "Applying changes to CouchPotato..."
-        couchpotato__enable
-        echo "Applying changes to Headphones..."
-        headphones__enable
-        echo "Applying changes to Plex Media Server..."
-        plexmediaserver__enable
-        echo "Applying changes to SABnzbd+..."
-        sabnzbdplus__enable
-        echo "Applying changes to Sick Beard..."
-        sickbeard__enable
-        echo "Applying changes to Transmission..."
-        transmission__enable
+        allservices__enable
         echo "Done."
         ;;
       '-b' | '--sickbeard')
@@ -130,18 +119,7 @@ function service__disable() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
     case "${CLI_ARGS[1]}" in
       '-a' | '--all')
-        echo "Applying changes to CouchPotato..."
-        couchpotato__disable
-        echo "Applying changes to Headphones..."
-        headphones__disable
-        echo "Applying changes to Plex Media Server..."
-        plexmediaserver__disable
-        echo "Applying changes to SABnzbd+..."
-        sabnzbdplus__disable
-        echo "Applying changes to Sick Beard..."
-        sickbeard__disable
-        echo "Applying changes to Transmission..."
-        transmission__disable
+        allservices__disable
         echo "Done."
         ;;
       '-b' | '--sickbeard')
@@ -186,26 +164,7 @@ function service__set_username() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
     case "${CLI_ARGS[1]}" in
       '-a' | '--all')
-        echo "Applying changes to CouchPotato..."
-        couchpotato__stop
-        couchpotato__set_username "${CLI_ARGS[4]}"
-        couchpotato__start
-        echo "Applying changes to Headphones..."
-        headphones__stop
-        headphones__set_username "${CLI_ARGS[4]}"
-        headphones__start
-        echo "Applying changes to SABnzbd+..."
-        sabnzbdplus__stop
-        sabnzbdplus__set_username "${CLI_ARGS[4]}"
-        sabnzbdplus__start
-        echo "Applying changes to Sick Beard..."
-        sickbeard__stop
-        sickbeard__set_username "${CLI_ARGS[4]}"
-        sickbeard__start
-        echo "Applying changes to Transmission..."
-        transmission__stop
-        transmission__set_username "${CLI_ARGS[4]}"
-        transmission__start
+        allservices__set_username "${CLI_ARGS[4]}"
         echo "Done."
         ;;
       '-b' | '--sickbeard')
@@ -268,26 +227,7 @@ function service__set_password() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
     case "${CLI_ARGS[1]}" in
       '-a' | '--all')
-        echo "Applying changes to CouchPotato..."
-        couchpotato__stop
-        couchpotato__set_password "${CLI_ARGS[4]}"
-        couchpotato__start
-        echo "Applying changes to Headphones..."
-        headphones__stop
-        headphones__set_password "${CLI_ARGS[4]}"
-        headphones__start
-        echo "Applying changes to SABnzbd+..."
-        sabnzbdplus__stop
-        sabnzbdplus__set_password "${CLI_ARGS[4]}"
-        sabnzbdplus__start
-        echo "Applying changes to Sick Beard..."
-        sickbeard__stop
-        sickbeard__set_password "${CLI_ARGS[4]}"
-        sickbeard__start
-        echo "Applying changes to Transmission..."
-        transmission__stop
-        transmission__set_password "${CLI_ARGS[4]}"
-        transmission__start
+        allservices__set_password "${CLI_ARGS[4]}"
         echo "Done."
         ;;
       '-b' | '--sickbeard')
@@ -350,7 +290,7 @@ function service__set_port() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
     case "${CLI_ARGS[1]}" in
       '-a' | '--all')
-        echo "This command requires a service to be specified"
+        echo "This command requires an individual service to be specified"
         ;;
       '-b' | '--sickbeard')
         echo "Applying changes to Sick Beard..."
@@ -416,26 +356,7 @@ function service__new_apikey() {
   if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
     case "${CLI_ARGS[1]}" in
       '-a' | '--all')
-        echo "Applying changes to CouchPotato..."
-        apikey="$(tools__gen_apikey)"
-        couchpotato__stop
-        couchpotato__set_apikey "$apikey"
-        couchpotato__start
-        echo "Applying changes to Headphones..."
-        apikey="$(tools__gen_apikey)"
-        headphones__stop
-        headphones__set_apikey "$apikey"
-        headphones__start
-        echo "Applying changes to SABnzbd+..."
-        apikey="$(tools__gen_apikey)"
-        sabnzbdplus__stop
-        sabnzbdplus__set_apikey "$apikey"
-        sabnzbdplus__start
-        echo "Applying changes to Sick Beard..."
-        apikey="$(tools__gen_apikey)"
-        sickbeard__stop
-        sickbeard__set_apikey "$apikey"
-        sickbeard__start
+        allservices__set_apikey
         echo "Done."
         ;;
       '-b' | '--sickbeard')
@@ -504,22 +425,7 @@ function service__show_config() {
   if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
     case "${CLI_ARGS[1]}" in
       '-a' | '--all')
-        couchpotato__show_config
-        echo
-        echo
-        headphones__show_config
-        echo
-        echo
-        plexmediaserver__show_config
-        echo
-        echo
-        sabnzbdplus__show_config
-        echo
-        echo
-        sickbeard__show_config
-        echo
-        echo
-        transmission__show_config
+        allservices__show_config
         ;;
       '-b' | '--sickbeard')
         sickbeard__show_config

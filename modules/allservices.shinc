@@ -1,0 +1,154 @@
+# avoid double inclusion
+if test "${allservices__imported+defined}" == "defined"; then
+  return 0
+fi
+allservices__imported=1
+
+function allservices__enable() {
+  echo "Applying changes to CouchPotato..."
+  couchpotato__enable
+  echo "Applying changes to Headphones..."
+  headphones__enable
+  echo "Applying changes to Plex Media Server..."
+  plexmediaserver__enable
+  echo "Applying changes to SABnzbd+..."
+  sabnzbdplus__enable
+  echo "Applying changes to Sick Beard..."
+  sickbeard__enable
+  echo "Applying changes to Transmission..."
+  transmission__enable
+}
+
+function allservices__disable() {
+  echo "Applying changes to CouchPotato..."
+  couchpotato__disable
+  echo "Applying changes to Headphones..."
+  headphones__disable
+  echo "Applying changes to Plex Media Server..."
+  plexmediaserver__disable
+  echo "Applying changes to SABnzbd+..."
+  sabnzbdplus__disable
+  echo "Applying changes to Sick Beard..."
+  sickbeard__disable
+  echo "Applying changes to Transmission..."
+  transmission__disable
+}
+
+function allservices__start() {
+  couchpotato__start
+  headphones__start
+  sabnzbdplus__start
+  sickbeard__start
+  transmission__start
+  plexmediaserver__start
+}
+
+function allservices__stop() {
+  plexmediaserver__stop
+  couchpotato__stop
+  headphones__stop
+  sabnzbdplus__stop
+  sickbeard__stop
+  transmission__stop
+}
+
+function allservices__set_username() {
+  username="$1"
+  
+  echo "Applying changes to CouchPotato..."
+  couchpotato__stop
+  couchpotato__set_username "$username"
+  couchpotato__start
+  echo "Applying changes to Headphones..."
+  headphones__stop
+  headphones__set_username "$username"
+  headphones__set_sabnzbdplus_username "$username"
+  headphones__start
+  echo "Applying changes to SABnzbd+..."
+  sabnzbdplus__stop
+  sabnzbdplus__set_username "$username"
+  sabnzbdplus__start
+  echo "Applying changes to Sick Beard..."
+  sickbeard__stop
+  sickbeard__set_username "$username"
+  sickbeard__set_sabnzbdplus_username "$username"
+  sickbeard__start
+  echo "Applying changes to Transmission..."
+  transmission__stop
+  transmission__set_username "$username"
+  transmission__start
+}
+
+function allservices__set_password() {
+  password="$1"
+  
+  echo "Applying changes to CouchPotato..."
+  couchpotato__stop
+  couchpotato__set_password "$password"
+  couchpotato__start
+  echo "Applying changes to Headphones..."
+  headphones__stop
+  headphones__set_password "$password"
+  headphones__set_sabnzbdplus_password "$password"
+  headphones__start
+  echo "Applying changes to SABnzbd+..."
+  sabnzbdplus__stop
+  sabnzbdplus__set_password "$password"
+  sabnzbdplus__start
+  echo "Applying changes to Sick Beard..."
+  sickbeard__stop
+  sickbeard__set_password "$password"
+  sickbeard__set_sabnzbdplus_password "$password"
+  sickbeard__start
+  echo "Applying changes to Transmission..."
+  transmission__stop
+  transmission__set_password "$password"
+  transmission__start
+}
+
+function allservices__set_apikey() {
+  echo "Generating new API keys..."
+  couchpotato_apikey="$(tools__gen_apikey)" && sleep 2
+  headphones_apikey="$(tools__gen_apikey)" && sleep 2
+  sabnzbdplus_apikey="$(tools__gen_apikey)" && sleep 2
+  sickbeard_apikey="$(tools__gen_apikey)"
+  
+  echo "Applying changes to CouchPotato..."
+  couchpotato__stop
+  couchpotato__set_apikey "$couchpotato_apikey"
+  couchpotato__set_sabnzbdplus_apikey "$sabnzbdplus_apikey"
+  couchpotato__start
+  echo "Applying changes to Headphones..."
+  headphones__stop
+  headphones__set_apikey "$headphones_apikey"
+  couchpotato__set_sabnzbdplus_apikey "$sabnzbdplus_apikey"
+  headphones__start
+  echo "Applying changes to SABnzbd+..."
+  sabnzbdplus__stop
+  sabnzbdplus__set_apikey "$sabnzbdplus_apikey"
+  sabnzbdplus__start
+  echo "Applying changes to Sick Beard..."
+  sickbeard__stop
+  sickbeard__set_apikey "$sickbeard_apikey"
+  couchpotato__set_sabnzbdplus_apikey "$sabnzbdplus_apikey"
+  sickbeard__start
+}
+
+function allservices__show_config() {
+  couchpotato__show_config
+  echo
+  echo
+  headphones__show_config
+  echo
+  echo
+  plexmediaserver__show_config
+  echo
+  echo
+  sabnzbdplus__show_config
+  echo
+  echo
+  sickbeard__show_config
+  echo
+  echo
+  transmission__show_config
+}
