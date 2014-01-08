@@ -408,7 +408,7 @@ function config__wizard() {
 
 function config__backup_appdata() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    echo "Stopping Enabled Services..."
+    echo "Stopping Services..."
     plexmediaserver__stop
     couchpotato__stop
     headphones__stop
@@ -421,7 +421,7 @@ function config__backup_appdata() {
     echo "Creating Backup $tretflixDir/backup-$timestamp.tar"
     sudo su -c -u $osUser "cd $tretflixDir && tar cf backup-$timestamp.tar appdata/"
     
-    echo "Starting Enabled Services..."
+    echo "Starting Services..."
     couchpotato__start
     headphones__start
     sabnzbdplus__start
@@ -458,7 +458,7 @@ function config__restore_appdata() {
     
         file="$(realpath $file)"
     
-        echo "Stopping Enabled Services..."
+        echo "Stopping Services..."
         plexmediaserver__stop
         couchpotato__stop
         headphones__stop
@@ -472,7 +472,7 @@ function config__restore_appdata() {
         rm -rf /opt/tretflix/appdata/
         sudo su -c -u $osUser "tar -xf $file -C $tretflixDir/"
     
-        echo "Starting Enabled Services..."
+        echo "Starting Services..."
         couchpotato__start
         headphones__start
         sabnzbdplus__start
