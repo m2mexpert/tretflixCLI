@@ -18,6 +18,11 @@ function couchpotato__get_status() {
 function couchpotato__enable() {
   if [ "$(couchpotato__get_status)" == "Disabled" ]; then
     update-rc.d couchpotato defaults > /dev/null 2>&1
+    if [ "$(tools__path_istype $couchpotato_appdata/.disabled" == "File" ]; then
+      rm -f $couchpotato_appdata/.disabled > /dev/null 2>&1
+    fi
+    timestamp=$(date "+%Y%m%d%H%M%S")
+    sudo su -c -u $osUser "echo $timestamp > $couchpotato_appdata/.enabled"
   fi
   couchpotato__start
 }
@@ -26,6 +31,11 @@ function couchpotato__disable() {
   if [ "$(couchpotato__get_status)" != "Disabled" ]; then
     couchpotato__stop
     update-rc.d -f couchpotato remove > /dev/null 2>&1
+    if [ "$(tools__path_istype $couchpotato_appdata/.enabled" == "File" ]; then
+      rm -f $couchpotato_appdata/.enabled > /dev/null 2>&1
+    fi
+    timestamp=$(date "+%Y%m%d%H%M%S")
+    sudo su -c -u $osUser "echo $timestamp > $couchpotato_appdata/.disabled"
   fi
 }
 
