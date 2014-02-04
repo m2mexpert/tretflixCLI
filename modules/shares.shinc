@@ -122,9 +122,6 @@ function shares__del_cifs() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
     share="//${CLI_ARGS[3]}/${CLI_ARGS[4]}"
     mountPoint="/mnt/${CLI_ARGS[3]}/${CLI_ARGS[4]}"
-    
-    share=$(echo "$share" | tr '[:upper:]' '[:lower:]')
-    mountPoint=$(echo "$mountPoint" | tr '[:upper:]' '[:lower:]')
 
     if tools__share_exists $share $mountPoint; then
 
@@ -170,9 +167,6 @@ function shares__add_nfs() {
 
     share="${CLI_ARGS[3]}:${CLI_ARGS[4]}"
     mountPoint="/mnt/${CLI_ARGS[3]}${CLI_ARGS[4]}"
-    
-    share=$(echo "$share" | tr '[:upper:]' '[:lower:]')
-    mountPoint=$(echo "$mountPoint" | tr '[:upper:]' '[:lower:]')
 
     mountCmd="$share $mountPoint nfs auto 0 0"
 
@@ -224,9 +218,6 @@ function shares__del_nfs() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
     share="${CLI_ARGS[3]}:${CLI_ARGS[4]}"
     mountPoint="/mnt/${CLI_ARGS[3]}${CLI_ARGS[4]}"
-    
-    share=$(echo "$share" | tr '[:upper:]' '[:lower:]')
-    mountPoint=$(echo "$mountPoint" | tr '[:upper:]' '[:lower:]')
 
     if tools__share_exists $share $mountPoint; then
 
