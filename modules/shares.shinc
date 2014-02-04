@@ -69,7 +69,7 @@ function shares__add_cifs() {
     mountPoint="/mnt/${CLI_ARGS[3]}/${CLI_ARGS[4]}"
 
     if [ "$authType" == "Anonymous" ]; then
-      mountCmd="$share $mountPoint cifs auto,guest,sec=none,uid=sysadmin,gid=sysadmin 0 0"
+      mountCmd="$share $mountPoint cifs auto,sec=ntlm,uid=sysadmin,gid=sysadmin 0 0"
     else
       mountCmd="$share $mountPoint cifs auto,sec=ntlm,uid=sysadmin,gid=sysadmin,username=${CLI_ARGS[6]},password=${CLI_ARGS[7]} 0 0"
     fi
