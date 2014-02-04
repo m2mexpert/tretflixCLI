@@ -106,7 +106,7 @@ function shares__add_cifs() {
     echo "Applying changes to fstab..."
     sudo su -c "echo -e '$mountCmd' >> /etc/fstab"
     echo "Mounting share..."
-    sudo mount $mountPoint
+    sudo mount $mountPoint > /dev/null 2>&1
     if [ $? -ne 0 ]; then
       echo "Failed to mount the CIFS share '$share'"
       echo
@@ -202,7 +202,7 @@ function shares__add_nfs() {
     echo "Applying changes to fstab..."
     sudo su -c "echo -e '$mountCmd' >> /etc/fstab"
     echo "Mounting share..."
-    sudo mount $mountPoint
+    sudo mount $mountPoint > /dev/null 2>&1
     if [ $? -ne 0 ]; then
       echo "Failed to mount the NFS share '$share'"
       echo
