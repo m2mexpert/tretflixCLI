@@ -127,7 +127,7 @@ function shares__del_cifs() {
 
       if tools__share_isactive $share $mountPoint; then
         echo "Unmounting share..."
-        sudo umount $mountPoint
+        sudo umount $mountPoint > /dev/null 2>&1
         if [ $? -ne 0 ]; then
           echo "Failed to unmount the CIFS share"
           echo
@@ -223,7 +223,7 @@ function shares__del_nfs() {
 
       if tools__share_isactive $share $mountPoint; then
         echo "Unmounting share..."
-        sudo umount $mountPoint
+        sudo umount $mountPoint > /dev/null 2>&1
         if [ $? -ne 0 ]; then
           echo "Failed to unmount the NFS share"
           echo
