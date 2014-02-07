@@ -257,7 +257,7 @@ function shares__validate_share() {
   
   # If the test mountpoint is already in use, unmount it
   if df -T | grep -q "$testMountPoint$"; then
-    umount $testMountPoint > /dev/null 2>&1
+    umount "$testMountPoint" > /dev/null 2>&1
     if [ $? -ne 0 ]; then
       echo "The test mount point is in use and could not be unmounted"
       echo
@@ -268,22 +268,22 @@ function shares__validate_share() {
   # Mount the share to the test mount point
   if [ "$type" == "cifs" ]; then
     share="//$host/$share"
-    output=$(mount -t cifs $share $testMountPoint -o sec=ntlm,user=$user,pass=$pass 2>&1)
+    output=$(mount -t cifs "$share" "$testMountPoint" -o sec=ntlm,user="$user",pass="$pass" 2>&1)
   elif [ "$type" == "nfs" ]; then
     share="$host:$share"
-    output=$(mount -t nfs $share $testMountPoint 2>&1)
+    output=$(mount -t nfs "$share" "$testMountPoint" 2>&1)
   fi
   
   # If test mount was successful, unmount
   if [ $? -eq 0 ]; then
-    umount $testMountPoint > /dev/null 2>&1
+    umount "$testMountPoint" > /dev/null 2>&1
   else
     # If test mount was unsuccessful, display the reason
-    if echo $output | grep -q "Retrying with upper case share name.*No such device or address"; then
+    if echo "$output" | grep -q "Retrying with upper case share name.*No such device or address"; then
       echo "No such share found on the host"
-    elif echo $output | grep -q "mount error.*Permission denied"; then
+    elif echo "$output" | grep -q "mount error.*Permission denied"; then
       echo "Access denied, a valid login/password is required"
-    elif echo $output | grep -q "access denied by server while mounting"; then
+    elif echo "$output" | grep -q "access denied by server while mounting"; then
       echo "Access denied, share access is restricted or no such share found on the host"
     else
       echo "$output"
