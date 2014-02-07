@@ -28,13 +28,13 @@ function shares__command_handler() {
     	  shares__add_cifs
     	  ;;
     	'del cifs')
-    	  shares__del_cifs
+    	  shares__del_share
     	  ;;
     	'add nfs')
     	  shares__add_nfs
     	  ;;
     	'del nfs')
-    	  shares__del_nfs
+    	  shares__del_share
     	  ;;
     	'mount all')
     	  shares__mount_all
@@ -256,6 +256,60 @@ function shares__del_nfs() {
   fi
 }
 
+function shares__del_share() {
+  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
+    # Assign friendly names to passed variables
+    host="${CLI_ARGS[3]}"
+    share="${CLI_ARGS[4]}"
+    type="${CLI_ARGS[2]}"
+    
+    # Build the share and mount point syntax depending on share type
+    if [ "$type" == "cifs" ]; then
+      shareStr="//${CLI_ARGS[3]}/${CLI_ARGS[4]}"
+      mountPointStr="/mnt/${CLI_ARGS[3]}/${CLI_ARGS[4]}"
+    elif [ "$type" == "nfs" ]; then
+      shareStr="${CLI_ARGS[3]}:${CLI_ARGS[4]}"
+      mountPointStr="/mnt/${CLI_ARGS[3]}${CLI_ARGS[4]}"
+    else
+      echo "Invalid share type"
+      echo
+      exit 1
+    fi
+    
+    # Exit if the share isn't found in /etc/fstab
+    if ! cat /etc/fstab | grep -q "^$shareStr $mountPointStr $type"; then
+      echo "Share not found in fstab"
+      echo
+      exit 1
+    fi
+    
+    # Unmount the share if currently mounted, display error if unmount fails
+    if df -T | grep -q "^$shareStr.*$type.*$mountPointStr$"; then
+      echo "Unmounting share..."
+      sudo umount $mountPoint > /dev/null 2>&1
+      if [ $? -ne 0 ]; then
+        echo "Unmount failed, unable to remove the share"
+        echo
+        exit 1
+      fi
+    fi
+
+    # Remove the share entry from /etc/fstab
+    echo "Applying changes to fstab..."
+    sudo sed -i '\#^'"$shareStr"' '"$mountPointStr"' '"$type"'#d' /etc/fstab
+
+		# Share removal verification, display error if the share was not successfully removed
+    if cat /etc/fstab | grep -q "^$shareStr $mountPointStr $type"; then
+      echo "Failed to remove the NFS share entry from /etc/fstab"
+      echo
+      exit 1
+    fi
+
+  else
+    shares__help
+  fi
+}
+
 function shares__mount_all() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
     mount -a
@@ -267,18 +321,22 @@ function shares__mount_all() {
 
 function shares__show_config() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
+    # If cifs/nfs shares are found in fstab, display the df headers
     if egrep -i -q "cifs|nfs" /etc/fstab; then
       df -hT | head -1
+      # Loop through the cifs/nfs shares in fstab
       egrep -i "cifs|nfs" /etc/fstab | while read -r line; do
         share=$(echo $line | awk '{print $1}')
+        # If the current share from fstab is mounted, display the df -hT output
         if df -hT | grep -q "$share"; then
           df -hT | grep "$share"
+        # If the current share from fstab is nout mounted, display the share syntax + (Not Mounted)
         else
           echo -e "$share \t (Not Mounted)"
         fi
       done  
     else
-      echo "There are no shares mounted"
+      echo "No shares have been added"
     fi
   else
     shares__help
@@ -286,10 +344,10 @@ function shares__show_config() {
 }
 
 function shares__mount_test() {
-  # Prepare the share and test mountpoint variables for the test using arguments passed into the function
+  # Assign friendly names to passed variables
   host="$1"
   share="$2"
-  type="$3" 
+  type="$3"
   mountPoint="/mnt/.test"
 
   # Verify that the host is reachable and/or hostname can be resolved
