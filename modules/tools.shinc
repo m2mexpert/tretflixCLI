@@ -48,38 +48,6 @@ function tools__dir_isempty() {
     false
   fi
 }
-
-function tools__share_exists() {
-  if cat /etc/fstab | grep -q "^$1.*$2"; then
-    true
-  else
-    false
-  fi
-}
-
-function tools__share_isactive() {
-  if df | grep -q "^$1.*$2$"; then
-    true
-  else
-    false
-  fi
-}
-
-function tools__mountpoint_exists() {
-  if cat /etc/fstab | grep -q " $1"; then
-    true
-  else
-    false
-  fi
-}
-
-function tools__mountpoint_isactive() {
-  if df | grep -q "$1$"; then
-    true
-  else
-    false
-  fi
-}
   
 function tools__gen_apikey() {
   apikey=$(date +%s | sha256sum | base64 | head -c 32 | tr -s '[:upper:]'  '[:lower:]')
