@@ -93,7 +93,7 @@ function shares__add_share() {
   fi
   
   # Create the mount point, display error and exit if operation fails
-  mkdir -p $mountPointStr
+  mkdir -p $mountPointStr > /dev/null 2>&1
   if [ $? -ne 0 ]; then
     echo "Failed to create the mount point '$mountPointStr'"
     echo
@@ -160,7 +160,7 @@ function shares__del_share() {
 
 		# Share removal verification, display error if the share was not successfully removed
     if cat /etc/fstab | grep -q "^$shareStr $mountPointStr $type"; then
-      echo "Failed to remove the NFS share entry from /etc/fstab"
+      echo "Failed to remove the share from fstab"
       echo
       exit 1
     fi
@@ -173,7 +173,7 @@ function shares__del_share() {
 
 function shares__mount_all() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    mount -a
+    mount -a > /dev/null 2>&1
     shares__show_config
   else
     shares__help
@@ -259,7 +259,7 @@ function shares__validate_share() {
   if df -T | grep -q "$testMountPoint$"; then
     umount $testMountPoint > /dev/null 2>&1
     if [ $? -ne 0 ]; then
-      echo "The test mount point is in use and could not be unmounted."
+      echo "The test mount point is in use and could not be unmounted"
       echo
       exit 1
     fi
