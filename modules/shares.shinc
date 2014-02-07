@@ -261,7 +261,7 @@ function shares__show_config() {
         if df -hT | grep -q "$share"; then
           df -hT | grep "$share"
         else
-          echo "$share (Not Mounted)"
+          echo -e "$share \t (Not Mounted)"
         fi
       done  
     else
