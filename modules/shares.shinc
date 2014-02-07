@@ -49,12 +49,12 @@ function shares__command_handler() {
 function shares__add_cifs() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
     authType="Anonymous"
-    tools__cifs_test ${CLI_ARGS[3]} ${CLI_ARGS[4]}
+    shares__mount_test ${CLI_ARGS[3]} ${CLI_ARGS[4]} cifs
   elif [ "${#CLI_ARGS[@]}" -eq 8 ]; then
     case "${CLI_ARGS[5]}" in
       '-u' | '--user')
         authType="User"
-        tools__cifs_test ${CLI_ARGS[3]} ${CLI_ARGS[4]} ${CLI_ARGS[6]} ${CLI_ARGS[7]}
+        shares__mount_test ${CLI_ARGS[3]} ${CLI_ARGS[4]} cifs ${CLI_ARGS[6]} ${CLI_ARGS[7]}
         ;;
       *)
         shares__help
@@ -158,7 +158,7 @@ function shares__del_cifs() {
 
 function shares__add_nfs() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
-    tools__nfs_test ${CLI_ARGS[3]} ${CLI_ARGS[4]}
+    shares__mount_test ${CLI_ARGS[3]} ${CLI_ARGS[4]} nfs
   else
     shares__help
   fi
@@ -271,5 +271,57 @@ function shares__show_config() {
     fi
   else
     shares__help
+  fi
+}
+
+function shares__mount_test() {
+  # Prepare the share and test mountpoint variables for the test using arguments passed into the function
+  host="$1"
+  share="$2"
+  type="$3" 
+  mountPoint="/mnt/.test"
+
+  # If the test mountpoint is already in use, unmount it
+  if tools__mountpoint_isactive $mountPoint; then
+    umount $mountPoint > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+      echo "Failed to unmount the test mount path"
+      return 1
+    fi
+  fi
+
+  # Verify that the host is reachable and/or hostname can be resolved
+  tools__host_ping $host
+  if [ $? -ne 0 ]; then
+    return 1
+  fi
+
+  if [ "$type" == "cifs" ]; then
+    share="//$host/$share"
+    # Perform the test mount, output errors if unsuccessful
+    if [ $# -eq 3 ]; then
+      output=$(mount -t cifs $share $mountPoint -o guest,sec=ntlm 2>&1)
+    elif [ $# -eq 5 ]; then
+      output=$(mount -t cifs $share $mountPoint -o user=$4,pass=$5,sec=ntlm 2>&1)
+    fi
+  elif [ "$type" == "nfs" ]; then
+    share="$host:$share"
+    output=$(mount -t nfs $share $mountPoint 2>&1)
+  fi
+  
+  if [ $? -eq 0 ]; then
+    umount $mountPoint
+    return 0
+  else
+    if echo $output | grep -q "Retrying with upper case share name.*No such device or address"; then
+      echo "No such share found on the host"
+    elif echo $output | grep -q "mount error.*Permission denied"; then
+      echo "Access denied, a valid login/password is required"
+    elif echo $output | grep -q "access denied by server while mounting"; then
+      echo "Access denied, share access is restricted or no such share found on the host"
+    else
+      echo "$output"
+    fi
+    return 1
   fi
 }
