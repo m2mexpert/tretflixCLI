@@ -122,44 +122,6 @@ function shares__add_cifs() {
   fi
 }
 
-function shares__del_cifs() {
-  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
-    share="//${CLI_ARGS[3]}/${CLI_ARGS[4]}"
-    mountPoint="/mnt/${CLI_ARGS[3]}/${CLI_ARGS[4]}"
-
-    if tools__share_exists $share $mountPoint; then
-
-      if tools__share_isactive $share $mountPoint; then
-        echo "Unmounting share..."
-        sudo umount $mountPoint > /dev/null 2>&1
-        if [ $? -ne 0 ]; then
-          echo "Failed to unmount the CIFS share"
-          echo
-          exit 1
-        fi
-      fi
-
-      echo "Applying changes to fstab..."
-      sudo sed -i '\#^'"$share"' '"$mountPoint"'#d' /etc/fstab
-      if ! tools__share_exists $share $mountPoint; then
-        echo "Done."
-      else
-        echo "Failed to remove the CIFS share entry from /etc/fstab"
-        echo
-        exit 1
-      fi
-
-    else
-      echo "No such CIFS share entry found in /etc/fstab"
-      echo
-      exit 1
-    fi
-
-  else
-    shares__help
-  fi
-}
-
 function shares__add_nfs() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
     shares__mount_test ${CLI_ARGS[3]} ${CLI_ARGS[4]} nfs
@@ -215,44 +177,6 @@ function shares__add_nfs() {
     echo "Done."
   else
     exit 1
-  fi
-}
-
-function shares__del_nfs() {
-  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
-    share="${CLI_ARGS[3]}:${CLI_ARGS[4]}"
-    mountPoint="/mnt/${CLI_ARGS[3]}${CLI_ARGS[4]}"
-
-    if tools__share_exists $share $mountPoint; then
-
-      if tools__share_isactive $share $mountPoint; then
-        echo "Unmounting share..."
-        sudo umount $mountPoint > /dev/null 2>&1
-        if [ $? -ne 0 ]; then
-          echo "Failed to unmount the NFS share"
-          echo
-          exit 1
-        fi
-      fi
-
-      echo "Applying changes to fstab..."
-      sudo sed -i '\#^'"$share"' '"$mountPoint"'#d' /etc/fstab
-      if ! tools__share_exists $share $mountPoint; then
-        echo "Done."
-      else
-        echo "Failed to remove the NFS share entry from /etc/fstab"
-        echo
-        exit 1
-      fi
-
-    else
-      echo "No such NFS share entry found in /etc/fstab"
-      echo
-      exit 1
-    fi
-
-  else
-    shares__help
   fi
 }
 
