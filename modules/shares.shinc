@@ -12,6 +12,7 @@ function shares__help() {
   echo "  tretflix shares del cifs [HOST] [SHARE]"
   echo "  tretflix shares add nfs [HOST] [SHARE]"
   echo "  tretflix shares del nfs [HOST] [SHARE]"
+  echo "  tretflix shares mount all"
   echo "  tretflix shares show config"
   echo
   echo "OPTIONS:"
@@ -34,6 +35,9 @@ function shares__command_handler() {
     	  ;;
     	'del nfs')
     	  shares__del_nfs
+    	  ;;
+    	'mount all')
+    	  shares__mount_all
     	  ;;    	  
       'show config')
         shares__show_config
@@ -251,6 +255,15 @@ function shares__del_nfs() {
     shares__help
   fi
 }
+
+function shares__mount_all() {
+  if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
+    mount -a
+    shares__show_config
+  else
+    shares__help
+  fi
+}    
 
 function shares__show_config() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
