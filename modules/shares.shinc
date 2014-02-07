@@ -273,15 +273,13 @@ function shares__validate_share() {
     share="$host:$share"
     output=$(mount -t nfs "$share" "$testMountPoint" 2>&1)
   fi
-  
-  echo $?
-  
+
   # If test mount was successful, unmount
   if [ $? -eq 0 ]; then
     umount "$testMountPoint" > /dev/null 2>&1
   else
     # If test mount was unsuccessful, display the reason
-    if echo "$output" | grep -q "Retrying with upper case share name.*No such device or address"; then
+    if echo "$output" | grep -q "mount error(6): No such device or address"; then
       echo "Share not found on the host"
     elif echo "$output" | grep -q "mount error.*Permission denied"; then
       echo "Access denied, a valid login/password is required"
