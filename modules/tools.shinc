@@ -7,9 +7,9 @@ tools__imported=1
 function tools__host_ping() {
   output=$(ping -c 1 "$1" 2>&1)
   if [ $? -gt 0 ]; then
-    if [ $exitCode -eq 1 ]; then
+    if [ $? -eq 1 ]; then
       echo "Unable to ping the host"
-    elif [ $exitCode -eq 2 ]; then
+    elif [ $? -eq 2 ]; then
       echo "Unable to resolve the hostname"
     else
       echo "$output"
