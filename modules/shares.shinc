@@ -292,9 +292,7 @@ function shares__mount_test() {
 
   # Verify that the host is reachable and/or hostname can be resolved
   tools__host_ping $host
-  if [ $? -ne 0 ]; then
-    return 1
-  fi
+
 
   if [ "$type" == "cifs" ]; then
     share="//$host/$share"

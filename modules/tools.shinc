@@ -6,10 +6,7 @@ tools__imported=1
 
 function tools__host_ping() {
   output=$(ping -c 1 "$1" 2>&1)
-  exitCode=$?
-  if [ $exitCode -eq 0 ]; then
-    return 0
-  else
+  if [ $? -gt 0 ]; then
     if [ $exitCode -eq 1 ]; then
       echo "Unable to ping the host"
     elif [ $exitCode -eq 2 ]; then
@@ -17,7 +14,8 @@ function tools__host_ping() {
     else
       echo "$output"
     fi
-    return 1
+    echo
+    exit 1
   fi
 }
 
@@ -79,26 +77,6 @@ function tools__mountpoint_isactive() {
     true
   else
     false
-  fi
-}
-
-function tools__service_isrunning() {
-  output=$(service "$1" status 2>&1)
-  exitCode=$?
-  if [ $exitCode -eq 0 ]; then
-    true
-  else
-  	false
-  fi
-}
-
-function tools__service_isenabled() {
-  output=$(ls /etc/rc?.d/*"$1" 2>&1)
-  exitCode=$?
-  if [ $exitCode -eq 0 ]; then
-    true
-  else
-  	false
   fi
 }
   
