@@ -254,8 +254,16 @@ function shares__del_nfs() {
 
 function shares__show_config() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    if df -hT | egrep -q "[[:space:]]cifs[[:space:]]|[[:space:]]nfs[[:space:]]"; then
-      df -hT | egrep "^Filesystem[[:space:]]|[[:space:]]cifs[[:space:]]|[[:space:]]nfs[[:space:]]"   
+    if egrep -i "cifs|nfs" /etc/fstab; then
+      df -hT | head -1
+      egrep -i "cifs|nfs" /etc/fstab | while read -r line; do
+        share=$(echo $line | awk '{print $1}')
+        if df -hT | grep "$share"; then
+          df -hT | grep "$share"
+        else
+          echo "$share (Not Mounted)"
+        fi
+      done  
     else
       echo "There are no shares mounted"
       echo
