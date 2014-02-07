@@ -76,14 +76,6 @@ function shares__add_share() {
 
   # Validate the share before adding and mounting
   shares__validate_share "$host" "$share" "$type" "$user" "$pass"
-  
-  # Create the mount point, display error and exit if operation fails
-  mkdir -p $mountPoint
-  if [ $? -ne 0 ]; then
-    echo "Failed to create the mount point '$mountPoint'"
-    echo
-    exit 1
-  fi
 
   # Build the share and mount point syntax depending on share type
   if [ "$type" == "cifs" ]; then
@@ -96,6 +88,14 @@ function shares__add_share() {
     optionStr="auto"
   else
     echo "Invalid share type"
+    echo
+    exit 1
+  fi
+  
+  # Create the mount point, display error and exit if operation fails
+  mkdir -p $mountPointStr
+  if [ $? -ne 0 ]; then
+    echo "Failed to create the mount point '$mountPointStr'"
     echo
     exit 1
   fi
