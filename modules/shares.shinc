@@ -106,7 +106,7 @@ function shares__add_share() {
     
   # Mount the share, display error and exit if operation fails
   echo "Mounting share..."
-  sudo mount $mountPoint > /dev/null 2>&1
+  sudo mount $mountPointStr > /dev/null 2>&1
   if [ $? -ne 0 ]; then
     echo "Failed to mount the share '$share'"
     echo
