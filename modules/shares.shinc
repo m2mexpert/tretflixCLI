@@ -274,6 +274,8 @@ function shares__validate_share() {
     output=$(mount -t nfs "$share" "$testMountPoint" 2>&1)
   fi
   
+  echo $?
+  
   # If test mount was successful, unmount
   if [ $? -eq 0 ]; then
     umount "$testMountPoint" > /dev/null 2>&1
