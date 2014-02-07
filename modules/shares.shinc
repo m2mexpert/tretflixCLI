@@ -258,7 +258,7 @@ function shares__show_config() {
       df -hT | head -1
       egrep -i -q "cifs|nfs" /etc/fstab | while read -r line; do
         share=$(echo $line | awk '{print $1}')
-        if df -hT | grep -q "$share"; then
+        if df -hT | grep "$share"; then
           df -hT | grep "$share"
         else
           echo "$share (Not Mounted)"
