@@ -286,7 +286,7 @@ function shares__del_share() {
     # Unmount the share if currently mounted, display error if unmount fails
     if df -T | grep -q "^$shareStr.*$type.*$mountPointStr$"; then
       echo "Unmounting share..."
-      sudo umount $mountPoint > /dev/null 2>&1
+      sudo umount $mountPointStr > /dev/null 2>&1
       if [ $? -ne 0 ]; then
         echo "Unmount failed, unable to remove the share"
         echo
