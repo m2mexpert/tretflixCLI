@@ -280,11 +280,11 @@ function shares__validate_share() {
   else
     # If test mount was unsuccessful, display the reason
     if echo "$output" | grep -q "Retrying with upper case share name.*No such device or address"; then
-      echo "No such share found on the host"
+      echo "Share not found on the host"
     elif echo "$output" | grep -q "mount error.*Permission denied"; then
       echo "Access denied, a valid login/password is required"
     elif echo "$output" | grep -q "access denied by server while mounting"; then
-      echo "Access denied, share access is restricted or no such share found on the host"
+      echo "Access denied, share access is restricted or share not found on the host"
     else
       echo "$output"
     fi
