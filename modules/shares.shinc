@@ -25,13 +25,13 @@ function shares__command_handler() {
   if test "${CLI_ARGS[2]+isset}"; then
     case "${CLI_ARGS[1]} ${CLI_ARGS[2]}" in
     	'add cifs')
-    	  shares__add_cifs
+    	  shares__add_share
     	  ;;
     	'del cifs')
     	  shares__del_share
     	  ;;
     	'add nfs')
-    	  shares__add_nfs
+    	  shares__add_share
     	  ;;
     	'del nfs')
     	  shares__del_share
@@ -50,15 +50,17 @@ function shares__command_handler() {
   fi
 }
 
-function shares__add_cifs() {
+function shares__add_share() {
   if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
-    authType="Anonymous"
-    shares__mount_test ${CLI_ARGS[3]} ${CLI_ARGS[4]} cifs
+    # Assign the user/pass variables for guest cifs shares
+    user="guest"
+    pass=""
   elif [ "${#CLI_ARGS[@]}" -eq 8 ]; then
     case "${CLI_ARGS[5]}" in
       '-u' | '--user')
-        authType="User"
-        shares__mount_test ${CLI_ARGS[3]} ${CLI_ARGS[4]} cifs ${CLI_ARGS[6]} ${CLI_ARGS[7]}
+        # Assign the user/pass variables for authenticated cifs shares
+        user="${CLI_ARGS[6]}"
+        pass="${CLI_ARGS[7]}"
         ;;
       *)
         shares__help
@@ -67,117 +69,51 @@ function shares__add_cifs() {
     shares__help
   fi
 
-  if [ $? -eq 0 ]; then
+  # Assign friendly names to passed variables
+  host="${CLI_ARGS[3]}"
+  share="${CLI_ARGS[4]}"
+  type="${CLI_ARGS[2]}"
 
-    share="//${CLI_ARGS[3]}/${CLI_ARGS[4]}"
-    mountPoint="/mnt/${CLI_ARGS[3]}/${CLI_ARGS[4]}"
-
-    if [ "$authType" == "Anonymous" ]; then
-      mountCmd="$share $mountPoint cifs auto,sec=ntlm,uid=sysadmin,gid=sysadmin,username=guest,password= 0 0"
-    else
-      mountCmd="$share $mountPoint cifs auto,sec=ntlm,uid=sysadmin,gid=sysadmin,username=${CLI_ARGS[6]},password=${CLI_ARGS[7]} 0 0"
-    fi
-
-    if tools__share_exists $share $mountPoint; then
-      echo "The CIFS share '$share' already exists in /etc/fstab"
-      echo
-      exit 1
-    elif tools__mountpoint_exists $mountPoint; then
-      echo "The mount point '$mountPoint' already exists in /etc/fstab"
-      echo
-      exit 1
-    fi
-
-    if tools__path_exists $mountPoint; then
-      if [ "$(tools__path_istype $mountPoint)" != "Directory" ]; then
-        echo "The moint point '$mountPoint' already exists and cannot be used"
-        echo
-        exit 1
-      elif ! tools__dir_isempty $mountPoint; then
-        echo "The mount point '$mountPoint' is not empty and cannot be used"
-        echo
-        exit 1
-      fi
-    else
-      mkdir -p $mountPoint
-      if [ $? -ne 0 ]; then
-        echo "Failed to create the mount point '$mountPoint'"
-        echo
-        exit 1
-      fi
-    fi
-
-    echo "Applying changes to fstab..."
-    sudo su -c "echo -e '$mountCmd' >> /etc/fstab"
-    echo "Mounting share..."
-    sudo mount $mountPoint > /dev/null 2>&1
-    if [ $? -ne 0 ]; then
-      echo "Failed to mount the CIFS share '$share'"
-      echo
-      exit 1
-    fi
-    echo "Done."
-  else
+  # Validate the share before adding and mounting
+  shares__validate_share $host $share $type $user $pass
+  
+  # Create the mount point, display error and exit if operation fails
+  mkdir -p $mountPoint
+  if [ $? -ne 0 ]; then
+    echo "Failed to create the mount point '$mountPoint'"
+    echo
     exit 1
   fi
-}
 
-function shares__add_nfs() {
-  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
-    shares__mount_test ${CLI_ARGS[3]} ${CLI_ARGS[4]} nfs
+  # Build the share and mount point syntax depending on share type
+  if [ "$type" == "cifs" ]; then
+    shareStr="//${CLI_ARGS[3]}/${CLI_ARGS[4]}"
+    mountPointStr="/mnt/${CLI_ARGS[3]}/${CLI_ARGS[4]}"
+    optionStr="auto,sec=ntlm,uid=$osUser,gid=$osUser,username=$user,password=$pass"
+  elif [ "$type" == "nfs" ]; then
+    shareStr="${CLI_ARGS[3]}:${CLI_ARGS[4]}"
+    mountPointStr="/mnt/${CLI_ARGS[3]}${CLI_ARGS[4]}"
+    optionStr="auto"
   else
-    shares__help
-  fi
-
-  if [ $? -eq 0 ]; then
-
-    share="${CLI_ARGS[3]}:${CLI_ARGS[4]}"
-    mountPoint="/mnt/${CLI_ARGS[3]}${CLI_ARGS[4]}"
-
-    mountCmd="$share $mountPoint nfs auto 0 0"
-
-    if tools__share_exists $share $mountPoint; then
-      echo "The NFS share '$share' already exists in /etc/fstab"
-      echo
-      exit 1
-    elif tools__mountpoint_exists $mountPoint; then
-      echo "The mount point '$mountPoint' already exists in /etc/fstab"
-      echo
-      exit 1
-    fi
-
-    if tools__path_exists $mountPoint; then
-      if [ "$(tools__path_istype $mountPoint)" != "Directory" ]; then
-        echo "The moint point '$mountPoint' already exists and cannot be used"
-        echo
-        exit 1
-      elif ! tools__dir_isempty $mountPoint; then
-        echo "The mount point '$mountPoint' is not empty and cannot be used"
-        echo
-        exit 1
-      fi
-    else
-      mkdir -p $mountPoint
-      if [ $? -ne 0 ]; then
-        echo "Failed to create the mount point '$mountPoint'"
-        echo
-        exit 1
-      fi
-    fi
-
-    echo "Applying changes to fstab..."
-    sudo su -c "echo -e '$mountCmd' >> /etc/fstab"
-    echo "Mounting share..."
-    sudo mount $mountPoint > /dev/null 2>&1
-    if [ $? -ne 0 ]; then
-      echo "Failed to mount the NFS share '$share'"
-      echo
-      exit 1
-    fi
-    echo "Done."
-  else
+    echo "Invalid share type"
+    echo
     exit 1
   fi
+  
+  # Write the mount details to fstab
+  echo "Applying changes to fstab..."
+  sudo su -c "echo -e '$shareStr $mountPointStr $type $optionStr 0 0' >> /etc/fstab"
+    
+  # Mount the share, display error and exit if operation fails
+  echo "Mounting share..."
+  sudo mount $mountPoint > /dev/null 2>&1
+  if [ $? -ne 0 ]; then
+    echo "Failed to mount the share '$share'"
+    echo
+    exit 1
+  fi
+  
+  echo "Done."
 }
 
 function shares__del_share() {
@@ -228,7 +164,8 @@ function shares__del_share() {
       echo
       exit 1
     fi
-
+    
+    echo "Done."
   else
     shares__help
   fi
@@ -267,20 +204,60 @@ function shares__show_config() {
   fi
 }
 
-function shares__mount_test() {
+function shares__validate_share() {
   # Assign friendly names to passed variables
   host="$1"
   share="$2"
   type="$3"
-  mountPoint="/mnt/.test"
+  user="$4"
+  pass="$5"
+  
+  # Build the share and mount point syntax depending on share type
+  if [ "$type" == "cifs" ]; then
+    shareStr="//${CLI_ARGS[3]}/${CLI_ARGS[4]}"
+    mountPointStr="/mnt/${CLI_ARGS[3]}/${CLI_ARGS[4]}"
+  elif [ "$type" == "nfs" ]; then
+    shareStr="${CLI_ARGS[3]}:${CLI_ARGS[4]}"
+    mountPointStr="/mnt/${CLI_ARGS[3]}${CLI_ARGS[4]}"
+  else
+    echo "Invalid share type"
+    echo
+    exit 1
+  fi
+  
+  # Define the test mount point path
+  testMountPoint="/mnt/.test"
 
   # Verify that the host is reachable and/or hostname can be resolved
   tools__host_ping $host
+  
+  # Verify that the share and/or mount point isn't already in use
+  if cat /etc/fstab | grep -q "^$shareStr.*$type"; then
+    echo "The share '$shareStr' is already in fstab"
+    echo
+    exit 1
+  elif cat /etc/fstab | grep -q " $mountPointStr "; then
+    echo "The mount point '$mountPointStr' is already in fstab"
+    echo
+    exit 1
+  fi
 
+  # Validate that the mount point is usable if it already exists
+  if tools__path_exists $mountPointStr; then
+    if [ "$(tools__path_istype $mountPointStr)" != "Directory" ]; then
+      echo "The moint point '$mountPointStr' is a file and cannot be used"
+      echo
+      exit 1
+    elif ! tools__dir_isempty $mountPointStr; then
+      echo "The mount point '$mountPointStr' is not empty and cannot be used"
+      echo
+      exit 1
+    fi
+  fi
   
   # If the test mountpoint is already in use, unmount it
-  if tools__mountpoint_isactive $mountPoint; then
-    umount $mountPoint > /dev/null 2>&1
+  if tools__mountpoint_isactive $testMountPoint; then
+    umount $testMountPoint > /dev/null 2>&1
     if [ $? -ne 0 ]; then
       echo "The test mount point is in use and could not be unmounted."
       echo
@@ -288,22 +265,20 @@ function shares__mount_test() {
     fi
   fi
 
+  # Mount the share to the test mount point
   if [ "$type" == "cifs" ]; then
     share="//$host/$share"
-    # Perform the test mount, output errors if unsuccessful
-    if [ $# -eq 3 ]; then
-      output=$(mount -t cifs $share $mountPoint -o guest,sec=ntlm 2>&1)
-    elif [ $# -eq 5 ]; then
-      output=$(mount -t cifs $share $mountPoint -o user=$4,pass=$5,sec=ntlm 2>&1)
-    fi
+    output=$(mount -t cifs $share $testMountPoint -o sec=ntlm,user=$user,pass=$pass 2>&1)
   elif [ "$type" == "nfs" ]; then
     share="$host:$share"
-    output=$(mount -t nfs $share $mountPoint 2>&1)
+    output=$(mount -t nfs $share $testMountPoint 2>&1)
   fi
   
+  # If test mount was successful, unmount
   if [ $? -eq 0 ]; then
-    umount $mountPoint > /dev/null 2>&1
+    umount $testMountPoint > /dev/null 2>&1
   else
+    # If test mount was unsuccessful, display the reason
     if echo $output | grep -q "Retrying with upper case share name.*No such device or address"; then
       echo "No such share found on the host"
     elif echo $output | grep -q "mount error.*Permission denied"; then
