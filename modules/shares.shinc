@@ -22,7 +22,7 @@ function shares__help() {
   echo "  Use the 'mount all' option in the event that one or more" 
   echo "  shares fail to mount on startup or become unmounted. If"
   echo "  mount attempts repeatedly fail, delete and re-add the"
-  echo "  share(s) as needed."
+  echo "  shares as needed."
 	echo
   exit 1
 }
