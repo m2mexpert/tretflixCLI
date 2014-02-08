@@ -70,11 +70,11 @@ function plexmediaserver__upgrade() {
   
   # Verify correct package (x86/x64) for OS
   osBuild=$(uname -a)
-  if echo "$osBuild" | grep -q "i386" && echo "$URL" | grep -q "amd64.deb$"; then
+  if echo "$osBuild" | grep -q "i386" && echo "$url" | grep -q "amd64.deb$"; then
     echo "The version is mismatched, 32bit .deb needed"
     echo
     exit 1
-  elif echo "$osBuild" | grep -q "x86_x64" && echo "$URL" | grep -q "i386.deb$"; then
+  elif echo "$osBuild" | grep -q "x86_x64" && echo "$url" | grep -q "i386.deb$"; then
     echo "The version is mismatched, 64bit .deb needed"
     echo
     exit 1
