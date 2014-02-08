@@ -40,8 +40,6 @@ function plexmediaserver__disable() {
 }
 
 function plexmediaserver__upgrade() {
-  plexmediaserver__stop
-  
   while true; do
     read -p "Enter the Web URL to the latest .deb (Ubuntu) install file: " input
     case "$input" in
@@ -89,6 +87,7 @@ function plexmediaserver__upgrade() {
   fi
   
   echo "Applying changes to Plex Media Server..."
+  plexmediaserver__stop
   gdebi --n /tmp/"$filename" > /dev/null 2>&1
   if [ $? -ne 0 ]; then
     echo "Failed to install the .deb file"
