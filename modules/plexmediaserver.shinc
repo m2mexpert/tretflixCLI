@@ -95,9 +95,9 @@ function plexmediaserver__upgrade() {
     exit 1
   fi
   
-  rm -f /tmp/"$filename" > /dev/null 2>&1
-  
   plexmediaserver__start
+  
+  rm -f /tmp/"$filename" > /dev/null 2>&1
 }
 
 function plexmediaserver__start() {
