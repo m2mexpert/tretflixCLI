@@ -40,7 +40,18 @@ function sabnzbdplus__disable() {
 }
 
 function sabnzbdplus__upgrade() {
-  echo "Coming Soon"
+  sabnzbdplus__stop
+  
+  apt-get update > /dev/null 2>&1
+  output=$(apt-cache policy sabnzbdplus 2>&1)
+  installedVers=$(echo "$output" | grep "Installed:" | awk '{ print $2 }')
+  candidateVers=$(echo "$output" | grep "Candidate:" | awk '{ print $2 }')
+  
+  if [ "$installedVers" != "$candidateVers" ]; then
+    apt-get -y install sabnzbdplus > /dev/null 2>&1
+  fi
+  
+  sabnzbdplus__start
 }
 
 function sabnzbdplus__start() {
