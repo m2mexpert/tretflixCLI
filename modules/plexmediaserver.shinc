@@ -48,6 +48,8 @@ function plexmediaserver__upgrade() {
     url=$(echo "$downloadPage" | grep 'amd64.deb">' | head -1 | sed -e 's/^.*href="\(.*\)">.*$/\1/')
   fi
 
+  filename=$(basename "$url")
+  
   wget -O /tmp/"$filename" "$url" > /dev/null 2>&1  
   if [ $? -ne 0 ]; then
     echo "Failed to download the upgrade file"
