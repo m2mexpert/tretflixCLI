@@ -68,6 +68,18 @@ function plexmediaserver__upgrade() {
     exit 1
   fi
   
+  # Verify correct package (x86/x64) for OS
+  osBuild=$(uname -a)
+  if echo "$osBuild" | grep -q "i386" && echo "$URL" | grep -q "amd64.deb$"; then
+    echo "The version is mismatched, 32bit .deb needed"
+    echo
+    exit 1
+  elif echo "$osBuild" | grep -q "x86_x64" && echo "$URL" | grep -q "i386.deb$"; then
+    echo "The version is mismatched, 64bit .deb needed"
+    echo
+    exit 1
+  fi
+  
   echo "Downloading .deb file, please wait..."
   wget -O /tmp/"$filename" "$url" > /dev/null 2>&1  
   if [ $? -ne 0 ]; then
