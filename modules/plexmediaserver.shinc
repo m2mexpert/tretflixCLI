@@ -68,7 +68,6 @@ function plexmediaserver__upgrade() {
   plexmediaserver__start
   
   rm -f /tmp/"$filename" > /dev/null 2>&1
-  echo
 }
 
 function plexmediaserver__start() {
