@@ -315,7 +315,7 @@ function config__wizard() {
     fi
 
     echo "* Configuring Plex Media Server"
-    # No need to stop Plex Media Server if already running
+		# No need to stop Plex Media Server
     if [ "$plexmediaserver_state" == "Enabled" ]; then
       plexmediaserver__enable
     else
@@ -439,6 +439,15 @@ function config__restore_appdata() {
         echo "Restoring Backup $file"
         echo "Stopping Services..."
         allservices__stop
+
+        # Upgrade all apps, prevents newer appdata w/ old app builds issue
+        echo "Upgrading Services..."
+        couchpotato__upgrade
+        headphones__upgrade
+        plexmediaserver__upgrade
+        sabnzbdplus__upgrade
+        sickbeard__upgrade
+        transmission__upgrade
     
         echo "Unpacking Archive..."
         timestamp=$(date "+%Y%m%d%H%M%S")

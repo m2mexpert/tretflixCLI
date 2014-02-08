@@ -35,7 +35,18 @@ function allservices__disable() {
 }
 
 function allservices__upgrade() {
-  echo "Coming Soon"
+  echo "Applying changes to CouchPotato..."
+  couchpotato__upgrade
+  echo "Applying changes to Headphones..."
+  headphones__upgrade
+  echo "Applying changes to Plex Media Server..."
+  plexmediaserver__upgrade
+  echo "Applying changes to SABnzbd+..."
+  sabnzbdplus__upgrade
+  echo "Applying changes to Sick Beard..."
+  sickbeard__upgrade
+  echo "Applying changes to Transmission..."
+  transmission__upgrade
 }
 
 function allservices__start() {
