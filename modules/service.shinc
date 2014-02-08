@@ -25,10 +25,11 @@ function service__help() {
   echo "  -s, --sabnzbdplus"
   echo "  -t, --transmission"
   echo
-  echo "  Note: The 'set port' command requires an individual application to be"
-  echo "        specified. The 'new apikey' command is only available for the"
-  echo "        services where api keys are used. Plex Media Server commands"
-  echo "        are limited to 'enable', 'disable' and 'show config'."
+  echo "NOTES:" 
+  echo "  The 'set port' command requires an individual application to be"
+  echo "  specified. The 'new apikey' command is only available for the"
+  echo "  services where api keys are used. Plex Media Server commands"
+  echo "  are limited to 'enable', 'disable' and 'show config'."
   echo
   exit 1
 }

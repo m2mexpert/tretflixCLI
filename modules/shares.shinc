@@ -18,6 +18,12 @@ function shares__help() {
   echo "OPTIONS:"
   echo "  -u, --user [USERNAME] [PASSWORD]"
   echo
+  echo "NOTES: 
+  echo "  Use the 'mount all' option in the event that one or more" 
+  echo "  shares fail to mount on startup or become unmounted. If"
+  echo "  mount attempts repeatedly fail, delete and re-add the"
+  echo "  share(s) as needed."
+	echo
   exit 1
 }
 

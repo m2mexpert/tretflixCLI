@@ -14,8 +14,9 @@ function downloads__help() {
   echo "OPTIONS:"
   echo "  -l, --link-only"
   echo
-  echo "  Note: Downloads are copied to the new path by default. Use the '-l'"
-  echo "        option to change the path without copying the existing files."
+  echo "NOTES:" 
+  echo "  Downloads are copied to the new path by default. Use the '-l'"
+  echo "  option to change the path without copying the existing files."
   echo
   exit 1
 }
