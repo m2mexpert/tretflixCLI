@@ -148,11 +148,15 @@ function service__upgrade() {
         echo "Done."
         ;;
       '-s' | '--sabnzbdplus')
+        echo "Updating package lists from apt repositories..."
+        apt-get update > /dev/null 2>&1
         echo "Applying changes to SABnzbd+..."
         sabnzbdplus__upgrade
         echo "Done."
         ;;
       '-t' | '--transmission')
+        echo "Updating package lists from apt repositories..."
+        apt-get update > /dev/null 2>&1
         echo "Applying changes to Transmission..."
         transmission__upgrade
         echo "Done."

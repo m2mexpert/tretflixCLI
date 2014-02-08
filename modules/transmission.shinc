@@ -42,7 +42,6 @@ function transmission__disable() {
 function transmission__upgrade() {
   transmission__stop
   
-  apt-get update > /dev/null 2>&1
   output=$(apt-cache policy transmission-daemon 2>&1)
   installedVers=$(echo "$output" | grep "Installed:" | awk '{ print $2 }')
   candidateVers=$(echo "$output" | grep "Candidate:" | awk '{ print $2 }')
