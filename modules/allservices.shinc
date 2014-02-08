@@ -171,5 +171,5 @@ function allservices__show_config() {
   (transmission__show_config) >> $tmpfile
   
   cat $tmpfile | more
-  rm -f $tmpfile
+  rm -f $tmpfile > /dev/null 2>&1
 }
