@@ -48,6 +48,7 @@ function plexmediaserver__upgrade() {
       ?* )
         url="$input"
         filename=$(basename "$url")
+        echo
         break;;
       * )
         echo "!! ERROR: Invalid entry."
@@ -74,6 +75,8 @@ function plexmediaserver__upgrade() {
     echo
     exit 1
   fi
+  
+  echo "Applying changes to Plex Media Server..."
   
   plexmediaserver__start
 }

@@ -98,7 +98,6 @@ function service__enable() {
         echo "Done."
         ;;
       '-p' | '--plexmediaserver')
-        echo "Applying changes to Plex Media Server..."
         plexmediaserver__enable
         echo "Done."
         ;;
