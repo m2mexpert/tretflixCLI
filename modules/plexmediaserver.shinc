@@ -40,7 +40,20 @@ function plexmediaserver__disable() {
 }
 
 function plexmediaserver__upgrade() {
-  echo "Coming Soon"
+  plexmediaserver__stop
+  
+  while true; do
+    read -p "Enter the Web URL for the latest .deb (Ubuntu) file: " input
+    case "$input" in
+      "http://.*.deb" )
+        echo "Great, download it"
+      * )
+        echo "!! ERROR: Invalid entry."
+        echo
+    esac
+  done  
+  
+  plexmediaserver__start
 }
 
 function plexmediaserver__start() {
