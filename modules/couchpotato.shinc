@@ -41,7 +41,7 @@ function couchpotato__disable() {
 
 function couchpotato__upgrade() {
   couchpotato__stop
-  git pull $couchpotato_source > /dev/null 2>&1
+  sudo su -c -u $osUser "git pull $couchpotato_source > /dev/null 2>&1"
   couchpotato__start
 }
 

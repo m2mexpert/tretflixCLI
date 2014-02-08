@@ -41,7 +41,7 @@ function headphones__disable() {
 
 function headphones__upgrade() {
   headphones__stop
-  git pull $headphones_source > /dev/null 2>&1
+  sudo su -c -u $osUser "git pull $headphones_source > /dev/null 2>&1"
   headphones__start
 }
 

@@ -41,7 +41,7 @@ function sickbeard__disable() {
 
 function sickbeard__upgrade() {
   sickbeard__stop
-  git pull $sickbeard_source > /dev/null 2>&1
+  sudo su -c -u $osUser "git pull $sickbeard_source > /dev/null 2>&1"
   sickbeard__start
 }
 
