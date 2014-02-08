@@ -46,12 +46,34 @@ function plexmediaserver__upgrade() {
     read -p "Enter the Web URL for the latest .deb (Ubuntu) file: " input
     case "$input" in
       ?* )
-        echo "Great, download it";;
+        url="$input"
+        filename=$(basename "$url")
+        break;;
       * )
         echo "!! ERROR: Invalid entry."
         echo
     esac
-  done  
+  done
+
+  if ! tools__url_exists "$url"; then
+    echo "The URL is invalid, cannot be reached"
+    echo
+    exit 1
+  fi
+  
+  if ! echo "$url" | grep -q -i ".deb$"; then
+    echo "The URL is invalid, not a .deb file"
+    echo
+    exit 1
+  fi
+  
+  echo "Downloading .deb file, please wait..."
+  wget -O /tmp/"$filename" "$url" > /dev/null 2>&1  
+  if [ $? -ne 0 ]; then
+    echo "Failed to download the .deb file"
+    echo
+    exit 1
+  fi
   
   plexmediaserver__start
 }
