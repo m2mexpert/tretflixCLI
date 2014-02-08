@@ -45,7 +45,7 @@ function plexmediaserver__upgrade() {
   while true; do
     read -p "Enter the Web URL for the latest .deb (Ubuntu) file: " input
     case "$input" in
-      "*.deb" )
+      ?* )
         echo "Great, download it";;
       * )
         echo "!! ERROR: Invalid entry."
