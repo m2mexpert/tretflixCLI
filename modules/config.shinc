@@ -442,6 +442,7 @@ function config__restore_appdata() {
 
         # Upgrade all apps, prevents newer appdata w/ old app builds issue
         echo "Upgrading Services..."
+        apt-get update > /dev/null 2>&1
         couchpotato__upgrade
         headphones__upgrade
         plexmediaserver__upgrade
