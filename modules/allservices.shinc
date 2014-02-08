@@ -35,6 +35,8 @@ function allservices__disable() {
 }
 
 function allservices__upgrade() {
+  echo "Updating apt repository package lists..."
+  apt-get update > /dev/null 2>&1
   echo "Applying changes to CouchPotato..."
   couchpotato__upgrade
   echo "Applying changes to Headphones..."
