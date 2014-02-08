@@ -20,6 +20,15 @@ function tools__host_ping() {
   fi
 }
 
+function tools__url_exists() {
+  url="$1"
+  if curl --output /dev/null --silent --head --fail "$url"; then
+    true
+  else
+    false
+  fi
+}
+
 function tools__path_exists() {
   if [ "$(tools__path_istype $1)" != "No such file or directory" ]; then
     true
