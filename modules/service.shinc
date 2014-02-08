@@ -142,7 +142,6 @@ function service__upgrade() {
         echo "Done."
         ;;
       '-p' | '--plexmediaserver')
-        echo "Applying changes to Plex Media Server..."
         plexmediaserver__upgrade
         echo "Done."
         ;;
