@@ -10,6 +10,7 @@ function service__help() {
   echo "COMMANDS:"
   echo "  tretflix service [OPTION] enable"
   echo "  tretflix service [OPTION] disable"
+  echo "  tretflix service [OPTION] upgrade"
   echo "  tretflix service [OPTION] set username [USERNAME]"
   echo "  tretflix service [OPTION] set password [PASSWORD]"
   echo "  tretflix service [OPTION] set port [PORT]"
@@ -63,6 +64,9 @@ function service__command_handler() {
       disable)
         service__disable
         ;;
+      upgrade)
+        service__upgrade
+        ;;
       *)
         service__help
     esac
@@ -106,6 +110,51 @@ function service__enable() {
       '-t' | '--transmission')
         echo "Applying changes to Transmission..."
         transmission__enable
+        echo "Done."
+        ;;
+      *)
+      	service__help
+    esac
+  else
+    service__help
+  fi
+}
+
+function service__upgrade() {
+  if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
+    case "${CLI_ARGS[1]}" in
+      '-a' | '--all')
+        allservices__upgrade
+        echo "Done."
+        ;;
+      '-b' | '--sickbeard')
+      	echo "Applying changes to Sick Beard..."
+        sickbeard__upgrade
+        echo "Done."
+        ;;    
+      '-c' | '--couchpotato')
+        echo "Applying changes to CouchPotato..."
+        couchpotato__upgrade
+        echo "Done."
+        ;;
+      '-h' | '--headphones')
+        echo "Applying changes to Headphones..."
+        headphones__upgrade
+        echo "Done."
+        ;;
+      '-p' | '--plexmediaserver')
+        echo "Applying changes to Plex Media Server..."
+        plexmediaserver__upgrade
+        echo "Done."
+        ;;
+      '-s' | '--sabnzbdplus')
+        echo "Applying changes to SABnzbd+..."
+        sabnzbdplus__upgrade
+        echo "Done."
+        ;;
+      '-t' | '--transmission')
+        echo "Applying changes to Transmission..."
+        transmission__upgrade
         echo "Done."
         ;;
       *)

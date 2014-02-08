@@ -34,6 +34,10 @@ function allservices__disable() {
   transmission__disable
 }
 
+function allservices__upgrade() {
+  echo "Coming Soon"
+}
+
 function allservices__start() {
   couchpotato__start
   headphones__start

@@ -39,6 +39,12 @@ function headphones__disable() {
   fi
 }
 
+function headphones__upgrade() {
+  headphones__stop
+  git pull $headphones_source > /dev/null 2>&1
+  headphones__start
+}
+
 function headphones__start() {
   if [ "$(headphones__get_status)" != "Disabled" ]; then
     for i in {1..3}; do

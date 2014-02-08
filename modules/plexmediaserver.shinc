@@ -39,6 +39,10 @@ function plexmediaserver__disable() {
   fi
 }
 
+function plexmediaserver__upgrade() {
+  echo "Coming Soon"
+}
+
 function plexmediaserver__start() {
   if [ "$(plexmediaserver__get_status)" != "Disabled" ]; then
     for i in {1..3}; do

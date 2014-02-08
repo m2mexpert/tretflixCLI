@@ -39,6 +39,12 @@ function sickbeard__disable() {
   fi
 }
 
+function sickbeard__upgrade() {
+  sickbeard__stop
+  git pull $sickbeard_source > /dev/null 2>&1
+  sickbeard__start
+}
+
 function sickbeard__start() {
   if [ "$(sickbeard__get_status)" != "Disabled" ]; then
     for i in {1..3}; do

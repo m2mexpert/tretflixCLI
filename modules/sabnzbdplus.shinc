@@ -39,6 +39,10 @@ function sabnzbdplus__disable() {
   fi
 }
 
+function sabnzbdplus__upgrade() {
+  echo "Coming Soon"
+}
+
 function sabnzbdplus__start() {
   if [ "$(sabnzbdplus__get_status)" != "Disabled" ]; then
     for i in {1..3}; do

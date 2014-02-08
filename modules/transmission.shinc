@@ -39,6 +39,10 @@ function transmission__disable() {
   fi
 }
 
+function transmission__upgrade() {
+  echo "Coming Soon"
+}
+
 function transmission__start() {
   if [ "$(transmission__get_status)" != "Disabled" ]; then
     for i in {1..3}; do

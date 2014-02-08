@@ -39,6 +39,12 @@ function couchpotato__disable() {
   fi
 }
 
+function couchpotato__upgrade() {
+  couchpotato__stop
+  git pull $couchpotato_source > /dev/null 2>&1
+  couchpotato__start
+}
+
 function couchpotato__start() {
   if [ "$(couchpotato__get_status)" != "Disabled" ]; then
     for i in {1..3}; do
@@ -102,6 +108,12 @@ function couchpotato__set_sabnzbdplus_apikey() {
   apikey="$1"
   
   sed -i -e '/^\[sabnzbd\]/,/^\[/{/^\[sabnzbd\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $couchpotato_config
+}
+
+function couchpotato__update_app() {
+  couchpotato__stop
+  git pull $couchpotato_source > /dev/null 2>&1
+  couchpotato__start
 }
 
 function couchpotato__show_config() {
