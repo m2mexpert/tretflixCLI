@@ -77,7 +77,7 @@ function plexmediaserver__upgrade() {
   fi
   
   echo "Applying changes to Plex Media Server..."
-  gdebi plexmediaserver_0.9.8.18.290-11b7fdd_i386.deb > /dev/null 2>&1
+  gdebi /tmp/"$filename" > /dev/null 2>&1
   if [ $? -ne 0 ]; then
     echo "Failed to install the .deb file"
     echo
