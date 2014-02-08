@@ -40,57 +40,25 @@ function plexmediaserver__disable() {
 }
 
 function plexmediaserver__upgrade() {
-  while true; do
-    read -p "Enter the Web URL to the latest .deb (Ubuntu) install file: " input
-    case "$input" in
-      ?* )
-        url="$input"
-        filename=$(basename "$url")
-        echo
-        break;;
-      * )
-        echo "!! ERROR: Invalid entry."
-        echo
-    esac
-  done
+  downloadPage=$(curl https://plex.tv/downloads 2> /dev/null)
 
-  if ! tools__url_exists "$url"; then
-    echo "The URL is invalid, cannot be reached"
-    echo
-    exit 1
+  if uname -a | grep -q "i386"; then
+    url=$(echo "$downloadPage" | grep 'i386.deb">' | head -1 | sed -e 's/^.*href="\(.*\)">.*$/\1/')
+  else
+    url=$(echo "$downloadPage" | grep 'amd64.deb">' | head -1 | sed -e 's/^.*href="\(.*\)">.*$/\1/')
   fi
-  
-  if ! echo "$url" | grep -q -i ".deb$"; then
-    echo "The URL is invalid, not a .deb file"
-    echo
-    exit 1
-  fi
-  
-  # Verify correct package (x86/x64) for OS
-  osBuild=$(uname -a)
-  if echo "$osBuild" | grep -q "i386" && echo "$url" | grep -q "amd64.deb$"; then
-    echo "The version is mismatched, 32bit .deb needed"
-    echo
-    exit 1
-  elif echo "$osBuild" | grep -q "x86_x64" && echo "$url" | grep -q "i386.deb$"; then
-    echo "The version is mismatched, 64bit .deb needed"
-    echo
-    exit 1
-  fi
-  
-  echo "Downloading .deb file, please wait..."
+
   wget -O /tmp/"$filename" "$url" > /dev/null 2>&1  
   if [ $? -ne 0 ]; then
-    echo "Failed to download the .deb file"
+    echo "Failed to download the upgrade file"
     echo
     exit 1
   fi
-  
-  echo "Applying changes to Plex Media Server..."
+
   plexmediaserver__stop
   gdebi --n /tmp/"$filename" > /dev/null 2>&1
   if [ $? -ne 0 ]; then
-    echo "Failed to install the .deb file"
+    echo "Failed to install the upgrade file"
     echo
     exit 1
   fi
@@ -98,6 +66,7 @@ function plexmediaserver__upgrade() {
   plexmediaserver__start
   
   rm -f /tmp/"$filename" > /dev/null 2>&1
+  echo
 }
 
 function plexmediaserver__start() {
