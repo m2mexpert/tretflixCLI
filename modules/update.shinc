@@ -32,7 +32,7 @@ function update__command_handler() {
 
 function update__cli() {
   if [ "${#CLI_ARGS[@]}" -eq 2 ]; then
-    if sudo su -c -u $osUser "cd $CLIRepoDir && git fetch -v --dry-run 2>&1 | grep 'master' | grep -q 'up to date'"; then
+    if cd $CLIRepoDir && git fetch -v --dry-run 2>&1 | grep 'master' | grep -q 'up to date'; then
       echo "Tretflix CLI is up-to-date."
     else
       while true; do
