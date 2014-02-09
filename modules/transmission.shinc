@@ -40,18 +40,18 @@ function transmission__disable() {
 }
 
 function transmission__upgrade() {
-  transmission__stop
-  
   output=$(apt-cache policy transmission-daemon 2>&1)
   installedVers=$(echo "$output" | grep "Installed:" | awk '{ print $2 }')
   candidateVers=$(echo "$output" | grep "Candidate:" | awk '{ print $2 }')
   
-  echo "Upgrading Transmission..."
-  if [ "$installedVers" != "$candidateVers" ]; then
+  if [ "$installedVers" == "$candidateVers" ]; then
+    echo "Transmission is already up-to-date..."
+  else
+    echo "Upgrading Transmission..."
+    transmission__stop
     apt-get -y install transmission-daemon > /dev/null 2>&1
+    transmission__start
   fi
-  
-  transmission__start
 }
 
 function transmission__start() {

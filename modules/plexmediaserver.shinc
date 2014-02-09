@@ -94,29 +94,38 @@ function plexmediaserver__upgrade() {
     echo
     exit 1
   fi
-
+  
+  # Extract the installer filename from the URL
   filename=$(basename "$url")
-
-  echo "Downloading installer..."
-  wget -O /tmp/"$filename" "$url" > /dev/null 2>&1  
-  if [ $? -ne 0 ]; then
-    echo "Installation failed, download error"
-    echo
-    exit 1
-  fi
-
-  echo "Upgrading Plex Media Server..."
-  plexmediaserver__stop
-  gdebi --n /tmp/"$filename" > /dev/null 2>&1
-  if [ $? -ne 0 ]; then
-    echo "Installation failed"
-    echo
-    exit 1
-  fi
   
-  plexmediaserver__start
+  # Get the installed & candidate versions
+  output=$(apt-cache policy plexmediaserver 2>&1)
+  installedVers=$(echo "$output" | grep "Installed:" | awk '{ print $2 }')
+  candidateVers=$(echo "$filename" | sed 's/^[a-z]*_//g' | sed 's/_.*$//g')
   
-  rm -f /tmp/"$filename" > /dev/null 2>&1
+  if awk "BEGIN {exit !($candidateVers <= $installedVers)}"; then
+    echo "Plex Media Server is already up-to-date..."
+  else
+    echo "Downloading installer..."
+    wget -O /tmp/"$filename" "$url" > /dev/null 2>&1  
+    if [ $? -ne 0 ]; then
+      echo "Installation failed, download error"
+      echo
+      exit 1
+    fi
+
+    echo "Upgrading Plex Media Server..."
+    plexmediaserver__stop
+    gdebi --n /tmp/"$filename" > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+      echo "Installation failed"
+      echo
+      exit 1
+    fi
+  
+    plexmediaserver__start
+    rm -f /tmp/"$filename" > /dev/null 2>&1
+  fi
 }
 
 function plexmediaserver__start() {
