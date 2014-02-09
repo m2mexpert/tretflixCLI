@@ -44,7 +44,6 @@ function sabnzbdplus__upgrade() {
   installedVers=$(echo "$output" | grep "Installed:" | awk '{ print $2 }')
   candidateVers=$(echo "$output" | grep "Candidate:" | awk '{ print $2 }')
 
-  
   if [ "$installedVers" == "$candidateVers" ]; then
     echo "SABnzbd+ is already up-to-date..."
   else
