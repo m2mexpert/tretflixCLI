@@ -40,10 +40,14 @@ function couchpotato__disable() {
 }
 
 function couchpotato__upgrade() {
-  couchpotato__stop
-  echo "Upgrading CouchPotato..."
-  sudo su -c -u $osUser "cd $couchpotato_source && git remote update > /dev/null 2>&1"
-  couchpotato__start
+  if cd $couchpotato_source && git fetch -v --dry-run 2>&1 | grep 'master' | grep -q 'up to date'; then
+    echo "CouchPotato is already up-to-date..."
+  else
+    echo "Upgrading CouchPotato..."
+    couchpotato__stop
+    sudo su -c -u $osUser "cd $couchpotato_source && git remote update > /dev/null 2>&1"
+    couchpotato__start
+  fi
 }
 
 function couchpotato__start() {

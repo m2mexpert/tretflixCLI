@@ -40,10 +40,14 @@ function sickbeard__disable() {
 }
 
 function sickbeard__upgrade() {
-  sickbeard__stop
-  echo "Upgrading Sick Beard..."
-  sudo su -c -u $osUser "cd $sickbeard_source && git remote update > /dev/null 2>&1"
-  sickbeard__start
+  if cd $sickbeard_source && git fetch -v --dry-run 2>&1 | grep 'master' | grep -q 'up to date'; then
+    echo "Sick Beard is already up-to-date..."
+  else
+    echo "Upgrading Sick Beard..."
+    sickbeard__stop
+    sudo su -c -u $osUser "cd $sickbeard_source && git remote update > /dev/null 2>&1"
+    sickbeard__start
+  fi
 }
 
 function sickbeard__start() {
