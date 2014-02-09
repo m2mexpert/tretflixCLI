@@ -40,7 +40,6 @@ function plexmediaserver__disable() {
 }
 
 function plexmediaserver__upgrade() {
-  echo
   echo "Review the Plex Media Server upgrade options below..."
   echo
   echo "1. Automatically grab the latest public release."
@@ -51,7 +50,6 @@ function plexmediaserver__upgrade() {
     if [[ -z "${input}" ]]; then
       input="1"
     fi
-    echo
     case "$input" in
       1 | 1. )
         downloadPage=$(curl https://plex.tv/downloads 2> /dev/null)
@@ -60,6 +58,7 @@ function plexmediaserver__upgrade() {
         else
           url=$(echo "$downloadPage" | grep 'amd64.deb">' | head -1 | sed -e 's/^.*href="\(.*\)">.*$/\1/')
         fi
+        echo
         break;;
       2 | 2. )
         read -p "Enter URL: " input
