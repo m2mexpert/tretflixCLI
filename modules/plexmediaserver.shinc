@@ -40,10 +40,11 @@ function plexmediaserver__disable() {
 }
 
 function plexmediaserver__upgrade() {
-  echo "Review the Plex Media Server upgrade options below:"
   echo
-  echo "1. Automatically grab the latest public release.
-  echo "2. Enter URL for the latest Plex Pass release.
+  echo "Review the Plex Media Server upgrade options below..."
+  echo
+  echo "1. Automatically grab the latest public release."
+  echo "2. Enter URL for the latest Plex Pass release."
   echo
   while true; do
     read -p "Enter option [Default: 1]: " input
