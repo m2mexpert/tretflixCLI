@@ -275,6 +275,9 @@ function config__wizard() {
     echo " |__|  |__|    \_____/__|  |__|  |____/__/__/\__\\"
     echo
     echo
+    # Upgrade all apps, prevents newer appdata w/ old app builds issue
+    allservices__upgrade
+    echo
     echo "Applying configuration changes..."
     echo
 
