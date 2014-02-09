@@ -441,14 +441,7 @@ function config__restore_appdata() {
         allservices__stop
 
         # Upgrade all apps, prevents newer appdata w/ old app builds issue
-        echo "Upgrading Services..."
-        apt-get update > /dev/null 2>&1
-        couchpotato__upgrade
-        headphones__upgrade
-        plexmediaserver__upgrade
-        sabnzbdplus__upgrade
-        sickbeard__upgrade
-        transmission__upgrade
+        allservices__upgrade
     
         echo "Unpacking Archive..."
         timestamp=$(date "+%Y%m%d%H%M%S")

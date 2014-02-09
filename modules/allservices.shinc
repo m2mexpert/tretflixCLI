@@ -24,7 +24,6 @@ function allservices__disable() {
   couchpotato__disable
   echo "Applying changes to Headphones..."
   headphones__disable
-  echo "Applying changes to Plex Media Server..."
   plexmediaserver__disable
   echo "Applying changes to SABnzbd+..."
   sabnzbdplus__disable
@@ -37,17 +36,11 @@ function allservices__disable() {
 function allservices__upgrade() {
   echo "Updating apt repository package lists..."
   apt-get update > /dev/null 2>&1
-  echo "Applying changes to CouchPotato..."
   couchpotato__upgrade
-  echo "Applying changes to Headphones..."
   headphones__upgrade
-  echo "Applying changes to Plex Media Server..."
   plexmediaserver__upgrade
-  echo "Applying changes to SABnzbd+..."
   sabnzbdplus__upgrade
-  echo "Applying changes to Sick Beard..."
   sickbeard__upgrade
-  echo "Applying changes to Transmission..."
   transmission__upgrade
 }
 

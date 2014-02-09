@@ -46,6 +46,7 @@ function transmission__upgrade() {
   installedVers=$(echo "$output" | grep "Installed:" | awk '{ print $2 }')
   candidateVers=$(echo "$output" | grep "Candidate:" | awk '{ print $2 }')
   
+  echo "Upgrading Transmission..."
   if [ "$installedVers" != "$candidateVers" ]; then
     apt-get -y install transmission-daemon > /dev/null 2>&1
   fi

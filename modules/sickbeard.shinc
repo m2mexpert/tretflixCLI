@@ -41,6 +41,7 @@ function sickbeard__disable() {
 
 function sickbeard__upgrade() {
   sickbeard__stop
+  echo "Upgrading Sick Beard..."
   sudo su -c -u $osUser "cd $sickbeard_source && git remote update > /dev/null 2>&1"
   sickbeard__start
 }

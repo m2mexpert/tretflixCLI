@@ -173,36 +173,30 @@ function service__upgrade() {
         echo "Done."
         ;;
       '-b' | '--sickbeard')
-      	echo "Applying changes to Sick Beard..."
         sickbeard__upgrade
         echo "Done."
         ;;    
       '-c' | '--couchpotato')
-        echo "Applying changes to CouchPotato..."
         couchpotato__upgrade
         echo "Done."
         ;;
       '-h' | '--headphones')
-        echo "Applying changes to Headphones..."
         headphones__upgrade
         echo "Done."
         ;;
       '-p' | '--plexmediaserver')
-        echo "Applying changes to Plex Media Server..."
         plexmediaserver__upgrade
         echo "Done."
         ;;
       '-s' | '--sabnzbdplus')
         echo "Updating apt repository package lists..."
         apt-get update > /dev/null 2>&1
-        echo "Applying changes to SABnzbd+..."
         sabnzbdplus__upgrade
         echo "Done."
         ;;
       '-t' | '--transmission')
         echo "Updating apt repository package lists..."
         apt-get update > /dev/null 2>&1
-        echo "Applying changes to Transmission..."
         transmission__upgrade
         echo "Done."
         ;;

@@ -41,6 +41,7 @@ function headphones__disable() {
 
 function headphones__upgrade() {
   headphones__stop
+  echo "Upgrading Headphones..."
   sudo su -c -u $osUser "cd $headphones_source && git remote update > /dev/null 2>&1"
   headphones__start
 }
