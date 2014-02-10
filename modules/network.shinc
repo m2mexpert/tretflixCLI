@@ -38,19 +38,14 @@ function network__command_handler() {
 function network__add_ip() {
   if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
     ifaceIP="${CLI_ARGS[3]}"
-    echo "$ifaceIP"
     ifaceNetmask="$(ifconfig eth0 | sed -rn '2s/ .*:(.*)$/\1/p')"
-    echo "$ifaceNetmask"
     ifaceBroadcast=$(ipcalc $ifaceIP $ifaceNetmask | egrep "^Broadcast:" | awk '{ print $2}')
-    echo "$ifaceBroadcast"
     ifaceNetwork=$(ipcalc $ifaceIP $ifaceNetmask | egrep "^Network:" | awk '{ print $2}' | sed 's/\/.*$//g')
-    echo "$ifaceNetwork"
   else
     network__help
   fi
 
-  echo "Calling host ping function"
-  tools__host_ping $ifaceIP
+  tools__host_ping "$ifaceIP"
   if [ $? -eq 0 ]; then
     echo "IP address already in use on the network"
     echo
