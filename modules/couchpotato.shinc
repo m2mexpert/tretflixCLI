@@ -40,7 +40,7 @@ function couchpotato__disable() {
 }
 
 function couchpotato__upgrade() {
-  if cd $couchpotato_source && ! git fetch -v --dry-run 2>&1 | grep "^ =" | grep -q -v "[up to date]"; then
+  if cd $couchpotato_source && ! git fetch -v --dry-run 2>&1 | grep -iv "^from" | grep -ivq "\[up to date\]"; then
     echo "CouchPotato is already up-to-date..."
   else
     echo "Upgrading CouchPotato..."
