@@ -5,8 +5,11 @@ fi
 tools__imported=1
 
 function tools__host_ping() {
+  echo "Running host ping"
   output=$(ping -c 1 "$1" 2>&1)
   exitCode="$?"
+  echo "Exit code: $exitCode"
+  echo "$output"
   if [ $exitCode -ne 0 ]; then
     if [ $exitCode -eq 1 ]; then
       echo "Unable to ping the host"
