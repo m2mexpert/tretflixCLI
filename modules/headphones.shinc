@@ -40,12 +40,13 @@ function headphones__disable() {
 }
 
 function headphones__upgrade() {
-  if cd $headphones_source && git fetch -v --dry-run 2>&1 | grep 'master' | grep -q 'up to date'; then
+  if cd $headphones_source && git fetch -v --dry-run 2>&1 | grep "^ =" | grep -q -v "[up to date]"; then
     echo "Headphones is already up-to-date..."
   else
     echo "Upgrading Headphones..."
     headphones__stop
     sudo su -c -u $osUser "cd $headphones_source && git remote update > /dev/null 2>&1"
+    sudo su -c -u $osUser "cd $headphones_source && git pull --all > /dev/null 2>&1"
     headphones__start
   fi
 }
