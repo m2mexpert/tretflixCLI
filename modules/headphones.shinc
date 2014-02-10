@@ -40,7 +40,7 @@ function headphones__disable() {
 }
 
 function headphones__upgrade() {
-  if cd $headphones_source && git fetch -v --dry-run 2>&1 | grep "^ =" | grep -q -v "[up to date]"; then
+  if cd $headphones_source && ! git fetch -v --dry-run 2>&1 | grep "^ =" | grep -q -v "[up to date]"; then
     echo "Headphones is already up-to-date..."
   else
     echo "Upgrading Headphones..."
