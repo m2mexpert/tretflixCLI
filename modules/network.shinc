@@ -49,7 +49,8 @@ function network__add_ip() {
     network__help
   fi
 
-  tools__host_ping $ifaceIP > /dev/null 2>&1
+  echo "Calling host ping function"
+  tools__host_ping $ifaceIP
   if [ $? -eq 0 ]; then
     echo "IP address already in use on the network"
     echo
