@@ -46,7 +46,7 @@ sabnzbdConfig="$sabnzbdData/sabnzbd.ini"
 sickbeardSource="/usr/share/sickbeard"
 sickbeardData="$tretflixPath/appdata/sickbeard"
 sickbeardConfig="$sickbeardData/config.ini"
-sickbeardScriptConfig="$sickbeardAppdata/autoProcessTV/autoProcessTV.cfg"
+sickbeardScriptConfig="$sickbeardData/autoProcessTV/autoProcessTV.cfg"
 
 # Transmission
 transmissionData="$tretflixPath/appdata/transmission-daemon"
