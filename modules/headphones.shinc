@@ -18,11 +18,11 @@ function headphones__get_status() {
 function headphones__enable() {
   if [ "$(headphones__get_status)" == "Disabled" ]; then
     update-rc.d headphones defaults > /dev/null 2>&1
-    if [ "$(tools__path_istype $headphones_appdata/.disabled)" == "File" ]; then
-      rm -f $headphones_appdata/.disabled > /dev/null 2>&1
+    if [ "$(tools__path_istype $headphonesData/.disabled)" == "File" ]; then
+      rm -f $headphonesData/.disabled > /dev/null 2>&1
     fi
     timestamp=$(date "+%Y%m%d%H%M%S")
-    sudo su -c -u $osUser "echo $timestamp > $headphones_appdata/.enabled"
+    sudo su -c -u $osUser "echo $timestamp > $headphonesData/.enabled"
   fi
   headphones__start
 }
@@ -31,22 +31,22 @@ function headphones__disable() {
   if [ "$(headphones__get_status)" != "Disabled" ]; then
     headphones__stop
     update-rc.d -f headphones remove > /dev/null 2>&1
-    if [ "$(tools__path_istype $headphones_appdata/.enabled)" == "File" ]; then
-      rm -f $headphones_appdata/.enabled > /dev/null 2>&1
+    if [ "$(tools__path_istype $headphonesData/.enabled)" == "File" ]; then
+      rm -f $headphonesData/.enabled > /dev/null 2>&1
     fi
     timestamp=$(date "+%Y%m%d%H%M%S")
-    sudo su -c -u $osUser "echo $timestamp > $headphones_appdata/.disabled"
+    sudo su -c -u $osUser "echo $timestamp > $headphonesData/.disabled"
   fi
 }
 
 function headphones__upgrade() {
-  if cd $headphones_source && ! git fetch -v --dry-run 2>&1 | grep -iv "^from" | grep -ivq "\[up to date\]"; then
+  if cd $headphonesSource && ! git fetch -v --dry-run 2>&1 | grep -iv "^from" | grep -ivq "\[up to date\]"; then
     echo "Headphones is already up-to-date..."
   else
     echo "Upgrading Headphones..."
     headphones__stop
-    sudo su -c -u $osUser "cd $headphones_source && git remote update > /dev/null 2>&1"
-    sudo su -c -u $osUser "cd $headphones_source && git pull --all > /dev/null 2>&1"
+    sudo su -c -u $osUser "cd $headphonesSource && git remote update > /dev/null 2>&1"
+    sudo su -c -u $osUser "cd $headphonesSource && git pull --all > /dev/null 2>&1"
     headphones__start
   fi
 }
@@ -82,58 +82,58 @@ function headphones__stop() {
 function headphones__set_username() {
   username="$1"
 
-  sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^http_username .*/http_username = '$username'/g}}' $headphones_config
+  sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^http_username .*/http_username = '$username'/g}}' $headphonesConfig
 }
 
 function headphones__set_password() {
   password="$1"
   
-  sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^http_password .*/http_password = '$password'/g}}' $headphones_config
+  sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^http_password .*/http_password = '$password'/g}}' $headphonesConfig
 }
 
 function headphones__set_port() {
   port="$1"
 
-  sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^http_port .*/http_port = '$port'/g}}' $headphones_config
+  sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^http_port .*/http_port = '$port'/g}}' $headphonesConfig
 }
 
 function headphones__set_apikey() {
   apikey="$1"
 
-  sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $headphones_config
+  sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $headphonesConfig
 }
 
-function headphones__set_sabnzbdplus_username() {
+function headphones__set_sabnzbd_username() {
   username="$1"
   
-  sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_username .*/sab_username = '$username'/g}}' $headphones_config
+  sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_username .*/sab_username = '$username'/g}}' $headphonesConfig
 }
 
-function headphones__set_sabnzbdplus_password() {
+function headphones__set_sabnzbd_password() {
   password="$1"
   
-  sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_password .*/sab_password = '$password'/g}}' $headphones_config
+  sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_password .*/sab_password = '$password'/g}}' $headphonesConfig
 }
 
-function headphones__set_sabnzbdplus_port() {
+function headphones__set_sabnzbd_port() {
   port="$1"
   
-  sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_host .*/sab_host = http:\/\/localhost:'$port'\//g}}' $headphones_config
+  sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_host .*/sab_host = http:\/\/localhost:'$port'\//g}}' $headphonesConfig
 }
 
-function headphones__set_sabnzbdplus_apikey() {
+function headphones__set_sabnzbd_apikey() {
   apikey="$1"
   
-  sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_apikey .*/sab_apikey = '$apikey'/g}}' $headphones_config
+  sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_apikey .*/sab_apikey = '$apikey'/g}}' $headphonesConfig
 }
 
 function headphones__show_config() {
   status="$(headphones__get_status)"
   ipv4=$(tools__get_ip)
-  username=$(sed -n '/^\[General\]/,/^\[/p' $headphones_config | grep "^http_username " | awk '{ print $3 }')
-  password=$(sed -n '/^\[General\]/,/^\[/p' $headphones_config | grep "^http_password " | awk '{ print $3 }')
-  port=$(sed -n '/^\[General\]/,/^\[/p' $headphones_config | grep "^http_port " | awk '{ print $3 }')
-  apikey=$(sed -n '/^\[General\]/,/^\[/p' $headphones_config | grep "^api_key " | awk '{ print $3 }')
+  username=$(sed -n '/^\[General\]/,/^\[/p' $headphonesConfig | grep "^http_username " | awk '{ print $3 }')
+  password=$(sed -n '/^\[General\]/,/^\[/p' $headphonesConfig | grep "^http_password " | awk '{ print $3 }')
+  port=$(sed -n '/^\[General\]/,/^\[/p' $headphonesConfig | grep "^http_port " | awk '{ print $3 }')
+  apikey=$(sed -n '/^\[General\]/,/^\[/p' $headphonesConfig | grep "^api_key " | awk '{ print $3 }')
 
   echo "Headphones Config:"
   echo "----------------------------"

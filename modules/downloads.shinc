@@ -14,9 +14,8 @@ function downloads__help() {
   echo "OPTIONS:"
   echo "  -l, --link-only"
   echo
-  echo "NOTES:" 
-  echo "  Downloads are copied to the new path by default. Use the '-l'"
-  echo "  option to change the path without copying the existing files."
+  echo "  Note: Downloads are copied to the new path by default. Use the '-l'"
+  echo "        option to change the path without copying the existing files."
   echo
   exit 1
 }
@@ -69,7 +68,7 @@ function downloads__set_path() {
   fi
 
   if [ "$option" == "sync" ]; then
-		syncSize=$(du -c "$downloadsSymLink" | grep total | awk '{ print $1 }')
+		syncSize=$(du -c "$downloadsLink" | grep total | awk '{ print $1 }')
 		newPathAvail=$(df -k "$newPath" | awk '{ print $4 }' | grep -v "Available")
 		
     if [ "$syncSize" -ge "$newPathAvail" ]; then
@@ -78,13 +77,13 @@ function downloads__set_path() {
       exit 1
     fi
     
-    sudo su -c -u $osUser "rsync -av --progress --human-readable $downloadsSymLink/* $newPath/."
+    sudo su -c -u $osUser "rsync -av --progress --human-readable $downloadsLink/* $newPath/."
     if [ $? -ne 0 ]; then
       echo "There were errors while copying the current downloads to the new downloads path"
       echo
       exit 1
     fi
-	  ln -sfn $newPath $downloadsSymLink
+	  ln -sfn $newPath $downloadsLink
     if [ $? -ne 0 ]; then
       echo "Failed to set the new downloads path"
       echo
@@ -93,7 +92,7 @@ function downloads__set_path() {
 
   else
     echo "Applying changes to the downloads path..."
-	  ln -sfn $newPath $downloadsSymLink
+	  ln -sfn $newPath $downloadsLink
     if [ $? -ne 0 ]; then
       echo "Failed to set the new downloads path"
       echo
@@ -105,11 +104,11 @@ function downloads__set_path() {
 
 function downloads__show_config() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    path="$(readlink $downloadsSymLink)"
-    size="$(df -h "$downloadsSymLink" | awk '{ print $2 }' | egrep -v "Size")"
-    used="$(df -h "$downloadsSymLink" | awk '{ print $3 }' | egrep -v "Used")"
-    avail="$(df -h "$downloadsSymLink" | awk '{ print $4 }' | egrep -v "Avail")"
-    uPerc="$(df -h "$downloadsSymLink" | awk '{ print $5 }' | egrep -v "Use%")"
+    path="$(readlink $downloadsLink)"
+    size="$(df -h "$downloadsLink" | awk '{ print $2 }' | egrep -v "Size")"
+    used="$(df -h "$downloadsLink" | awk '{ print $3 }' | egrep -v "Used")"
+    avail="$(df -h "$downloadsLink" | awk '{ print $4 }' | egrep -v "Avail")"
+    uPerc="$(df -h "$downloadsLink" | awk '{ print $5 }' | egrep -v "Use%")"
 
     printf "%-40s %-7s %-7s %-7s %-7s\n" "Path" "Size" "Used" "Avail" "Use%"
     printf "%-40s %-7s %-7s %-7s %-7s\n" "$path" "$size" "$used" "$avail" "$uPerc"

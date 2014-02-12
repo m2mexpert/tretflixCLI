@@ -1,0 +1,127 @@
+# avoid double inclusion
+if test "${sabnzbd__imported+defined}" == "defined"; then
+  return 0
+fi
+sabnzbd__imported=1
+
+function sabnzbd__get_status() {
+  if service sabnzbdplus status > /dev/null 2>&1; then
+    result="Enabled and Running"
+  elif ls /etc/rc?.d/*sabnzbdplus > /dev/null 2>&1; then
+    result="Not Running"
+  else
+    result="Disabled"
+  fi
+  echo "$result"
+}
+
+function sabnzbd__enable() {
+  if [ "$(sabnzbd__get_status)" == "Disabled" ]; then
+    update-rc.d sabnzbdplus defaults > /dev/null 2>&1
+    if [ "$(tools__path_istype $sabnzbdData/.disabled)" == "File" ]; then
+      rm -f $sabnzbdData/.disabled > /dev/null 2>&1
+    fi
+    timestamp=$(date "+%Y%m%d%H%M%S")
+    sudo su -c -u $osUser "echo $timestamp > $sabnzbdData/.enabled"
+  fi
+  sabnzbd__start
+}
+
+function sabnzbd__disable() {
+  if [ "$(sabnzbd__get_status)" != "Disabled" ]; then
+    sabnzbd__stop
+    update-rc.d -f sabnzbdplus remove > /dev/null 2>&1
+    if [ "$(tools__path_istype $sabnzbdData/.enabled)" == "File" ]; then
+      rm -f $sabnzbdData/.enabled > /dev/null 2>&1
+    fi
+    timestamp=$(date "+%Y%m%d%H%M%S")
+    sudo su -c -u $osUser "echo $timestamp > $sabnzbdData/.disabled"
+  fi
+}
+
+function sabnzbd__upgrade() {
+  output=$(apt-cache policy sabnzbdplus 2>&1)
+  installedVers=$(echo "$output" | grep "Installed:" | awk '{ print $2 }')
+  candidateVers=$(echo "$output" | grep "Candidate:" | awk '{ print $2 }')
+
+  if [ "$installedVers" == "$candidateVers" ]; then
+    echo "SABnzbd+ is already up-to-date..."
+  else
+    echo "Upgrading SABnzbd+..."
+    sabnzbd__stop
+    apt-get -y install sabnzbdplus > /dev/null 2>&1
+    sabnzbd__start
+  fi
+}
+
+function sabnzbd__start() {
+  if [ "$(sabnzbd__get_status)" != "Disabled" ]; then
+    for i in {1..3}; do
+      if [ $i -gt 1 ]; then
+        sleep 2
+      fi
+      if [ "$(sabnzbd__get_status)" != "Enabled and Running" ]; then
+        service sabnzbdplus start > /dev/null 2>&1
+      else
+        break
+      fi
+    done
+  fi
+}
+
+function sabnzbd__stop() {
+  for i in {1..3}; do
+    if [ $i -gt 1 ]; then
+      sleep 2
+    fi
+    if [ "$(sabnzbd__get_status)" == "Enabled and Running" ]; then
+      service sabnzbdplus stop > /dev/null 2>&1
+    else
+      break
+    fi
+  done
+}
+
+function sabnzbd__set_username() {
+  username="$1"
+
+  sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/^username .*/username = '$username'/g}}' $sabnzbdConfig
+}
+
+function sabnzbd__set_password() {
+  password="$1"
+
+  sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/^password .*/password = '$password'/g}}' $sabnzbdConfig
+}
+
+function sabnzbd__set_port() {
+  port="$1"
+  
+  sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/^port .*/port = '$port'/g}}' $sabnzbdConfig
+}
+
+function sabnzbd__set_apikey() {
+  apikey="$1"
+
+  sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $sabnzbdConfig
+}
+
+function sabnzbd__show_config() {
+  status="$(sabnzbd__get_status)"
+  ipv4=$(tools__get_ip)
+  username=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdConfig | grep "^username " | awk '{ print $3 }')
+  password=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdConfig | grep "^password " | awk '{ print $3 }')
+  port=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdConfig | grep "^port " | awk '{ print $3 }')
+  apikey=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdConfig | grep "^api_key " | awk '{ print $3 }')
+
+  echo "SABnzbd+ Config:"
+  echo "----------------------------"
+  echo "Status: $status"
+  if [ "$status" == "Enabled and Running" ]; then
+    echo "Web UI: http://$ipv4:$port/sabnzbd/"
+    echo
+    echo "Username: $username"
+    echo "Password: $password"
+    echo "API Key: $apikey"
+  fi
+}

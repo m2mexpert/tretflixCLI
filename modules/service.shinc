@@ -22,8 +22,9 @@ function service__help() {
   echo "  -b, --sickbeard"
   echo "  -c, --couchpotato"
   echo "  -h, --headphones"
-  echo "  -p, --plexmediaserver"
-  echo "  -s, --sabnzbdplus"
+  echo "  -n, --nzbdrone"
+  echo "  -p, --plexserver"
+  echo "  -s, --sabnzbd"
   echo "  -t, --transmission"
   echo
   echo "NOTES:" 
@@ -97,14 +98,19 @@ function service__enable() {
         headphones__enable
         echo "Done."
         ;;
-      '-p' | '--plexmediaserver')
-        echo "Applying changes to Plex Media Server..."
-        plexmediaserver__enable
+      '-n' | '--nzbdrone')
+        echo "Applying changes to NzbDrone..."
+        nzbdrone__enable
         echo "Done."
         ;;
-      '-s' | '--sabnzbdplus')
+      '-p' | '--plexserver')
+        echo "Applying changes to Plex Media Server..."
+        plexserver__enable
+        echo "Done."
+        ;;
+      '-s' | '--sabnzbd')
         echo "Applying changes to SABnzbd+..."
-        sabnzbdplus__enable
+        sabnzbd__enable
         echo "Done."
         ;;
       '-t' | '--transmission')
@@ -142,14 +148,19 @@ function service__disable() {
         headphones__disable
         echo "Done."
         ;;
-      '-p' | '--plexmediaserver')
-        echo "Applying changes to Plex Media Server..."
-        plexmediaserver__disable
+      '-n' | '--nzbdrone')
+        echo "Applying changes to NzbDrone..."
+        nzbdrone__disable
         echo "Done."
         ;;
-      '-s' | '--sabnzbdplus')
+      '-p' | '--plexserver')
+        echo "Applying changes to Plex Media Server..."
+        plexserver__disable
+        echo "Done."
+        ;;
+      '-s' | '--sabnzbd')
         echo "Applying changes to SABnzbd+..."
-        sabnzbdplus__disable
+        sabnzbd__disable
         echo "Done."
         ;;
       '-t' | '--transmission')
@@ -184,14 +195,18 @@ function service__upgrade() {
         headphones__upgrade
         echo "Done."
         ;;
-      '-p' | '--plexmediaserver')
-        plexmediaserver__upgrade
+      '-n' | '--nzbdrone')
+        nzbdrone__upgrade
         echo "Done."
         ;;
-      '-s' | '--sabnzbdplus')
+      '-p' | '--plexserver')
+        plexserver__upgrade
+        echo "Done."
+        ;;
+      '-s' | '--sabnzbd')
         echo "Updating apt repository package lists..."
         apt-get update > /dev/null 2>&1
-        sabnzbdplus__upgrade
+        sabnzbd__upgrade
         echo "Done."
         ;;
       '-t' | '--transmission')
@@ -236,23 +251,34 @@ function service__set_username() {
         headphones__start
         echo "Done."
         ;;
-      '-p' | '--plexmediaserver')
+      '-n' | '--nzbdrone')
+        echo "Applying changes to NzbDrone..."
+        nzbdrone__stop
+        nzbdrone__set_username "${CLI_ARGS[4]}"
+        nzbdrone__start
+        echo "Done."
+        ;;
+      '-p' | '--plexserver')
         echo "This command is not available for Plex Media Server"
         echo
         exit 1
         ;;
-      '-s' | '--sabnzbdplus')
+      '-s' | '--sabnzbd')
         echo "Applying changes to SABnzbd+..."
-        sabnzbdplus__stop
-        sabnzbdplus__set_username "${CLI_ARGS[4]}"
-        sabnzbdplus__start
+        sabnzbd__stop
+        sabnzbd__set_username "${CLI_ARGS[4]}"
+        sabnzbd__start
         echo "Applying changes to Headphones..."
         headphones__stop
-        headphones__set_sabnzbdplus_username "${CLI_ARGS[4]}"
+        headphones__set_sabnzbd_username "${CLI_ARGS[4]}"
         headphones__start
+        echo "Applying changes to NzbDrone..."
+        nzbdrone__stop
+        nzbdrone__set_sabnzbd_username "${CLI_ARGS[4]}"
+        nzbdrone__start
         echo "Applying changes to Sick Beard..."
         sickbeard__stop
-        sickbeard__set_sabnzbdplus_username "${CLI_ARGS[4]}"
+        sickbeard__set_sabnzbd_username "${CLI_ARGS[4]}"
         sickbeard__start     
         echo "Done."
         ;;
@@ -299,23 +325,34 @@ function service__set_password() {
         headphones__start
         echo "Done."
         ;;
-      '-p' | '--plexmediaserver')
+      '-n' | '--nzbdrone')
+        echo "Applying changes to NzbDrone..."
+        nzbdrone__stop
+        nzbdrone__set_password "${CLI_ARGS[4]}"
+        nzbdrone__start
+        echo "Done."
+        ;;
+      '-p' | '--plexserver')
         echo "This command is not available for Plex Media Server"
         echo
         exit 1
         ;;
-      '-s' | '--sabnzbdplus')
+      '-s' | '--sabnzbd')
         echo "Applying changes to SABnzbd+..."
-        sabnzbdplus__stop
-        sabnzbdplus__set_password "${CLI_ARGS[4]}"
-        sabnzbdplus__start
+        sabnzbd__stop
+        sabnzbd__set_password "${CLI_ARGS[4]}"
+        sabnzbd__start
         echo "Applying changes to Headphones..."
         headphones__stop
-        headphones__set_sabnzbdplus_password "${CLI_ARGS[4]}"
+        headphones__set_sabnzbd_password "${CLI_ARGS[4]}"
         headphones__start
+        echo "Applying changes to NzbDrone..."
+        nzbdrone__stop
+        nzbdrone__set_sabnzbd_password "${CLI_ARGS[4]}"
+        nzbdrone__start
         echo "Applying changes to Sick Beard..."
         sickbeard__stop
-        sickbeard__set_sabnzbdplus_password "${CLI_ARGS[4]}"
+        sickbeard__set_sabnzbd_password "${CLI_ARGS[4]}"
         sickbeard__start
         echo "Done."
         ;;
@@ -361,27 +398,38 @@ function service__set_port() {
         headphones__start
         echo "Done."
         ;;
-      '-p' | '--plexmediaserver')
+      '-n' | '--nzbdrone')
+        echo "Applying changes to NzbDrone..."
+        nzbdrone__stop
+        nzbdrone__set_port "${CLI_ARGS[4]}"
+        nzbdrone__start
+        echo "Done."
+        ;;
+      '-p' | '--plexserver')
         echo "This command is not available for Plex Media Server"
         echo
         exit 1
         ;;
-      '-s' | '--sabnzbdplus')
+      '-s' | '--sabnzbd')
         echo "Applying changes to SABnzbd+..."
-        sabnzbdplus__stop
-        sabnzbdplus__set_port "${CLI_ARGS[4]}"
-        sabnzbdplus__start
+        sabnzbd__stop
+        sabnzbd__set_port "${CLI_ARGS[4]}"
+        sabnzbd__start
         echo "Applying changes to CouchPotato..."
         couchpotato__stop
-        couchpotato__set_sabnzbdplus_port "${CLI_ARGS[4]}"
+        couchpotato__set_sabnzbd_port "${CLI_ARGS[4]}"
         couchpotato__start
         echo "Applying changes to Headphones..."
         headphones__stop
-        headphones__set_sabnzbdplus_port "${CLI_ARGS[4]}"
+        headphones__set_sabnzbd_port "${CLI_ARGS[4]}"
         headphones__start
+        echo "Applying changes to NzbDrone..."
+        nzbdrone__stop
+        nzbdrone__set_sabnzbd_port "${CLI_ARGS[4]}"
+        nzbdrone__start
         echo "Applying changes to Sick Beard..."
         sickbeard__stop
-        sickbeard__set_sabnzbdplus_port "${CLI_ARGS[4]}"
+        sickbeard__set_sabnzbd_port "${CLI_ARGS[4]}"
         sickbeard__start
         echo "Done."
         ;;
@@ -431,28 +479,40 @@ function service__new_apikey() {
         headphones__start
         echo "Done."
         ;;
-      '-p' | '--plexmediaserver')
+      '-n' | '--nzbdrone')
+        echo "Applying changes to NzbDrone..."
+        apikey="$(tools__gen_apikey)"
+        nzbdrone__stop
+        nzbdrone__set_apikey "$apikey"
+        nzbdrone__start
+        echo "Done."
+        ;;
+      '-p' | '--plexserver')
         echo "This command is not available for Plex Media Server"
         echo
         exit 1
         ;;
-      '-s' | '--sabnzbdplus')
+      '-s' | '--sabnzbd')
         echo "Applying changes to SABnzbd+..."
         apikey="$(tools__gen_apikey)"
-        sabnzbdplus__stop
-        sabnzbdplus__set_apikey "$apikey"
-        sabnzbdplus__start
+        sabnzbd__stop
+        sabnzbd__set_apikey "$apikey"
+        sabnzbd__start
         echo "Applying changes to CouchPotato..."
         couchpotato__stop
-        couchpotato__set_sabnzbdplus_apikey "$apikey"
+        couchpotato__set_sabnzbd_apikey "$apikey"
         couchpotato__start
         echo "Applying changes to Headphones..."
         headphones__stop
-        headphones__set_sabnzbdplus_apikey "$apikey"
+        headphones__set_sabnzbd_apikey "$apikey"
         headphones__start
+        echo "Applying changes to NzbDrone..."
+        nzbdrone__stop
+        nzbdrone__set_sabnzbd_apikey "$apikey"
+        nzbdrone__start
         echo "Applying changes to Sick Beard..."
         sickbeard__stop
-        sickbeard__set_sabnzbdplus_apikey "$apikey"
+        sickbeard__set_sabnzbd_apikey "$apikey"
         sickbeard__start
         echo "Done."
         ;;
@@ -484,11 +544,14 @@ function service__show_config() {
       '-h' | '--headphones')
         headphones__show_config
         ;;
-      '-p' | '--plexmediaserver')
-        plexmediaserver__show_config
+      '-n' | '--nzbdrone')
+        nzbdrone__show_config
         ;;
-      '-s' | '--sabnzbdplus')
-        sabnzbdplus__show_config
+      '-p' | '--plexserver')
+        plexserver__show_config
+        ;;
+      '-s' | '--sabnzbd')
+        sabnzbd__show_config
         ;;
       '-t' | '--transmission')
         transmission__show_config

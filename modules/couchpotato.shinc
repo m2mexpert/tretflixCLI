@@ -18,11 +18,11 @@ function couchpotato__get_status() {
 function couchpotato__enable() {
   if [ "$(couchpotato__get_status)" == "Disabled" ]; then
     update-rc.d couchpotato defaults > /dev/null 2>&1
-    if [ "$(tools__path_istype $couchpotato_appdata/.disabled)" == "File" ]; then
-      rm -f $couchpotato_appdata/.disabled > /dev/null 2>&1
+    if [ "$(tools__path_istype $couchpotatoData/.disabled)" == "File" ]; then
+      rm -f $couchpotatoData/.disabled > /dev/null 2>&1
     fi
     timestamp=$(date "+%Y%m%d%H%M%S")
-    sudo su -c -u $osUser "echo $timestamp > $couchpotato_appdata/.enabled"
+    sudo su -c -u $osUser "echo $timestamp > $couchpotatoData/.enabled"
   fi
   couchpotato__start
 }
@@ -31,22 +31,22 @@ function couchpotato__disable() {
   if [ "$(couchpotato__get_status)" != "Disabled" ]; then
     couchpotato__stop
     update-rc.d -f couchpotato remove > /dev/null 2>&1
-    if [ "$(tools__path_istype $couchpotato_appdata/.enabled)" == "File" ]; then
-      rm -f $couchpotato_appdata/.enabled > /dev/null 2>&1
+    if [ "$(tools__path_istype $couchpotatoData/.enabled)" == "File" ]; then
+      rm -f $couchpotatoData/.enabled > /dev/null 2>&1
     fi
     timestamp=$(date "+%Y%m%d%H%M%S")
-    sudo su -c -u $osUser "echo $timestamp > $couchpotato_appdata/.disabled"
+    sudo su -c -u $osUser "echo $timestamp > $couchpotatoData/.disabled"
   fi
 }
 
 function couchpotato__upgrade() {
-  if cd $couchpotato_source && ! git fetch -v --dry-run 2>&1 | grep -iv "^from" | grep -ivq "\[up to date\]"; then
+  if cd $couchpotatoSource && ! git fetch -v --dry-run 2>&1 | grep -iv "^from" | grep -ivq "\[up to date\]"; then
     echo "CouchPotato is already up-to-date..."
   else
     echo "Upgrading CouchPotato..."
     couchpotato__stop
-    sudo su -c -u $osUser "cd $couchpotato_source && git remote update > /dev/null 2>&1"
-    sudo su -c -u $osUser "cd $couchpotato_source && git pull --all > /dev/null 2>&1"
+    sudo su -c -u $osUser "cd $couchpotatoSource && git remote update > /dev/null 2>&1"
+    sudo su -c -u $osUser "cd $couchpotatoSource && git pull --all > /dev/null 2>&1"
     couchpotato__start
   fi
 }
@@ -82,53 +82,53 @@ function couchpotato__stop() {
 function couchpotato__set_username() {
   username="$1"
   
-  sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^username .*/username = '$username'/g}}' $couchpotato_config
+  sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^username .*/username = '$username'/g}}' $couchpotatoConfig
 }
 
 function couchpotato__set_password() {
   password="$1"
   passwordmd5=$(echo -n $password | md5sum | awk '{print $1}')
 
-  sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^password .*/password = '$passwordmd5'/g}}' $couchpotato_config
+  sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^password .*/password = '$passwordmd5'/g}}' $couchpotatoConfig
 }
 
 function couchpotato__set_port() {
   port="$1"
 
-  sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^port .*/port = '$port'/g}}' $couchpotato_config
+  sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^port .*/port = '$port'/g}}' $couchpotatoConfig
 }
 
 function couchpotato__set_apikey() {
   apikey="$1"
 
-  sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $couchpotato_config
+  sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $couchpotatoConfig
 }
 
-function couchpotato__set_sabnzbdplus_port() {
+function couchpotato__set_sabnzbd_port() {
   port="$1"
   
-  sed -i -e '/^\[sabnzbd\]/,/^\[/{/^\[sabnzbd\]/n;/^\[/!{s/^host .*/host = localhost:'$port'/g}}' $couchpotato_config
+  sed -i -e '/^\[sabnzbd\]/,/^\[/{/^\[sabnzbd\]/n;/^\[/!{s/^host .*/host = localhost:'$port'/g}}' $couchpotatoConfig
 }
 
-function couchpotato__set_sabnzbdplus_apikey() {
+function couchpotato__set_sabnzbd_apikey() {
   apikey="$1"
   
-  sed -i -e '/^\[sabnzbd\]/,/^\[/{/^\[sabnzbd\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $couchpotato_config
+  sed -i -e '/^\[sabnzbd\]/,/^\[/{/^\[sabnzbd\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $couchpotatoConfig
 }
 
 function couchpotato__update_app() {
   couchpotato__stop
-  git pull $couchpotato_source > /dev/null 2>&1
+  git pull $couchpotatoSource > /dev/null 2>&1
   couchpotato__start
 }
 
 function couchpotato__show_config() {
   status="$(couchpotato__get_status)"
   ipv4=$(tools__get_ip)
-  username=$(sed -n '/^\[core\]/,/^\[/p' $couchpotato_config | grep "^username " | awk '{ print $3 }')
+  username=$(sed -n '/^\[core\]/,/^\[/p' $couchpotatoConfig | grep "^username " | awk '{ print $3 }')
   password="N/A (ENCRYPTED)"
-  port=$(sed -n '/^\[core\]/,/^\[/p' $couchpotato_config | grep "^port " | awk '{ print $3 }')
-  apikey=$(sed -n '/^\[core\]/,/^\[/p' $couchpotato_config | grep "^api_key " | awk '{ print $3 }')
+  port=$(sed -n '/^\[core\]/,/^\[/p' $couchpotatoConfig | grep "^port " | awk '{ print $3 }')
+  apikey=$(sed -n '/^\[core\]/,/^\[/p' $couchpotatoConfig | grep "^api_key " | awk '{ print $3 }')
 
   echo "CouchPotato Config:"
   echo "----------------------------"

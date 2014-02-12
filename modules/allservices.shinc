@@ -9,10 +9,12 @@ function allservices__enable() {
   couchpotato__enable
   echo "Applying changes to Headphones..."
   headphones__enable
+  echo "Applying changes to NzbDrone..."
+  nzbdrone__enable
   echo "Applying changes to Plex Media Server..."
-  plexmediaserver__enable
+  plexserver__enable
   echo "Applying changes to SABnzbd+..."
-  sabnzbdplus__enable
+  sabnzbd__enable
   echo "Applying changes to Sick Beard..."
   sickbeard__enable
   echo "Applying changes to Transmission..."
@@ -24,9 +26,12 @@ function allservices__disable() {
   couchpotato__disable
   echo "Applying changes to Headphones..."
   headphones__disable
-  plexmediaserver__disable
+  echo "Applying changes to NzbDrone..."
+  nzbdrone__disable
+  echo "Applying changes to Plex Media Server..."
+  plexserver__disable
   echo "Applying changes to SABnzbd+..."
-  sabnzbdplus__disable
+  sabnzbd__disable
   echo "Applying changes to Sick Beard..."
   sickbeard__disable
   echo "Applying changes to Transmission..."
@@ -38,8 +43,9 @@ function allservices__upgrade() {
   apt-get update > /dev/null 2>&1
   couchpotato__upgrade
   headphones__upgrade
-  plexmediaserver__upgrade
-  sabnzbdplus__upgrade
+  nzbdrone__upgrade
+  plexserver__upgrade
+  sabnzbd__upgrade
   sickbeard__upgrade
   transmission__upgrade
 }
@@ -47,17 +53,19 @@ function allservices__upgrade() {
 function allservices__start() {
   couchpotato__start
   headphones__start
-  sabnzbdplus__start
+  nzbdrone__start
+  sabnzbd__start
   sickbeard__start
   transmission__start
-  plexmediaserver__start
+  plexserver__start
 }
 
 function allservices__stop() {
-  plexmediaserver__stop
+  plexserver__stop
   couchpotato__stop
   headphones__stop
-  sabnzbdplus__stop
+  nzbdrone__stop
+  sabnzbd__stop
   sickbeard__stop
   transmission__stop
 }
@@ -72,16 +80,21 @@ function allservices__set_username() {
   echo "Applying changes to Headphones..."
   headphones__stop
   headphones__set_username "$username"
-  headphones__set_sabnzbdplus_username "$username"
+  headphones__set_sabnzbd_username "$username"
   headphones__start
+  echo "Applying changes to NzbDrone..."
+  nzbdrone__stop
+  nzbdrone__set_username "$username"
+  nzbdrone__set_sabnzbd_username "$username"
+  nzbdrone__start
   echo "Applying changes to SABnzbd+..."
-  sabnzbdplus__stop
-  sabnzbdplus__set_username "$username"
-  sabnzbdplus__start
+  sabnzbd__stop
+  sabnzbd__set_username "$username"
+  sabnzbd__start
   echo "Applying changes to Sick Beard..."
   sickbeard__stop
   sickbeard__set_username "$username"
-  sickbeard__set_sabnzbdplus_username "$username"
+  sickbeard__set_sabnzbd_username "$username"
   sickbeard__start
   echo "Applying changes to Transmission..."
   transmission__stop
@@ -99,16 +112,21 @@ function allservices__set_password() {
   echo "Applying changes to Headphones..."
   headphones__stop
   headphones__set_password "$password"
-  headphones__set_sabnzbdplus_password "$password"
+  headphones__set_sabnzbd_password "$password"
   headphones__start
+  echo "Applying changes to NzbDrone..."
+  nzbdrone__stop
+  nzbdrone__set_password "$password"
+  nzbdrone__set_sabnzbd_password "$password"
+  nzbdrone__start
   echo "Applying changes to SABnzbd+..."
-  sabnzbdplus__stop
-  sabnzbdplus__set_password "$password"
-  sabnzbdplus__start
+  sabnzbd__stop
+  sabnzbd__set_password "$password"
+  sabnzbd__start
   echo "Applying changes to Sick Beard..."
   sickbeard__stop
   sickbeard__set_password "$password"
-  sickbeard__set_sabnzbdplus_password "$password"
+  sickbeard__set_sabnzbd_password "$password"
   sickbeard__start
   echo "Applying changes to Transmission..."
   transmission__stop
@@ -118,29 +136,35 @@ function allservices__set_password() {
 
 function allservices__set_apikey() {
   echo "Generating new API keys..."
-  couchpotato_apikey="$(tools__gen_apikey)" && sleep 2
-  headphones_apikey="$(tools__gen_apikey)" && sleep 2
-  sabnzbdplus_apikey="$(tools__gen_apikey)" && sleep 2
-  sickbeard_apikey="$(tools__gen_apikey)"
+  couchpotatoAPIkey="$(tools__gen_apikey)" && sleep 2
+  headphonesAPIkey="$(tools__gen_apikey)" && sleep 2
+  nzbdroneAPIkey="$(tools__gen_apikey)" && sleep 2
+  sabnzbdAPIkey="$(tools__gen_apikey)" && sleep 2
+  sickbeardAPIkey="$(tools__gen_apikey)"
   
   echo "Applying changes to CouchPotato..."
   couchpotato__stop
-  couchpotato__set_apikey "$couchpotato_apikey"
-  couchpotato__set_sabnzbdplus_apikey "$sabnzbdplus_apikey"
+  couchpotato__set_apikey "$couchpotatoAPIkey"
+  couchpotato__set_sabnzbd_apikey "$sabnzbdAPIkey"
   couchpotato__start
   echo "Applying changes to Headphones..."
   headphones__stop
-  headphones__set_apikey "$headphones_apikey"
-  headphones__set_sabnzbdplus_apikey "$sabnzbdplus_apikey"
+  headphones__set_apikey "$headphonesAPIkey"
+  headphones__set_sabnzbd_apikey "$sabnzbdAPIkey"
   headphones__start
+  echo "Applying changes to NzbDrone..."
+  nzbdrone__stop
+  nzbdrone__set_apikey "$nzbdroneAPIkey"
+  nzbdrone__set_sabnzbd_apikey "$sabnzbdAPIkey"
+  nzbdrone__start
   echo "Applying changes to SABnzbd+..."
-  sabnzbdplus__stop
-  sabnzbdplus__set_apikey "$sabnzbdplus_apikey"
-  sabnzbdplus__start
+  sabnzbd__stop
+  sabnzbd__set_apikey "$sabnzbdAPIkey"
+  sabnzbd__start
   echo "Applying changes to Sick Beard..."
   sickbeard__stop
-  sickbeard__set_apikey "$sickbeard_apikey"
-  sickbeard__set_sabnzbdplus_apikey "$sabnzbdplus_apikey"
+  sickbeard__set_apikey "$sickbeardAPIkey"
+  sickbeard__set_sabnzbd_apikey "$sabnzbdAPIkey"
   sickbeard__start
 }
 
@@ -154,10 +178,13 @@ function allservices__show_config() {
   (headphones__show_config) >> $tmpfile
   echo >> $tmpfile
   echo >> $tmpfile
-  (plexmediaserver__show_config) >> $tmpfile
+  (nzbdrone__show_config) >> $tmpfile
   echo >> $tmpfile
   echo >> $tmpfile
-  (sabnzbdplus__show_config) >> $tmpfile
+  (plexserver__show_config) >> $tmpfile
+  echo >> $tmpfile
+  echo >> $tmpfile
+  (sabnzbd__show_config) >> $tmpfile
   echo >> $tmpfile
   echo >> $tmpfile
   (sickbeard__show_config) >> $tmpfile

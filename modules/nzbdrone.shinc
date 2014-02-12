@@ -1,0 +1,193 @@
+# avoid double inclusion
+if test "${nzbdrone__imported+defined}" == "defined"; then
+  return 0
+fi
+nzbdrone__imported=1
+
+function nzbdrone__get_status() {
+  if service nzbdrone status | egrep "start|running" > /dev/null 2>&1; then
+    result="Enabled and Running"
+  elif ! ls -l /etc/init/nzbdrone.override > /dev/null 2>&1; then
+    result="Not Running"
+  elif apt-cache policy nzbdrone | grep -q "Installed:"; then
+    result="Disabled"
+  else
+    result="Not Installed"
+  fi
+  echo "$result"
+}
+
+function nzbdrone__install() {
+  # Add apt repository to sources.list
+  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys FDA5DFFC > /dev/null 2>&1
+  echo "deb http://update.nzbdrone.com/repos/apt/debian master main" | tee -a /etc/apt/sources.list > /dev/null 2>&1
+  
+  # Update apt repository package lists
+  apt-get update > /dev/null 2>&1
+  
+  # Install NzbDrone
+  apt-get -q -y install nzbdrone > /dev/null 2>&1
+  
+  # Create the sabnzbd+ temp dir for nzbdrone downloads
+  sudo su -c -u $osUser \
+    "mkdir /media/disk2/tmp/sabnzbdplus/nzbdrone > /dev/null 2>&1"
+  
+  # Create a symbolic link for NzbDrone config (Can't configure appdata dir)
+  sudo su -c -u $osUser \
+    "ln -s /opt/tretflix/appdata/nzbdrone/ /home/sysadmin/.config/NzbDrone > /dev/null 2>&1"
+  
+  # Copy runlevel config files into init
+  sudo su -c -u $osUser \
+    "tar xf $configPayload --strip-components 2 -C /etc/init/ config/init/nzbdrone.conf > /dev/null 2>&1"
+  sudo su -c -u $osUser \
+    "tar xf $configPayload --strip-components 2 -C /etc/init/ config/init/nzbdrone.override > /dev/null 2>&1"
+  
+  # Copy the app data into appdata/
+  sudo su -c -u $osUser \
+    "tar xf $appdataPayload --strip-components 1 -C $tretflixPath/appdata/ appdata/nzbdrone > /dev/null 2>&1"
+}
+
+function nzbdrone__enable() {
+  if [ "$(nzbdrone__get_status)" == "Not Installed" ]; then
+    nzbdrone__install
+  fi
+  if [ "$(nzbdrone__get_status)" == "Disabled" ]; then
+    rm /etc/init/nzbdrone.override > /dev/null 2>&1
+    if [ "$(tools__path_istype $nzbdroneData/.disabled)" == "File" ]; then
+      rm -f $nzbdroneData/.disabled > /dev/null 2>&1
+    fi
+    timestamp=$(date "+%Y%m%d%H%M%S")
+    sudo su -c -u $osUser \
+      "echo $timestamp > $nzbdroneData/.enabled"
+  fi
+  nzbdrone__start
+}
+
+function nzbdrone__disable() {
+  if [ "$(nzbdrone__get_status)" == "Not Installed" ]; then
+    echo "NzbDrone is not installed..."
+    echo
+    exit 1
+  if [ "$(nzbdrone__get_status)" != "Disabled" ]; then
+    nzbdrone__stop
+    echo -e "manual" >> /etc/init/nzbdrone.override
+    if [ "$(tools__path_istype $nzbdroneData/.enabled)" == "File" ]; then
+      rm -f $nzbdroneData/.enabled > /dev/null 2>&1
+    fi
+    timestamp=$(date "+%Y%m%d%H%M%S")
+    sudo su -c -u $osUser \
+      "echo $timestamp > $nzbdroneData/.disabled"
+  fi
+}
+
+function nzbdrone__upgrade() {
+  output=$(apt-cache policy nzbdrone 2>&1)
+  installedVers=$(echo "$output" | grep "Installed:" | awk '{ print $2 }')
+  candidateVers=$(echo "$output" | grep "Candidate:" | awk '{ print $2 }')
+
+  if [ "$installedVers" == "$candidateVers" ]; then
+    echo "NzbDrone is already up-to-date..."
+  else
+    echo "Upgrading NzbDrone..."
+    nzbdrone__stop
+    apt-get -y install nzbdrone > /dev/null 2>&1
+    nzbdrone__start
+  fi
+}
+
+function nzbdrone__start() {
+  if [ "$(nzbdrone__get_status)" != "Disabled" ]; then
+    for i in {1..3}; do
+      if [ $i -gt 1 ]; then
+        sleep 2
+      fi
+      if [ "$(nzbdrone__get_status)" != "Enabled and Running" ]; then
+        service nzbdrone start > /dev/null 2>&1
+      else
+        break
+      fi
+    done
+  fi
+}
+
+function nzbdrone__stop() {
+  for i in {1..3}; do
+    if [ $i -gt 1 ]; then
+      sleep 2
+    fi
+    if [ "$(nzbdrone__get_status)" == "Enabled and Running" ]; then
+      service nzbdrone stop > /dev/null 2>&1
+    else
+      break
+    fi
+  done
+}
+
+function nzbdrone__set_username() {
+  username="$1"
+
+  sed -i 's#\(<Username>\).*\(</Username>\)#\1'$username'\2#g' $nzbdroneConfig
+}
+
+function nzbdrone__set_password() {
+  password="$1"
+
+  sed -i 's#\(<Password>\).*\(</Password>\)#\1'$password'\2#g' $nzbdroneConfig
+}
+
+function nzbdrone__set_port() {
+  port="$1"
+
+  sed -i 's#\(<Port>\).*\(</Port>\)#\1'$port'\2#g' $nzbdroneConfig
+}
+
+function nzbdrone__set_apikey() {
+  apikey="$1"
+
+  sed -i 's#\(<ApiKey>\).*\(</ApiKey>\)#\1'$apikey'\2#g' $nzbdroneConfig
+}
+
+function nzbdrone__set_sabnzbd_username() {
+  username="$1"
+  
+  sqlite3 $nzbdroneDB "UPDATE Config SET value='$username' WHERE key='sabusername'"
+}
+
+function nzbdrone__set_sabnzbd_password() {
+  password="$1"
+  
+  sqlite3 $nzbdroneDB "UPDATE Config SET value='$password' WHERE key='sabpassword'"
+}
+
+function nzbdrone__set_sabnzbd_port() {
+  port="$1"
+  
+  sqlite3 $nzbdroneDB "UPDATE Config SET value='$port' WHERE key='sabport'"
+}
+
+function nzbdrone__set_sabnzbd_apikey() {
+  apikey="$1"
+  
+  sqlite3 $nzbdroneDB "UPDATE Config SET value='$apikey' WHERE key='sabapikey'"
+}
+
+function nzbdrone__show_config() {
+  status="$(nzbdrone__get_status)"
+  ipv4=$(tools__get_ip)
+  username=$(grep "<Username>.*</Username>" $nzbdroneConfig | awk -F "[<>]" '{ print $3 }')
+  password=$(grep "<Password>.*</Password>" $nzbdroneConfig | awk -F "[<>]" '{ print $3 }')
+  port=$(grep "<Port>.*</Port>" $nzbdroneConfig | awk -F "[<>]" '{ print $3 }')
+  apikey=$(grep "<ApiKey>.*</ApiKey>" $nzbdroneConfig | awk -F "[<>]" '{ print $3 }')
+
+  echo "NzbDrone Config:"
+  echo "----------------------------"
+  echo "Status: $status"
+  if [ "$status" == "Enabled and Running" ]; then
+    echo "Web UI: http://$ipv4:$port/"
+    echo
+    echo "Username: $username"
+    echo "Password: $password"
+    echo "Web Port: $port"
+    echo "API Key: $apikey"
+  fi
+}

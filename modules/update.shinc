@@ -32,16 +32,16 @@ function update__command_handler() {
 
 function update__cli() {
   if [ "${#CLI_ARGS[@]}" -eq 2 ]; then
-    if cd $CLIRepoDir && git fetch -v --dry-run 2>&1 | grep 'master' | grep -q 'up to date'; then
+    if cd $cliPath && git fetch -v --dry-run 2>&1 | grep 'master' | grep -q 'up to date'; then
       echo "Tretflix CLI is up-to-date."
     else
       while true; do
         read -p "There is an update available for Tretflix CLI. Update now? (y/n): " input
         case "$input" in
           [yY] | [yY][Ee][Ss] )
-            sudo su -c -u $osUser "cd $CLIRepoDir && git fetch" > /dev/null 2>&1
-            sudo su -c -u $osUser "cd $CLIRepoDir && git checkout -f master" > /dev/null 2>&1
-            sudo su -c -u $osUser "cd $CLIRepoDir && git reset --hard origin/master" > /dev/null 2>&1
+            sudo su -c -u $osUser "cd $cliPath && git fetch" > /dev/null 2>&1
+            sudo su -c -u $osUser "cd $cliPath && git checkout -f master" > /dev/null 2>&1
+            sudo su -c -u $osUser "cd $cliPath && git reset --hard origin/master" > /dev/null 2>&1
             chmod +x "$0"
             echo "Tretflix CLI has been updated."
             break;;
@@ -60,9 +60,9 @@ function update__cli() {
         branch="${CLI_ARGS[3]}"
         branch=$(echo "$branch" | tr '[:upper:]' '[:lower:]')
         if [ "$branch" == "master" ] || [ "$branch" == "develop" ]; then
-          sudo su -c -u $osUser "cd $CLIRepoDir && git fetch -v"
-          sudo su -c -u $osUser "cd $CLIRepoDir && git checkout -f $branch"
-          sudo su -c -u $osUser "cd $CLIRepoDir && git reset --hard origin/$branch" 
+          sudo su -c -u $osUser "cd $cliPath && git fetch -v"
+          sudo su -c -u $osUser "cd $cliPath && git checkout -f $branch"
+          sudo su -c -u $osUser "cd $cliPath && git reset --hard origin/$branch" 
           chmod +x "$0"
         else
           echo "Invalid branch name."

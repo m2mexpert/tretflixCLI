@@ -3,19 +3,14 @@
 # Relaunch as root if user didn't use "sudo"
 [ `whoami` = root ] || exec sudo $0 "$@"
 
+# Avoid exit in case of an unset variable
 set -o nounset
 
+# Copy user args array
 CLI_ARGS=("$@")
-DEFAULT_IFS=$IFS
-CLI_Version="1.0.11"
 
-# Verify that the user has run the script using "sudo" user
-if [[ $(whoami) != "root" ]]; then
-  echo
-  echo "!! ERROR: This script must be run as root..."
-  echo
-  exit 1
-fi
+# Store the default IFS settings
+DEFAULT_IFS=$IFS
 
 function getScriptAbsoluteDir {
   # @description used to get the script path
@@ -89,14 +84,15 @@ function help() {
   exit 1
 }
 
-# get script name and path (Required for import function)
+# Import Tretflix variables
+source "$script_absolute_dir/variables"
+source "$script_absolute_dir/version"
+
+# Prep Import module capability
 script_invoke_path="$0"
 script_name=`basename "$0"`
 getScriptAbsoluteDir "$script_invoke_path"
 script_absolute_dir=$FCN_RESULT
-
-# get config variables from config file
-source "$script_absolute_dir/config"
 
 # Import modules
 import "modules/about"
@@ -106,8 +102,9 @@ import "modules/couchpotato"
 import "modules/downloads"
 import "modules/headphones"
 import "modules/network"
-import "modules/plexmediaserver"
-import "modules/sabnzbdplus"
+import "modules/nzbdrone"
+import "modules/plexserver"
+import "modules/sabnzbd"
 import "modules/service"
 import "modules/shares"
 import "modules/sickbeard"

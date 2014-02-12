@@ -1,0 +1,54 @@
+# OS Details
+osUser="sysadmin"
+
+# Path to the Tretflix BaseDir
+tretflixPath="/opt/tretflix"
+
+# Tretflix CLI path
+cliPath="$tretflixPath/.sys/cli"
+
+# CLI payload archives
+appdataBundle="$cliPath/bundles/appdata.tar"
+configBundle="$cliPath/bundles/config.tar"
+
+# Symlinks
+downloadsLink="$tretflixPath/downloads"
+tmpLink="$tretflixPath/tmp"
+
+# Status Flags
+configFlag="$tretflixPath/.sys/.configured"
+restoreFlag="$tretflixPath/.sys/.restored"
+
+# CouchPotato
+couchpotatoSource="/usr/share/couchpotato"
+couchpotatoData="$tretflixPath/appdata/couchpotato"
+couchpotatoConfig="$couchpotatoData/settings.conf"
+
+# Headphones
+headphonesSource="/usr/share/headphones"
+headphonesData="$tretflixPath/appdata/headphones"
+headphonesConfig="$headphonesData/config.ini"
+
+# NzbDrone
+nzbdroneData="$tretflixPath/appdata/nzbdrone"
+nzbdroneDB="$nzbdroneData/nzbdrone.db"
+nzbdroneConfig="$nzbdroneData/config.xml"
+
+# Plex Media Server
+plexData="$tretflixPath/appdata/plexmediaserver"
+plexConfig="$plexData/Plex\ Media\ Server/Preferences.xml"
+
+# SABnzbd+
+sabnzbdData="$tretflixPath/appdata/sabnzbdplus"
+sabnzbdConfig="$sabnzbdData/sabnzbd.ini"
+
+# Sick Beard
+sickbeardSource="/usr/share/sickbeard"
+sickbeardData="$tretflixPath/appdata/sickbeard"
+sickbeardConfig="$sickbeardData/config.ini"
+sickbeardScriptConfig="$sickbeardAppdata/autoProcessTV/autoProcessTV.cfg"
+
+# Transmission
+transmissionData="$tretflixPath/appdata/transmission-daemon"
+transmissionConfig="$transmissionData/settings.json"
+
