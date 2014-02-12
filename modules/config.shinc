@@ -427,7 +427,8 @@ function config__wizard() {
     done
     
     timestamp=$(date "+%Y%m%d%H%M%S")
-    sudo su -c -u $osUser "echo config-wizard_$timestamp >> $configFlag"
+    sudo su -c -u $osUser \
+      "echo config-wizard_$timestamp >> $configFlag"
     
   else
     config__help
@@ -442,7 +443,8 @@ function config__backup_appdata() {
     allservices__stop
     
     echo "Creating $tretflixPath/backup-$timestamp.tar..."
-    sudo su -c -u $osUser "cd $tretflixPath && tar cf backup-$timestamp.tar appdata/"
+    sudo su -c -u $osUser \
+      "cd $tretflixPath && tar cf backup-$timestamp.tar appdata/"
     
     echo "Starting Services..."
     allservices__start
@@ -479,16 +481,18 @@ function config__restore_appdata() {
         allservices__stop
 
         # Upgrade all apps, prevents newer appdata w/ old app builds issue
-        echo "Upgrading Services...
+        echo "Upgrading Services..."
         allservices__upgrade
         
         echo "Archiving current Appdata..."
         timestamp=$(date "+%Y%m%d%H%M%S")
-        sudo su -c -u $osUser "cd $tretflixPath && tar cf archived-$timestamp.tar appdata/"
+        sudo su -c -u $osUser \
+          "cd $tretflixPath && tar cf archived-$timestamp.tar appdata/"
     
         echo "Unpacking $file..."
         rm -rf /opt/tretflix/appdata/
-        sudo su -c -u $osUser "tar -xf $file -C $tretflixPath/"
+        sudo su -c -u $osUser \
+          "tar -xf $file -C $tretflixPath/"
     
         echo "Starting Services..."
         if [ "$(tools__path_istype $couchpotatoData/.enabled)" == "File" ]; then
@@ -529,7 +533,8 @@ function config__restore_appdata() {
         echo "Done."
 
         timestamp=$(date "+%Y%m%d%H%M%S")
-        sudo su -c -u $osUser "echo restore-appdata_$timestamp >> $restoreFlag"
+        sudo su -c -u $osUser \
+          "echo restore-appdata_$timestamp >> $restoreFlag"
         ;;
       *)
         config__help
