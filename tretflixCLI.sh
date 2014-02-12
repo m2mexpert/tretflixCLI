@@ -84,11 +84,7 @@ function help() {
   exit 1
 }
 
-# Import Tretflix variables
-source "$script_absolute_dir/variables"
-source "$script_absolute_dir/version"
-
-# Prep Import module capability
+# Prep import module function
 script_invoke_path="$0"
 script_name=`basename "$0"`
 getScriptAbsoluteDir "$script_invoke_path"
@@ -111,6 +107,10 @@ import "modules/sickbeard"
 import "modules/tools"
 import "modules/transmission"
 import "modules/update"
+
+# Import variables (used by modules)
+source "$script_absolute_dir/variables"
+source "$script_absolute_dir/version"
 
 # call appropriate module based on options entered by the user via CLI
 if test "${CLI_ARGS[0]+isset}"; then
