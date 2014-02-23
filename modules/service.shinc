@@ -349,19 +349,19 @@ function service__set_username() {
         sabnzbd__stop
         sabnzbd__set_username "${CLI_ARGS[4]}"
         sabnzbd__start
-        if $(headphones__get_status) | grep -q "^Enabled"; then
+        if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
           echo "* Applying changes to Headphones"
           headphones__stop
           headphones__set_sabnzbd_username "${CLI_ARGS[4]}"
           headphones__start
         fi
-        if $(nzbdrone__get_status) | grep -q "^Enabled"; then
+        if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
           echo "* Applying changes to NzbDrone"
           nzbdrone__stop
           nzbdrone__set_sabnzbd_username "${CLI_ARGS[4]}"
           nzbdrone__start
         fi
-        if $(sickbeard__get_status) | grep -q "^Enabled"; then
+        if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
           echo "* Applying changes to Sick Beard"
           sickbeard__stop
           sickbeard__set_sabnzbd_username "${CLI_ARGS[4]}"
@@ -429,19 +429,19 @@ function service__set_password() {
         sabnzbd__stop
         sabnzbd__set_password "${CLI_ARGS[4]}"
         sabnzbd__start
-        if $(headphones__get_status) | grep -q "^Enabled"; then
+        if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
           echo "* Applying changes to Headphones"
           headphones__stop
           headphones__set_sabnzbd_password "${CLI_ARGS[4]}"
           headphones__start
         fi
-        if $(nzbdrone__get_status) | grep -q "^Enabled"; then
+        if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
           echo "* Applying changes to NzbDrone"
           nzbdrone__stop
           nzbdrone__set_sabnzbd_password "${CLI_ARGS[4]}"
           nzbdrone__start
         fi
-        if $(sickbeard__get_status) | grep -q "^Enabled"; then
+        if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
           echo "* Applying changes to Sick Beard"
           sickbeard__stop
           sickbeard__set_sabnzbd_password "${CLI_ARGS[4]}"
@@ -508,25 +508,25 @@ function service__set_port() {
         sabnzbd__stop
         sabnzbd__set_port "${CLI_ARGS[4]}"
         sabnzbd__start
-        if $(couchpotato__get_status) | grep -q "^Enabled"; then
+        if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
           echo "* Applying changes to CouchPotato"
           couchpotato__stop
           couchpotato__set_sabnzbd_port "${CLI_ARGS[4]}"
           couchpotato__start
         fi
-        if $(headphones__get_status) | grep -q "^Enabled"; then
+        if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
           echo "* Applying changes to Headphones"
           headphones__stop
           headphones__set_sabnzbd_port "${CLI_ARGS[4]}"
           headphones__start
         fi
-        if $(nzbdrone__get_status) | grep -q "^Enabled"; then
+        if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
           echo "* Applying changes to NzbDrone"
           nzbdrone__stop
           nzbdrone__set_sabnzbd_port "${CLI_ARGS[4]}"
           nzbdrone__start
         fi
-        if $(sickbeard__get_status) | grep -q "^Enabled"; then
+        if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
           echo "* Applying changes to Sick Beard"
           sickbeard__stop
           sickbeard__set_sabnzbd_port "${CLI_ARGS[4]}"
@@ -599,25 +599,25 @@ function service__new_apikey() {
         sabnzbd__stop
         sabnzbd__set_apikey "$apikey"
         sabnzbd__start
-        if $(couchpotato__get_status) | grep -q "^Enabled"; then
+        if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
           echo "* Applying changes to CouchPotato"
           couchpotato__stop
           couchpotato__set_sabnzbd_apikey "$apikey"
           couchpotato__start
         fi
-        if $(headphones__get_status) | grep -q "^Enabled"; then
+        if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
           echo "* Applying changes to Headphones"
           headphones__stop
           headphones__set_sabnzbd_apikey "$apikey"
           headphones__start
         fi
-        if $(nzbdrone__get_status) | grep -q "^Enabled"; then
+        if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
           echo "* Applying changes to NzbDrone"
           nzbdrone__stop
           nzbdrone__set_sabnzbd_apikey "$apikey"
           nzbdrone__start
         fi
-        if $(sickbeard__get_status) | grep -q "^Enabled"; then
+        if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
           echo "* Applying changes to Sick Beard"
           sickbeard__stop
           sickbeard__set_sabnzbd_apikey "$apikey"
