@@ -69,47 +69,47 @@ function sabnzbd__stop() {
 function sabnzbd__set_username() {
   username="$1"
 
-  sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/username .*/username = '$username'/g}}' $sabnzbdConfig
+  sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/^[ \t]*username .*/username = '$username'/g}}' $sabnzbdConfig
 }
 
 function sabnzbd__set_password() {
   password="$1"
 
-  sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/password .*/password = '$password'/g}}' $sabnzbdConfig
+  sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/^[ \t]*password .*/password = '$password'/g}}' $sabnzbdConfig
 }
 
 function sabnzbd__set_port() {
   port="$1"
   
-  sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/port .*/port = '$port'/g}}' $sabnzbdConfig
+  sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/^[ \t]*port .*/port = '$port'/g}}' $sabnzbdConfig
 }
 
 function sabnzbd__set_apikey() {
   apikey="$1"
 
-  sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/api_key .*/api_key = '$apikey'/g}}' $sabnzbdConfig
+  sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/^[ \t]*api_key .*/api_key = '$apikey'/g}}' $sabnzbdConfig
 }
 
 function sabnzbd__get_username() {
-  username=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdConfig | grep "username " | awk '{ print $3 }')
+  username=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdConfig | egrep "(^|^.* )username " | awk '{ print $3 }')
   
   echo "$username"
 }
 
 function sabnzbd__get_password() {
-  password=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdConfig | grep "password " | awk '{ print $3 }')
+  password=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdConfig | egrep "(^|^.* )password " | awk '{ print $3 }')
   
   echo "$password"
 }
 
 function sabnzbd__get_port() {
-  port=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdConfig | grep "port " | awk '{ print $3 }')
+  port=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdConfig | egrep "(^|^.* )port " | awk '{ print $3 }')
   
   echo "$port"
 }
 
 function sabnzbd__get_apikey() {
-  apikey=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdConfig | grep "api_key " | awk '{ print $3 }')
+  apikey=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdConfig | egrep "(^|^.* )api_key " | awk '{ print $3 }')
   
   echo "$apikey"
 }
