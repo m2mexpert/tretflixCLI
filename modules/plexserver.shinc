@@ -25,9 +25,7 @@ function plexserver__enable() {
 
 function plexserver__disable() {
   if echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
-    
-    sudo su -c -u $osUser \
-      "tar xf $configBundle --strip-components 2 -C /etc/init/ config/init/plexmediaserver.override"
+    tar xf $configBundle --strip-components 2 -C /etc/init/ config/init/plexmediaserver.override
   fi
 }
 

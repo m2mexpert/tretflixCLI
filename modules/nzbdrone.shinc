@@ -25,9 +25,7 @@ function nzbdrone__enable() {
 
 function nzbdrone__disable() {
   if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-    
-    sudo su -c -u $osUser \
-      "tar xf $configBundle --strip-components 2 -C /etc/init/ config/init/nzbdrone.override"
+    tar xf $configBundle --strip-components 2 -C /etc/init/ config/init/nzbdrone.override
   fi
 }
 
