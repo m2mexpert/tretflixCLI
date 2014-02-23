@@ -51,7 +51,7 @@ function config__command_handler() {
 
 function config__wizard() {
   if [ "${#CLI_ARGS[@]}" -eq 2 ]; then
-#    clear
+    clear
     echo "  __                  __    _____ __   __        "
     echo "_/  |________   _____/  |__/ ____\  | |__|__  ___"
     echo "\   __\_  __ \_/ __ \   __\   __\|  | |  \  \/  /"
@@ -303,7 +303,7 @@ function config__wizard() {
       esac
     done
 
-#    clear
+    clear
     echo "  __                  __    _____ __   __        "
     echo "_/  |________   _____/  |__/ ____\  | |__|__  ___"
     echo "\   __\_  __ \_/ __ \   __\   __\|  | |  \  \/  /"
@@ -591,7 +591,7 @@ function config__restore_appdata() {
     sudo su -c -u $osUser \
       "cd $tretflixPath && tar cvf archived-$timestamp.tar appdata/"
         
-#    clear
+    clear
     echo "  __                  __    _____ __   __        "
     echo "_/  |________   _____/  |__/ ____\  | |__|__  ___"
     echo "\   __\_  __ \_/ __ \   __\   __\|  | |  \  \/  /"
@@ -732,7 +732,7 @@ function config__restore_appdata() {
       esac
     done
 
-#    clear
+    clear
     echo "  __                  __    _____ __   __        "
     echo "_/  |________   _____/  |__/ ____\  | |__|__  ___"
     echo "\   __\_  __ \_/ __ \   __\   __\|  | |  \  \/  /"
