@@ -18,21 +18,9 @@ function headphones__get_status() {
 }
 
 function headphones__enable() {
-  if [ "$(headphones__get_status)" == "Not Installed" ]; then
-    headphones__install
-  fi
-
-  if headphones__version_check; then
-    headphones__stop
-    headphones__upgrade
-  fi
-
   if [ "$(headphones__get_status)" == "Disabled" ]; then
     update-rc.d headphones defaults
   fi
-  
-  # Make sure config is in sync w/ current SABnzbd+ settings
-  headphones__sabnzbd_sync
 }
 
 function headphones__disable() {

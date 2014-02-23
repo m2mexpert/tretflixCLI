@@ -311,16 +311,27 @@ function config__wizard() {
     echo " |__|  |__|    \_____/__|  |__|  |____/__/__/\__\\"
     echo
     echo
-    # Upgrade all apps, prevents newer appdata w/ old app builds issue
+    # Update apt package lists (necessary for version checking & upgrading)
     echo "* Updating apt repository package lists"
     apt-get update
 
+
+    # SABnzbd+ Section
     if [ "$sabnzbdAction" == "Enable" ]; then
-      echo
-      if ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
-        echo "* Enabling SABnzbd+"
-        sabnzbd__enable
+      # Install the service if not already installed
+      if [ "$(sabnzbd__get_status)" == "Not Installed" ]; then
+        echo "* Installing SABnzbd+"
+        sabnzbd__install
       fi
+
+      # Upgrade the service if a newer version is available
+      if sabnzbd__version_check; then
+        echo "* Upgrading SABnzbd+"
+        sabnzbd__stop
+        sabnzbd__upgrade
+      fi
+      
+      # Configure the service using user input
       echo "* Configuring SABnzbd+"
       sabnzbd__stop
       sabnzbd__set_username "$sabnzbdUser"
@@ -328,179 +339,276 @@ function config__wizard() {
       sabnzbd__set_port "$sabnzbdPort"
       sabnzbd__set_apikey "$sabnzbdAPIkey"
       
-      if sabnzbd__version_check; then
-        echo "* Upgrading SABnzbd+"
-        sabnzbd__upgrade
+      # Enable the service if not already enabled
+      if ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
+        echo "* Enabling SABnzbd+"
+        # Enable SABnzbd+
+        sabnzbd__enable
       fi
-      
+
+      # Start the service
       sabnzbd__start
     else
+      # Stop and disable the service if not already disabled
       if echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
-        echo
         echo "* Disabling SABnzbd+"
         sabnzbd__stop
         sabnzbd__disable
       fi
     fi
-    
+
+
+    # Plex Media Server Section
     if [ "$plexserverAction" == "Enable" ]; then
-      echo
-      if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
-        echo "* Enabling Plex Media Server"
-        plexserver__enable
+      # Install the service if not already installed
+      if [ "$(plexserver__get_status)" == "Not Installed" ]; then
+        echo "* Installing Plex Media Server"
+        plexserver__install
       fi
-      echo "* Configuring Plex Media Server"
-      plexserver__stop
-      # None for now
-      
+
+      # Upgrade the service if a newer version is available
       if plexserver__version_check; then
         echo "* Upgrading Plex Media Server"
+        plexserver__stop
         plexserver__upgrade
       fi
       
+      # Configure the service using user input (None for Plex)
+      #echo "* Configuring Plex Media Server"
+ 
+      # Enable the service if not already enabled
+      if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
+        echo "* Enabling Plex Media Server"
+        # Enable Plex Media Server
+        plexserver__enable
+      fi
+
+      # Start the service
       plexserver__start
     else
+      # Stop and disable the service if not already disabled
       if echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
-        echo
-        echo "Disabling Plex Media Server"
+        echo "* Disabling Plex Media Server"
         plexserver__stop
         plexserver__disable
       fi
     fi
-    
+
+
+    # CouchPotato Section
     if [ "$couchpotatoAction" == "Enable" ]; then
-      echo
-      if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
-        echo "* Enabling CouchPotato"
-        couchpotato__enable
+      # Install the service if not already installed
+      if [ "$(couchpotato__get_status)" == "Not Installed" ]; then
+        echo "* Installing CouchPotato"
+        couchpotato__install
       fi
+
+      # Upgrade the service if a newer version is available
+      if couchpotato__version_check; then
+        echo "* Upgrading CouchPotato"
+        couchpotato__stop
+        couchpotato__upgrade
+      fi
+      
+      # Configure the service using user input
       echo "* Configuring CouchPotato"
       couchpotato__stop
       couchpotato__set_username "$couchpotatoUser"
       couchpotato__set_password "$couchpotatoPass"
       couchpotato__set_port "$couchpotatoPort"
       couchpotato__set_apikey "$couchpotatoAPIkey"
+
+      # Sync CouchPotato to the current SABnzbd+ config
+      couchpotato__sabnzbd_sync
       
-      if couchpotato__version_check; then
-        echo "* Upgrading CouchPotato"
-        couchpotato__upgrade
+      # Enable the service if not already enabled
+      if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+        echo "* Enabling CouchPotato"
+        # Enable CouchPotato
+        couchpotato__enable
       fi
-      
+
+      # Start the service
       couchpotato__start
     else
+      # Stop and disable the service if not already disabled
       if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
-        echo
         echo "* Disabling CouchPotato"
         couchpotato__stop
         couchpotato__disable
       fi
     fi
-   
+
+
+    # Headphones Section
     if [ "$headphonesAction" == "Enable" ]; then
-      echo
-      if ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-        echo "* Enabling Headphones"
-        headphones__enable
+      # Install the service if not already installed
+      if [ "$(headphones__get_status)" == "Not Installed" ]; then
+        echo "* Installing Headphones"
+        headphones__install
       fi
+
+      # Upgrade the service if a newer version is available
+      if headphones__version_check; then
+        echo "* Upgrading Headphones"
+        headphones__stop
+        headphones__upgrade
+      fi
+      
+      # Configure the service using user input
       echo "* Configuring Headphones"
       headphones__stop
       headphones__set_username "$headphonesUser"
       headphones__set_password "$headphonesPass"
       headphones__set_port "$headphonesPort"
       headphones__set_apikey "$headphonesAPIkey"
+
+      # Sync Headphones to the current SABnzbd+ config
+      headphones__sabnzbd_sync
       
-      if headphones__version_check; then
-        echo "* Upgrading Headphones"
-        headphones__upgrade
+      # Enable the service if not already enabled
+      if ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
+        echo "* Enabling Headphones"
+        # Enable Headphones
+        headphones__enable
       fi
-      
+
+      # Start the service
       headphones__start
     else
+      # Stop and disable the service if not already disabled
       if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-        echo
         echo "* Disabling Headphones"
         headphones__stop
         headphones__disable
       fi
     fi
-    
+
+
+    # NzbDrone Section
     if [ "$nzbdroneAction" == "Enable" ]; then
-      echo
-      if ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-        echo "* Enabling NzbDrone"
-        nzbdrone__enable
+      # Install the service if not already installed
+      if [ "$(nzbdrone__get_status)" == "Not Installed" ]; then
+        echo "* Installing NzbDrone"
+        nzbdrone__install
       fi
+
+      # Upgrade the service if a newer version is available
+      if nzbdrone__version_check; then
+        echo "* Upgrading NzbDrone"
+        nzbdrone__stop
+        nzbdrone__upgrade
+      fi
+      
+      # Configure the service using user input
       echo "* Configuring NzbDrone"
       nzbdrone__stop
       nzbdrone__set_username "$nzbdroneUser"
       nzbdrone__set_password "$nzbdronePass"
       nzbdrone__set_port "$nzbdronePort"
       nzbdrone__set_apikey "$nzbdroneAPIkey"
+
+      # Sync NzbDrone to the current SABnzbd+ config
+      nzbdrone__sabnzbd_sync
       
-      if nzbdrone__version_check; then
-        echo "* Upgrading NzbDrone"
-        nzbdrone__upgrade
+      # Enable the service if not already enabled
+      if ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+        echo "* Enabling NzbDrone"
+        # Enable NzbDrone
+        nzbdrone__enable
       fi
-      
+
+      # Start the service
       nzbdrone__start
     else
+      # Stop and disable the service if not already disabled
       if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-        echo
         echo "* Disabling NzbDrone"
         nzbdrone__stop
         nzbdrone__disable
       fi
-    fi
-
+    fi    
+    
+ 
+    # Sick Beard Section
     if [ "$sickbeardAction" == "Enable" ]; then
-      echo
-      if ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-        echo "* Enabling Sick Beard"
-        sickbeard__enable
+      # Install the service if not already installed
+      if [ "$(sickbeard__get_status)" == "Not Installed" ]; then
+        echo "* Installing Sick Beard"
+        sickbeard__install
       fi
+
+      # Upgrade the service if a newer version is available
+      if sickbeard__version_check; then
+        echo "* Upgrading Sick Beard"
+        sickbeard__stop
+        sickbeard__upgrade
+      fi
+      
+      # Configure the service using user input
       echo "* Configuring Sick Beard"
       sickbeard__stop
       sickbeard__set_username "$sickbeardUser"
       sickbeard__set_password "$sickbeardPass"
       sickbeard__set_port "$sickbeardPort"
       sickbeard__set_apikey "$sickbeardAPIkey"
+
+      # Sync Sick Beard to the current SABnzbd+ config
+      sickbeard__sabnzbd_sync
       
-      if sickbeard__version_check; then
-        echo "* Upgrading Sick Beard"
-        sickbeard__upgrade
+      # Enable the service if not already enabled
+      if ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+        echo "* Enabling Sick Beard"
+        # Enable Sick Beard
+        sickbeard__enable
       fi
-      
+
+      # Start the service
       sickbeard__start
     else
+      # Stop and disable the service if not already disabled
       if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-        echo
         echo "* Disabling Sick Beard"
         sickbeard__stop
         sickbeard__disable
       fi
-    fi
-
+    fi 
+    
+    
+    # Transmission Section
     if [ "$transmissionAction" == "Enable" ]; then
-      echo
-      if ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
-        echo "* Enabling Transmission"
-        transmission__enable
+      # Install the service if not already installed
+      if [ "$(transmission__get_status)" == "Not Installed" ]; then
+        echo "* Installing Transmission"
+        transmission__install
       fi
+
+      # Upgrade the service if a newer version is available
+      if transmission__version_check; then
+        echo "* Upgrading Transmission"
+        transmission__stop
+        transmission__upgrade
+      fi
+      
+      # Configure the service using user input
       echo "* Configuring Transmission"
       transmission__stop
       transmission__set_username "$transmissionUser"
       transmission__set_password "$transmissionPass"
       transmission__set_port "$transmissionPort"
       
-      if transmission__version_check; then
-        echo "* Upgrading Transmission"
-        transmission__upgrade
+      # Enable the service if not already enabled
+      if ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
+        echo "* Enabling Transmission"
+        # Enable Transmission
+        transmission__enable
       fi
-      
+
+      # Start the service
       transmission__start
     else
+      # Stop and disable the service if not already disabled
       if echo "$(transmission__get_status)" | grep -q "^Enabled"; then
-        echo
         echo "* Disabling Transmission"
         transmission__stop
         transmission__disable
@@ -744,151 +852,257 @@ function config__restore_appdata() {
     echo "* Updating apt repository package lists"
     apt-get update
     
+  
+    # SABnzbd+ Section
     if [ "$sabnzbdAction" == "Restore" ]; then
-      echo
-      if ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
-        echo "* Enabling SABnzbd+"
-        sabnzbd__enable
+      # Install the service if not already installed
+      if [ "$(sabnzbd__get_status)" == "Not Installed" ]; then
+        echo "* Installing SABnzbd+"
+        sabnzbd__install
       fi
+
+      # Upgrade the service if a newer version is available
+      if sabnzbd__version_check; then
+        echo "* Upgrading SABnzbd+"
+        sabnzbd__stop
+        sabnzbd__upgrade
+      fi
+      
+      # Restore SABnzbd+ appdata from backup
       echo "* Restoring SABnzbd+ Data"
       sabnzbd__stop
-      
       rm -rf "$sabnzbdData"
       sudo su -c -u $osUser \
         "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/sabnzbdplus"
       
-      if sabnzbd__version_check; then
-        echo "* Upgrading SABnzbd+"
-        sabnzbd__upgrade
+      # Enable the service if not already enabled
+      if ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
+        echo "* Enabling SABnzbd+"
+        # Enable SABnzbd+
+        sabnzbd__enable
       fi
-      
+
+      # Start the service
       sabnzbd__start
     fi
 
+
+    # Plex Media Server Section
     if [ "$plexserverAction" == "Restore" ]; then
-      echo
-      if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
-        echo "* Enabling Plex Media Server"
-        plexserver__enable
+      # Install the service if not already installed
+      if [ "$(plexserver__get_status)" == "Not Installed" ]; then
+        echo "* Installing Plex Media Server"
+        plexserver__install
       fi
+
+      # Upgrade the service if a newer version is available
+      if plexserver__version_check; then
+        echo "* Upgrading Plex Media Server"
+        plexserver__stop
+        plexserver__upgrade
+      fi
+
+      # Restore Plex Media Server appdata from backup
       echo "* Restoring Plex Media Server Data"
-      plexserver__stop
-      
+      plexserver__stop    
       rm -rf "$plexserverData"
       sudo su -c -u $osUser \
         "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/plexmediaserver"
-      
-      if plexserver__version_check; then
-        echo "* Upgrading Plex Media Server"
-        plexserver__upgrade
+ 
+      # Enable the service if not already enabled
+      if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
+        echo "* Enabling Plex Media Server"
+        # Enable Plex Media Server
+        plexserver__enable
       fi
-      
+
+      # Start the service
       plexserver__start
     fi
-    
 
+
+    # CouchPotato Section
     if [ "$couchpotatoAction" == "Restore" ]; then
-      echo
-      if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
-        echo "* Enabling CouchPotato"
-        couchpotato__enable
+      # Install the service if not already installed
+      if [ "$(couchpotato__get_status)" == "Not Installed" ]; then
+        echo "* Installing CouchPotato"
+        couchpotato__install
       fi
-      echo "* Restoring CouchPotato Data"
-      couchpotato__stop
-      
-      rm -rf "$couchpotatoData"
-      sudo su -c -u $osUser \
-        "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/couchpotato"
-      
+
+      # Upgrade the service if a newer version is available
       if couchpotato__version_check; then
         echo "* Upgrading CouchPotato"
+        couchpotato__stop
         couchpotato__upgrade
       fi
-      
-      couchpotato__start
-    fi    
 
-    if [ "$headphonesAction" == "Restore" ]; then
-      echo
-      if ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-        echo "* Enabling Headphones"
-        headphones__enable
-      fi
-      echo "* Restoring Headphones Data"
-      headphones__stop
-      
-      rm -rf "$headphonesData"
+      # Restore CouchPotato appdata from backup
+      echo "* Restoring CouchPotato Data"
+      couchpotato__stop
+      rm -rf "$couchpotatoData"
       sudo su -c -u $osUser \
-        "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/headphones"
+        "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/couchpotato"      
+
+      # Sync CouchPotato to the current SABnzbd+ config
+      echo "* Configuring CouchPotato"
+      couchpotato__sabnzbd_sync
       
+      # Enable the service if not already enabled
+      if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+        echo "* Enabling CouchPotato"
+        # Enable CouchPotato
+        couchpotato__enable
+      fi
+
+      # Start the service
+      couchpotato__start
+    fi
+
+
+    # Headphones Section
+    if [ "$headphonesAction" == "Restore" ]; then
+      # Install the service if not already installed
+      if [ "$(headphones__get_status)" == "Not Installed" ]; then
+        echo "* Installing Headphones"
+        headphones__install
+      fi
+
+      # Upgrade the service if a newer version is available
       if headphones__version_check; then
         echo "* Upgrading Headphones"
+        headphones__stop
         headphones__upgrade
       fi
       
+      # Restore Headphones appdata from backup
+      echo "* Restoring Headphones Data"
+      headphones__stop
+      rm -rf "$headphonesData"
+      sudo su -c -u $osUser \
+        "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/headphones"
+
+      # Sync Headphones to the current SABnzbd+ config
+      echo "* Configuring Headphones"
+      headphones__sabnzbd_sync
+      
+      # Enable the service if not already enabled
+      if ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
+        echo "* Enabling Headphones"
+        # Enable Headphones
+        headphones__enable
+      fi
+
+      # Start the service
       headphones__start
     fi
 
+
+    # NzbDrone Section
     if [ "$nzbdroneAction" == "Restore" ]; then
-      echo
-      if ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-        echo "* Enabling NzbDrone"
-        nzbdrone__enable
+      # Install the service if not already installed
+      if [ "$(nzbdrone__get_status)" == "Not Installed" ]; then
+        echo "* Installing NzbDrone"
+        nzbdrone__install
       fi
-      echo "* Restoring NzbDrone Data Data"
-      nzbdrone__stop
-      
-      rm -rf "$nzbdroneData"
-      sudo su -c -u $osUser \
-        "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/nzbdrone"
-      
+
+      # Upgrade the service if a newer version is available
       if nzbdrone__version_check; then
         echo "* Upgrading NzbDrone"
+        nzbdrone__stop
         nzbdrone__upgrade
       fi
-      
-      nzbdrone__start
-    fi
 
-    if [ "$sickbeardAction" == "Restore" ]; then
-      echo
-      if ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-        echo "* Enabling Sick Beard"
-        sickbeard__enable
+      # Restore NzbDrone appdata from backup
+      echo "* Restoring NzbDrone Data"
+      nzbdrone__stop
+      rm -rf "$nzbdroneData"
+      sudo su -c -u $osUser \
+        "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/nzbdrone"     
+
+      # Sync NzbDrone to the current SABnzbd+ config
+      echo "* Configuring NzbDrone"
+      nzbdrone__sabnzbd_sync
+      
+      # Enable the service if not already enabled
+      if ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+        echo "* Enabling NzbDrone"
+        # Enable NzbDrone
+        nzbdrone__enable
       fi
+
+      # Start the service
+      nzbdrone__start
+    fi    
+    
+ 
+    # Sick Beard Section
+    if [ "$sickbeardAction" == "Restore" ]; then
+      # Install the service if not already installed
+      if [ "$(sickbeard__get_status)" == "Not Installed" ]; then
+        echo "* Installing Sick Beard"
+        sickbeard__install
+      fi
+
+      # Upgrade the service if a newer version is available
+      if sickbeard__version_check; then
+        echo "* Upgrading Sick Beard"
+        sickbeard__stop
+        sickbeard__upgrade
+      fi
+
+      # Restore Sick Beard appdata from backup
       echo "* Restoring Sick Beard Data"
       sickbeard__stop
-      
       rm -rf "$sickbeardData"
       sudo su -c -u $osUser \
         "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/sickbeard"
-      
-      if sickbeard__version_check; then
-        echo "* Upgrading Sick Beard"
-        sickbeard__upgrade
-      fi
-      
-      sickbeard__start
-    fi
 
-    if [ "$transmissionAction" == "Enable" ]; then
-      echo
-      if ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
-        echo "* Enabling Transmission"
-        transmission__enable
+      # Sync Sick Beard to the current SABnzbd+ config
+      echo "* Configuring Sick Beard"
+      sickbeard__sabnzbd_sync
+      
+      # Enable the service if not already enabled
+      if ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+        echo "* Enabling Sick Beard"
+        # Enable Sick Beard
+        sickbeard__enable
       fi
+
+      # Start the service
+      sickbeard__start
+    fi 
+    
+    
+    # Transmission Section
+    if [ "$transmissionAction" == "Restore" ]; then
+      # Install the service if not already installed
+      if [ "$(transmission__get_status)" == "Not Installed" ]; then
+        echo "* Installing Transmission"
+        transmission__install
+      fi
+
+      # Upgrade the service if a newer version is available
+      if transmission__version_check; then
+        echo "* Upgrading Transmission"
+        transmission__stop
+        transmission__upgrade
+      fi
+
+      # Restore Transmission appdata from backup
       echo "* Restoring Transmission Data"
       transmission__stop
-      
       rm -rf "$transmissionData"
       sudo su -c -u $osUser \
         "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/transmission-daemon"
       
-      if transmission__version_check; then
-        echo "* Upgrading Transmission"
-        transmission__upgrade
+      # Enable the service if not already enabled
+      if ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
+        echo "* Enabling Transmission"
+        # Enable Transmission
+        transmission__enable
       fi
-      
+
+      # Start the service
       transmission__start
     fi
 

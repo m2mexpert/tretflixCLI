@@ -18,21 +18,9 @@ function sickbeard__get_status() {
 }
 
 function sickbeard__enable() {
-  if [ "$(sickbeard__get_status)" == "Not Installed" ]; then
-    sickbeard__install
-  fi
-
-  if sickbeard__version_check; then
-    sickbeard__stop
-    sickbeard__upgrade
-  fi
-  
   if [ "$(sickbeard__get_status)" == "Disabled" ]; then
     update-rc.d sickbeard defaults
   fi
-  
-  # Make sure config is in sync w/ current SABnzbd+ settings
-  sickbeard__sabnzbd_sync
 }
 
 function sickbeard__disable() {

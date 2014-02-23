@@ -18,15 +18,6 @@ function plexserver__get_status() {
 }
 
 function plexserver__enable() {
-  if [ "$(plexserver__get_status)" == "Not Installed" ]; then
-    plexserver__install
-  fi
-
-  if plexserver__version_check; then
-    plexserver__stop
-    plexserver__upgrade
-  fi
-  
   if [ "$(plexserver__get_status)" == "Disabled" ]; then
     rm -v /etc/init/plexmediaserver.override
   fi

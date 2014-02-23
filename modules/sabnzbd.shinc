@@ -18,15 +18,6 @@ function sabnzbd__get_status() {
 }
 
 function sabnzbd__enable() {
-  if [ "$(sabnzbd__get_status)" == "Not Installed" ]; then
-    sabnzbd__install
-  fi
-
-  if sabnzbd__version_check; then
-    sabnzbd__stop
-    sabnzbd__upgrade
-  fi
-  
   if [ "$(sabnzbd__get_status)" == "Disabled" ]; then
     update-rc.d sabnzbdplus defaults
   fi

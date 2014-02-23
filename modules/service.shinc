@@ -81,49 +81,166 @@ function service__enable() {
     case "${CLI_ARGS[1]}" in
       '-a' | '--all')
         allservices__enable
-        echo "Done."
         ;;
       '-b' | '--sickbeard')
-      	echo "* Applying changes to Sick Beard"
-        sickbeard__enable
+        if ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+          # Install the service if not already installed
+          if [ "$(sickbeard__get_status)" == "Not Installed" ]; then
+            echo "* Installing Sick Beard"
+            sickbeard__install
+          fi
+
+          # Upgrade the service if a newer version is available
+          if sickbeard__version_check; then
+            echo "* Upgrading Sick Beard"
+            sickbeard__stop
+            sickbeard__upgrade
+          fi
+
+          # Sync Sick Beard to the current SABnzbd+ config
+          echo "* Configuring Sick Beard"
+          sickbeard__stop
+          sickbeard__sabnzbd_sync
+      
+          echo "* Enabling Sick Beard"
+          sickbeard__enable
+        fi
         sickbeard__start
-        echo "Done."
-        ;;    
+        ;;
       '-c' | '--couchpotato')
-        echo "* Applying changes to CouchPotato"
-        couchpotato__enable
+        if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+          # Install the service if not already installed
+          if [ "$(couchpotato__get_status)" == "Not Installed" ]; then
+            echo "* Installing CouchPotato"
+            couchpotato__install
+          fi
+
+          # Upgrade the service if a newer version is available
+          if couchpotato__version_check; then
+            echo "* Upgrading CouchPotato"
+            couchpotato__stop
+            couchpotato__upgrade
+          fi
+
+          # Sync CouchPotato to the current SABnzbd+ config
+          echo "* Configuring CouchPotato"
+          couchpotato__stop
+          couchpotato__sabnzbd_sync
+      
+          echo "* Enabling CouchPotato"
+          couchpotato__enable
+        fi
         couchpotato__start
-        echo "Done."
         ;;
       '-h' | '--headphones')
-        echo "* Applying changes to Headphones"
-        headphones__enable
+        if ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
+          # Install the service if not already installed
+          if [ "$(headphones__get_status)" == "Not Installed" ]; then
+            echo "* Installing Headphones"
+            headphones__install
+          fi
+
+          # Upgrade the service if a newer version is available
+          if headphones__version_check; then
+            echo "* Upgrading Headphones"
+            headphones__stop
+            headphones__upgrade
+          fi
+
+          # Sync Headphones to the current SABnzbd+ config
+          echo "* Configuring Headphones"
+          headphones__stop
+          headphones__sabnzbd_sync
+      
+          echo "* Enabling Headphones"
+          headphones__enable
+        fi
         headphones__start
-        echo "Done."
         ;;
       '-n' | '--nzbdrone')
-        echo "* Applying changes to NzbDrone"
-        nzbdrone__enable
+        if ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+          # Install the service if not already installed
+          if [ "$(nzbdrone__get_status)" == "Not Installed" ]; then
+            echo "* Installing NzbDrone"
+            nzbdrone__install
+          fi
+
+          # Upgrade the service if a newer version is available
+          if nzbdrone__version_check; then
+            echo "* Upgrading NzbDrone"
+            nzbdrone__stop
+            nzbdrone__upgrade
+          fi
+
+          # Sync NzbDrone to the current SABnzbd+ config
+          echo "* Configuring NzbDrone"
+          nzbdrone__stop
+          nzbdrone__sabnzbd_sync
+      
+          echo "* Enabling NzbDrone"
+          nzbdrone__enable
+        fi
         nzbdrone__start
-        echo "Done."
         ;;
       '-p' | '--plexserver')
-        echo "* Applying changes to Plex Media Server"
-        plexserver__enable
+        if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
+          # Install the service if not already installed
+          if [ "$(plexserver__get_status)" == "Not Installed" ]; then
+            echo "* Installing Plex Media Server"
+            plexserver__install
+          fi
+
+          # Upgrade the service if a newer version is available
+          if plexserver__version_check; then
+            echo "* Upgrading Plex Media Server"
+            plexserver__stop
+            plexserver__upgrade
+          fi
+      
+          echo "* Enabling Plex Media Server"
+          plexserver__enable
+        fi
         plexserver__start
-        echo "Done."
         ;;
       '-s' | '--sabnzbd')
-        echo "* Applying changes to SABnzbd+"
-        sabnzbd__enable
+        if ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
+          # Install the service if not already installed
+          if [ "$(sabnzbd__get_status)" == "Not Installed" ]; then
+            echo "* Installing SABnzbd+"
+            sabnzbd__install
+          fi
+
+          # Upgrade the service if a newer version is available
+          if sabnzbd__version_check; then
+            echo "* Upgrading SABnzbd+"
+            sabnzbd__stop
+            sabnzbd__upgrade
+          fi
+      
+          echo "* Enabling SABnzbd+"
+          sabnzbd__enable
+        fi
         sabnzbd__start
-        echo "Done."
         ;;
       '-t' | '--transmission')
-        echo "* Applying changes to Transmission"
-        transmission__enable
+        if ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
+          # Install the service if not already installed
+          if [ "$(transmission__get_status)" == "Not Installed" ]; then
+            echo "* Installing Transmission"
+            transmission__install
+          fi
+
+          # Upgrade the service if a newer version is available
+          if transmission__version_check; then
+            echo "* Upgrading Transmission"
+            transmission__stop
+            transmission__upgrade
+          fi
+      
+          echo "* Enabling Transmission"
+          transmission__enable
+        fi
         transmission__start
-        echo "Done."
         ;;
       *)
       	service__help
@@ -138,49 +255,41 @@ function service__disable() {
     case "${CLI_ARGS[1]}" in
       '-a' | '--all')
         allservices__disable
-        echo "Done."
         ;;
       '-b' | '--sickbeard')
-      	echo "* Applying changes to Sick Beard"
+      	echo "* Disabling Sick Beard"
       	sickbeard__stop
         sickbeard__disable
-        echo "Done."
         ;;    
       '-c' | '--couchpotato')
-        echo "* Applying changes to CouchPotato"
+        echo "* Disabling CouchPotato"
         couchpotato__stop
         couchpotato__disable
-        echo "Done."
         ;;
       '-h' | '--headphones')
-        echo "* Applying changes to Headphones"
+        echo "* Disabling Headphones"
         headphones__stop
         headphones__disable
-        echo "Done."
         ;;
       '-n' | '--nzbdrone')
-        echo "* Applying changes to NzbDrone"
+        echo "* Disabling NzbDrone"
         nzbdrone__stop
         nzbdrone__disable
-        echo "Done."
         ;;
       '-p' | '--plexserver')
-        echo "* Applying changes to Plex Media Server"
+        echo "* Disabling Plex Media Server"
         plexserver__stop
         plexserver__disable
-        echo "Done."
         ;;
       '-s' | '--sabnzbd')
-        echo "* Applying changes to SABnzbd+"
+        echo "* Disabling SABnzbd+"
         sabnzbd__stop
         sabnzbd__disable
-        echo "Done."
         ;;
       '-t' | '--transmission')
-        echo "* Applying changes to Transmission"
+        echo "* Disabling Transmission"
         transmission__stop
         transmission__disable
-        echo "Done."
         ;;
       *)
       	service__help
@@ -197,15 +306,13 @@ function service__upgrade() {
         echo "* Updating apt repository package lists"
         apt-get update > /dev/null 2>&1
         allservices__upgrade
-        echo "Done."
         ;;
       '-b' | '--sickbeard')
         if sickbeard__version_check; then
-          echo "* Applying changes to Sick Beard"
+          echo "* Upgrading Sick Beard"
           sickbeard__stop
           sickbeard__upgrade
           sickbeard__start
-          echo "Done."
         else
           echo "Sick Beard is up-to-date."
           echo
@@ -214,11 +321,10 @@ function service__upgrade() {
         ;;    
       '-c' | '--couchpotato')
         if couchpotato__version_check; then
-          echo "* Applying changes to CouchPotato"
+          echo "* Upgrading CouchPotato"
           couchpotato__stop
           couchpotato__upgrade
           couchpotato__start
-          echo "Done."
         else
           echo "CouchPotato is up-to-date."
           echo
@@ -227,11 +333,10 @@ function service__upgrade() {
         ;;
       '-h' | '--headphones')
         if headphones__version_check; then
-          echo "* Applying changes to Headphones"
+          echo "* Upgrading Headphones"
           headphones__stop
           headphones__upgrade
           headphones__start
-          echo "Done."
         else
           echo "Headphones is up-to-date."
           echo
@@ -242,11 +347,10 @@ function service__upgrade() {
         echo "* Updating apt repository package lists"
         apt-get update > /dev/null 2>&1
         if nzbdrone__version_check; then
-          echo "* Applying changes to NzbDrone"
+          echo "* Upgrading NzbDrone"
           nzbdrone__stop
           nzbdrone__upgrade
           nzbdrone__start
-          echo "Done."
         else
           echo "NzbDrone is up-to-date."
           echo
@@ -255,11 +359,10 @@ function service__upgrade() {
         ;;
       '-p' | '--plexserver')
         if plexserver__version_check; then
-          echo "* Applying changes to Plex Media Server"
+          echo "* Upgrading Plex Media Server"
           plexserver__stop
           plexserver__upgrade
           plexserver__start
-          echo "Done."
         else
           echo "Plex Media Server is up-to-date."
           echo
@@ -270,11 +373,10 @@ function service__upgrade() {
         echo "* Updating apt repository package lists"
         apt-get update > /dev/null 2>&1
         if sabnzbd__version_check; then
-          echo "* Applying changes to SABnzbd+"
+          echo "* Upgrading SABnzbd+"
           sabnzbd__stop
           sabnzbd__upgrade
           sabnzbd__start
-          echo "Done."
         else
           echo "SABnzbd+ is up-to-date."
           echo
@@ -285,11 +387,10 @@ function service__upgrade() {
         echo "* Updating apt repository package lists"
         apt-get update > /dev/null 2>&1
         if transmission__version_check; then
-          echo "* Applying changes to Transmission"
+          echo "* Upgrading Transmission"
           transmission__stop
           transmission__upgrade
           transmission__start
-          echo "Done."
         else
           echo "Transmission is up-to-date."
           echo

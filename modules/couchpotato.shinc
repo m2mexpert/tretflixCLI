@@ -18,21 +18,9 @@ function couchpotato__get_status() {
 }
 
 function couchpotato__enable() {
-  if [ "$(couchpotato__get_status)" == "Not Installed" ]; then
-    couchpotato__install
-  fi
-
-  if couchpotato__version_check; then
-    couchpotato__stop
-    couchpotato__upgrade
-  fi
-
   if [ "$(couchpotato__get_status)" == "Disabled" ]; then
     update-rc.d couchpotato defaults
   fi
-  
-  # Make sure config is in sync w/ current SABnzbd+ settings 
-  couchpotato__sabnzbd_sync
 }
 
 function couchpotato__disable() {

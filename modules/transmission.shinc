@@ -18,15 +18,6 @@ function transmission__get_status() {
 }
 
 function transmission__enable() {
-  if [ "$(transmission__get_status)" == "Not Installed" ]; then
-    transmission__install
-  fi
-
-  if transmission__version_check; then
-    transmission__stop
-    transmission__upgrade
-  fi
-  
   if [ "$(transmission__get_status)" == "Disabled" ]; then
     update-rc.d transmission-daemon defaults
   fi

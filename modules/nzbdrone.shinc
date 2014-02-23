@@ -18,21 +18,9 @@ function nzbdrone__get_status() {
 }
 
 function nzbdrone__enable() {
-  if [ "$(nzbdrone__get_status)" == "Not Installed" ]; then
-    nzbdrone__install
-  fi
-
-  if nzbdrone__version_check; then
-    nzbdrone__stop
-    nzbdrone__upgrade
-  fi
-  
   if [ "$(nzbdrone__get_status)" == "Disabled" ]; then
     rm -v /etc/init/nzbdrone.override
   fi
-  
-  # Make sure config is in sync w/ current SABnzbd+ settings
-  nzbdrone__sabnzbd_sync
 }
 
 function nzbdrone__disable() {
