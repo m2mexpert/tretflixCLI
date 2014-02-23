@@ -386,7 +386,7 @@ function config__wizard() {
       echo
       echo "* Configuring Sick Beard"
       sickbeard__stop
-      sickbeard__set_username "$sickbearduser"
+      sickbeard__set_username "$sickbeardUser"
       sickbeard__set_password "$sickbeardPass"
       sickbeard__set_port "$sickbeardPort"
       sickbeard__set_apikey "$sickbeardAPIkey"
