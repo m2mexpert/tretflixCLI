@@ -109,8 +109,7 @@ import "modules/transmission"
 import "modules/update"
 
 # Import variables (used by modules)
-source "$script_absolute_dir/variables"
-source "$script_absolute_dir/version"
+source "$script_absolute_dir/script.conf"
 
 # call appropriate module based on options entered by the user via CLI
 if test "${CLI_ARGS[0]+isset}"; then

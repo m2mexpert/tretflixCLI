@@ -5,60 +5,53 @@ fi
 headphones__imported=1
 
 function headphones__get_status() {
-  if service headphones status > /dev/null 2>&1; then
-    result="Enabled and Running"
+  if service headphones status | grep "unrecognized service" > /dev/null 2>&1; then
+    status="Not Installed"
+  elif service headphones status > /dev/null 2>&1; then
+    status="Enabled|Running"
   elif ls /etc/rc?.d/*headphones > /dev/null 2>&1; then
-    result="Not Running"
+    status="Enabled|Stopped"
   else
-    result="Disabled"
+    status="Disabled"
   fi
-  echo "$result"
+  echo "$status"
 }
 
 function headphones__enable() {
-  if [ "$(headphones__get_status)" == "Disabled" ]; then
-    update-rc.d headphones defaults > /dev/null 2>&1
-    if [ "$(tools__path_istype $headphonesData/.disabled)" == "File" ]; then
-      rm -f $headphonesData/.disabled > /dev/null 2>&1
-    fi
-    timestamp=$(date "+%Y%m%d%H%M%S")
-    sudo su -c -u $osUser "echo $timestamp > $headphonesData/.enabled"
+  if [ "$(headphones__get_status)" == "Not Installed" ]; then
+    headphones__install
   fi
+
+  if headphones__version_check; then
+    headphones__upgrade
+  fi
+
+  if [ "$(headphones__get_status)" == "Disabled" ]; then
+    update-rc.d headphones defaults
+  fi
+  
+  # Make sure config is in sync w/ current SABnzbd+ settings
+  headphones__sabnzbd_sync
+
+  # Start the service
   headphones__start
 }
 
 function headphones__disable() {
-  if [ "$(headphones__get_status)" != "Disabled" ]; then
+  if $(headphones__get_status) | grep -q "^Enabled"; then
     headphones__stop
-    update-rc.d -f headphones remove > /dev/null 2>&1
-    if [ "$(tools__path_istype $headphonesData/.enabled)" == "File" ]; then
-      rm -f $headphonesData/.enabled > /dev/null 2>&1
-    fi
-    timestamp=$(date "+%Y%m%d%H%M%S")
-    sudo su -c -u $osUser "echo $timestamp > $headphonesData/.disabled"
-  fi
-}
-
-function headphones__upgrade() {
-  if cd $headphonesSource && ! git fetch -v --dry-run 2>&1 | grep -iv "^from" | grep -ivq "\[up to date\]"; then
-    echo "Headphones is already up-to-date..."
-  else
-    echo "Upgrading Headphones..."
-    headphones__stop
-    sudo su -c -u $osUser "cd $headphonesSource && git remote update > /dev/null 2>&1"
-    sudo su -c -u $osUser "cd $headphonesSource && git pull --all > /dev/null 2>&1"
-    headphones__start
+    update-rc.d -f headphones remove
   fi
 }
 
 function headphones__start() {
-  if [ "$(headphones__get_status)" != "Disabled" ]; then
+  if $(headphones__get_status) | grep -q "^Enabled"; then
     for i in {1..3}; do
       if [ $i -gt 1 ]; then
         sleep 2
       fi
-      if [ "$(headphones__get_status)" != "Enabled and Running" ]; then
-        service headphones start > /dev/null 2>&1
+      if [ "$(headphones__get_status)" != "Enabled|Running" ]; then
+        service headphones start
       else
         break
       fi
@@ -71,8 +64,8 @@ function headphones__stop() {
     if [ $i -gt 1 ]; then
       sleep 2
     fi
-    if [ "$(headphones__get_status)" == "Enabled and Running" ]; then
-      service headphones stop > /dev/null 2>&1
+    if [ "$(headphones__get_status)" == "Enabled|Running" ]; then
+      service headphones stop
     else
       break
     fi
@@ -103,6 +96,84 @@ function headphones__set_apikey() {
   sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $headphonesConfig
 }
 
+function headphones__get_username() {
+  username=$(sed -n '/^\[General\]/,/^\[/p' $headphonesConfig | grep "^http_username " | awk '{ print $3 }')
+  
+  echo "$username"
+}
+
+function headphones__get_password() {
+  password=$(sed -n '/^\[General\]/,/^\[/p' $headphonesConfig | grep "^http_password " | awk '{ print $3 }')
+  
+  echo "$password"
+}
+
+function headphones__get_port() {
+  port=$(sed -n '/^\[General\]/,/^\[/p' $headphonesConfig | grep "^http_port " | awk '{ print $3 }')
+  
+  echo "$port"
+}
+
+function headphones__get_apikey() {
+  apikey=$(sed -n '/^\[General\]/,/^\[/p' $headphonesConfig | grep "^api_key " | awk '{ print $3 }')
+  
+  echo "$apikey"
+}
+
+function headphones__show_config() {
+  status=$(headphones__get_status)
+  ipv4=$(tools__get_ip)
+  
+  username=$(headphones__get_username)
+  password=$(headphones__get_password)
+  port=$(headphones__get_port)
+  apikey=$(headphones__get_apikey)
+
+  echo "Headphones Config:"
+  echo "----------------------------"
+  echo "Status: $status"
+  if [ "$status" == "Enabled|Running" ]; then
+    echo "Web UI: http://$ipv4:$port/"
+    echo
+    echo "Username: $username"
+    echo "Password: $password"
+    echo "API Key: $apikey"
+  fi
+}
+
+function headphones__install() {
+  echo "Coming Soon"
+}
+
+function headphones__version_check() {
+  if cd $headphonesSource && ! git fetch -v --dry-run 2>&1 | grep -iv "^from" | grep -ivq "\[up to date\]"; then
+    false
+  else
+    true
+  fi
+}
+
+function headphones__upgrade() {
+  headphones__stop
+  
+  sudo su -c -u $osUser \
+    "cd $headphonesSource && git remote update"
+  sudo su -c -u $osUser \
+    "cd $headphonesSource && git pull --all"
+}
+
+function headphones__sabnzbd_sync() {
+  username=$(sabnzbd__get_username)
+  password=$(sabnzbd__get_password)
+  port=$(sabnzbd__get_port)
+  apikey=$(sabnzbd__get_apikey)
+  
+  headphones__set_sabnzbd_username "$username"
+  headphones__set_sabnzbd_password "$password"
+  headphones__set_sabnzbd_port "$port"
+  headphones__set_sabnzbd_apikey "$apikey"
+}
+
 function headphones__set_sabnzbd_username() {
   username="$1"
   
@@ -111,38 +182,18 @@ function headphones__set_sabnzbd_username() {
 
 function headphones__set_sabnzbd_password() {
   password="$1"
-  
+ 
   sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_password .*/sab_password = '$password'/g}}' $headphonesConfig
 }
 
 function headphones__set_sabnzbd_port() {
   port="$1"
-  
-  sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_host .*/sab_host = http:\/\/localhost:'$port'\//g}}' $headphonesConfig
+
+ sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_host .*/sab_host = http:\/\/localhost:'$port'\//g}}' $headphonesConfig
 }
 
 function headphones__set_sabnzbd_apikey() {
   apikey="$1"
   
   sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_apikey .*/sab_apikey = '$apikey'/g}}' $headphonesConfig
-}
-
-function headphones__show_config() {
-  status="$(headphones__get_status)"
-  ipv4=$(tools__get_ip)
-  username=$(sed -n '/^\[General\]/,/^\[/p' $headphonesConfig | grep "^http_username " | awk '{ print $3 }')
-  password=$(sed -n '/^\[General\]/,/^\[/p' $headphonesConfig | grep "^http_password " | awk '{ print $3 }')
-  port=$(sed -n '/^\[General\]/,/^\[/p' $headphonesConfig | grep "^http_port " | awk '{ print $3 }')
-  apikey=$(sed -n '/^\[General\]/,/^\[/p' $headphonesConfig | grep "^api_key " | awk '{ print $3 }')
-
-  echo "Headphones Config:"
-  echo "----------------------------"
-  echo "Status: $status"
-  if [ "$status" == "Enabled and Running" ]; then
-    echo "Web UI: http://$ipv4:$port/"
-    echo
-    echo "Username: $username"
-    echo "Password: $password"
-    echo "API Key: $apikey"
-  fi
 }

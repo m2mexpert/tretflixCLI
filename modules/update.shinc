@@ -8,6 +8,7 @@ function update__help() {
   echo "Usage: tretflix update [COMMAND] [OPTION]"
   echo
   echo "COMMANDS:"
+  echo "  tretflix update appliance"
   echo "  tretflix update cli [OPTION] ..."
   echo
   echo "OPTIONS:"
@@ -19,6 +20,9 @@ function update__help() {
 function update__command_handler() {
   if test "${CLI_ARGS[1]+isset}"; then
     case "${CLI_ARGS[1]}" in
+    	'appliance')
+    	  update__appliance
+    	  ;;
     	'cli')
     	  update__cli
     	  ;;
@@ -30,6 +34,16 @@ function update__command_handler() {
   fi
 }
 
+function update__appliance() {
+  # 1.0.x CLI to 1.1.x CLI update requirements
+  # Update ~/.profile to run appliance update anytime CLI is updated
+  # Remove /opt/tretflix/.sys/config
+  # Fix plex media server bug (remove identity strings)
+  # Install NZBdrone & deploy config
+  # Install Proxy & deploy config
+  echo "Coming Soon..."
+}
+
 function update__cli() {
   if [ "${#CLI_ARGS[@]}" -eq 2 ]; then
     if cd $cliPath && git fetch -v --dry-run 2>&1 | grep 'master' | grep -q 'up to date'; then
@@ -39,9 +53,12 @@ function update__cli() {
         read -p "There is an update available for Tretflix CLI. Update now? (y/n): " input
         case "$input" in
           [yY] | [yY][Ee][Ss] )
-            sudo su -c -u $osUser "cd $cliPath && git fetch" > /dev/null 2>&1
-            sudo su -c -u $osUser "cd $cliPath && git checkout -f master" > /dev/null 2>&1
-            sudo su -c -u $osUser "cd $cliPath && git reset --hard origin/master" > /dev/null 2>&1
+            sudo su -c -u $osUser \
+              "cd $cliPath && git fetch > /dev/null 2>&1"
+            sudo su -c -u $osUser \
+              "cd $cliPath && git checkout -f master > /dev/null 2>&1"
+            sudo su -c -u $osUser \
+              "cd $cliPath && git reset --hard origin/master > /dev/null 2>&1"
             chmod +x "$0"
             echo "Tretflix CLI has been updated."
             break;;
@@ -60,9 +77,12 @@ function update__cli() {
         branch="${CLI_ARGS[3]}"
         branch=$(echo "$branch" | tr '[:upper:]' '[:lower:]')
         if [ "$branch" == "master" ] || [ "$branch" == "develop" ]; then
-          sudo su -c -u $osUser "cd $cliPath && git fetch -v"
-          sudo su -c -u $osUser "cd $cliPath && git checkout -f $branch"
-          sudo su -c -u $osUser "cd $cliPath && git reset --hard origin/$branch" 
+          sudo su -c -u $osUser \
+            "cd $cliPath && git fetch -v"
+          sudo su -c -u $osUser \
+            "cd $cliPath && git checkout -f $branch"
+          sudo su -c -u $osUser \
+            "cd $cliPath && git reset --hard origin/$branch" 
           chmod +x "$0"
         else
           echo "Invalid branch name."

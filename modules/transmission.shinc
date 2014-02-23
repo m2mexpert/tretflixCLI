@@ -5,63 +5,50 @@ fi
 transmission__imported=1
 
 function transmission__get_status() {
-  if service transmission-daemon status > /dev/null 2>&1; then
-    result="Enabled and Running"
+  if service transmission-daemon status | grep "unrecognized service" > /dev/null 2>&1; then
+    status="Not Installed"
+  elif service transmission-daemon status > /dev/null 2>&1; then
+    status="Enabled|Running"
   elif ls /etc/rc?.d/*transmission-daemon > /dev/null 2>&1; then
-    result="Not Running"
+    status="Enabled|Stopped"
   else
-    result="Disabled"
+    status="Disabled"
   fi
-  echo "$result"
+  echo "$status"
 }
 
 function transmission__enable() {
-  if [ "$(transmission__get_status)" == "Disabled" ]; then
-    update-rc.d transmission-daemon defaults > /dev/null 2>&1
-    if [ "$(tools__path_istype $transmissionData/.disabled)" == "File" ]; then
-      rm -f $transmissionData/.disabled > /dev/null 2>&1
-    fi
-    timestamp=$(date "+%Y%m%d%H%M%S")
-    sudo su -c -u $osUser "echo $timestamp > $transmissionData/.enabled"
+  if [ "$(transmission__get_status)" == "Not Installed" ]; then
+    transmission__install
   fi
+
+  if transmission__version_check; then
+    transmission__upgrade
+  fi
+  
+  if [ "$(transmission__get_status)" == "Disabled" ]; then
+    update-rc.d transmission-daemon defaults
+  fi
+
+  # Start the service
   transmission__start
 }
 
 function transmission__disable() {
-  if [ "$(transmission__get_status)" != "Disabled" ]; then
+  if $(transmission__get_status) | grep -q "^Enabled"; then
     transmission__stop
-    update-rc.d -f transmission-daemon remove > /dev/null 2>&1
-    if [ "$(tools__path_istype $transmissionData/.enabled)" == "File" ]; then
-      rm -f $transmissionData/.enabled > /dev/null 2>&1
-    fi
-    timestamp=$(date "+%Y%m%d%H%M%S")
-    sudo su -c -u $osUser "echo $timestamp > $transmissionData/.disabled"
-  fi
-}
-
-function transmission__upgrade() {
-  output=$(apt-cache policy transmission-daemon 2>&1)
-  installedVers=$(echo "$output" | grep "Installed:" | awk '{ print $2 }')
-  candidateVers=$(echo "$output" | grep "Candidate:" | awk '{ print $2 }')
-  
-  if [ "$installedVers" == "$candidateVers" ]; then
-    echo "Transmission is already up-to-date..."
-  else
-    echo "Upgrading Transmission..."
-    transmission__stop
-    apt-get -y install transmission-daemon > /dev/null 2>&1
-    transmission__start
+    update-rc.d -f transmission-daemon remove
   fi
 }
 
 function transmission__start() {
-  if [ "$(transmission__get_status)" != "Disabled" ]; then
+  if $(transmission__get_status) | grep -q "^Enabled"; then
     for i in {1..3}; do
       if [ $i -gt 1 ]; then
         sleep 2
       fi
-      if [ "$(transmission__get_status)" != "Enabled and Running" ]; then
-        service transmission-daemon start > /dev/null 2>&1
+      if [ "$(transmission__get_status)" != "Enabled|Running" ]; then
+        service transmission-daemon start
       else
         break
       fi
@@ -74,8 +61,8 @@ function transmission__stop() {
     if [ $i -gt 1 ]; then
       sleep 2
     fi
-    if [ "$(transmission__get_status)" == "Enabled and Running" ]; then
-      service transmission-daemon stop > /dev/null 2>&1
+    if [ "$(transmission__get_status)" == "Enabled|Running" ]; then
+      service transmission-daemon stop
     else
       break
     fi
@@ -100,20 +87,59 @@ function transmission__set_port() {
   sed -i -e 's/"rpc-port".*/"rpc-port": '$port',/g' $transmissionConfig
 }
 
-function transmission__show_config() {
-  status="$(transmission__get_status)"
-  ipv4=$(tools__get_ip)
+function transmission__get_username() {
   username=$(grep "rpc-username" $transmissionConfig | awk '{ print $2 }' | awk -F '"' '{ print $2 }')
+  
+  echo "$username"
+}
+
+function transmission__get_password() {
   password="N/A (ENCRYPTED)"
+  
+  echo "$password"
+}
+
+function transmission__get_port() {
   port=$(grep "rpc-port" $transmissionConfig | awk '{ print $2 }' | sed 's/,$//g')
+  
+  echo "$port"
+}
+
+function transmission__show_config() {
+  status=$(transmission__get_status)
+  ipv4=$(tools__get_ip)
+  username=$(transmission__get_username)
+  password=$(transmission__get_password)
+  port=$(transmission__get_port)
 
   echo "Transmission Config:"
   echo "----------------------------"
   echo "Status: $status"
-  if [ "$status" == "Enabled and Running" ]; then
+  if [ "$status" == "Enabled|Running" ]; then
     echo "Web UI: http://$ipv4:$port/transmission/web/"
     echo
     echo "Username: $username"
     echo "Password: $password"
   fi
+}
+
+function transmission__install() {
+  echo "Coming Soon"
+}
+
+function transmission__version_check() {
+  output=$(apt-cache policy transmission-daemon 2>&1)
+  installedVers=$(echo "$output" | grep "Installed:" | awk '{ print $2 }')
+  candidateVers=$(echo "$output" | grep "Candidate:" | awk '{ print $2 }')
+
+  if [ "$installedVers" == "$candidateVers" ]; then
+    false
+  else
+    true
+  fi
+}
+
+function transmission__upgrade() {
+  transmission__stop
+  apt-get -y install transmission-daemon
 }

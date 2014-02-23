@@ -60,7 +60,8 @@ function downloads__set_path() {
     exit 1
   fi
   
-  sudo su -c -u $osUser "test -w $newPath"
+  sudo su -c -u $osUser \
+    "test -w $newPath"
   if [ $? -ne 0 ]; then
     echo "Permission denied, no write permission to the new downloads path"
     echo
@@ -77,7 +78,8 @@ function downloads__set_path() {
       exit 1
     fi
     
-    sudo su -c -u $osUser "rsync -av --progress --human-readable $downloadsLink/* $newPath/."
+    sudo su -c -u $osUser \
+      "rsync -av --progress --human-readable $downloadsLink/* $newPath/."
     if [ $? -ne 0 ]; then
       echo "There were errors while copying the current downloads to the new downloads path"
       echo

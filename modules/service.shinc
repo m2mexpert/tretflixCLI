@@ -84,37 +84,37 @@ function service__enable() {
         echo "Done."
         ;;
       '-b' | '--sickbeard')
-      	echo "Applying changes to Sick Beard..."
+      	echo "* Applying changes to Sick Beard"
         sickbeard__enable
         echo "Done."
         ;;    
       '-c' | '--couchpotato')
-        echo "Applying changes to CouchPotato..."
+        echo "* Applying changes to CouchPotato"
         couchpotato__enable
         echo "Done."
         ;;
       '-h' | '--headphones')
-        echo "Applying changes to Headphones..."
+        echo "* Applying changes to Headphones"
         headphones__enable
         echo "Done."
         ;;
       '-n' | '--nzbdrone')
-        echo "Applying changes to NzbDrone..."
+        echo "* Applying changes to NzbDrone"
         nzbdrone__enable
         echo "Done."
         ;;
       '-p' | '--plexserver')
-        echo "Applying changes to Plex Media Server..."
+        echo "* Applying changes to Plex Media Server"
         plexserver__enable
         echo "Done."
         ;;
       '-s' | '--sabnzbd')
-        echo "Applying changes to SABnzbd+..."
+        echo "* Applying changes to SABnzbd+"
         sabnzbd__enable
         echo "Done."
         ;;
       '-t' | '--transmission')
-        echo "Applying changes to Transmission..."
+        echo "* Applying changes to Transmission"
         transmission__enable
         echo "Done."
         ;;
@@ -134,37 +134,37 @@ function service__disable() {
         echo "Done."
         ;;
       '-b' | '--sickbeard')
-      	echo "Applying changes to Sick Beard..."
+      	echo "* Applying changes to Sick Beard"
         sickbeard__disable
         echo "Done."
         ;;    
       '-c' | '--couchpotato')
-        echo "Applying changes to CouchPotato..."
+        echo "* Applying changes to CouchPotato"
         couchpotato__disable
         echo "Done."
         ;;
       '-h' | '--headphones')
-        echo "Applying changes to Headphones..."
+        echo "* Applying changes to Headphones"
         headphones__disable
         echo "Done."
         ;;
       '-n' | '--nzbdrone')
-        echo "Applying changes to NzbDrone..."
+        echo "* Applying changes to NzbDrone"
         nzbdrone__disable
         echo "Done."
         ;;
       '-p' | '--plexserver')
-        echo "Applying changes to Plex Media Server..."
+        echo "* Applying changes to Plex Media Server"
         plexserver__disable
         echo "Done."
         ;;
       '-s' | '--sabnzbd')
-        echo "Applying changes to SABnzbd+..."
+        echo "* Applying changes to SABnzbd+"
         sabnzbd__disable
         echo "Done."
         ;;
       '-t' | '--transmission')
-        echo "Applying changes to Transmission..."
+        echo "* Applying changes to Transmission"
         transmission__disable
         echo "Done."
         ;;
@@ -180,40 +180,107 @@ function service__upgrade() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
     case "${CLI_ARGS[1]}" in
       '-a' | '--all')
+        echo "* Updating apt repository package lists"
+        apt-get update > /dev/null 2>&1
         allservices__upgrade
         echo "Done."
         ;;
       '-b' | '--sickbeard')
-        sickbeard__upgrade
-        echo "Done."
+        if sickbeard__version_check; then
+          echo "* Applying changes to Sick Beard"
+          sickbeard__stop
+          sickbeard__upgrade
+          sickbeard__start
+          echo "Done."
+        else
+          echo "Sick Beard is up-to-date."
+          echo
+          exit 1
+        fi
         ;;    
       '-c' | '--couchpotato')
-        couchpotato__upgrade
-        echo "Done."
+        if couchpotato__version_check; then
+          echo "* Applying changes to CouchPotato"
+          couchpotato__stop
+          couchpotato__upgrade
+          couchpotato__start
+          echo "Done."
+        else
+          echo "CouchPotato is up-to-date."
+          echo
+          exit 1
+        fi
         ;;
       '-h' | '--headphones')
-        headphones__upgrade
-        echo "Done."
+        if headphones__version_check; then
+          echo "* Applying changes to Headphones"
+          headphones__stop
+          headphones__upgrade
+          headphones__start
+          echo "Done."
+        else
+          echo "Headphones is up-to-date."
+          echo
+          exit 1
+        fi
         ;;
       '-n' | '--nzbdrone')
-        nzbdrone__upgrade
-        echo "Done."
+        echo "* Updating apt repository package lists"
+        apt-get update > /dev/null 2>&1
+        if nzbdrone__version_check; then
+          echo "* Applying changes to NzbDrone"
+          nzbdrone__stop
+          nzbdrone__upgrade
+          nzbdrone__start
+          echo "Done."
+        else
+          echo "NzbDrone is up-to-date."
+          echo
+          exit 1
+        fi
         ;;
       '-p' | '--plexserver')
-        plexserver__upgrade
-        echo "Done."
+        if plexserver__version_check; then
+          echo "* Applying changes to Plex Media Server"
+          plexserver__stop
+          plexserver__upgrade
+          plexserver__start
+          echo "Done."
+        else
+          echo "Plex Media Server is up-to-date."
+          echo
+          exit 1
+        fi
         ;;
       '-s' | '--sabnzbd')
-        echo "Updating apt repository package lists..."
+        echo "* Updating apt repository package lists"
         apt-get update > /dev/null 2>&1
-        sabnzbd__upgrade
-        echo "Done."
+        if sabnzbd__version_check; then
+          echo "* Applying changes to SABnzbd+"
+          sabnzbd__stop
+          sabnzbd__upgrade
+          sabnzbd__start
+          echo "Done."
+        else
+          echo "SABnzbd+ is up-to-date."
+          echo
+          exit 1
+        fi
         ;;
       '-t' | '--transmission')
-        echo "Updating apt repository package lists..."
+        echo "* Updating apt repository package lists"
         apt-get update > /dev/null 2>&1
-        transmission__upgrade
-        echo "Done."
+        if transmission__version_check; then
+          echo "* Applying changes to Transmission"
+          transmission__stop
+          transmission__upgrade
+          transmission__start
+          echo "Done."
+        else
+          echo "Transmission is up-to-date."
+          echo
+          exit 1
+        fi
         ;;
       *)
       	service__help
@@ -231,28 +298,28 @@ function service__set_username() {
         echo "Done."
         ;;
       '-b' | '--sickbeard')
-        echo "Applying changes to Sick Beard..."
+        echo "* Applying changes to Sick Beard"
         sickbeard__stop
         sickbeard__set_username "${CLI_ARGS[4]}"
         sickbeard__start
         echo "Done."
         ;;    
       '-c' | '--couchpotato')
-        echo "Applying changes to CouchPotato..."
+        echo "* Applying changes to CouchPotato"
         couchpotato__stop
         couchpotato__set_username "${CLI_ARGS[4]}"
         couchpotato__start
         echo "Done."
         ;;
       '-h' | '--headphones')
-        echo "Applying changes to Headphones..."
+        echo "* Applying changes to Headphones"
         headphones__stop
         headphones__set_username "${CLI_ARGS[4]}"
         headphones__start
         echo "Done."
         ;;
       '-n' | '--nzbdrone')
-        echo "Applying changes to NzbDrone..."
+        echo "* Applying changes to NzbDrone"
         nzbdrone__stop
         nzbdrone__set_username "${CLI_ARGS[4]}"
         nzbdrone__start
@@ -264,26 +331,32 @@ function service__set_username() {
         exit 1
         ;;
       '-s' | '--sabnzbd')
-        echo "Applying changes to SABnzbd+..."
+        echo "* Applying changes to SABnzbd+"
         sabnzbd__stop
         sabnzbd__set_username "${CLI_ARGS[4]}"
         sabnzbd__start
-        echo "Applying changes to Headphones..."
-        headphones__stop
-        headphones__set_sabnzbd_username "${CLI_ARGS[4]}"
-        headphones__start
-        echo "Applying changes to NzbDrone..."
-        nzbdrone__stop
-        nzbdrone__set_sabnzbd_username "${CLI_ARGS[4]}"
-        nzbdrone__start
-        echo "Applying changes to Sick Beard..."
-        sickbeard__stop
-        sickbeard__set_sabnzbd_username "${CLI_ARGS[4]}"
-        sickbeard__start     
+        if $(headphones__get_status) | grep -q "^Enabled"; then
+          echo "* Applying changes to Headphones"
+          headphones__stop
+          headphones__set_sabnzbd_username "${CLI_ARGS[4]}"
+          headphones__start
+        fi
+        if $(nzbdrone__get_status) | grep -q "^Enabled"; then
+          echo "* Applying changes to NzbDrone"
+          nzbdrone__stop
+          nzbdrone__set_sabnzbd_username "${CLI_ARGS[4]}"
+          nzbdrone__start
+        fi
+        if $(sickbeard__get_status) | grep -q "^Enabled"; then
+          echo "* Applying changes to Sick Beard"
+          sickbeard__stop
+          sickbeard__set_sabnzbd_username "${CLI_ARGS[4]}"
+          sickbeard__start
+        fi  
         echo "Done."
         ;;
       '-t' | '--transmission')
-        echo "Applying changes to Transmission..."
+        echo "* Applying changes to Transmission"
         transmission__stop
         transmission__set_username "${CLI_ARGS[4]}"
         transmission__start
@@ -305,28 +378,28 @@ function service__set_password() {
         echo "Done."
         ;;
       '-b' | '--sickbeard')
-        echo "Applying changes to Sick Beard..."
+        echo "* Applying changes to Sick Beard"
         sickbeard__stop
         sickbeard__set_password "${CLI_ARGS[4]}"
         sickbeard__start
         echo "Done."
         ;;    
       '-c' | '--couchpotato')
-        echo "Applying changes to CouchPotato..."
+        echo "* Applying changes to CouchPotato"
         couchpotato__stop
         couchpotato__set_password "${CLI_ARGS[4]}"
         couchpotato__start
         echo "Done."
         ;;
       '-h' | '--headphones')
-        echo "Applying changes to Headphones..."
+        echo "* Applying changes to Headphones"
         headphones__stop
         headphones__set_password "${CLI_ARGS[4]}"
         headphones__start
         echo "Done."
         ;;
       '-n' | '--nzbdrone')
-        echo "Applying changes to NzbDrone..."
+        echo "* Applying changes to NzbDrone"
         nzbdrone__stop
         nzbdrone__set_password "${CLI_ARGS[4]}"
         nzbdrone__start
@@ -338,26 +411,32 @@ function service__set_password() {
         exit 1
         ;;
       '-s' | '--sabnzbd')
-        echo "Applying changes to SABnzbd+..."
+        echo "* Applying changes to SABnzbd+"
         sabnzbd__stop
         sabnzbd__set_password "${CLI_ARGS[4]}"
         sabnzbd__start
-        echo "Applying changes to Headphones..."
-        headphones__stop
-        headphones__set_sabnzbd_password "${CLI_ARGS[4]}"
-        headphones__start
-        echo "Applying changes to NzbDrone..."
-        nzbdrone__stop
-        nzbdrone__set_sabnzbd_password "${CLI_ARGS[4]}"
-        nzbdrone__start
-        echo "Applying changes to Sick Beard..."
-        sickbeard__stop
-        sickbeard__set_sabnzbd_password "${CLI_ARGS[4]}"
-        sickbeard__start
+        if $(headphones__get_status) | grep -q "^Enabled"; then
+          echo "* Applying changes to Headphones"
+          headphones__stop
+          headphones__set_sabnzbd_password "${CLI_ARGS[4]}"
+          headphones__start
+        fi
+        if $(nzbdrone__get_status) | grep -q "^Enabled"; then
+          echo "* Applying changes to NzbDrone"
+          nzbdrone__stop
+          nzbdrone__set_sabnzbd_password "${CLI_ARGS[4]}"
+          nzbdrone__start
+        fi
+        if $(sickbeard__get_status) | grep -q "^Enabled"; then
+          echo "* Applying changes to Sick Beard"
+          sickbeard__stop
+          sickbeard__set_sabnzbd_password "${CLI_ARGS[4]}"
+          sickbeard__start
+        fi
         echo "Done."
         ;;
       '-t' | '--transmission')
-        echo "Applying changes to Transmission..."
+        echo "* Applying changes to Transmission"
         transmission__stop
         transmission__set_password "${CLI_ARGS[4]}"
         transmission__start
@@ -378,28 +457,28 @@ function service__set_port() {
         echo "This command requires an individual service to be specified"
         ;;
       '-b' | '--sickbeard')
-        echo "Applying changes to Sick Beard..."
+        echo "* Applying changes to Sick Beard"
         sickbeard__stop
         sickbeard__set_port "${CLI_ARGS[4]}"
         sickbeard__start
         echo "Done."
         ;;    
       '-c' | '--couchpotato')
-        echo "Applying changes to CouchPotato..."
+        echo "* Applying changes to CouchPotato"
         couchpotato__stop
         couchpotato__set_port "${CLI_ARGS[4]}"
         couchpotato__start
         echo "Done."
         ;;
       '-h' | '--headphones')
-        echo "Applying changes to Headphones..."
+        echo "* Applying changes to Headphones"
         headphones__stop
         headphones__set_port "${CLI_ARGS[4]}"
         headphones__start
         echo "Done."
         ;;
       '-n' | '--nzbdrone')
-        echo "Applying changes to NzbDrone..."
+        echo "* Applying changes to NzbDrone"
         nzbdrone__stop
         nzbdrone__set_port "${CLI_ARGS[4]}"
         nzbdrone__start
@@ -411,30 +490,38 @@ function service__set_port() {
         exit 1
         ;;
       '-s' | '--sabnzbd')
-        echo "Applying changes to SABnzbd+..."
+        echo "* Applying changes to SABnzbd+"
         sabnzbd__stop
         sabnzbd__set_port "${CLI_ARGS[4]}"
         sabnzbd__start
-        echo "Applying changes to CouchPotato..."
-        couchpotato__stop
-        couchpotato__set_sabnzbd_port "${CLI_ARGS[4]}"
-        couchpotato__start
-        echo "Applying changes to Headphones..."
-        headphones__stop
-        headphones__set_sabnzbd_port "${CLI_ARGS[4]}"
-        headphones__start
-        echo "Applying changes to NzbDrone..."
-        nzbdrone__stop
-        nzbdrone__set_sabnzbd_port "${CLI_ARGS[4]}"
-        nzbdrone__start
-        echo "Applying changes to Sick Beard..."
-        sickbeard__stop
-        sickbeard__set_sabnzbd_port "${CLI_ARGS[4]}"
-        sickbeard__start
+        if $(couchpotato__get_status) | grep -q "^Enabled"; then
+          echo "* Applying changes to CouchPotato"
+          couchpotato__stop
+          couchpotato__set_sabnzbd_port "${CLI_ARGS[4]}"
+          couchpotato__start
+        fi
+        if $(headphones__get_status) | grep -q "^Enabled"; then
+          echo "* Applying changes to Headphones"
+          headphones__stop
+          headphones__set_sabnzbd_port "${CLI_ARGS[4]}"
+          headphones__start
+        fi
+        if $(nzbdrone__get_status) | grep -q "^Enabled"; then
+          echo "* Applying changes to NzbDrone"
+          nzbdrone__stop
+          nzbdrone__set_sabnzbd_port "${CLI_ARGS[4]}"
+          nzbdrone__start
+        fi
+        if $(sickbeard__get_status) | grep -q "^Enabled"; then
+          echo "* Applying changes to Sick Beard"
+          sickbeard__stop
+          sickbeard__set_sabnzbd_port "${CLI_ARGS[4]}"
+          sickbeard__start
+        fi
         echo "Done."
         ;;
       '-t' | '--transmission')
-        echo "Applying changes to Transmission..."
+        echo "* Applying changes to Transmission"
         transmission__stop
         transmission__set_port "${CLI_ARGS[4]}"
         transmission__start
@@ -456,7 +543,7 @@ function service__new_apikey() {
         echo "Done."
         ;;
       '-b' | '--sickbeard')
-        echo "Applying changes to Sick Beard..."
+        echo "* Applying changes to Sick Beard"
         apikey="$(tools__gen_apikey)"
         sickbeard__stop
         sickbeard__set_apikey "$apikey"
@@ -464,7 +551,7 @@ function service__new_apikey() {
         echo "Done."
         ;;    
       '-c' | '--couchpotato')
-        echo "Applying changes to CouchPotato..."
+        echo "* Applying changes to CouchPotato"
         apikey="$(tools__gen_apikey)"
         couchpotato__stop
         couchpotato__set_apikey "$apikey"
@@ -472,7 +559,7 @@ function service__new_apikey() {
         echo "Done."
         ;;
       '-h' | '--headphones')
-        echo "Applying changes to Headphones..."
+        echo "* Applying changes to Headphones"
         apikey="$(tools__gen_apikey)"
         headphones__stop
         headphones__set_apikey "$apikey"
@@ -480,7 +567,7 @@ function service__new_apikey() {
         echo "Done."
         ;;
       '-n' | '--nzbdrone')
-        echo "Applying changes to NzbDrone..."
+        echo "* Applying changes to NzbDrone"
         apikey="$(tools__gen_apikey)"
         nzbdrone__stop
         nzbdrone__set_apikey "$apikey"
@@ -493,27 +580,35 @@ function service__new_apikey() {
         exit 1
         ;;
       '-s' | '--sabnzbd')
-        echo "Applying changes to SABnzbd+..."
+        echo "* Applying changes to SABnzbd+"
         apikey="$(tools__gen_apikey)"
         sabnzbd__stop
         sabnzbd__set_apikey "$apikey"
         sabnzbd__start
-        echo "Applying changes to CouchPotato..."
-        couchpotato__stop
-        couchpotato__set_sabnzbd_apikey "$apikey"
-        couchpotato__start
-        echo "Applying changes to Headphones..."
-        headphones__stop
-        headphones__set_sabnzbd_apikey "$apikey"
-        headphones__start
-        echo "Applying changes to NzbDrone..."
-        nzbdrone__stop
-        nzbdrone__set_sabnzbd_apikey "$apikey"
-        nzbdrone__start
-        echo "Applying changes to Sick Beard..."
-        sickbeard__stop
-        sickbeard__set_sabnzbd_apikey "$apikey"
-        sickbeard__start
+        if $(couchpotato__get_status) | grep -q "^Enabled"; then
+          echo "* Applying changes to CouchPotato"
+          couchpotato__stop
+          couchpotato__set_sabnzbd_apikey "$apikey"
+          couchpotato__start
+        fi
+        if $(headphones__get_status) | grep -q "^Enabled"; then
+          echo "* Applying changes to Headphones"
+          headphones__stop
+          headphones__set_sabnzbd_apikey "$apikey"
+          headphones__start
+        fi
+        if $(nzbdrone__get_status) | grep -q "^Enabled"; then
+          echo "* Applying changes to NzbDrone"
+          nzbdrone__stop
+          nzbdrone__set_sabnzbd_apikey "$apikey"
+          nzbdrone__start
+        fi
+        if $(sickbeard__get_status) | grep -q "^Enabled"; then
+          echo "* Applying changes to Sick Beard"
+          sickbeard__stop
+          sickbeard__set_sabnzbd_apikey "$apikey"
+          sickbeard__start
+        fi
         echo "Done."
         ;;
       '-t' | '--transmission')

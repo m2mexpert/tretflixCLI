@@ -5,60 +5,53 @@ fi
 couchpotato__imported=1
 
 function couchpotato__get_status() {
-  if service couchpotato status > /dev/null 2>&1; then
-    result="Enabled and Running"
+  if service couchpotato status | grep "unrecognized service" > /dev/null 2>&1; then
+    status="Not Installed"
+  elif service couchpotato status > /dev/null 2>&1; then
+    status="Enabled|Running"
   elif ls /etc/rc?.d/*couchpotato > /dev/null 2>&1; then
-    result="Not Running"
+    status="Enabled|Stopped"
   else
-    result="Disabled"
+    status="Disabled"
   fi
-  echo "$result"
+  echo "$status"
 }
 
 function couchpotato__enable() {
-  if [ "$(couchpotato__get_status)" == "Disabled" ]; then
-    update-rc.d couchpotato defaults > /dev/null 2>&1
-    if [ "$(tools__path_istype $couchpotatoData/.disabled)" == "File" ]; then
-      rm -f $couchpotatoData/.disabled > /dev/null 2>&1
-    fi
-    timestamp=$(date "+%Y%m%d%H%M%S")
-    sudo su -c -u $osUser "echo $timestamp > $couchpotatoData/.enabled"
+  if [ "$(couchpotato__get_status)" == "Not Installed" ]; then
+    couchpotato__install
   fi
+
+  if couchpotato__version_check; then
+    couchpotato__upgrade
+  fi
+
+  if [ "$(couchpotato__get_status)" == "Disabled" ]; then
+    update-rc.d couchpotato defaults
+  fi
+  
+  # Make sure config is in sync w/ current SABnzbd+ settings 
+  couchpotato__sabnzbd_sync 
+  
+  # Start the service
   couchpotato__start
 }
 
 function couchpotato__disable() {
-  if [ "$(couchpotato__get_status)" != "Disabled" ]; then
+  if $(couchpotato__get_status) | grep -q "^Enabled"; then
     couchpotato__stop
-    update-rc.d -f couchpotato remove > /dev/null 2>&1
-    if [ "$(tools__path_istype $couchpotatoData/.enabled)" == "File" ]; then
-      rm -f $couchpotatoData/.enabled > /dev/null 2>&1
-    fi
-    timestamp=$(date "+%Y%m%d%H%M%S")
-    sudo su -c -u $osUser "echo $timestamp > $couchpotatoData/.disabled"
-  fi
-}
-
-function couchpotato__upgrade() {
-  if cd $couchpotatoSource && ! git fetch -v --dry-run 2>&1 | grep -iv "^from" | grep -ivq "\[up to date\]"; then
-    echo "CouchPotato is already up-to-date..."
-  else
-    echo "Upgrading CouchPotato..."
-    couchpotato__stop
-    sudo su -c -u $osUser "cd $couchpotatoSource && git remote update > /dev/null 2>&1"
-    sudo su -c -u $osUser "cd $couchpotatoSource && git pull --all > /dev/null 2>&1"
-    couchpotato__start
+    update-rc.d -f couchpotato remove
   fi
 }
 
 function couchpotato__start() {
-  if [ "$(couchpotato__get_status)" != "Disabled" ]; then
+  if $(couchpotato__get_status) | grep -q "^Enabled"; then
     for i in {1..3}; do
       if [ $i -gt 1 ]; then
         sleep 2
       fi
-      if [ "$(couchpotato__get_status)" != "Enabled and Running" ]; then
-        service couchpotato start > /dev/null 2>&1
+      if [ "$(couchpotato__get_status)" != "Enabled|Running" ]; then
+        service couchpotato start
       else
         break
       fi
@@ -71,8 +64,8 @@ function couchpotato__stop() {
     if [ $i -gt 1 ]; then
       sleep 2
     fi
-    if [ "$(couchpotato__get_status)" == "Enabled and Running" ]; then
-      service couchpotato stop > /dev/null 2>&1
+    if [ "$(couchpotato__get_status)" == "Enabled|Running" ]; then
+      service couchpotato stop
     else
       break
     fi
@@ -104,40 +97,88 @@ function couchpotato__set_apikey() {
   sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $couchpotatoConfig
 }
 
-function couchpotato__set_sabnzbd_port() {
-  port="$1"
+function couchpotato__get_username() {
+  username=$(sed -n '/^\[core\]/,/^\[/p' $couchpotatoConfig | grep "^username " | awk '{ print $3 }')
   
-  sed -i -e '/^\[sabnzbd\]/,/^\[/{/^\[sabnzbd\]/n;/^\[/!{s/^host .*/host = localhost:'$port'/g}}' $couchpotatoConfig
+  echo "$username"
 }
 
-function couchpotato__set_sabnzbd_apikey() {
-  apikey="$1"
+function couchpotato__get_password() {
+  password="N/A (ENCRYPTED)"
   
-  sed -i -e '/^\[sabnzbd\]/,/^\[/{/^\[sabnzbd\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $couchpotatoConfig
+  echo "$password"
 }
 
-function couchpotato__update_app() {
-  couchpotato__stop
-  git pull $couchpotatoSource > /dev/null 2>&1
-  couchpotato__start
+function couchpotato__get_port() {
+  port=$(sed -n '/^\[core\]/,/^\[/p' $couchpotatoConfig | grep "^port " | awk '{ print $3 }')
+  
+  echo "$port"
+}
+
+function couchpotato__get_apikey() {
+  apikey=$(sed -n '/^\[core\]/,/^\[/p' $couchpotatoConfig | grep "^api_key " | awk '{ print $3 }')
+  
+  echo "$apikey"
 }
 
 function couchpotato__show_config() {
-  status="$(couchpotato__get_status)"
+  status=$(couchpotato__get_status)
   ipv4=$(tools__get_ip)
-  username=$(sed -n '/^\[core\]/,/^\[/p' $couchpotatoConfig | grep "^username " | awk '{ print $3 }')
-  password="N/A (ENCRYPTED)"
-  port=$(sed -n '/^\[core\]/,/^\[/p' $couchpotatoConfig | grep "^port " | awk '{ print $3 }')
-  apikey=$(sed -n '/^\[core\]/,/^\[/p' $couchpotatoConfig | grep "^api_key " | awk '{ print $3 }')
-
+  
+  username=$(couchpotato__get_username)
+  password=$(couchpotato__get_password)
+  port=$(couchpotato__get_port)
+  apikey=$(couchpotato__get_apikey)  
+  
   echo "CouchPotato Config:"
   echo "----------------------------"
   echo "Status: $status"
-  if [ "$status" == "Enabled and Running" ]; then
+  if [ "$status" == "Enabled|Running" ]; then
     echo "Web UI: http://$ipv4:$port/"
     echo
     echo "Username: $username"
     echo "Password: $password"
     echo "API Key: $apikey"
   fi
+}
+
+function couchpotato__install() {
+  echo "Coming Soon"
+}
+
+function couchpotato__version_check() {
+  if cd $couchpotatoSource && ! git fetch -v --dry-run 2>&1 | grep -iv "^from" | grep -ivq "\[up to date\]"; then
+    false
+  else
+    true
+  fi
+}
+
+function couchpotato__upgrade() {
+  couchpotato__stop
+
+  sudo su -c -u $osUser \
+    "cd $couchpotatoSource && git remote update"
+  sudo su -c -u $osUser \
+    "cd $couchpotatoSource && git pull --all"
+}
+
+function couchpotato__sabnzbd_sync() {
+  port=$(sabnzbd__get_port)
+  apikey=$(sabnzbd__get_apikey)
+  
+  couchpotato__set_sabnzbd_port "$port"
+  couchpotato__set_sabnzbd_apikey "$apikey"
+}
+
+function couchpotato__set_sabnzbd_port() {
+  port="$1"
+
+ sed -i -e '/^\[sabnzbd\]/,/^\[/{/^\[sabnzbd\]/n;/^\[/!{s/^host .*/host = localhost:'$port'/g}}' $couchpotatoConfig
+}
+
+function couchpotato__set_sabnzbd_apikey() {
+  apikey="$1"
+  
+  sed -i -e '/^\[sabnzbd\]/,/^\[/{/^\[sabnzbd\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $couchpotatoConfig
 }

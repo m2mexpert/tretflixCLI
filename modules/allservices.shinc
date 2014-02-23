@@ -5,49 +5,102 @@ fi
 allservices__imported=1
 
 function allservices__enable() {
-  echo "Applying changes to CouchPotato..."
+  echo "* Applying changes to CouchPotato"
   couchpotato__enable
-  echo "Applying changes to Headphones..."
+  echo "* Applying changes to Headphones"
   headphones__enable
-  echo "Applying changes to NzbDrone..."
+  echo "* Applying changes to NzbDrone"
   nzbdrone__enable
-  echo "Applying changes to Plex Media Server..."
+  echo "* Applying changes to Plex Media Server"
   plexserver__enable
-  echo "Applying changes to SABnzbd+..."
+  echo "* Applying changes to SABnzbd+"
   sabnzbd__enable
-  echo "Applying changes to Sick Beard..."
+  echo "* Applying changes to Sick Beard"
   sickbeard__enable
-  echo "Applying changes to Transmission..."
+  echo "* Applying changes to Transmission"
   transmission__enable
 }
 
 function allservices__disable() {
-  echo "Applying changes to CouchPotato..."
+  echo "* Applying changes to CouchPotato"
   couchpotato__disable
-  echo "Applying changes to Headphones..."
+  echo "* Applying changes to Headphones"
   headphones__disable
-  echo "Applying changes to NzbDrone..."
+  echo "* Applying changes to NzbDrone"
   nzbdrone__disable
-  echo "Applying changes to Plex Media Server..."
+  echo "* Applying changes to Plex Media Server"
   plexserver__disable
-  echo "Applying changes to SABnzbd+..."
+  echo "* Applying changes to SABnzbd+"
   sabnzbd__disable
-  echo "Applying changes to Sick Beard..."
+  echo "* Applying changes to Sick Beard"
   sickbeard__disable
-  echo "Applying changes to Transmission..."
+  echo "* Applying changes to Transmission"
   transmission__disable
 }
 
 function allservices__upgrade() {
-  echo "Updating apt repository package lists..."
-  apt-get update > /dev/null 2>&1
-  couchpotato__upgrade
-  headphones__upgrade
-  nzbdrone__upgrade
-  plexserver__upgrade
-  sabnzbd__upgrade
-  sickbeard__upgrade
-  transmission__upgrade
+  if sickbeard__version_check; then
+    echo "* Applying changes to Sick Beard"
+    sickbeard__stop
+    sickbeard__upgrade
+    sickbeard__start
+  else
+    echo "Sick Beard is up-to-date."
+  fi
+  
+  if couchpotato__version_check; then
+    echo "* Applying changes to CouchPotato"
+    couchpotato__stop
+    couchpotato__upgrade
+    couchpotato__start
+  else
+    echo "CouchPotato is up-to-date."
+  fi
+
+  if headphones__version_check; then
+    echo "* Applying changes to Headphones"
+    headphones__stop
+    headphones__upgrade
+    headphones__start
+  else
+    echo "Headphones is up-to-date."
+  fi
+
+  if nzbdrone__version_check; then
+    echo "* Applying changes to NzbDrone"
+    nzbdrone__stop
+    nzbdrone__upgrade
+    nzbdrone__start
+  else
+    echo "NzbDrone is up-to-date."
+  fi
+
+  if plexserver__version_check; then
+    echo "* Applying changes to Plex Media Server"
+    plexserver__stop
+    plexserver__upgrade
+    plexserver__start
+  else
+    echo "Plex Media Server is up-to-date."
+  fi
+
+  if sabnzbd__version_check; then
+    echo "* Applying changes to SABnzbd+"
+    sabnzbd__stop
+    sabnzbd__upgrade
+    sabnzbd__start
+  else
+    echo "SABnzbd+ is up-to-date."
+  fi
+
+  if transmission__version_check; then
+    echo "* Applying changes to Transmission"
+    transmission__stop
+    transmission__upgrade
+    transmission__start
+  else
+    echo "Transmission is up-to-date."
+  fi
 }
 
 function allservices__start() {
@@ -73,30 +126,30 @@ function allservices__stop() {
 function allservices__set_username() {
   username="$1"
   
-  echo "Applying changes to CouchPotato..."
+  echo "* Applying changes to CouchPotato"
   couchpotato__stop
   couchpotato__set_username "$username"
   couchpotato__start
-  echo "Applying changes to Headphones..."
+  echo "* Applying changes to Headphones"
   headphones__stop
   headphones__set_username "$username"
   headphones__set_sabnzbd_username "$username"
   headphones__start
-  echo "Applying changes to NzbDrone..."
+  echo "* Applying changes to NzbDrone"
   nzbdrone__stop
   nzbdrone__set_username "$username"
   nzbdrone__set_sabnzbd_username "$username"
   nzbdrone__start
-  echo "Applying changes to SABnzbd+..."
+  echo "* Applying changes to SABnzbd+"
   sabnzbd__stop
   sabnzbd__set_username "$username"
   sabnzbd__start
-  echo "Applying changes to Sick Beard..."
+  echo "* Applying changes to Sick Beard"
   sickbeard__stop
   sickbeard__set_username "$username"
   sickbeard__set_sabnzbd_username "$username"
   sickbeard__start
-  echo "Applying changes to Transmission..."
+  echo "* Applying changes to Transmission"
   transmission__stop
   transmission__set_username "$username"
   transmission__start
@@ -105,63 +158,63 @@ function allservices__set_username() {
 function allservices__set_password() {
   password="$1"
   
-  echo "Applying changes to CouchPotato..."
+  echo "* Applying changes to CouchPotato"
   couchpotato__stop
   couchpotato__set_password "$password"
   couchpotato__start
-  echo "Applying changes to Headphones..."
+  echo "* Applying changes to Headphones"
   headphones__stop
   headphones__set_password "$password"
   headphones__set_sabnzbd_password "$password"
   headphones__start
-  echo "Applying changes to NzbDrone..."
+  echo "* Applying changes to NzbDrone"
   nzbdrone__stop
   nzbdrone__set_password "$password"
   nzbdrone__set_sabnzbd_password "$password"
   nzbdrone__start
-  echo "Applying changes to SABnzbd+..."
+  echo "* Applying changes to SABnzbd+"
   sabnzbd__stop
   sabnzbd__set_password "$password"
   sabnzbd__start
-  echo "Applying changes to Sick Beard..."
+  echo "* Applying changes to Sick Beard"
   sickbeard__stop
   sickbeard__set_password "$password"
   sickbeard__set_sabnzbd_password "$password"
   sickbeard__start
-  echo "Applying changes to Transmission..."
+  echo "* Applying changes to Transmission"
   transmission__stop
   transmission__set_password "$password"
   transmission__start
 }
 
 function allservices__set_apikey() {
-  echo "Generating new API keys..."
+  echo "* Generating new API keys"
   couchpotatoAPIkey="$(tools__gen_apikey)" && sleep 2
   headphonesAPIkey="$(tools__gen_apikey)" && sleep 2
   nzbdroneAPIkey="$(tools__gen_apikey)" && sleep 2
   sabnzbdAPIkey="$(tools__gen_apikey)" && sleep 2
   sickbeardAPIkey="$(tools__gen_apikey)"
   
-  echo "Applying changes to CouchPotato..."
+  echo "* Applying changes to CouchPotato"
   couchpotato__stop
   couchpotato__set_apikey "$couchpotatoAPIkey"
   couchpotato__set_sabnzbd_apikey "$sabnzbdAPIkey"
   couchpotato__start
-  echo "Applying changes to Headphones..."
+  echo "* Applying changes to Headphones"
   headphones__stop
   headphones__set_apikey "$headphonesAPIkey"
   headphones__set_sabnzbd_apikey "$sabnzbdAPIkey"
   headphones__start
-  echo "Applying changes to NzbDrone..."
+  echo "* Applying changes to NzbDrone"
   nzbdrone__stop
   nzbdrone__set_apikey "$nzbdroneAPIkey"
   nzbdrone__set_sabnzbd_apikey "$sabnzbdAPIkey"
   nzbdrone__start
-  echo "Applying changes to SABnzbd+..."
+  echo "* Applying changes to SABnzbd+"
   sabnzbd__stop
   sabnzbd__set_apikey "$sabnzbdAPIkey"
   sabnzbd__start
-  echo "Applying changes to Sick Beard..."
+  echo "* Applying changes to Sick Beard"
   sickbeard__stop
   sickbeard__set_apikey "$sickbeardAPIkey"
   sickbeard__set_sabnzbd_apikey "$sabnzbdAPIkey"

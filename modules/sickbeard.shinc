@@ -5,60 +5,53 @@ fi
 sickbeard__imported=1
 
 function sickbeard__get_status() {
-  if service sickbeard status > /dev/null 2>&1; then
-    result="Enabled and Running"
+  if service sickbeard status | grep "unrecognized service" > /dev/null 2>&1; then
+    status="Not Installed"
+  elif service sickbeard status > /dev/null 2>&1; then
+    status="Enabled|Running"
   elif ls /etc/rc?.d/*sickbeard > /dev/null 2>&1; then
-    result="Not Running"
+    status="Enabled|Stopped"
   else
-    result="Disabled"
+    status="Disabled"
   fi
-  echo "$result"
+  echo "$status"
 }
 
 function sickbeard__enable() {
-  if [ "$(sickbeard__get_status)" == "Disabled" ]; then
-    update-rc.d sickbeard defaults > /dev/null 2>&1
-    if [ "$(tools__path_istype $sickbeardData/.disabled)" == "File" ]; then
-      rm -f $sickbeardData/.disabled > /dev/null 2>&1
-    fi
-    timestamp=$(date "+%Y%m%d%H%M%S")
-    sudo su -c -u $osUser "echo $timestamp > $sickbeardData/.enabled"
+  if [ "$(sickbeard__get_status)" == "Not Installed" ]; then
+    sickbeard__install
   fi
+
+  if sickbeard__version_check; then
+    sickbeard__upgrade
+  fi
+  
+  if [ "$(sickbeard__get_status)" == "Disabled" ]; then
+    update-rc.d sickbeard defaults
+  fi
+  
+  # Make sure config is in sync w/ current SABnzbd+ settings
+  sickbeard__sabnzbd_sync
+
+  # Start the service
   sickbeard__start
 }
 
 function sickbeard__disable() {
-  if [ "$(sickbeard__get_status)" != "Disabled" ]; then
+  if $(sickbeard__get_status) | grep -q "^Enabled"; then
     sickbeard__stop
-    update-rc.d -f sickbeard remove > /dev/null 2>&1
-    if [ "$(tools__path_istype $sickbeardData/.enabled)" == "File" ]; then
-      rm -f $sickbeardData/.enabled > /dev/null 2>&1
-    fi
-    timestamp=$(date "+%Y%m%d%H%M%S")
-    sudo su -c -u $osUser "echo $timestamp > $sickbeardData/.disabled"
-  fi
-}
-
-function sickbeard__upgrade() {
-  if cd $sickbeardSource && ! git fetch -v --dry-run 2>&1 | grep -iv "^from" | grep -ivq "\[up to date\]"; then
-    echo "Sick Beard is already up-to-date..."
-  else
-    echo "Upgrading Sick Beard..."
-    sickbeard__stop
-    sudo su -c -u $osUser "cd $sickbeardSource && git remote update > /dev/null 2>&1"
-    sudo su -c -u $osUser "cd $sickbeardSource && git pull --all > /dev/null 2>&1"
-    sickbeard__start
+    update-rc.d -f sickbeard remove
   fi
 }
 
 function sickbeard__start() {
-  if [ "$(sickbeard__get_status)" != "Disabled" ]; then
+  if $(sickbeard__get_status) | grep -q "^Enabled"; then
     for i in {1..3}; do
       if [ $i -gt 1 ]; then
         sleep 2
       fi
-      if [ "$(sickbeard__get_status)" != "Enabled and Running" ]; then
-        service sickbeard start > /dev/null 2>&1
+      if [ "$(sickbeard__get_status)" != "Enabled|Running" ]; then
+        service sickbeard start
       else
         break
       fi
@@ -71,8 +64,8 @@ function sickbeard__stop() {
     if [ $i -gt 1 ]; then
       sleep 2
     fi
-    if [ "$(sickbeard__get_status)" == "Enabled and Running" ]; then
-      service sickbeard stop > /dev/null 2>&1
+    if [ "$(sickbeard__get_status)" == "Enabled|Running" ]; then
+      service sickbeard stop
     else
       break
     fi
@@ -106,6 +99,84 @@ function sickbeard__set_apikey() {
   sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $sickbeardConfig
 }
 
+function sickbeard__get_username() {
+  username=$(sed -n '/^\[General\]/,/^\[/p' $sickbeardConfig | grep "^web_username " | awk '{ print $3 }')
+  
+  echo "$username"
+}
+
+function sickbeard__get_password() {
+  password=$(sed -n '/^\[General\]/,/^\[/p' $sickbeardConfig | grep "^web_password " | awk '{ print $3 }')
+  
+  echo "$password"
+}
+
+function sickbeard__get_port() {
+  port=$(sed -n '/^\[General\]/,/^\[/p' $sickbeardConfig | grep "^web_port " | awk '{ print $3 }')
+  
+  echo "$port"
+}
+
+function sickbeard__get_apikey() {
+  apikey=$(sed -n '/^\[General\]/,/^\[/p' $sickbeardConfig | grep "^api_key " | awk '{ print $3 }')
+  
+  echo "$apikey"
+}
+
+function sickbeard__show_config() {
+  status=$(sickbeard__get_status)
+  ipv4=$(tools__get_ip)
+  
+  username=$(sickbeard__get_username)
+  password=$(sickbeard__get_password)
+  port=$(sickbeard__get_port)
+  apikey=$(sickbeard__get_apikey)  
+
+  echo "Sick Beard Config:"
+  echo "----------------------------"
+  echo "Status: $status"
+  if [ "$status" == "Enabled|Running" ]; then
+    echo "Web UI: http://$ipv4:$port/home/"
+    echo
+    echo "Username: $username"
+    echo "Password: $password"
+    echo "API Key: $apikey"
+  fi
+}
+
+function sickbeard__install() {
+  echo "Coming Soon"
+}
+
+function sickbeard__version_check() {
+  if cd $sickbeardSource && ! git fetch -v --dry-run 2>&1 | grep -iv "^from" | grep -ivq "\[up to date\]"; then
+    false
+  else
+    true
+  fi
+}
+
+function sickbeard__upgrade() {
+  sickbeard__stop
+  
+  sudo su -c -u $osUser \
+    "cd $sickbeardSource && git remote update"
+  sudo su -c -u $osUser \
+    "cd $sickbeardSource && git pull --all"
+}
+
+function sickbeard__sabnzbd_sync() {
+  username=$(sabnzbd__get_username)
+  password=$(sabnzbd__get_password)
+  port=$(sabnzbd__get_port)
+  apikey=$(sabnzbd__get_apikey)
+
+  sickbeard__set_sabnzbd_username "$username"
+  sickbeard__set_sabnzbd_password "$password"
+  sickbeard__set_sabnzbd_port "$port"
+  sickbeard__set_sabnzbd_apikey "$apikey"
+}
+
 function sickbeard__set_sabnzbd_username() {
   username="$1"
   
@@ -114,38 +185,18 @@ function sickbeard__set_sabnzbd_username() {
 
 function sickbeard__set_sabnzbd_password() {
   password="$1"
-  
+ 
   sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_password .*/sab_password = '$password'/g}}' $sickbeardConfig
 }
 
 function sickbeard__set_sabnzbd_port() {
   port="$1"
-  
-  sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_host .*/sab_host = http:\/\/localhost:'$port'\//g}}' $sickbeardConfig
+
+ sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_host .*/sab_host = http:\/\/localhost:'$port'\//g}}' $sickbeardConfig
 }
 
 function sickbeard__set_sabnzbd_apikey() {
   apikey="$1"
   
   sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_apikey .*/sab_apikey = '$apikey'/g}}' $sickbeardConfig
-}
-
-function sickbeard__show_config() {
-  status="$(sickbeard__get_status)"
-  ipv4=$(tools__get_ip)
-  username=$(sed -n '/^\[General\]/,/^\[/p' $sickbeardConfig | grep "^web_username " | awk '{ print $3 }')
-  password=$(sed -n '/^\[General\]/,/^\[/p' $sickbeardConfig | grep "^web_password " | awk '{ print $3 }')
-  port=$(sed -n '/^\[General\]/,/^\[/p' $sickbeardConfig | grep "^web_port " | awk '{ print $3 }')
-  apikey=$(sed -n '/^\[General\]/,/^\[/p' $sickbeardConfig | grep "^api_key " | awk '{ print $3 }')
-
-  echo "Sick Beard Config:"
-  echo "----------------------------"
-  echo "Status: $status"
-  if [ "$status" == "Enabled and Running" ]; then
-    echo "Web UI: http://$ipv4:$port/home/"
-    echo
-    echo "Username: $username"
-    echo "Password: $password"
-    echo "API Key: $apikey"
-  fi
 }

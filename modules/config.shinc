@@ -63,7 +63,7 @@ function config__wizard() {
       read -p "Do you want to use CouchPotato? (y/n): " input
       case "$input" in
         [yY] | [yY][Ee][Ss] )
-          couchpotatoStatus="Enabled"
+          couchpotatoAction="Enable"
           read -p "Enter a username for the CouchPotato Web UI [Default: admin]: " input
           if [[ -z "${input}" ]]; then
             couchpotatoUser="admin"
@@ -86,7 +86,7 @@ function config__wizard() {
           echo "New CouchPotato API key randomly generated for increased security."
           break;;
         [nN] | [n|N][O|o] )
-          couchpotatoStatus="Disabled"
+          couchpotatoAction="Disable"
           break;;
         * )
           echo "!! ERROR: Invalid entry."
@@ -99,7 +99,7 @@ function config__wizard() {
       read -p "Do you want to use Headphones? (y/n): " input
       case "$input" in
         [yY] | [yY][Ee][Ss] )
-          headphonesStatus="Enabled"
+          headphonesAction="Enable"
           read -p "Enter a username for the Headphones Web UI [Default: admin]: " input
           if [[ -z "${input}" ]]; then
             headphonesUser="admin"
@@ -122,7 +122,7 @@ function config__wizard() {
           echo "New Headphones API key randomly generated for increased security."
           break;;
         [nN] | [n|N][O|o] )
-          headphonesStatus="Disabled"
+          headphonesAction="Disable"
           break;;
         * )
           echo "!! ERROR: Invalid entry."
@@ -135,7 +135,7 @@ function config__wizard() {
       read -p "Do you want to use NzbDrone? (y/n): " input
       case "$input" in
         [yY] | [yY][Ee][Ss] )
-          nzbdroneStatus="Enabled"
+          nzbdroneAction="Enable"
           read -p "Enter a username for the NzbDrone Web UI [Default: admin]: " input
           if [[ -z "${input}" ]]; then
             nzbdroneUser="admin"
@@ -158,7 +158,7 @@ function config__wizard() {
           echo "New NzbDrone API key randomly generated for increased security."
           break;;
         [nN] | [n|N][O|o] )
-          nzbdroneStatus="Disabled"
+          nzbdroneAction="Disable"
           break;;
         * )
           echo "!! ERROR: Invalid entry."
@@ -171,11 +171,11 @@ function config__wizard() {
       read -p "Do you want to use Plex Media Server? (y/n): " input
       case "$input" in
         [yY] | [yY][Ee][Ss] )
-          plexserverStatus="Enabled"
+          plexserverAction="Enable"
           plexserverPort="32400"
           break;;
         [nN] | [n|N][O|o] )
-          plexserverStatus="Disabled"
+          plexserverAction="Disable"
           break;;
         * )
           echo "!! ERROR: Invalid entry."
@@ -188,7 +188,7 @@ function config__wizard() {
       read -p "Do you want to use SABnzbd+? (y/n): " input
       case "$input" in
         [yY] | [yY][Ee][Ss] )
-          sabnzbdStatus="Enabled"
+          sabnzbdAction="Enable"
           read -p "Enter a username for the SABnbzd+ Web UI [Default: admin]: " input
           if [[ -z "${input}" ]]; then
             sabnzbdUser="admin"
@@ -211,7 +211,7 @@ function config__wizard() {
           echo "New SABnzbd+ API key randomly generated for increased security."
           break;;
         [nN] | [n|N][O|o] )
-          sabnzbdStatus="Disabled"
+          sabnzbdAction="Disable"
           break;;
         * )
           echo "!! ERROR: Invalid entry."
@@ -224,7 +224,7 @@ function config__wizard() {
       read -p "Do you want to use Sick Beard? (y/n): " input
       case "$input" in
         [yY] | [yY][Ee][Ss] )
-          sickbeardStatus="Enabled"
+          sickbeardAction="Enable"
           read -p "Enter a username for the Sick Beard Web UI [Default: admin]: " input
           if [[ -z "${input}" ]]; then
             sickbeardUser="admin"
@@ -247,7 +247,7 @@ function config__wizard() {
           echo "New Sick Beard API key randomly generated for increased security."
           break;;
         [nN] | [n|N][O|o] )
-          sickbeardStatus="Disabled"
+          sickbeardAction="Disable"
           break;;
         * )
           echo "!! ERROR: Invalid entry."
@@ -260,7 +260,7 @@ function config__wizard() {
       read -p "Do you want to use Transmission? (y/n): " input
       case "$input" in
         [yY] | [yY][Ee][Ss] )
-          transmissionStatus="Enabled"
+          transmissionAction="Enable"
           read -p "Enter a username for the Transmission Web UI [Default: admin]: " input
           if [[ -z "${input}" ]]; then
             transmissionUser="admin"
@@ -281,7 +281,7 @@ function config__wizard() {
           fi
           break;;
         [nN] | [n|N][O|o] )
-          transmissionStatus="Disabled"
+          transmissionAction="Disable"
           break;;
         * )
           echo "!! ERROR: Invalid entry."
@@ -312,98 +312,104 @@ function config__wizard() {
     echo
     echo
     # Upgrade all apps, prevents newer appdata w/ old app builds issue
-    allservices__upgrade
-    echo
-    echo "Applying configuration changes..."
-    echo
+    echo "* Updating apt repository package lists"
+    apt-get update
 
-    echo "* Configuring CouchPotato"
-    couchpotato__stop
-    # Prevents config getting out of sync with SABnzbd+ if enabled later
-    if [ "$sabnzbdStatus" == "Enabled" ]; then
-      couchpotato__set_sabnzbd_port "$sabnzbdPort"
-      couchpotato__set_sabnzbd_apikey "$sabnzbdAPIkey"     
-    fi
-    if [ "$couchpotatoStatus" == "Enabled" ]; then
-      couchpotato__set_username "$couchpotatoUser"
-      couchpotato__set_password "$couchpotatoPass"
-      couchpotato__set_port "$couchpotatoPort"
-      couchpotato__set_apikey "$couchpotatoAPIkey"
-      couchpotato__enable
-    else
-      couchpotato__disable
-    fi
     
-    echo "* Configuring Headphones"
-    headphones__stop
-    # Prevents config getting out of sync with SABnzbd+ if enabled later
-    if [ "$sabnzbdStatus" == "Enabled" ]; then
-      headphones__set_sabnzbd_username "$sabnzbdUser"
-      headphones__set_sabnzbd_password "$sabnzbdPass"
-      headphones__set_sabnzbd_port "$sabnzbdPort"
-      headphones__set_sabnzbd_apikey "$sabnzbdAPIkey"      
-    fi    
-    if [ "$headphonesStatus" == "Enabled" ]; then
-      headphones__set_username "$headphonesUser"
-      headphones__set_password "$headphonesPass"
-      headphones__set_port "$headphonesPort"
-      headphones__set_apikey "$headphonesAPIkey"
-      headphones__enable
-    else
-      headphones__disable
-    fi
-
-    echo "* Configuring Plex Media Server"
-		# No need to stop Plex Media Server
-    if [ "$plexserverStatus" == "Enabled" ]; then
-      plexserver__enable
-    else
-      plexserver__disable
-    fi
-    
-    echo "* Configuring SABnzbd+"
-    sabnzbd__stop
-    if [ "$sabnzbdStatus" == "Enabled" ]; then
+    if [ "$sabnzbdAction" == "Enable" ]; then
+      echo
+      echo "* Configuring SABnzbd+"
+      sabnzbd__stop
       sabnzbd__set_username "$sabnzbdUser"
       sabnzbd__set_password "$sabnzbdPass"
       sabnzbd__set_port "$sabnzbdPort"
       sabnzbd__set_apikey "$sabnzbdAPIkey"
+      echo "* Enabling SABnzbd+"
       sabnzbd__enable
     else
       sabnzbd__disable
     fi
-
-    echo "* Configuring Sick Beard"
-    sickbeard__stop
-    # Prevents config getting out of sync with SABnzbd+ if enabled later
-    if [ "$sabnzbdStatus" == "Enabled" ]; then
-      sickbeard__set_sabnzbd_username "$sabnzbdUser"
-      sickbeard__set_sabnzbd_password "$sabnzbdPass"
-      sickbeard__set_sabnzbd_port "$sabnzbdPort"
-      sickbeard__set_sabnzbd_apikey "$sabnzbdAPIkey"      
+    
+    if [ "$plexserverAction" == "Enable" ]; then
+      echo
+      echo "* Configuring Plex Media Server"
+		  # No config options at this time
+      echo "* Enabling Plex Media Server"
+      plexserver__enable
+    else
+      plexserver__disable
     fi
-    if [ "$sickbeardStatus" == "Enabled" ]; then
+
+    if [ "$couchpotatoAction" == "Enable" ]; then
+      echo
+      echo "* Configuring CouchPotato"
+      couchpotato__stop
+      couchpotato__set_username "$couchpotatoUser"
+      couchpotato__set_password "$couchpotatoPass"
+      couchpotato__set_port "$couchpotatoPort"
+      couchpotato__set_apikey "$couchpotatoAPIkey"
+      echo "* Enabling CouchPotato"
+      couchpotato__enable
+    else
+      couchpotato__disable
+    fi
+   
+    if [ "$headphonesAction" == "Enable" ]; then
+      echo
+      echo "* Configuring Headphones"
+      headphones__stop 
+      headphones__set_username "$headphonesUser"
+      headphones__set_password "$headphonesPass"
+      headphones__set_port "$headphonesPort"
+      headphones__set_apikey "$headphonesAPIkey"
+      echo "* Enabling Headphones"
+      headphones__enable
+    else
+      headphones__disable
+    fi
+    
+    if [ "$nzbdroneAction" == "Enable" ]; then
+      echo
+      echo "* Configuring NzbDrone"
+      nzbdrone__stop 
+      nzbdrone__set_username "$nzbdroneUser"
+      nzbdrone__set_password "$nzbdronePass"
+      nzbdrone__set_port "$nzbdronePort"
+      nzbdrone__set_apikey "$nzbdroneAPIkey"
+      echo "* Enabling NzbDrone"
+      nzbdrone__enable
+    else
+      nzbdrone__disable
+    fi
+
+    if [ "$sickbeardAction" == "Enable" ]; then
+      echo
+      echo "* Configuring Sick Beard"
+      sickbeard__stop
       sickbeard__set_username "$sickbearduser"
       sickbeard__set_password "$sickbeardPass"
       sickbeard__set_port "$sickbeardPort"
       sickbeard__set_apikey "$sickbeardAPIkey"
+      echo "* Enabling Sick Beard"
       sickbeard__enable
     else
       sickbeard__disable
     fi
 
-    echo "* Configuring Transmission"
-    transmission__stop
-    if [ "$transmissionStatus" == "Enabled" ]; then
+    if [ "$transmissionAction" == "Enable" ]; then
+      echo
+      echo "* Configuring Transmission"
+      transmission__stop
       transmission__set_username "$transmissionUser"
       transmission__set_password "$transmissionPass"
       transmission__set_port "$transmissionPort"
+      echo "* Enabling Transmission"
       transmission__enable
     else
       transmission__disable
     fi
-    
-		echo	
+
+    echo    
     while true; do
       read -p "Do you want to see a config summary? (y/n): " input
       case "$input" in
@@ -439,17 +445,17 @@ function config__backup_appdata() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
     timestamp=$(date "+%Y%m%d%H%M%S")
   
-    echo "Stopping Services..."
+    echo "* Stopping Services"
     allservices__stop
     
-    echo "Creating $tretflixPath/backup-$timestamp.tar..."
+    echo "* Creating Backup Archive"
     sudo su -c -u $osUser \
-      "cd $tretflixPath && tar cf backup-$timestamp.tar appdata/"
+      "cd $tretflixPath && tar cvf backup-$timestamp.tar appdata/"
     
-    echo "Starting Services..."
+    echo "* Restarting Services"
     allservices__start
-
-    echo "Done."
+    
+    echo "* Backup Saved to $tretflixPath/backup-$timestamp.tar"
   else
     config__help
   fi
@@ -460,6 +466,7 @@ function config__restore_appdata() {
     case "${CLI_ARGS[3]}" in
       '-l' | '--list')
         ls "$tretflixPath" | grep --color="none" "backup-.*tar" 2> /dev/null
+        exit 0
         ;;
       *)
         config__help
@@ -476,69 +483,287 @@ function config__restore_appdata() {
           echo
           exit 1
         fi
-        
-        echo "Stopping Services..."
-        allservices__stop
-
-        # Upgrade all apps, prevents newer appdata w/ old app builds issue
-        echo "Upgrading Services..."
-        allservices__upgrade
-        
-        echo "Archiving current Appdata..."
-        timestamp=$(date "+%Y%m%d%H%M%S")
-        sudo su -c -u $osUser \
-          "cd $tretflixPath && tar cf archived-$timestamp.tar appdata/"
-    
-        echo "Unpacking $file..."
-        rm -rf /opt/tretflix/appdata/
-        sudo su -c -u $osUser \
-          "tar -xf $file -C $tretflixPath/"
-    
-        echo "Starting Services..."
-        if [ "$(tools__path_istype $couchpotatoData/.enabled)" == "File" ]; then
-          couchpotato__enable
-        elif [ "$(tools__path_istype $couchpotatoData/.disabled)" == "File" ]; then
-          couchpotato__disable
-        fi
-        if [ "$(tools__path_istype $headphonesData/.enabled)" == "File" ]; then
-          headphones__enable
-        elif [ "$(tools__path_istype $headphonesData/.disabled)" == "File" ]; then
-          headphones__disable
-        fi
-        if [ "$(tools__path_istype $nzbdroneData/.enabled)" == "File" ]; then
-          nzbdrone__enable
-        elif [ "$(tools__path_istype $nzbdroneData/.disabled)" == "File" ]; then
-          nzbdrone__disable
-        fi
-        if [ "$(tools__path_istype $sabnzbdData/.enabled)" == "File" ]; then
-          sabnzbd__enable
-        elif [ "$(tools__path_istype $sabnzbdData/.disabled)" == "File" ]; then
-          sabnzbd__disable
-        fi
-        if [ "$(tools__path_istype $sickbeardData/.enabled)" == "File" ]; then
-          sickbeard__enable
-        elif [ "$(tools__path_istype $sickbeardData/.disabled)" == "File" ]; then
-          sickbeard__disable
-        fi
-        if [ "$(tools__path_istype $transmissionData/.enabled)" == "File" ]; then
-          transmission__enable
-        elif [ "$(tools__path_istype $transmissionData/.disabled)" == "File" ]; then
-          transmission__disable
-        fi
-        if [ "$(tools__path_istype $plexserverData/.enabled)" == "File" ]; then
-          plexserver__enable
-        elif [ "$(tools__path_istype $plexserverData/.disabled)" == "File" ]; then
-          plexserver__disable
-        fi
-        echo "Done."
-
-        timestamp=$(date "+%Y%m%d%H%M%S")
-        sudo su -c -u $osUser \
-          "echo restore-appdata_$timestamp >> $restoreFlag"
         ;;
       *)
         config__help
     esac
+    
+    echo "* Backing Up Current AppData"
+    timestamp=$(date "+%Y%m%d%H%M%S")
+    sudo su -c -u $osUser \
+      "cd $tretflixPath && tar cvf archived-$timestamp.tar appdata/"
+        
+    clear
+    echo "  __                  __    _____ __   __        "
+    echo "_/  |________   _____/  |__/ ____\  | |__|__  ___"
+    echo "\   __\_  __ \_/ __ \   __\   __\|  | |  \  \/  /"
+    echo " |  |  |  | \/\  ___/|  |  |  |  |  |_|  |>    < "
+    echo " |__|  |__|    \_____/__|  |__|  |____/__/__/\__\\"
+    echo
+    echo
+    if tar -tf "$file" | grep -q "^appdata/couchpotato/$"; then
+      while true; do
+        read -p "Do you want to restore and use CouchPotato? (y/n): " input
+        case "$input" in
+          [yY] | [yY][Ee][Ss] )
+            couchpotatoAction="Restore"
+            break;;
+          [nN] | [n|N][O|o] )
+            couchpotatoAction="None"   
+            break;;
+          * )
+            echo "!! ERROR: Invalid entry."
+            echo
+        esac      
+      done
+    fi
+
+    if tar -tf "$file" | grep -q "^appdata/headphones/$"; then
+      while true; do
+        read -p "Do you want to restore and use Headphones? (y/n): " input
+        case "$input" in
+          [yY] | [yY][Ee][Ss] )
+            headphonesAction="Restore"
+            break;;
+          [nN] | [n|N][O|o] )
+            headphonesAction="None"   
+            break;;
+          * )
+            echo "!! ERROR: Invalid entry."
+            echo
+        esac      
+      done
+    fi
+    
+    if tar -tf "$file" | grep -q "^appdata/nzbdrone/$"; then
+      while true; do
+        read -p "Do you want to restore and use NzbDrone? (y/n): " input
+        case "$input" in
+          [yY] | [yY][Ee][Ss] )
+            nzbdroneAction="Restore"
+            break;;
+          [nN] | [n|N][O|o] )
+            nzbdroneAction="None"   
+            break;;
+          * )
+            echo "!! ERROR: Invalid entry."
+            echo
+        esac      
+      done
+    fi
+
+    if tar -tf "$file" | grep -q "^appdata/plexmediaserver/$"; then
+      while true; do
+        read -p "Do you want to restore and use Plex Media Server? (y/n): " input
+        case "$input" in
+          [yY] | [yY][Ee][Ss] )
+            plexserverAction="Restore"
+            break;;
+          [nN] | [n|N][O|o] )
+            plexserverAction="None"   
+            break;;
+          * )
+            echo "!! ERROR: Invalid entry."
+            echo
+        esac      
+      done
+    fi
+    
+    if tar -tf "$file" | grep -q "^appdata/sabnzbdplus/$"; then
+      while true; do
+        read -p "Do you want to restore and use SABnzbd+? (y/n): " input
+        case "$input" in
+          [yY] | [yY][Ee][Ss] )
+            sabnzbdAction="Restore"
+            break;;
+          [nN] | [n|N][O|o] )
+            sabnzbdAction="None"   
+            break;;
+          * )
+            echo "!! ERROR: Invalid entry."
+            echo
+        esac      
+      done
+    fi
+
+    if tar -tf "$file" | grep -q "^appdata/sickbeard/$"; then
+      while true; do
+        read -p "Do you want to restore and use Sick Beard? (y/n): " input
+        case "$input" in
+          [yY] | [yY][Ee][Ss] )
+            sickbeardAction="Restore"
+            break;;
+          [nN] | [n|N][O|o] )
+            sickbeardAction="None"   
+            break;;
+          * )
+            echo "!! ERROR: Invalid entry."
+            echo
+        esac      
+      done
+    fi
+    
+    if tar -tf "$file" | grep -q "^appdata/transmission-daemon/$"; then
+      while true; do
+        read -p "Do you want to restore and use Transmission? (y/n): " input
+        case "$input" in
+          [yY] | [yY][Ee][Ss] )
+            transmissionAction="Restore"
+            break;;
+          [nN] | [n|N][O|o] )
+            transmissionAction="None"   
+            break;;
+          * )
+            echo "!! ERROR: Invalid entry."
+            echo
+        esac      
+      done
+    fi
+
+		echo	
+    while true; do
+      read -p "Apply these changes? (y/n): " input
+      case "$input" in
+        [yY] | [yY][Ee][Ss] )
+          break;;
+        [nN] | [n|N][O|o] )
+          exit 1;;
+        * )
+          echo "!! ERROR: Invalid entry."
+          echo
+      esac
+    done
+
+    clear
+    echo "  __                  __    _____ __   __        "
+    echo "_/  |________   _____/  |__/ ____\  | |__|__  ___"
+    echo "\   __\_  __ \_/ __ \   __\   __\|  | |  \  \/  /"
+    echo " |  |  |  | \/\  ___/|  |  |  |  |  |_|  |>    < "
+    echo " |__|  |__|    \_____/__|  |__|  |____/__/__/\__\\"
+    echo
+    echo
+    # Upgrade all apps, prevents newer appdata w/ old app builds issue
+    echo "* Updating apt repository package lists"
+    apt-get update
+    
+    if [ "$sabnzbdAction" == "Restore" ]; then
+      echo
+      echo "* Restoring SABnzbd+ Data"
+      sabnzbd__stop
+      
+      rm -rf "$sabnzbdData"
+      sudo su -c -u $osUser \
+        "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/sabnzbdplus"
+      
+      echo "* Enabling SABnzbd+"
+      sabnzbd__enable
+    fi
+    
+    if [ "$plexserverAction" == "Restore" ]; then
+      echo
+      echo "* Restoring Plex Media Server Data"
+      plexserver__stop
+      
+      rm -rf "$plexserverData"
+      sudo su -c -u $osUser \
+        "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/plexmediaserver"
+      
+      echo "* Enabling Plex Media Server"
+      plexserver__enable
+    fi
+
+    if [ "$couchpotatoAction" == "Restore" ]; then
+      echo
+      echo "* Restoring CouchPotato Data"
+      couchpotato__stop
+      
+      rm -rf "$couchpotatoData"
+      sudo su -c -u $osUser \
+        "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/couchpotato"
+
+      echo "* Enabling CouchPotato"
+      couchpotato__enable
+    fi
+   
+    if [ "$headphonesAction" == "Restore" ]; then
+      echo
+      echo "* Restoring Headphones Data"
+      headphones__stop
+      
+      rm -rf "$headphonesData"
+      sudo su -c -u $osUser \
+        "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/headphones"
+      
+      echo "* Enabling Headphones"
+      headphones__enable
+    fi
+
+    if [ "$nzbdroneAction" == "Restore" ]; then
+      echo
+      echo "* Restoring NzbDrone Data Data"
+      nzbdrone__stop
+      
+      rm -rf "$nzbdroneData"
+      sudo su -c -u $osUser \
+        "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/nzbdrone"
+
+      echo "* Enabling NzbDrone"
+      nzbdrone__enable
+    fi   
+
+    if [ "$sickbeardAction" == "Restore" ]; then
+      echo
+      echo "* Restoring Sick Beard Data"
+      sickbeard__stop
+      
+      rm -rf "$sickbeardData"
+      sudo su -c -u $osUser \
+        "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/sickbeard"
+
+      echo "* Enabling Sick Beard"
+      sickbeard__enable
+    fi
+
+    if [ "$transmissionAction" == "Restore" ]; then
+      echo
+      echo "* Restoring Transmission Data"
+      transmission__stop
+      
+      rm -rf "$transmissionData"
+      sudo su -c -u $osUser \
+        "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/transmission-daemon"
+
+      echo "* Enabling Transmission"
+      transmission__enable
+    fi
+
+    echo    
+    while true; do
+      read -p "Do you want to see a config summary? (y/n): " input
+      case "$input" in
+        [yY] | [yY][Ee][Ss] )
+          clear
+          echo "  __                  __    _____ __   __        "
+          echo "_/  |________   _____/  |__/ ____\  | |__|__  ___"
+          echo "\   __\_  __ \_/ __ \   __\   __\|  | |  \  \/  /"
+          echo " |  |  |  | \/\  ___/|  |  |  |  |  |_|  |>    < "
+          echo " |__|  |__|    \_____/__|  |__|  |____/__/__/\__\\"
+          echo
+          echo    
+          allservices__show_config
+          break;;
+        [nN] | [n|N][O|o] )
+          break;;
+        * )
+          echo "!! ERROR: Invalid entry."
+          echo
+      esac
+    done
+
+    timestamp=$(date "+%Y%m%d%H%M%S")
+    sudo su -c -u $osUser \
+      "echo restore-appdata_$timestamp >> $restoreFlag"
+
   else
     config__help
   fi
