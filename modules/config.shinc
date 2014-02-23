@@ -350,6 +350,7 @@ function config__wizard() {
         plexserver__enable
       fi
       echo "* Configuring Plex Media Server"
+      plexserver__stop
       # None for now
       
       if plexserver__version_check; then
@@ -490,7 +491,6 @@ function config__wizard() {
       transmission__set_username "$transmissionUser"
       transmission__set_password "$transmissionPass"
       transmission__set_port "$transmissionPort"
-      transmission__set_apikey "$transmissionAPIkey"
       
       if transmission__version_check; then
         echo "* Upgrading Transmission"
