@@ -18,9 +18,12 @@ function allservices__enable() {
       couchpotato__stop
       couchpotato__upgrade
     fi
+    
+    # Stop the service
+    couchpotato__stop
 
     # Sync CouchPotato to the current SABnzbd+ config
-    couchpotato__stop
+    echo "* Configuring SABnzbd+"
     couchpotato__sabnzbd_sync
       
     # Enable the service
@@ -42,9 +45,12 @@ function allservices__enable() {
       headphones__stop
       headphones__upgrade
     fi
+    
+    # Stop the service
+    headphones__stop
 
     # Sync Headphones to the current SABnzbd+ config
-    headphones__stop
+    echo "* Configuring Headphones"
     headphones__sabnzbd_sync
     
     # Enable the service
@@ -67,8 +73,11 @@ function allservices__enable() {
 			nzbdrone__upgrade
 		fi
 
-		# Sync NzbDrone to the current SABnzbd+ config
+    # Stop the service
 		nzbdrone__stop
+
+		# Sync NzbDrone to the current SABnzbd+ config
+		echo "* Configuring NzbDrone"
 		nzbdrone__sabnzbd_sync
 
     # Enable the service
@@ -130,9 +139,12 @@ function allservices__enable() {
       sickbeard__stop
       sickbeard__upgrade
     fi
+    
+    # Stop the service
+    sickbeard__stop
 
     # Sync Sick Beard to the current SABnzbd+ config
-    sickbeard__stop
+    echo "* Configuring Sick Beard"
     sickbeard__sabnzbd_sync
     
     # Enable the service

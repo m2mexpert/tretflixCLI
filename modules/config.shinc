@@ -329,9 +329,11 @@ function config__wizard() {
         sabnzbd__upgrade
       fi
       
+      # Stop the service
+      sabnzbd__stop
+      
       # Configure the service using user input
       echo "* Configuring SABnzbd+"
-      sabnzbd__stop
       sabnzbd__set_username "$sabnzbdUser"
       sabnzbd__set_password "$sabnzbdPass"
       sabnzbd__set_port "$sabnzbdPort"
@@ -400,9 +402,11 @@ function config__wizard() {
         couchpotato__upgrade
       fi
       
+      # Stop the service
+      couchpotato__stop
+      
       # Configure the service using user input
       echo "* Configuring CouchPotato"
-      couchpotato__stop
       couchpotato__set_username "$couchpotatoUser"
       couchpotato__set_password "$couchpotatoPass"
       couchpotato__set_port "$couchpotatoPort"
@@ -441,9 +445,11 @@ function config__wizard() {
         headphones__upgrade
       fi
       
+      # Stop the service
+      headphones__stop
+      
       # Configure the service using user input
       echo "* Configuring Headphones"
-      headphones__stop
       headphones__set_username "$headphonesUser"
       headphones__set_password "$headphonesPass"
       headphones__set_port "$headphonesPort"
@@ -482,9 +488,11 @@ function config__wizard() {
         nzbdrone__upgrade
       fi
       
+      # Stop the service
+      nzbdrone__stop
+      
       # Configure the service using user input
       echo "* Configuring NzbDrone"
-      nzbdrone__stop
       nzbdrone__set_username "$nzbdroneUser"
       nzbdrone__set_password "$nzbdronePass"
       nzbdrone__set_port "$nzbdronePort"
@@ -523,9 +531,11 @@ function config__wizard() {
         sickbeard__upgrade
       fi
       
+      # Stop the service
+      sickbeard__stop
+      
       # Configure the service using user input
       echo "* Configuring Sick Beard"
-      sickbeard__stop
       sickbeard__set_username "$sickbeardUser"
       sickbeard__set_password "$sickbeardPass"
       sickbeard__set_port "$sickbeardPort"
@@ -564,9 +574,11 @@ function config__wizard() {
         transmission__upgrade
       fi
       
+      # Stop the service
+      transmission__stop
+      
       # Configure the service using user input
       echo "* Configuring Transmission"
-      transmission__stop
       transmission__set_username "$transmissionUser"
       transmission__set_password "$transmissionPass"
       transmission__set_port "$transmissionPort"
@@ -838,9 +850,11 @@ function config__restore_appdata() {
         sabnzbd__upgrade
       fi
       
+      # Stop the service
+      sabnzbd__stop
+      
       # Restore SABnzbd+ appdata from backup
       echo "* Restoring SABnzbd+ Data"
-      sabnzbd__stop
       rm -rf "$sabnzbdData"
       sudo su -c -u $osUser \
         "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/sabnzbdplus"
@@ -869,9 +883,11 @@ function config__restore_appdata() {
         plexserver__upgrade
       fi
 
+      # Stop the service
+      plexserver__stop
+
       # Restore Plex Media Server appdata from backup
-      echo "* Restoring Plex Media Server Data"
-      plexserver__stop    
+      echo "* Restoring Plex Media Server Data"   
       rm -rf "$plexserverData"
       sudo su -c -u $osUser \
         "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/plexmediaserver"
@@ -899,10 +915,12 @@ function config__restore_appdata() {
         couchpotato__stop
         couchpotato__upgrade
       fi
+      
+      # Stop the service
+      couchpotato__stop
 
       # Restore CouchPotato appdata from backup
       echo "* Restoring CouchPotato Data"
-      couchpotato__stop
       rm -rf "$couchpotatoData"
       sudo su -c -u $osUser \
         "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/couchpotato"      
@@ -935,9 +953,11 @@ function config__restore_appdata() {
         headphones__upgrade
       fi
       
+      # Stop the service
+      headphones__stop
+      
       # Restore Headphones appdata from backup
       echo "* Restoring Headphones Data"
-      headphones__stop
       rm -rf "$headphonesData"
       sudo su -c -u $osUser \
         "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/headphones"
@@ -969,10 +989,12 @@ function config__restore_appdata() {
         nzbdrone__stop
         nzbdrone__upgrade
       fi
+      
+      # Stop the service
+      nzbdrone__stop
 
       # Restore NzbDrone appdata from backup
       echo "* Restoring NzbDrone Data"
-      nzbdrone__stop
       rm -rf "$nzbdroneData"
       sudo su -c -u $osUser \
         "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/nzbdrone"     
@@ -1004,10 +1026,12 @@ function config__restore_appdata() {
         sickbeard__stop
         sickbeard__upgrade
       fi
+      
+      # Stop the service
+      sickbeard__stop
 
       # Restore Sick Beard appdata from backup
       echo "* Restoring Sick Beard Data"
-      sickbeard__stop
       rm -rf "$sickbeardData"
       sudo su -c -u $osUser \
         "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/sickbeard"
@@ -1039,10 +1063,12 @@ function config__restore_appdata() {
         transmission__stop
         transmission__upgrade
       fi
+      
+      # Stop the service
+      transmission__stop
 
       # Restore Transmission appdata from backup
       echo "* Restoring Transmission Data"
-      transmission__stop
       rm -rf "$transmissionData"
       sudo su -c -u $osUser \
         "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/transmission-daemon"
