@@ -178,9 +178,6 @@ function allservices__enable() {
 	fi
 	echo "* Starting Transmission"
 	transmission__start
-	
-	echo
-	allservices__show_config
 }
 
 function allservices__disable() {
@@ -205,9 +202,6 @@ function allservices__disable() {
   echo "* Disabling Transmission"
   transmission__stop
   transmission__disable
-  
-  echo
-  allservices__show_config
 }
 
 function allservices__upgrade() {  

@@ -431,35 +431,30 @@ function service__set_username() {
     case "${CLI_ARGS[1]}" in
       '-a' | '--all')
         allservices__set_username "${CLI_ARGS[4]}"
-        echo "Done."
         ;;
       '-b' | '--sickbeard')
         echo "* Applying changes to Sick Beard"
         sickbeard__stop
         sickbeard__set_username "${CLI_ARGS[4]}"
         sickbeard__start
-        echo "Done."
         ;;    
       '-c' | '--couchpotato')
         echo "* Applying changes to CouchPotato"
         couchpotato__stop
         couchpotato__set_username "${CLI_ARGS[4]}"
         couchpotato__start
-        echo "Done."
         ;;
       '-h' | '--headphones')
         echo "* Applying changes to Headphones"
         headphones__stop
         headphones__set_username "${CLI_ARGS[4]}"
         headphones__start
-        echo "Done."
         ;;
       '-n' | '--nzbdrone')
         echo "* Applying changes to NzbDrone"
         nzbdrone__stop
         nzbdrone__set_username "${CLI_ARGS[4]}"
         nzbdrone__start
-        echo "Done."
         ;;
       '-p' | '--plexserver')
         echo "This command is not available for Plex Media Server"
@@ -489,14 +484,12 @@ function service__set_username() {
           sickbeard__set_sabnzbd_username "${CLI_ARGS[4]}"
           sickbeard__start
         fi  
-        echo "Done."
         ;;
       '-t' | '--transmission')
         echo "* Applying changes to Transmission"
         transmission__stop
         transmission__set_username "${CLI_ARGS[4]}"
         transmission__start
-        echo "Done."
         ;;
       *)
       	service__help
@@ -511,35 +504,30 @@ function service__set_password() {
     case "${CLI_ARGS[1]}" in
       '-a' | '--all')
         allservices__set_password "${CLI_ARGS[4]}"
-        echo "Done."
         ;;
       '-b' | '--sickbeard')
         echo "* Applying changes to Sick Beard"
         sickbeard__stop
         sickbeard__set_password "${CLI_ARGS[4]}"
         sickbeard__start
-        echo "Done."
         ;;    
       '-c' | '--couchpotato')
         echo "* Applying changes to CouchPotato"
         couchpotato__stop
         couchpotato__set_password "${CLI_ARGS[4]}"
         couchpotato__start
-        echo "Done."
         ;;
       '-h' | '--headphones')
         echo "* Applying changes to Headphones"
         headphones__stop
         headphones__set_password "${CLI_ARGS[4]}"
         headphones__start
-        echo "Done."
         ;;
       '-n' | '--nzbdrone')
         echo "* Applying changes to NzbDrone"
         nzbdrone__stop
         nzbdrone__set_password "${CLI_ARGS[4]}"
         nzbdrone__start
-        echo "Done."
         ;;
       '-p' | '--plexserver')
         echo "This command is not available for Plex Media Server"
@@ -569,14 +557,12 @@ function service__set_password() {
           sickbeard__set_sabnzbd_password "${CLI_ARGS[4]}"
           sickbeard__start
         fi
-        echo "Done."
         ;;
       '-t' | '--transmission')
         echo "* Applying changes to Transmission"
         transmission__stop
         transmission__set_password "${CLI_ARGS[4]}"
         transmission__start
-        echo "Done."
         ;;
       *)
       	service__help
@@ -597,28 +583,24 @@ function service__set_port() {
         sickbeard__stop
         sickbeard__set_port "${CLI_ARGS[4]}"
         sickbeard__start
-        echo "Done."
         ;;    
       '-c' | '--couchpotato')
         echo "* Applying changes to CouchPotato"
         couchpotato__stop
         couchpotato__set_port "${CLI_ARGS[4]}"
         couchpotato__start
-        echo "Done."
         ;;
       '-h' | '--headphones')
         echo "* Applying changes to Headphones"
         headphones__stop
         headphones__set_port "${CLI_ARGS[4]}"
         headphones__start
-        echo "Done."
         ;;
       '-n' | '--nzbdrone')
         echo "* Applying changes to NzbDrone"
         nzbdrone__stop
         nzbdrone__set_port "${CLI_ARGS[4]}"
         nzbdrone__start
-        echo "Done."
         ;;
       '-p' | '--plexserver')
         echo "This command is not available for Plex Media Server"
@@ -654,14 +636,12 @@ function service__set_port() {
           sickbeard__set_sabnzbd_port "${CLI_ARGS[4]}"
           sickbeard__start
         fi
-        echo "Done."
         ;;
       '-t' | '--transmission')
         echo "* Applying changes to Transmission"
         transmission__stop
         transmission__set_port "${CLI_ARGS[4]}"
         transmission__start
-        echo "Done."
         ;;
       *)
       	service__help
@@ -676,7 +656,6 @@ function service__new_apikey() {
     case "${CLI_ARGS[1]}" in
       '-a' | '--all')
         allservices__set_apikey
-        echo "Done."
         ;;
       '-b' | '--sickbeard')
         echo "* Applying changes to Sick Beard"
@@ -684,7 +663,6 @@ function service__new_apikey() {
         sickbeard__stop
         sickbeard__set_apikey "$apikey"
         sickbeard__start
-        echo "Done."
         ;;    
       '-c' | '--couchpotato')
         echo "* Applying changes to CouchPotato"
@@ -692,7 +670,6 @@ function service__new_apikey() {
         couchpotato__stop
         couchpotato__set_apikey "$apikey"
         couchpotato__start
-        echo "Done."
         ;;
       '-h' | '--headphones')
         echo "* Applying changes to Headphones"
@@ -700,7 +677,6 @@ function service__new_apikey() {
         headphones__stop
         headphones__set_apikey "$apikey"
         headphones__start
-        echo "Done."
         ;;
       '-n' | '--nzbdrone')
         echo "* Applying changes to NzbDrone"
@@ -708,7 +684,6 @@ function service__new_apikey() {
         nzbdrone__stop
         nzbdrone__set_apikey "$apikey"
         nzbdrone__start
-        echo "Done."
         ;;
       '-p' | '--plexserver')
         echo "This command is not available for Plex Media Server"
@@ -745,7 +720,6 @@ function service__new_apikey() {
           sickbeard__set_sabnzbd_apikey "$apikey"
           sickbeard__start
         fi
-        echo "Done."
         ;;
       '-t' | '--transmission')
         echo "This command is not available for Transmission"
