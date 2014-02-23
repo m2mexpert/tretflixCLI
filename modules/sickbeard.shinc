@@ -19,12 +19,14 @@ function sickbeard__get_status() {
 
 function sickbeard__enable() {
   if [ "$(sickbeard__get_status)" == "Disabled" ]; then
+    echo "* Enabling Sick Beard"
     update-rc.d sickbeard defaults
   fi
 }
 
 function sickbeard__disable() {
   if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+    echo "* Disabling Sick Beard"
     update-rc.d -f sickbeard remove
   fi
 }
@@ -36,6 +38,7 @@ function sickbeard__start() {
         sleep 2
       fi
       if [ "$(sickbeard__get_status)" != "Enabled|Running" ]; then
+        echo "* Starting Sick Beard"
         service sickbeard start
       else
         break
@@ -50,6 +53,7 @@ function sickbeard__stop() {
       sleep 2
     fi
     if [ "$(sickbeard__get_status)" == "Enabled|Running" ]; then
+      echo "* Stopping Sick Beard"
       service sickbeard stop
     else
       break
@@ -130,11 +134,12 @@ function sickbeard__show_config() {
 }
 
 function sickbeard__install() {
-  echo "Coming Soon"
+  echo "* Installing Sick Beard"
 }
 
 function sickbeard__version_check() {
   if cd $sickbeardSource && ! git fetch -v --dry-run 2>&1 | grep -iv "^from" | grep -ivq "\[up to date\]"; then
+    echo "Sick Beard is up-to-date"
     false
   else
     true
@@ -142,6 +147,7 @@ function sickbeard__version_check() {
 }
 
 function sickbeard__upgrade() {
+  echo "* Upgrading Sick Beard"
   sudo su -c -u $osUser \
     "cd $sickbeardSource && git remote update"
   sudo su -c -u $osUser \

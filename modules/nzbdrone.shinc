@@ -19,12 +19,14 @@ function nzbdrone__get_status() {
 
 function nzbdrone__enable() {
   if [ "$(nzbdrone__get_status)" == "Disabled" ]; then
+    echo "* Enabling NzbDrone"
     rm -v /etc/init/nzbdrone.override
   fi
 }
 
 function nzbdrone__disable() {
   if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+    echo "* Disabling NzbDrone"
     tar xf $configBundle --strip-components 2 -C /etc/init/ config/init/nzbdrone.override
     echo "added \`/etc/init/nzbdrone.override'"
   fi
@@ -37,6 +39,7 @@ function nzbdrone__start() {
         sleep 2
       fi
       if [ "$(nzbdrone__get_status)" != "Enabled|Running" ]; then
+        echo "* Starting NzbDrone"
         service nzbdrone start
       else
         break
@@ -51,6 +54,7 @@ function nzbdrone__stop() {
       sleep 2
     fi
     if [ "$(nzbdrone__get_status)" == "Enabled|Running" ]; then
+      echo "* Stopping NzbDrone"
       service nzbdrone stop
     else
       break
@@ -129,6 +133,8 @@ function nzbdrone__show_config() {
 }
 
 function nzbdrone__install() {
+  echo "* Installing NzbDrone"
+  
   # Add apt repository to sources.list
   if ! grep -q "^deb http://update.nzbdrone.com/repos/apt/debian" /etc/apt/sources.list; then 
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys FDA5DFFC
@@ -138,7 +144,7 @@ function nzbdrone__install() {
   # Update apt repository package lists
   apt-get update
   
-  # Install NzbDrone
+  # Install NzbDrone (and dependencies)
   apt-get -q -y install nzbdrone sqlite3
   
   # Create the sabnzbd+ temp dir for nzbdrone downloads
@@ -190,6 +196,7 @@ function nzbdrone__version_check() {
   candidateVers=$(echo "$output" | grep "Candidate:" | awk '{ print $2 }')
 
   if [ "$installedVers" == "$candidateVers" ]; then
+    echo "NzbDrone is up-to-date"
     false
   else
     true
@@ -197,6 +204,7 @@ function nzbdrone__version_check() {
 }
 
 function nzbdrone__upgrade() {
+  echo "* Upgrading NzbDrone"
   apt-get -y install nzbdrone
 }
 

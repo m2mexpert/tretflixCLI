@@ -19,12 +19,14 @@ function plexserver__get_status() {
 
 function plexserver__enable() {
   if [ "$(plexserver__get_status)" == "Disabled" ]; then
+    echo "* Enabling Plex Media Server"
     rm -v /etc/init/plexmediaserver.override
   fi
 }
 
 function plexserver__disable() {
   if echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
+    echo "* Disabling Plex Media Server"
     tar xf $configBundle --strip-components 2 -C /etc/init/ config/init/plexmediaserver.override
     echo "added \`/etc/init/plexmediaserver.override'"
   fi
@@ -37,6 +39,7 @@ function plexserver__start() {
         sleep 5
       fi
       if [ "$(plexserver__get_status)" != "Enabled|Running" ]; then
+        echo "* Starting Plex Media Server"
         service plexmediaserver start
       else
         break
@@ -51,6 +54,7 @@ function plexserver__stop() {
       sleep 5
     fi
     if [ "$(plexserver__get_status)" == "Enabled|Running" ]; then
+      echo "* Stopping Plex Media Server"
       service plexmediaserver stop
     else
       break
@@ -73,7 +77,7 @@ function plexserver__show_config() {
 }
 
 function plexserver__install() {
-  echo "Coming Soon"
+  echo "* Installing Plex Media Server"
 }
 
 function plexserver__version_check() {
@@ -93,6 +97,7 @@ function plexserver__version_check() {
   candidateVers=$(echo "$filename" | sed 's/^[a-z]*_//g' | sed 's/_.*$//g')
   
   if awk "BEGIN {exit !($candidateVers <= $installedVers)}"; then
+    echo "Plex Media Server is up-to-date"
     false
   else
     true
@@ -100,6 +105,8 @@ function plexserver__version_check() {
 }
 
 function plexserver__upgrade() {
+  echo "* Upgrading Plex Media Server"
+  
   releaseList=$(curl http://tretflix.com/misc/currentPlexReleases.txt 2> /dev/null)
   if uname -a | grep -q "i386"; then
     url=$(echo "$releaseList" | grep "i386.deb")

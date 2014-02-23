@@ -320,13 +320,11 @@ function config__wizard() {
     if [ "$sabnzbdAction" == "Enable" ]; then
       # Install the service if not already installed
       if [ "$(sabnzbd__get_status)" == "Not Installed" ]; then
-        echo "* Installing SABnzbd+"
         sabnzbd__install
       fi
 
       # Upgrade the service if a newer version is available
       if sabnzbd__version_check; then
-        echo "* Upgrading SABnzbd+"
         sabnzbd__stop
         sabnzbd__upgrade
       fi
@@ -341,18 +339,15 @@ function config__wizard() {
       
       # Enable the service if not already enabled
       if ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
-        echo "* Enabling SABnzbd+"
         # Enable SABnzbd+
         sabnzbd__enable
       fi
 
       # Start the service
-      echo "* Starting SABnzbd+"
       sabnzbd__start
     else
       # Stop and disable the service if not already disabled
       if echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
-        echo "* Disabling SABnzbd+"
         sabnzbd__stop
         sabnzbd__disable
       fi
@@ -363,13 +358,11 @@ function config__wizard() {
     if [ "$plexserverAction" == "Enable" ]; then
       # Install the service if not already installed
       if [ "$(plexserver__get_status)" == "Not Installed" ]; then
-        echo "* Installing Plex Media Server"
         plexserver__install
       fi
 
       # Upgrade the service if a newer version is available
       if plexserver__version_check; then
-        echo "* Upgrading Plex Media Server"
         plexserver__stop
         plexserver__upgrade
       fi
@@ -379,18 +372,15 @@ function config__wizard() {
  
       # Enable the service if not already enabled
       if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
-        echo "* Enabling Plex Media Server"
         # Enable Plex Media Server
         plexserver__enable
       fi
 
       # Start the service
-      echo "* Starting Plex Media Server"
       plexserver__start
     else
       # Stop and disable the service if not already disabled
       if echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
-        echo "* Disabling Plex Media Server"
         plexserver__stop
         plexserver__disable
       fi
@@ -401,13 +391,11 @@ function config__wizard() {
     if [ "$couchpotatoAction" == "Enable" ]; then
       # Install the service if not already installed
       if [ "$(couchpotato__get_status)" == "Not Installed" ]; then
-        echo "* Installing CouchPotato"
         couchpotato__install
       fi
 
       # Upgrade the service if a newer version is available
       if couchpotato__version_check; then
-        echo "* Upgrading CouchPotato"
         couchpotato__stop
         couchpotato__upgrade
       fi
@@ -425,18 +413,15 @@ function config__wizard() {
       
       # Enable the service if not already enabled
       if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
-        echo "* Enabling CouchPotato"
         # Enable CouchPotato
         couchpotato__enable
       fi
 
       # Start the service
-      echo "* Starting CouchPotato"
       couchpotato__start
     else
       # Stop and disable the service if not already disabled
       if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
-        echo "* Disabling CouchPotato"
         couchpotato__stop
         couchpotato__disable
       fi
@@ -447,13 +432,11 @@ function config__wizard() {
     if [ "$headphonesAction" == "Enable" ]; then
       # Install the service if not already installed
       if [ "$(headphones__get_status)" == "Not Installed" ]; then
-        echo "* Installing Headphones"
         headphones__install
       fi
 
       # Upgrade the service if a newer version is available
       if headphones__version_check; then
-        echo "* Upgrading Headphones"
         headphones__stop
         headphones__upgrade
       fi
@@ -471,18 +454,15 @@ function config__wizard() {
       
       # Enable the service if not already enabled
       if ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-        echo "* Enabling Headphones"
         # Enable Headphones
         headphones__enable
       fi
 
       # Start the service
-      echo "* Starting Headphones"
       headphones__start
     else
       # Stop and disable the service if not already disabled
       if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-        echo "* Disabling Headphones"
         headphones__stop
         headphones__disable
       fi
@@ -493,13 +473,11 @@ function config__wizard() {
     if [ "$nzbdroneAction" == "Enable" ]; then
       # Install the service if not already installed
       if [ "$(nzbdrone__get_status)" == "Not Installed" ]; then
-        echo "* Installing NzbDrone"
         nzbdrone__install
       fi
 
       # Upgrade the service if a newer version is available
       if nzbdrone__version_check; then
-        echo "* Upgrading NzbDrone"
         nzbdrone__stop
         nzbdrone__upgrade
       fi
@@ -517,18 +495,15 @@ function config__wizard() {
       
       # Enable the service if not already enabled
       if ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-        echo "* Enabling NzbDrone"
         # Enable NzbDrone
         nzbdrone__enable
       fi
 
       # Start the service
-      echo "* Starting NzbDrone"
       nzbdrone__start
     else
       # Stop and disable the service if not already disabled
       if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-        echo "* Disabling NzbDrone"
         nzbdrone__stop
         nzbdrone__disable
       fi
@@ -539,13 +514,11 @@ function config__wizard() {
     if [ "$sickbeardAction" == "Enable" ]; then
       # Install the service if not already installed
       if [ "$(sickbeard__get_status)" == "Not Installed" ]; then
-        echo "* Installing Sick Beard"
         sickbeard__install
       fi
 
       # Upgrade the service if a newer version is available
       if sickbeard__version_check; then
-        echo "* Upgrading Sick Beard"
         sickbeard__stop
         sickbeard__upgrade
       fi
@@ -563,18 +536,15 @@ function config__wizard() {
       
       # Enable the service if not already enabled
       if ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-        echo "* Enabling Sick Beard"
         # Enable Sick Beard
         sickbeard__enable
       fi
 
       # Start the service
-      echo "* Starting Sick Beard"
       sickbeard__start
     else
       # Stop and disable the service if not already disabled
       if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-        echo "* Disabling Sick Beard"
         sickbeard__stop
         sickbeard__disable
       fi
@@ -585,13 +555,11 @@ function config__wizard() {
     if [ "$transmissionAction" == "Enable" ]; then
       # Install the service if not already installed
       if [ "$(transmission__get_status)" == "Not Installed" ]; then
-        echo "* Installing Transmission"
         transmission__install
       fi
 
       # Upgrade the service if a newer version is available
       if transmission__version_check; then
-        echo "* Upgrading Transmission"
         transmission__stop
         transmission__upgrade
       fi
@@ -605,18 +573,15 @@ function config__wizard() {
       
       # Enable the service if not already enabled
       if ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
-        echo "* Enabling Transmission"
         # Enable Transmission
         transmission__enable
       fi
 
       # Start the service
-      echo "* Starting Transmission"
       transmission__start
     else
       # Stop and disable the service if not already disabled
       if echo "$(transmission__get_status)" | grep -q "^Enabled"; then
-        echo "* Disabling Transmission"
         transmission__stop
         transmission__disable
       fi
@@ -864,13 +829,11 @@ function config__restore_appdata() {
     if [ "$sabnzbdAction" == "Restore" ]; then
       # Install the service if not already installed
       if [ "$(sabnzbd__get_status)" == "Not Installed" ]; then
-        echo "* Installing SABnzbd+"
         sabnzbd__install
       fi
 
       # Upgrade the service if a newer version is available
       if sabnzbd__version_check; then
-        echo "* Upgrading SABnzbd+"
         sabnzbd__stop
         sabnzbd__upgrade
       fi
@@ -884,13 +847,11 @@ function config__restore_appdata() {
       
       # Enable the service if not already enabled
       if ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
-        echo "* Enabling SABnzbd+"
         # Enable SABnzbd+
         sabnzbd__enable
       fi
 
       # Start the service
-      echo "* Starting SABnzbd+"
       sabnzbd__start
     fi
 
@@ -899,13 +860,11 @@ function config__restore_appdata() {
     if [ "$plexserverAction" == "Restore" ]; then
       # Install the service if not already installed
       if [ "$(plexserver__get_status)" == "Not Installed" ]; then
-        echo "* Installing Plex Media Server"
         plexserver__install
       fi
 
       # Upgrade the service if a newer version is available
       if plexserver__version_check; then
-        echo "* Upgrading Plex Media Server"
         plexserver__stop
         plexserver__upgrade
       fi
@@ -919,13 +878,11 @@ function config__restore_appdata() {
  
       # Enable the service if not already enabled
       if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
-        echo "* Enabling Plex Media Server"
         # Enable Plex Media Server
         plexserver__enable
       fi
 
       # Start the service
-      echo "* Starting Plex Media Server"
       plexserver__start
     fi
 
@@ -934,13 +891,11 @@ function config__restore_appdata() {
     if [ "$couchpotatoAction" == "Restore" ]; then
       # Install the service if not already installed
       if [ "$(couchpotato__get_status)" == "Not Installed" ]; then
-        echo "* Installing CouchPotato"
         couchpotato__install
       fi
 
       # Upgrade the service if a newer version is available
       if couchpotato__version_check; then
-        echo "* Upgrading CouchPotato"
         couchpotato__stop
         couchpotato__upgrade
       fi
@@ -958,13 +913,11 @@ function config__restore_appdata() {
       
       # Enable the service if not already enabled
       if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
-        echo "* Enabling CouchPotato"
         # Enable CouchPotato
         couchpotato__enable
       fi
 
       # Start the service
-      echo "* Starting CouchPotato"
       couchpotato__start
     fi
 
@@ -973,13 +926,11 @@ function config__restore_appdata() {
     if [ "$headphonesAction" == "Restore" ]; then
       # Install the service if not already installed
       if [ "$(headphones__get_status)" == "Not Installed" ]; then
-        echo "* Installing Headphones"
         headphones__install
       fi
 
       # Upgrade the service if a newer version is available
       if headphones__version_check; then
-        echo "* Upgrading Headphones"
         headphones__stop
         headphones__upgrade
       fi
@@ -997,13 +948,11 @@ function config__restore_appdata() {
       
       # Enable the service if not already enabled
       if ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-        echo "* Enabling Headphones"
         # Enable Headphones
         headphones__enable
       fi
 
       # Start the service
-      echo "* Starting Headphones"
       headphones__start
     fi
 
@@ -1012,13 +961,11 @@ function config__restore_appdata() {
     if [ "$nzbdroneAction" == "Restore" ]; then
       # Install the service if not already installed
       if [ "$(nzbdrone__get_status)" == "Not Installed" ]; then
-        echo "* Installing NzbDrone"
         nzbdrone__install
       fi
 
       # Upgrade the service if a newer version is available
       if nzbdrone__version_check; then
-        echo "* Upgrading NzbDrone"
         nzbdrone__stop
         nzbdrone__upgrade
       fi
@@ -1036,13 +983,11 @@ function config__restore_appdata() {
       
       # Enable the service if not already enabled
       if ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-        echo "* Enabling NzbDrone"
         # Enable NzbDrone
         nzbdrone__enable
       fi
 
       # Start the service
-      echo "* Starting NzbDrone"
       nzbdrone__start
     fi    
     
@@ -1051,13 +996,11 @@ function config__restore_appdata() {
     if [ "$sickbeardAction" == "Restore" ]; then
       # Install the service if not already installed
       if [ "$(sickbeard__get_status)" == "Not Installed" ]; then
-        echo "* Installing Sick Beard"
         sickbeard__install
       fi
 
       # Upgrade the service if a newer version is available
       if sickbeard__version_check; then
-        echo "* Upgrading Sick Beard"
         sickbeard__stop
         sickbeard__upgrade
       fi
@@ -1075,13 +1018,11 @@ function config__restore_appdata() {
       
       # Enable the service if not already enabled
       if ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-        echo "* Enabling Sick Beard"
         # Enable Sick Beard
         sickbeard__enable
       fi
 
       # Start the service
-      echo "* Starting Sick Beard"
       sickbeard__start
     fi 
     
@@ -1090,13 +1031,11 @@ function config__restore_appdata() {
     if [ "$transmissionAction" == "Restore" ]; then
       # Install the service if not already installed
       if [ "$(transmission__get_status)" == "Not Installed" ]; then
-        echo "* Installing Transmission"
         transmission__install
       fi
 
       # Upgrade the service if a newer version is available
       if transmission__version_check; then
-        echo "* Upgrading Transmission"
         transmission__stop
         transmission__upgrade
       fi
@@ -1110,13 +1049,11 @@ function config__restore_appdata() {
       
       # Enable the service if not already enabled
       if ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
-        echo "* Enabling Transmission"
         # Enable Transmission
         transmission__enable
       fi
 
       # Start the service
-      echo "* Starting Transmission"
       transmission__start
     fi
 

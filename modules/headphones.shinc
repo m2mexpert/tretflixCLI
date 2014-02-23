@@ -19,12 +19,14 @@ function headphones__get_status() {
 
 function headphones__enable() {
   if [ "$(headphones__get_status)" == "Disabled" ]; then
+    echo "* Enabling Headphones"
     update-rc.d headphones defaults
   fi
 }
 
 function headphones__disable() {
   if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
+    echo "* Disabling Headphones"
     update-rc.d -f headphones remove
   fi
 }
@@ -36,6 +38,7 @@ function headphones__start() {
         sleep 2
       fi
       if [ "$(headphones__get_status)" != "Enabled|Running" ]; then
+        echo "* Starting Headphones"
         service headphones start
       else
         break
@@ -50,6 +53,7 @@ function headphones__stop() {
       sleep 2
     fi
     if [ "$(headphones__get_status)" == "Enabled|Running" ]; then
+      echo "* Stopping Headphones"
       service headphones stop
     else
       break
@@ -127,11 +131,12 @@ function headphones__show_config() {
 }
 
 function headphones__install() {
-  echo "Coming Soon"
+  echo "* Installing Headphones"
 }
 
 function headphones__version_check() {
   if cd $headphonesSource && ! git fetch -v --dry-run 2>&1 | grep -iv "^from" | grep -ivq "\[up to date\]"; then
+    echo "Headphones is up-to-date"
     false
   else
     true
@@ -139,6 +144,7 @@ function headphones__version_check() {
 }
 
 function headphones__upgrade() {
+  echo "* Upgrading Headphones"
   sudo su -c -u $osUser \
     "cd $headphonesSource && git remote update"
   sudo su -c -u $osUser \

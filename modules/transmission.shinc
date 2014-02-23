@@ -19,12 +19,14 @@ function transmission__get_status() {
 
 function transmission__enable() {
   if [ "$(transmission__get_status)" == "Disabled" ]; then
+    echo "* Enabling Transmission"
     update-rc.d transmission-daemon defaults
   fi
 }
 
 function transmission__disable() {
   if echo "$(transmission__get_status)" | grep -q "^Enabled"; then
+    echo "* Disabling Transmission"
     update-rc.d -f transmission-daemon remove
   fi
 }
@@ -36,6 +38,7 @@ function transmission__start() {
         sleep 2
       fi
       if [ "$(transmission__get_status)" != "Enabled|Running" ]; then
+        echo "* Starting Transmission"
         service transmission-daemon start
       else
         break
@@ -50,6 +53,7 @@ function transmission__stop() {
       sleep 2
     fi
     if [ "$(transmission__get_status)" == "Enabled|Running" ]; then
+      echo "* Stopping Transmission"
       service transmission-daemon stop
     else
       break
@@ -112,7 +116,7 @@ function transmission__show_config() {
 }
 
 function transmission__install() {
-  echo "Coming Soon"
+  echo "* Installing Transmission"
 }
 
 function transmission__version_check() {
@@ -121,6 +125,7 @@ function transmission__version_check() {
   candidateVers=$(echo "$output" | grep "Candidate:" | awk '{ print $2 }')
 
   if [ "$installedVers" == "$candidateVers" ]; then
+    echo "Transmission is up-to-date"
     false
   else
     true
@@ -128,5 +133,6 @@ function transmission__version_check() {
 }
 
 function transmission__upgrade() {
+  echo "* Upgrading Transmission"
   apt-get -y install transmission-daemon
 }

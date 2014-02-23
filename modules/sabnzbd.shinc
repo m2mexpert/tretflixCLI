@@ -19,12 +19,14 @@ function sabnzbd__get_status() {
 
 function sabnzbd__enable() {
   if [ "$(sabnzbd__get_status)" == "Disabled" ]; then
+    echo "* Enabling SABnzbd+"
     update-rc.d sabnzbdplus defaults
   fi
 }
 
 function sabnzbd__disable() {
   if echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
+    echo "* Disabling SABnzbd+"
     update-rc.d -f sabnzbdplus remove
   fi
 }
@@ -36,6 +38,7 @@ function sabnzbd__start() {
         sleep 2
       fi
       if [ "$(sabnzbd__get_status)" != "Enabled|Running" ]; then
+        echo "* Starting SABnzbd+"
         service sabnzbdplus start
       else
         break
@@ -50,6 +53,7 @@ function sabnzbd__stop() {
       sleep 2
     fi
     if [ "$(sabnzbd__get_status)" == "Enabled|Running" ]; then
+      echo "* Stopping SABnzbd+"
       service sabnzbdplus stop
     else
       break
@@ -127,7 +131,7 @@ function sabnzbd__show_config() {
 }
 
 function sabnzbd__install() {
-  echo "Coming Soon"
+  echo "* Installing SABnzbd+"
 }
 
 function sabnzbd__version_check() {
@@ -136,6 +140,7 @@ function sabnzbd__version_check() {
   candidateVers=$(echo "$output" | grep "Candidate:" | awk '{ print $2 }')
 
   if [ "$installedVers" == "$candidateVers" ]; then
+    echo "SABnzbd+ is up-to-date"
     false
   else
     true
@@ -143,5 +148,6 @@ function sabnzbd__version_check() {
 }
 
 function sabnzbd__upgrade() {
+  echo "* Upgrading SABnzbd+"
   apt-get -y install sabnzbdplus
 }

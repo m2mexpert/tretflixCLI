@@ -19,12 +19,14 @@ function couchpotato__get_status() {
 
 function couchpotato__enable() {
   if [ "$(couchpotato__get_status)" == "Disabled" ]; then
+    echo "* Enabling CouchPotato"
     update-rc.d couchpotato defaults
   fi
 }
 
 function couchpotato__disable() {
   if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+    echo "* Disabling CouchPotato"
     update-rc.d -f couchpotato remove
   fi
 }
@@ -36,6 +38,7 @@ function couchpotato__start() {
         sleep 2
       fi
       if [ "$(couchpotato__get_status)" != "Enabled|Running" ]; then
+        echo "* Starting CouchPotato"
         service couchpotato start
       else
         break
@@ -50,6 +53,7 @@ function couchpotato__stop() {
       sleep 2
     fi
     if [ "$(couchpotato__get_status)" == "Enabled|Running" ]; then
+      echo "* Stopping CouchPotato"
       service couchpotato stop
     else
       break
@@ -128,11 +132,12 @@ function couchpotato__show_config() {
 }
 
 function couchpotato__install() {
-  echo "Coming Soon"
+  echo "* Installing CouchPotato"
 }
 
 function couchpotato__version_check() {
   if cd $couchpotatoSource && ! git fetch -v --dry-run 2>&1 | grep -iv "^from" | grep -ivq "\[up to date\]"; then
+    echo "CouchPotato is up-to-date"
     false
   else
     true
@@ -140,6 +145,7 @@ function couchpotato__version_check() {
 }
 
 function couchpotato__upgrade() {
+  echo "* Upgrading CouchPotato"
   sudo su -c -u $osUser \
     "cd $couchpotatoSource && git remote update"
   sudo su -c -u $osUser \
