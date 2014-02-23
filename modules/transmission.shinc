@@ -5,7 +5,7 @@ fi
 transmission__imported=1
 
 function transmission__get_status() {
-  if service transmission-daemon status 2>&1 | grep "unrecognized service"; then
+  if service transmission-daemon status 2>&1 | grep -q "unrecognized service"; then
     status="Not Installed"
   elif service transmission-daemon status > /dev/null 2>&1; then
     status="Enabled|Running"

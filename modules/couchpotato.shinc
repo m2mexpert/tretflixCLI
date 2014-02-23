@@ -5,7 +5,7 @@ fi
 couchpotato__imported=1
 
 function couchpotato__get_status() {
-  if service couchpotato status 2>&1 | grep "unrecognized service"; then
+  if service couchpotato status 2>&1 | grep -q "unrecognized service"; then
     status="Not Installed"
   elif service couchpotato status > /dev/null 2>&1; then
     status="Enabled|Running"

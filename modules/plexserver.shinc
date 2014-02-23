@@ -5,9 +5,9 @@ fi
 plexserver__imported=1
 
 function plexserver__get_status() {
-  if service plexmediaserver status 2>&1 | grep "unrecognized service"; then
+  if service plexmediaserver status 2>&1 | grep -q "unrecognized service"; then
     status="Not Installed"
-  elif service plexmediaserver status 2>&1 | egrep "start|running"; then
+  elif service plexmediaserver status 2>&1 | egrep -q "start|running"; then
     status="Enabled|Running"
   elif ! ls -l /etc/init/plexmediaserver.override > /dev/null 2>&1; then
     status="Enabled|Stopped"
