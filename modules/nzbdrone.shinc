@@ -143,17 +143,16 @@ function nzbdrone__show_config() {
 
 function nzbdrone__install() {
   # Add apt repository to sources.list
-  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys FDA5DFFC
-  echo "deb http://update.nzbdrone.com/repos/apt/debian master main" | tee -a /etc/apt/sources.list
+  if ! grep -q "^deb http://update.nzbdrone.com/repos/apt/debian" /etc/apt/sources.list; then 
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys FDA5DFFC
+    echo "deb http://update.nzbdrone.com/repos/apt/debian master main" | tee -a /etc/apt/sources.list
+  fi
   
   # Update apt repository package lists
   apt-get update
   
   # Install NzbDrone
-  apt-get -q -y install nzbdrone
-  
-  # Install sqlite3 (required for config changes)
-  apt-get -q -y install sqlite3
+  apt-get -q -y install nzbdrone sqlite3
   
   # Create the sabnzbd+ temp dir for nzbdrone downloads
   if ! tools__path_exists "/opt/tretflix/tmp/sabnzbdplus/nzbdrone"; then
@@ -177,12 +176,10 @@ function nzbdrone__install() {
   
   # Copy runlevel config files into init
   if ! tools__path_exists "/etc/init/nzbdrone.conf"; then
-    sudo su -c -u $osUser \
-      "tar xf $configBundle --strip-components 2 -C /etc/init/ config/init/nzbdrone.conf"
+    tar xf $configBundle --strip-components 2 -C /etc/init/ config/init/nzbdrone.conf
   fi
   if ! tools__path_exists "/etc/init/nzbdrone.override"; then
-    sudo su -c -u $osUser \
-      "tar xf $configBundle --strip-components 2 -C /etc/init/ config/init/nzbdrone.override"
+    tar xf $configBundle --strip-components 2 -C /etc/init/ config/init/nzbdrone.override
   fi
   
   # Copy the app data dir into appdata/
