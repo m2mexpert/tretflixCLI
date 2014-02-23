@@ -105,6 +105,7 @@ function service__enable() {
           echo "* Enabling Sick Beard"
           sickbeard__enable
         fi
+        echo "* Starting Sick Beard" 
         sickbeard__start
         ;;
       '-c' | '--couchpotato')
@@ -130,6 +131,7 @@ function service__enable() {
           echo "* Enabling CouchPotato"
           couchpotato__enable
         fi
+        echo "* Starting CouchPotato"
         couchpotato__start
         ;;
       '-h' | '--headphones')
@@ -155,6 +157,7 @@ function service__enable() {
           echo "* Enabling Headphones"
           headphones__enable
         fi
+        echo "* Starting Headphones"
         headphones__start
         ;;
       '-n' | '--nzbdrone')
@@ -180,6 +183,7 @@ function service__enable() {
           echo "* Enabling NzbDrone"
           nzbdrone__enable
         fi
+        echo "* Starting NzbDrone"
         nzbdrone__start
         ;;
       '-p' | '--plexserver')
@@ -200,6 +204,7 @@ function service__enable() {
           echo "* Enabling Plex Media Server"
           plexserver__enable
         fi
+        echo "* Starting Plex Media Server"
         plexserver__start
         ;;
       '-s' | '--sabnzbd')
@@ -220,6 +225,7 @@ function service__enable() {
           echo "* Enabling SABnzbd+"
           sabnzbd__enable
         fi
+        echo "* Starting SABnzbd+"
         sabnzbd__start
         ;;
       '-t' | '--transmission')
@@ -240,6 +246,7 @@ function service__enable() {
           echo "* Enabling Transmission"
           transmission__enable
         fi
+        echo "* Starting Transmission"
         transmission__start
         ;;
       *)

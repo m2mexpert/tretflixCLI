@@ -347,6 +347,7 @@ function config__wizard() {
       fi
 
       # Start the service
+      echo "* Starting SABnzbd+"
       sabnzbd__start
     else
       # Stop and disable the service if not already disabled
@@ -384,6 +385,7 @@ function config__wizard() {
       fi
 
       # Start the service
+      echo "* Starting Plex Media Server"
       plexserver__start
     else
       # Stop and disable the service if not already disabled
@@ -429,6 +431,7 @@ function config__wizard() {
       fi
 
       # Start the service
+      echo "* Starting CouchPotato"
       couchpotato__start
     else
       # Stop and disable the service if not already disabled
@@ -474,6 +477,7 @@ function config__wizard() {
       fi
 
       # Start the service
+      echo "* Starting Headphones"
       headphones__start
     else
       # Stop and disable the service if not already disabled
@@ -519,6 +523,7 @@ function config__wizard() {
       fi
 
       # Start the service
+      echo "* Starting NzbDrone"
       nzbdrone__start
     else
       # Stop and disable the service if not already disabled
@@ -564,6 +569,7 @@ function config__wizard() {
       fi
 
       # Start the service
+      echo "* Starting Sick Beard"
       sickbeard__start
     else
       # Stop and disable the service if not already disabled
@@ -605,6 +611,7 @@ function config__wizard() {
       fi
 
       # Start the service
+      echo "* Starting Transmission"
       transmission__start
     else
       # Stop and disable the service if not already disabled
@@ -883,6 +890,7 @@ function config__restore_appdata() {
       fi
 
       # Start the service
+      echo "* Starting SABnzbd+"
       sabnzbd__start
     fi
 
@@ -917,6 +925,7 @@ function config__restore_appdata() {
       fi
 
       # Start the service
+      echo "* Starting Plex Media Server"
       plexserver__start
     fi
 
@@ -955,6 +964,7 @@ function config__restore_appdata() {
       fi
 
       # Start the service
+      echo "* Starting CouchPotato"
       couchpotato__start
     fi
 
@@ -993,6 +1003,7 @@ function config__restore_appdata() {
       fi
 
       # Start the service
+      echo "* Starting Headphones"
       headphones__start
     fi
 
@@ -1031,6 +1042,7 @@ function config__restore_appdata() {
       fi
 
       # Start the service
+      echo "* Starting NzbDrone"
       nzbdrone__start
     fi    
     
@@ -1069,6 +1081,7 @@ function config__restore_appdata() {
       fi
 
       # Start the service
+      echo "* Starting Sick Beard"
       sickbeard__start
     fi 
     
@@ -1103,6 +1116,7 @@ function config__restore_appdata() {
       fi
 
       # Start the service
+      echo "* Starting Transmission"
       transmission__start
     fi
 
