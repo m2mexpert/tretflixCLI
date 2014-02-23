@@ -163,6 +163,18 @@ function nzbdrone__install() {
   
   # Create a symbolic link for NzbDrone config (Can't configure appdata dir)
   if ! tools__path_exists "/home/sysadmin/.config/NzbDrone"; then
+  
+    # Create the ~/.config directory
+    if ! tools__path_exists "/home/sysadmin/.config"; then
+      sudo su -c -u $osUser \
+      "mkdir /home/sysadmin/.config"
+    fi
+    
+    # Create the symbolic link
+    sudo su -c -u $osUser \
+      "mkdir /opt/tretflix/tmp/sabnzbdplus/nzbdrone"
+  fi
+    
     sudo su -c -u $osUser \
       "ln -s /opt/tretflix/appdata/nzbdrone/ /home/sysadmin/.config/NzbDrone"
   fi
@@ -170,17 +182,17 @@ function nzbdrone__install() {
   # Copy runlevel config files into init
   if ! tools__path_exists "/etc/init/nzbdrone.conf"; then
     sudo su -c -u $osUser \
-      "tar xf $configPayload --strip-components 2 -C /etc/init/ config/init/nzbdrone.conf"
+      "tar xf $configBundle --strip-components 2 -C /etc/init/ config/init/nzbdrone.conf"
   fi
   if ! tools__path_exists "/etc/init/nzbdrone.override"; then
     sudo su -c -u $osUser \
-      "tar xf $configPayload --strip-components 2 -C /etc/init/ config/init/nzbdrone.override"
+      "tar xf $configBundle --strip-components 2 -C /etc/init/ config/init/nzbdrone.override"
   fi
   
   # Copy the app data dir into appdata/
   if ! tools__path_exists "/opt/tretflix/appdata/nzbdrone"; then
     sudo su -c -u $osUser \
-      "tar xf $appdataPayload --strip-components 1 -C $tretflixPath/appdata/ appdata/nzbdrone"
+      "tar xf $appdataBundle --strip-components 1 -C $tretflixPath/appdata/ appdata/nzbdrone"
   fi
     
   # Add the nzbdrone category to the SABnzbd config
