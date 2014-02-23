@@ -23,20 +23,17 @@ function sabnzbd__enable() {
   fi
 
   if sabnzbd__version_check; then
+    sabnzbd__stop
     sabnzbd__upgrade
   fi
   
   if [ "$(sabnzbd__get_status)" == "Disabled" ]; then
     update-rc.d sabnzbdplus defaults
   fi
-  
-  # Start the service
-  sabnzbd__start
 }
 
 function sabnzbd__disable() {
   if echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
-    sabnzbd__stop
     update-rc.d -f sabnzbdplus remove
   fi
 }
@@ -155,6 +152,5 @@ function sabnzbd__version_check() {
 }
 
 function sabnzbd__upgrade() {
-  sabnzbd__stop
   apt-get -y install sabnzbdplus
 }

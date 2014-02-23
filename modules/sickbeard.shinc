@@ -23,6 +23,7 @@ function sickbeard__enable() {
   fi
 
   if sickbeard__version_check; then
+    sickbeard__stop
     sickbeard__upgrade
   fi
   
@@ -32,14 +33,10 @@ function sickbeard__enable() {
   
   # Make sure config is in sync w/ current SABnzbd+ settings
   sickbeard__sabnzbd_sync
-
-  # Start the service
-  sickbeard__start
 }
 
 function sickbeard__disable() {
   if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-    sickbeard__stop
     update-rc.d -f sickbeard remove
   fi
 }
@@ -157,8 +154,6 @@ function sickbeard__version_check() {
 }
 
 function sickbeard__upgrade() {
-  sickbeard__stop
-  
   sudo su -c -u $osUser \
     "cd $sickbeardSource && git remote update"
   sudo su -c -u $osUser \

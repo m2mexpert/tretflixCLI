@@ -315,98 +315,196 @@ function config__wizard() {
     echo "* Updating apt repository package lists"
     apt-get update
 
-    
     if [ "$sabnzbdAction" == "Enable" ]; then
       echo
+      if ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
+        echo "* Enabling SABnzbd+"
+        sabnzbd__enable
+      fi
       echo "* Configuring SABnzbd+"
       sabnzbd__stop
       sabnzbd__set_username "$sabnzbdUser"
       sabnzbd__set_password "$sabnzbdPass"
       sabnzbd__set_port "$sabnzbdPort"
       sabnzbd__set_apikey "$sabnzbdAPIkey"
-      echo "* Enabling SABnzbd+"
-      sabnzbd__enable
+      
+      if sabnzbd__version_check; then
+        echo "* Upgrading SABnzbd+"
+        sabnzbd__upgrade
+      fi
+      
+      sabnzbd__start
     else
-      sabnzbd__disable
+      if echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
+        echo
+        echo "* Disabling SABnzbd+"
+        sabnzbd__stop
+        sabnzbd__disable
+      fi
     fi
     
     if [ "$plexserverAction" == "Enable" ]; then
       echo
+      if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
+        echo "* Enabling Plex Media Server"
+        plexserver__enable
+      fi
       echo "* Configuring Plex Media Server"
-		  # No config options at this time
-      echo "* Enabling Plex Media Server"
-      plexserver__enable
+      # None for now
+      
+      if plexserver__version_check; then
+        echo "* Upgrading Plex Media Server"
+        plexserver__upgrade
+      fi
+      
+      plexserver__start
     else
-      plexserver__disable
+      if echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
+        echo
+        echo "Disabling Plex Media Server"
+        plexserver__stop
+        plexserver__disable
+      fi
     fi
-
+    
     if [ "$couchpotatoAction" == "Enable" ]; then
       echo
+      if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+        echo "* Enabling CouchPotato"
+        couchpotato__enable
+      fi
       echo "* Configuring CouchPotato"
       couchpotato__stop
       couchpotato__set_username "$couchpotatoUser"
       couchpotato__set_password "$couchpotatoPass"
       couchpotato__set_port "$couchpotatoPort"
       couchpotato__set_apikey "$couchpotatoAPIkey"
-      echo "* Enabling CouchPotato"
-      couchpotato__enable
+      
+      if couchpotato__version_check; then
+        echo "* Upgrading CouchPotato"
+        couchpotato__upgrade
+      fi
+      
+      couchpotato__start
     else
-      couchpotato__disable
+      if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+        echo
+        echo "* Disabling CouchPotato"
+        couchpotato__stop
+        couchpotato__disable
+      fi
     fi
    
     if [ "$headphonesAction" == "Enable" ]; then
       echo
+      if ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
+        echo "* Enabling Headphones"
+        headphones__enable
+      fi
       echo "* Configuring Headphones"
-      headphones__stop 
+      headphones__stop
       headphones__set_username "$headphonesUser"
       headphones__set_password "$headphonesPass"
       headphones__set_port "$headphonesPort"
       headphones__set_apikey "$headphonesAPIkey"
-      echo "* Enabling Headphones"
-      headphones__enable
+      
+      if headphones__version_check; then
+        echo "* Upgrading Headphones"
+        headphones__upgrade
+      fi
+      
+      headphones__start
     else
-      headphones__disable
+      if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
+        echo
+        echo "* Disabling Headphones"
+        headphones__stop
+        headphones__disable
+      fi
     fi
     
     if [ "$nzbdroneAction" == "Enable" ]; then
       echo
+      if ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+        echo "* Enabling NzbDrone"
+        nzbdrone__enable
+      fi
       echo "* Configuring NzbDrone"
-      nzbdrone__stop 
+      nzbdrone__stop
       nzbdrone__set_username "$nzbdroneUser"
       nzbdrone__set_password "$nzbdronePass"
       nzbdrone__set_port "$nzbdronePort"
       nzbdrone__set_apikey "$nzbdroneAPIkey"
-      echo "* Enabling NzbDrone"
-      nzbdrone__enable
+      
+      if nzbdrone__version_check; then
+        echo "* Upgrading NzbDrone"
+        nzbdrone__upgrade
+      fi
+      
+      nzbdrone__start
     else
-      nzbdrone__disable
+      if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+        echo
+        echo "* Disabling NzbDrone"
+        nzbdrone__stop
+        nzbdrone__disable
+      fi
     fi
 
     if [ "$sickbeardAction" == "Enable" ]; then
       echo
+      if ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+        echo "* Enabling Sick Beard"
+        sickbeard__enable
+      fi
       echo "* Configuring Sick Beard"
       sickbeard__stop
       sickbeard__set_username "$sickbeardUser"
       sickbeard__set_password "$sickbeardPass"
       sickbeard__set_port "$sickbeardPort"
       sickbeard__set_apikey "$sickbeardAPIkey"
-      echo "* Enabling Sick Beard"
-      sickbeard__enable
+      
+      if sickbeard__version_check; then
+        echo "* Upgrading Sick Beard"
+        sickbeard__upgrade
+      fi
+      
+      sickbeard__start
     else
-      sickbeard__disable
+      if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+        echo
+        echo "* Disabling Sick Beard"
+        sickbeard__stop
+        sickbeard__disable
+      fi
     fi
 
     if [ "$transmissionAction" == "Enable" ]; then
       echo
+      if ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
+        echo "* Enabling Transmission"
+        transmission__enable
+      fi
       echo "* Configuring Transmission"
       transmission__stop
       transmission__set_username "$transmissionUser"
       transmission__set_password "$transmissionPass"
       transmission__set_port "$transmissionPort"
-      echo "* Enabling Transmission"
-      transmission__enable
+      transmission__set_apikey "$transmissionAPIkey"
+      
+      if transmission__version_check; then
+        echo "* Upgrading Transmission"
+        transmission__upgrade
+      fi
+      
+      transmission__start
     else
-      transmission__disable
+      if echo "$(transmission__get_status)" | grep -q "^Enabled"; then
+        echo
+        echo "* Disabling Transmission"
+        transmission__stop
+        transmission__disable
+      fi
     fi
 
     echo    
@@ -648,6 +746,10 @@ function config__restore_appdata() {
     
     if [ "$sabnzbdAction" == "Restore" ]; then
       echo
+      if ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
+        echo "* Enabling SABnzbd+"
+        sabnzbd__enable
+      fi
       echo "* Restoring SABnzbd+ Data"
       sabnzbd__stop
       
@@ -655,12 +757,20 @@ function config__restore_appdata() {
       sudo su -c -u $osUser \
         "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/sabnzbdplus"
       
-      echo "* Enabling SABnzbd+"
-      sabnzbd__enable
+      if sabnzbd__version_check; then
+        echo "* Upgrading SABnzbd+"
+        sabnzbd__upgrade
+      fi
+      
+      sabnzbd__start
     fi
-    
+
     if [ "$plexserverAction" == "Restore" ]; then
       echo
+      if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
+        echo "* Enabling Plex Media Server"
+        plexserver__enable
+      fi
       echo "* Restoring Plex Media Server Data"
       plexserver__stop
       
@@ -668,25 +778,42 @@ function config__restore_appdata() {
       sudo su -c -u $osUser \
         "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/plexmediaserver"
       
-      echo "* Enabling Plex Media Server"
-      plexserver__enable
+      if plexserver__version_check; then
+        echo "* Upgrading Plex Media Server"
+        plexserver__upgrade
+      fi
+      
+      plexserver__start
     fi
+    
 
     if [ "$couchpotatoAction" == "Restore" ]; then
       echo
+      if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+        echo "* Enabling CouchPotato"
+        couchpotato__enable
+      fi
       echo "* Restoring CouchPotato Data"
       couchpotato__stop
       
       rm -rf "$couchpotatoData"
       sudo su -c -u $osUser \
         "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/couchpotato"
+      
+      if couchpotato__version_check; then
+        echo "* Upgrading CouchPotato"
+        couchpotato__upgrade
+      fi
+      
+      couchpotato__start
+    fi    
 
-      echo "* Enabling CouchPotato"
-      couchpotato__enable
-    fi
-   
     if [ "$headphonesAction" == "Restore" ]; then
       echo
+      if ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
+        echo "* Enabling Headphones"
+        headphones__enable
+      fi
       echo "* Restoring Headphones Data"
       headphones__stop
       
@@ -694,47 +821,75 @@ function config__restore_appdata() {
       sudo su -c -u $osUser \
         "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/headphones"
       
-      echo "* Enabling Headphones"
-      headphones__enable
+      if headphones__version_check; then
+        echo "* Upgrading Headphones"
+        headphones__upgrade
+      fi
+      
+      headphones__start
     fi
 
     if [ "$nzbdroneAction" == "Restore" ]; then
       echo
+      if ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+        echo "* Enabling NzbDrone"
+        nzbdrone__enable
+      fi
       echo "* Restoring NzbDrone Data Data"
       nzbdrone__stop
       
       rm -rf "$nzbdroneData"
       sudo su -c -u $osUser \
         "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/nzbdrone"
-
-      echo "* Enabling NzbDrone"
-      nzbdrone__enable
-    fi   
+      
+      if nzbdrone__version_check; then
+        echo "* Upgrading NzbDrone"
+        nzbdrone__upgrade
+      fi
+      
+      nzbdrone__start
+    fi
 
     if [ "$sickbeardAction" == "Restore" ]; then
       echo
+      if ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+        echo "* Enabling Sick Beard"
+        sickbeard__enable
+      fi
       echo "* Restoring Sick Beard Data"
       sickbeard__stop
       
       rm -rf "$sickbeardData"
       sudo su -c -u $osUser \
         "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/sickbeard"
-
-      echo "* Enabling Sick Beard"
-      sickbeard__enable
+      
+      if sickbeard__version_check; then
+        echo "* Upgrading Sick Beard"
+        sickbeard__upgrade
+      fi
+      
+      sickbeard__start
     fi
 
-    if [ "$transmissionAction" == "Restore" ]; then
+    if [ "$transmissionAction" == "Enable" ]; then
       echo
+      if ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
+        echo "* Enabling Transmission"
+        transmission__enable
+      fi
       echo "* Restoring Transmission Data"
       transmission__stop
       
       rm -rf "$transmissionData"
       sudo su -c -u $osUser \
         "tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/transmission-daemon"
-
-      echo "* Enabling Transmission"
-      transmission__enable
+      
+      if transmission__version_check; then
+        echo "* Upgrading Transmission"
+        transmission__upgrade
+      fi
+      
+      transmission__start
     fi
 
     echo    

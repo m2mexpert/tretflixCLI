@@ -23,20 +23,17 @@ function plexserver__enable() {
   fi
 
   if plexserver__version_check; then
+    plexserver__stop
     plexserver__upgrade
   fi
   
   if [ "$(plexserver__get_status)" == "Disabled" ]; then
     rm -v /etc/init/plexmediaserver.override
   fi
-
-  # Start the service
-  plexserver__start
 }
 
 function plexserver__disable() {
   if echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
-    plexserver__stop
     
     sudo su -c -u $osUser \
       "tar xf $configPayload --strip-components 2 -C /etc/init/ config/init/plexmediaserver.override"
@@ -127,7 +124,6 @@ function plexserver__upgrade() {
     exit 1
   fi
 
-  plexserver__stop
   gdebi --n /tmp/"$filename"
   if [ $? -ne 0 ]; then
     echo "Installation failed"

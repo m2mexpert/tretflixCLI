@@ -23,20 +23,17 @@ function transmission__enable() {
   fi
 
   if transmission__version_check; then
+    transmission__stop
     transmission__upgrade
   fi
   
   if [ "$(transmission__get_status)" == "Disabled" ]; then
     update-rc.d transmission-daemon defaults
   fi
-
-  # Start the service
-  transmission__start
 }
 
 function transmission__disable() {
   if echo "$(transmission__get_status)" | grep -q "^Enabled"; then
-    transmission__stop
     update-rc.d -f transmission-daemon remove
   fi
 }
@@ -140,6 +137,5 @@ function transmission__version_check() {
 }
 
 function transmission__upgrade() {
-  transmission__stop
   apt-get -y install transmission-daemon
 }

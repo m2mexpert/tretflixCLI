@@ -23,6 +23,7 @@ function couchpotato__enable() {
   fi
 
   if couchpotato__version_check; then
+    couchpotato__stop
     couchpotato__upgrade
   fi
 
@@ -31,15 +32,11 @@ function couchpotato__enable() {
   fi
   
   # Make sure config is in sync w/ current SABnzbd+ settings 
-  couchpotato__sabnzbd_sync 
-  
-  # Start the service
-  couchpotato__start
+  couchpotato__sabnzbd_sync
 }
 
 function couchpotato__disable() {
   if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
-    couchpotato__stop
     update-rc.d -f couchpotato remove
   fi
 }
@@ -155,8 +152,6 @@ function couchpotato__version_check() {
 }
 
 function couchpotato__upgrade() {
-  couchpotato__stop
-
   sudo su -c -u $osUser \
     "cd $couchpotatoSource && git remote update"
   sudo su -c -u $osUser \

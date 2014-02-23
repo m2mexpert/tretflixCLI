@@ -23,6 +23,7 @@ function headphones__enable() {
   fi
 
   if headphones__version_check; then
+    headphones__stop
     headphones__upgrade
   fi
 
@@ -32,14 +33,10 @@ function headphones__enable() {
   
   # Make sure config is in sync w/ current SABnzbd+ settings
   headphones__sabnzbd_sync
-
-  # Start the service
-  headphones__start
 }
 
 function headphones__disable() {
   if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-    headphones__stop
     update-rc.d -f headphones remove
   fi
 }
@@ -154,8 +151,6 @@ function headphones__version_check() {
 }
 
 function headphones__upgrade() {
-  headphones__stop
-  
   sudo su -c -u $osUser \
     "cd $headphonesSource && git remote update"
   sudo su -c -u $osUser \

@@ -7,34 +7,48 @@ allservices__imported=1
 function allservices__enable() {
   echo "* Applying changes to CouchPotato"
   couchpotato__enable
+  couchpotato__start
   echo "* Applying changes to Headphones"
   headphones__enable
+  headphones__start
   echo "* Applying changes to NzbDrone"
   nzbdrone__enable
+  nzbdrone__start
   echo "* Applying changes to Plex Media Server"
   plexserver__enable
+  plexserver__start
   echo "* Applying changes to SABnzbd+"
   sabnzbd__enable
+  sabnzbd__start
   echo "* Applying changes to Sick Beard"
   sickbeard__enable
+  sickbeard__start
   echo "* Applying changes to Transmission"
   transmission__enable
+  transmission__start
 }
 
 function allservices__disable() {
   echo "* Applying changes to CouchPotato"
+  couchpotato__stop
   couchpotato__disable
   echo "* Applying changes to Headphones"
+  headphones__stop
   headphones__disable
   echo "* Applying changes to NzbDrone"
+  nzbdrone__stop
   nzbdrone__disable
   echo "* Applying changes to Plex Media Server"
+  plexserver__stop
   plexserver__disable
   echo "* Applying changes to SABnzbd+"
+  sabnzbd__stop
   sabnzbd__disable
   echo "* Applying changes to Sick Beard"
+  sickbeard__stop
   sickbeard__disable
   echo "* Applying changes to Transmission"
+  transmission__stop
   transmission__disable
 }
 

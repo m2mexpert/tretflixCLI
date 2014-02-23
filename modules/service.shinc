@@ -86,36 +86,43 @@ function service__enable() {
       '-b' | '--sickbeard')
       	echo "* Applying changes to Sick Beard"
         sickbeard__enable
+        sickbeard__start
         echo "Done."
         ;;    
       '-c' | '--couchpotato')
         echo "* Applying changes to CouchPotato"
         couchpotato__enable
+        couchpotato__start
         echo "Done."
         ;;
       '-h' | '--headphones')
         echo "* Applying changes to Headphones"
         headphones__enable
+        headphones__start
         echo "Done."
         ;;
       '-n' | '--nzbdrone')
         echo "* Applying changes to NzbDrone"
         nzbdrone__enable
+        nzbdrone__start
         echo "Done."
         ;;
       '-p' | '--plexserver')
         echo "* Applying changes to Plex Media Server"
         plexserver__enable
+        plexserver__start
         echo "Done."
         ;;
       '-s' | '--sabnzbd')
         echo "* Applying changes to SABnzbd+"
         sabnzbd__enable
+        sabnzbd__start
         echo "Done."
         ;;
       '-t' | '--transmission')
         echo "* Applying changes to Transmission"
         transmission__enable
+        transmission__start
         echo "Done."
         ;;
       *)
@@ -135,36 +142,43 @@ function service__disable() {
         ;;
       '-b' | '--sickbeard')
       	echo "* Applying changes to Sick Beard"
+      	sickbeard__stop
         sickbeard__disable
         echo "Done."
         ;;    
       '-c' | '--couchpotato')
         echo "* Applying changes to CouchPotato"
+        couchpotato__stop
         couchpotato__disable
         echo "Done."
         ;;
       '-h' | '--headphones')
         echo "* Applying changes to Headphones"
+        headphones__stop
         headphones__disable
         echo "Done."
         ;;
       '-n' | '--nzbdrone')
         echo "* Applying changes to NzbDrone"
+        nzbdrone__stop
         nzbdrone__disable
         echo "Done."
         ;;
       '-p' | '--plexserver')
         echo "* Applying changes to Plex Media Server"
+        plexserver__stop
         plexserver__disable
         echo "Done."
         ;;
       '-s' | '--sabnzbd')
         echo "* Applying changes to SABnzbd+"
+        sabnzbd__stop
         sabnzbd__disable
         echo "Done."
         ;;
       '-t' | '--transmission')
         echo "* Applying changes to Transmission"
+        transmission__stop
         transmission__disable
         echo "Done."
         ;;

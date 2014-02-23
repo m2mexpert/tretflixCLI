@@ -23,6 +23,7 @@ function nzbdrone__enable() {
   fi
 
   if nzbdrone__version_check; then
+    nzbdrone__stop
     nzbdrone__upgrade
   fi
   
@@ -32,14 +33,10 @@ function nzbdrone__enable() {
   
   # Make sure config is in sync w/ current SABnzbd+ settings
   nzbdrone__sabnzbd_sync
-
-  # Start the service
-  nzbdrone__start
 }
 
 function nzbdrone__disable() {
   if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-    nzbdrone__stop
     
     sudo su -c -u $osUser \
       "tar xf $configPayload --strip-components 2 -C /etc/init/ config/init/nzbdrone.override"
@@ -208,7 +205,6 @@ function nzbdrone__version_check() {
 }
 
 function nzbdrone__upgrade() {
-  nzbdrone__stop
   apt-get -y install nzbdrone
 }
 
