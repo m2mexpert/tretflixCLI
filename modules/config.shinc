@@ -18,8 +18,8 @@ function config__help() {
   echo
   echo "NOTES:" 
   echo "  Backups will be saved in /opt/tretflix. When restoring a" 
-  echo "  backup, provide the backup filename or the full path to"
-  echo "  the backup file if it's not in /opt/tretflix."
+  echo "  backup, provide the tar archive filename or the full path"
+  echo "  to the tar file if it's not in /opt/tretflix."
   echo
   exit 1
 }
