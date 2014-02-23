@@ -5,9 +5,9 @@ fi
 nzbdrone__imported=1
 
 function nzbdrone__get_status() {
-  if service nzbdrone status | grep "unrecognized service" > /dev/null 2>&1; then
+  if service nzbdrone status 2>&1 | grep -q "unrecognized service"; then
     status="Not Installed"
-  elif service nzbdrone status | egrep "start|running" > /dev/null 2>&1; then
+  elif service nzbdrone status 2>&1 | egrep -q "start|running"; then
     status="Enabled|Running"
   elif ! ls -l /etc/init/nzbdrone.override > /dev/null 2>&1; then
     status="Enabled|Stopped"
