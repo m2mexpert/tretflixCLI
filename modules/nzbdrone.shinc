@@ -167,14 +167,10 @@ function nzbdrone__install() {
     # Create the ~/.config directory
     if ! tools__path_exists "/home/sysadmin/.config"; then
       sudo su -c -u $osUser \
-      "mkdir /home/sysadmin/.config"
+        "mkdir /home/sysadmin/.config"
     fi
     
-    # Create the symbolic link
-    sudo su -c -u $osUser \
-      "mkdir /opt/tretflix/tmp/sabnzbdplus/nzbdrone"
-  fi
-    
+    # Create the symbolic link in ~/.config
     sudo su -c -u $osUser \
       "ln -s /opt/tretflix/appdata/nzbdrone/ /home/sysadmin/.config/NzbDrone"
   fi
