@@ -25,7 +25,7 @@ function nzbdrone__enable() {
 
 function nzbdrone__disable() {
   if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-    tar xvf $configBundle --strip-components 2 -C /etc/init/ config/init/nzbdrone.override
+    tar xf $configBundle --strip-components 2 -C /etc/init/ config/init/nzbdrone.override
   fi
 }
 
@@ -162,16 +162,16 @@ function nzbdrone__install() {
   
   # Copy runlevel config files into init
   if ! tools__path_exists "/etc/init/nzbdrone.conf"; then
-    tar xvf $configBundle --strip-components 2 -C /etc/init/ config/init/nzbdrone.conf
+    tar xf $configBundle --strip-components 2 -C /etc/init/ config/init/nzbdrone.conf
   fi
   if ! tools__path_exists "/etc/init/nzbdrone.override"; then
-    tar xvf $configBundle --strip-components 2 -C /etc/init/ config/init/nzbdrone.override
+    tar xf $configBundle --strip-components 2 -C /etc/init/ config/init/nzbdrone.override
   fi
   
   # Copy the app data dir into appdata/
   if ! tools__path_exists "/opt/tretflix/appdata/nzbdrone"; then
     sudo su -c -u $osUser \
-      "tar xvf $appdataBundle --strip-components 1 -C $tretflixPath/appdata/ appdata/nzbdrone"
+      "tar xf $appdataBundle --strip-components 1 -C $tretflixPath/appdata/ appdata/nzbdrone"
   fi
     
   # Add the nzbdrone category to the SABnzbd config
