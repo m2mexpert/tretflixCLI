@@ -38,14 +38,14 @@ function headphones__enable() {
 }
 
 function headphones__disable() {
-  if $(headphones__get_status) | grep -q "^Enabled"; then
+  if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
     headphones__stop
     update-rc.d -f headphones remove
   fi
 }
 
 function headphones__start() {
-  if $(headphones__get_status) | grep -q "^Enabled"; then
+  if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
     for i in {1..3}; do
       if [ $i -gt 1 ]; then
         sleep 2

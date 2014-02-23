@@ -35,14 +35,14 @@ function sabnzbd__enable() {
 }
 
 function sabnzbd__disable() {
-  if $(sabnzbd__get_status) | grep -q "^Enabled"; then
+  if echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
     sabnzbd__stop
     update-rc.d -f sabnzbdplus remove
   fi
 }
 
 function sabnzbd__start() {
-  if $(sabnzbd__get_status) | grep -q "^Enabled"; then
+  if echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
     for i in {1..3}; do
       if [ $i -gt 1 ]; then
         sleep 2

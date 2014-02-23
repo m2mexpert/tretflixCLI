@@ -35,7 +35,7 @@ function plexserver__enable() {
 }
 
 function plexserver__disable() {
-  if $(plexserver__get_status) | grep -q "^Enabled"; then
+  if echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
     plexserver__stop
     
     sudo su -c -u $osUser \
@@ -44,7 +44,7 @@ function plexserver__disable() {
 }
 
 function plexserver__start() {
-  if $(plexserver__get_status) | grep -q "^Enabled"; then
+  if echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
     for i in {1..3}; do
       if [ $i -gt 1 ]; then
         sleep 5

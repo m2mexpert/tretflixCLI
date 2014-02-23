@@ -38,7 +38,7 @@ function nzbdrone__enable() {
 }
 
 function nzbdrone__disable() {
-  if $(nzbdrone__get_status) | grep -q "^Enabled"; then
+  if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
     nzbdrone__stop
     
     sudo su -c -u $osUser \
@@ -47,7 +47,7 @@ function nzbdrone__disable() {
 }
 
 function nzbdrone__start() {
-  if $(nzbdrone__get_status) | grep -q "^Enabled"; then
+  if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
     for i in {1..3}; do
       if [ $i -gt 1 ]; then
         sleep 2

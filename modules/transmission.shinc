@@ -35,14 +35,14 @@ function transmission__enable() {
 }
 
 function transmission__disable() {
-  if $(transmission__get_status) | grep -q "^Enabled"; then
+  if echo "$(transmission__get_status)" | grep -q "^Enabled"; then
     transmission__stop
     update-rc.d -f transmission-daemon remove
   fi
 }
 
 function transmission__start() {
-  if $(transmission__get_status) | grep -q "^Enabled"; then
+  if echo "$(transmission__get_status)" | grep -q "^Enabled"; then
     for i in {1..3}; do
       if [ $i -gt 1 ]; then
         sleep 2
