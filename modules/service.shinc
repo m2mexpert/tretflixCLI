@@ -107,6 +107,8 @@ function service__enable() {
         fi
         echo "* Starting Sick Beard" 
         sickbeard__start
+        echo
+        sickbeard__show_config
         ;;
       '-c' | '--couchpotato')
         if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
@@ -133,6 +135,8 @@ function service__enable() {
         fi
         echo "* Starting CouchPotato"
         couchpotato__start
+        echo
+        couchpotato__show_config
         ;;
       '-h' | '--headphones')
         if ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
@@ -159,6 +163,8 @@ function service__enable() {
         fi
         echo "* Starting Headphones"
         headphones__start
+        echo
+        headphones__show_config
         ;;
       '-n' | '--nzbdrone')
         if ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
@@ -185,6 +191,8 @@ function service__enable() {
         fi
         echo "* Starting NzbDrone"
         nzbdrone__start
+        echo
+        nzbdrone__show_config
         ;;
       '-p' | '--plexserver')
         if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
@@ -206,6 +214,8 @@ function service__enable() {
         fi
         echo "* Starting Plex Media Server"
         plexserver__start
+        echo
+        plexserver__show_config
         ;;
       '-s' | '--sabnzbd')
         if ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
@@ -227,6 +237,8 @@ function service__enable() {
         fi
         echo "* Starting SABnzbd+"
         sabnzbd__start
+        echo
+        sabnzbd__show_config
         ;;
       '-t' | '--transmission')
         if ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
@@ -248,6 +260,8 @@ function service__enable() {
         fi
         echo "* Starting Transmission"
         transmission__start
+        echo
+        transmission__show_config
         ;;
       *)
       	service__help
@@ -267,36 +281,50 @@ function service__disable() {
       	echo "* Disabling Sick Beard"
       	sickbeard__stop
         sickbeard__disable
+        echo
+        sickbeard__show_config
         ;;    
       '-c' | '--couchpotato')
         echo "* Disabling CouchPotato"
         couchpotato__stop
         couchpotato__disable
+        echo
+        couchpotato__show_config
         ;;
       '-h' | '--headphones')
         echo "* Disabling Headphones"
         headphones__stop
         headphones__disable
+        echo
+        headphones__show_config
         ;;
       '-n' | '--nzbdrone')
         echo "* Disabling NzbDrone"
         nzbdrone__stop
         nzbdrone__disable
+        echo
+        nzbdrone__show_config
         ;;
       '-p' | '--plexserver')
         echo "* Disabling Plex Media Server"
         plexserver__stop
         plexserver__disable
+        echo
+        plexserver__show_config
         ;;
       '-s' | '--sabnzbd')
         echo "* Disabling SABnzbd+"
         sabnzbd__stop
         sabnzbd__disable
+        echo
+        sabnzbd__show_config
         ;;
       '-t' | '--transmission')
         echo "* Disabling Transmission"
         transmission__stop
         transmission__disable
+        echo
+        transmission__show_config
         ;;
       *)
       	service__help
@@ -322,8 +350,6 @@ function service__upgrade() {
           sickbeard__start
         else
           echo "Sick Beard is up-to-date."
-          echo
-          exit 1
         fi
         ;;    
       '-c' | '--couchpotato')
@@ -334,8 +360,6 @@ function service__upgrade() {
           couchpotato__start
         else
           echo "CouchPotato is up-to-date."
-          echo
-          exit 1
         fi
         ;;
       '-h' | '--headphones')
@@ -346,8 +370,6 @@ function service__upgrade() {
           headphones__start
         else
           echo "Headphones is up-to-date."
-          echo
-          exit 1
         fi
         ;;
       '-n' | '--nzbdrone')
@@ -360,8 +382,6 @@ function service__upgrade() {
           nzbdrone__start
         else
           echo "NzbDrone is up-to-date."
-          echo
-          exit 1
         fi
         ;;
       '-p' | '--plexserver')
@@ -372,8 +392,6 @@ function service__upgrade() {
           plexserver__start
         else
           echo "Plex Media Server is up-to-date."
-          echo
-          exit 1
         fi
         ;;
       '-s' | '--sabnzbd')
@@ -386,8 +404,6 @@ function service__upgrade() {
           sabnzbd__start
         else
           echo "SABnzbd+ is up-to-date."
-          echo
-          exit 1
         fi
         ;;
       '-t' | '--transmission')
@@ -400,8 +416,6 @@ function service__upgrade() {
           transmission__start
         else
           echo "Transmission is up-to-date."
-          echo
-          exit 1
         fi
         ;;
       *)
