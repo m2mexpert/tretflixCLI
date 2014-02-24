@@ -1,0 +1,212 @@
+# avoid double inclusion
+if test "${storage__imported+defined}" == "defined"; then
+  return 0
+fi
+storage__imported=1
+
+function storage__help() {
+  echo "Usage: tretflix storage [COMMAND] [INPUT]"
+  echo
+  echo "COMMANDS:"
+  echo "  tretflix storage set local"
+  echo "  tretflix storage set share [PATH]"
+  echo "  tretflix storage show config"
+  echo
+  echo "  Note: Existing files will be copied. This may take a while if there"
+  echo "        are large amounts of data to be copied and/or depending on"
+  echo "        network speed, congestion, etc. Be patient."
+  echo
+  exit 1
+}
+
+function storage__command_handler() {
+  if test "${CLI_ARGS[2]+isset}"; then
+    case "${CLI_ARGS[1]} ${CLI_ARGS[2]}" in
+      'set local')
+        storage__set_local
+        ;;
+      'set share')
+        storage__set_share
+        ;;
+      'show config')
+        storage__show_config
+        ;;
+      *)
+        storage__help
+    esac
+  else
+    storage__help
+  fi
+}
+
+function storage__set_local() {
+  if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
+    newPath="/media/disk2/downloads"
+  
+    # Exit if the "downloads" symlink is already pointed to /media/disk2/downloads
+    downloadsPath="$(readlink $downloadsLink)"
+    if [ "$downloadsPath" == "$newPath" ]; then
+      echo "Error: Downloads are already stored locally"
+      echo
+      exit 1
+    fi
+    
+    # Get the size of the data to be synced to the new path
+    downloadsSize=$(du -c "$downloadsLink" | grep total | awk '{ print $1 }')
+		syncSize=$downloadsSize
+
+		# Get the space available at the new path
+		newPathSpace=$(df -k "$newPath" | awk '{ print $4 }' | grep -v "Available")
+	
+		# Verify that the new path has enough space to copy the existing files	
+		if [ "$syncSize" -ge "$newPathSpace" ]; then
+			echo "Error: Insufficient space, cannot copy exisitng files"
+			echo
+			exit 1
+		fi
+		
+		# Copy "Downloads" to the new path  
+		sudo su -c -u $osUser \
+			"rsync -av --progress --human-readable $downloadsLink/* $newPath/."
+		if [ $? -ne 0 ]; then
+			echo "Error: Rsync copy operation failed"
+			echo
+			exit 1
+		fi
+	
+		# Set the "Downloads" symlink to the new path
+		ln -sfn $newPath $downloadsLink
+		if [ $? -ne 0 ]; then
+			echo "Error: Failed to update the symbolic link"
+			echo
+			exit 1
+		fi
+  
+  else
+    storage__help
+  fi
+}
+
+function storage__set_share() {
+  if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
+    newPath="${CLI_ARGS[3]}"
+  
+    # Verify that the new path exists
+    if [ "$(tools__path_istype $newPath)" != "Directory" ]; then
+      echo "Error: The path provided does not exist or is not a directory"
+      echo
+      exit 1
+    fi
+
+    # Verify that the new path is a network share
+    newPathType=$(df -T "$newPath" | tail -1 | awk '{print $2}')
+    if ! echo $newPathType | egrep -q "cifs|nfs"; then
+      echo "Error: The path provided is not on a CIFS or NFS share"
+      echo
+      exit 1
+    fi
+
+    # Verify Read/Write permissions in the new path
+    sudo su -c -u $osUser \
+      "test -w $newPath"
+    if [ $? -ne 0 ]; then
+      echo "Error: Permission denied, test write failed"
+      echo
+      exit 1
+    fi
+    
+    # Get the "tmp" symlink's target path
+    tmpPath="$(readlink $tmpLink)"
+    # If the "tmp" symlink is still pointed to /media/disk2/tmp include it in the copy
+    if [ "$tmpPath" != "$downloadsLink/.tmp" ]; then
+      tmpAction=true
+    else
+      tmpAction=false
+    fi 
+
+    # Get the size of the data to be synced to the new path
+    downloadsSize=$(du -c "$downloadsLink" | grep total | awk '{ print $1 }')
+    if $tmpAction; then
+		  tmpSize=$(du -c "$tmpLink" | grep total | awk '{ print $1 }')
+		  syncSize=$(($downloadsSize+$tmpSize))
+		else
+		  syncSize=$downloadsSize
+		fi
+
+		# Get the space available at the new path
+		newPathSpace=$(df -k "$newPath" | awk '{ print $4 }' | grep -v "Available")
+	
+		# Verify that the new path has enough space to copy the existing files	
+		if [ "$syncSize" -ge "$newPathSpace" ]; then
+			echo "Error: Insufficient space, cannot copy exisitng files"
+			echo
+			exit 1
+		fi
+		
+		# Copy "Downloads" to the new path  
+		sudo su -c -u $osUser \
+			"rsync -av --progress --human-readable $downloadsLink/* $newPath/."
+		if [ $? -ne 0 ]; then
+			echo "Error: Rsync copy operation failed"
+			echo
+			exit 1
+		fi
+	
+		# Set the "Downloads" symlink to the new path
+		ln -sfn $newPath $downloadsLink
+		if [ $? -ne 0 ]; then
+			echo "Error: Failed to update the symbolic link"
+			echo
+			exit 1
+		fi
+    
+    # Copy and Set "tmp" to "downloads/.tmp" if it isn't already
+    if $tmpAction; then
+      # If the .tmp directory doesn't exist in "Downloads", create it
+      if [ "$(tools__path_istype $downloadsLink/.tmp)" != "Directory" ]; then
+        sudo su -c -u $osUser \
+          "mkdir $downloadsLink/.tmp"
+          
+        if [ $? -ne 0 ]; then
+				  echo "Error: Failed to create .tmp directory"
+				  echo
+				  exit 1
+			  fi
+      fi
+    
+      # Copy the existing tmp files to the new path/.tmp 
+			sudo su -c -u $osUser \
+				"rsync -av --progress --human-readable $tmpLink/* $downloadsLink/.tmp/."
+			if [ $? -ne 0 ]; then
+				echo "Error: Rsync copy operation failure"
+				echo
+				exit 1
+			fi
+			
+			# Change the symbolic link to point to the new path/.tmp
+			ln -sfn $downloadsLink/.tmp $tmpLink
+			if [ $? -ne 0 ]; then
+				echo "Error: Failed to update the symbolic link"
+				echo
+				exit 1
+			fi
+		fi
+  else
+    storage__help
+  fi
+}
+
+function storage__show_config() {
+  if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
+    path="$(readlink $downloadsLink)"
+    size="$(df -h "$downloadsLink" | awk '{ print $2 }' | egrep -v "Size")"
+    used="$(df -h "$downloadsLink" | awk '{ print $3 }' | egrep -v "Used")"
+    avail="$(df -h "$downloadsLink" | awk '{ print $4 }' | egrep -v "Avail")"
+    uPerc="$(df -h "$downloadsLink" | awk '{ print $5 }' | egrep -v "Use%")"
+
+    printf "%-40s %-7s %-7s %-7s %-7s\n" "Path" "Size" "Used" "Avail" "Use%"
+    printf "%-40s %-7s %-7s %-7s %-7s\n" "$path" "$size" "$used" "$avail" "$uPerc"
+  else
+    storage__help
+  fi
+}

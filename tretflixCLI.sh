@@ -104,6 +104,7 @@ import "modules/sabnzbd"
 import "modules/service"
 import "modules/shares"
 import "modules/sickbeard"
+import "modules/storage"
 import "modules/tools"
 import "modules/transmission"
 import "modules/update"
@@ -133,6 +134,9 @@ if test "${CLI_ARGS[0]+isset}"; then
     shares)
       shares__command_handler
       ;;
+    storage)
+      storage__command_handler
+      ;;      
     update)
       update__command_handler
       ;;
