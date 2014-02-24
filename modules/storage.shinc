@@ -52,7 +52,7 @@ function storage__set_local() {
     fi
     
     # Get the size of the data to be synced to the new path
-    downloadsSize=$(du -c "$downloadsLink" | grep total | awk '{ print $1 }')
+    downloadsSize=$(du -c "$downloadsLink/" | grep total | awk '{ print $1 }')
 		syncSize=$downloadsSize
 
 		# Get the space available at the new path
@@ -125,9 +125,9 @@ function storage__set_share() {
     fi 
 
     # Get the size of the data to be synced to the new path
-    downloadsSize=$(du -c "$downloadsLink" | grep total | awk '{ print $1 }')
+    downloadsSize=$(du -c "$downloadsLink/" | grep total | awk '{ print $1 }')
     if $tmpAction; then
-		  tmpSize=$(du -c "$tmpLink" | grep total | awk '{ print $1 }')
+		  tmpSize=$(du -c "$tmpLink/" | grep total | awk '{ print $1 }')
 		  syncSize=$(($downloadsSize+$tmpSize))
 		else
 		  syncSize=$downloadsSize
