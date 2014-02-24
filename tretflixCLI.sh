@@ -76,7 +76,6 @@ function help() {
   echo
   echo "COMMANDS:"
   echo "  tretflix config"
-  echo "  tretflix downloads"
   echo "  tretflix network"
   echo "  tretflix service"
   echo "  tretflix shares"
@@ -96,7 +95,6 @@ import "modules/about"
 import "modules/allservices"
 import "modules/config"
 import "modules/couchpotato"
-import "modules/downloads"
 import "modules/headphones"
 import "modules/network"
 import "modules/nzbdrone"
@@ -122,9 +120,6 @@ if test "${CLI_ARGS[0]+isset}"; then
       ;;
     config)
       config__command_handler
-      ;;
-    downloads)
-      downloads__command_handler
       ;;
     network)
       network__command_handler
