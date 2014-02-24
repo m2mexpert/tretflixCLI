@@ -67,7 +67,7 @@ function storage__set_local() {
 		
 		# Copy "Downloads" to the new path  
 		sudo su -c -u $osUser \
-			"rsync -av --progress --human-readable --include=.tmp/ $downloadsLink/ $newPath/."
+			"rsync -av --progress --human-readable --include=.tmp/ $downloadsLink/* $newPath/."
 		if [ $? -ne 0 ]; then
 			echo "Error: Rsync exited with errors, review output."
 		fi
@@ -143,7 +143,7 @@ function storage__set_share() {
 		
 		# Copy "Downloads" to the new path  
 		sudo su -c -u $osUser \
-			"rsync -av --progress --human-readable --include=.tmp/ $downloadsLink/ $newPath/."
+			"rsync -av --progress --human-readable --include=.tmp/ $downloadsLink/* $newPath/."
 		if [ $? -ne 0 ]; then
 			echo "Error: Rsync exited with errors, review output."
 		fi
@@ -172,7 +172,7 @@ function storage__set_share() {
     
       # Copy the existing tmp files to the new path/.tmp 
 			sudo su -c -u $osUser \
-				"rsync -av --progress --human-readable $tmpLink/ $downloadsLink/.tmp/."
+				"rsync -av --progress --human-readable $tmpLink/* $downloadsLink/.tmp/."
 		  if [ $? -ne 0 ]; then
 			  echo "Error: Rsync exited with errors, review output."
 		  fi
