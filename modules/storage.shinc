@@ -69,9 +69,7 @@ function storage__set_local() {
 		sudo su -c -u $osUser \
 			"rsync -av --progress --human-readable --include=.tmp/ $downloadsLink/ $newPath/."
 		if [ $? -ne 0 ]; then
-			echo "Error: Rsync copy operation failed"
-			echo
-			exit 1
+			echo "Error: Rsync exited with errors, review output."
 		fi
 	
 		# Set the "Downloads" symlink to the new path
@@ -147,9 +145,7 @@ function storage__set_share() {
 		sudo su -c -u $osUser \
 			"rsync -av --progress --human-readable --include=.tmp/ $downloadsLink/ $newPath/."
 		if [ $? -ne 0 ]; then
-			echo "Error: Rsync copy operation failed"
-			echo
-			exit 1
+			echo "Error: Rsync exited with errors, review output."
 		fi
 	
 		# Set the "Downloads" symlink to the new path
@@ -177,11 +173,9 @@ function storage__set_share() {
       # Copy the existing tmp files to the new path/.tmp 
 			sudo su -c -u $osUser \
 				"rsync -av --progress --human-readable $tmpLink/ $downloadsLink/.tmp/."
-			if [ $? -ne 0 ]; then
-				echo "Error: Rsync copy operation failure"
-				echo
-				exit 1
-			fi
+		  if [ $? -ne 0 ]; then
+			  echo "Error: Rsync exited with errors, review output."
+		  fi
 			
 			# Change the symbolic link to point to the new path/.tmp
 			ln -sfn $downloadsLink/.tmp $tmpLink
