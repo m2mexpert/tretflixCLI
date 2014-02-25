@@ -55,10 +55,10 @@ function system__app_upgrades() {
         option="enable"
         ;;
       *)
-        shares__help
+        system__help
     esac
   else
-    shares__help
+    system__help
   fi
   
   echo $option
@@ -74,10 +74,10 @@ function system__tmp_cleanup() {
         option="enable"
         ;;
       *)
-        shares__help
+        system__help
     esac
   else
-    shares__help
+    system__help
   fi
   
   echo $option
@@ -93,10 +93,10 @@ function system__web_proxy() {
         option="enable"
         ;;
       *)
-        shares__help
+        system__help
     esac
   else
-    shares__help
+    system__help
   fi
   
   echo $option
