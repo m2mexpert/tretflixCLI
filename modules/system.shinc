@@ -8,20 +8,33 @@ function system__help() {
   echo "Usage: tretflix system [COMMAND] [OPTION]"
   echo
   echo "COMMANDS:"
-  echo "  tretflix system webproxy [OPTION]"
+  echo "  tretflix system app upgrades [OPTION]"
+  echo "  tretflix system tmp cleanup [OPTION]"
+  echo "  tretflix system web proxy [OPTION]"
   echo
   echo "OPTIONS:"
   echo "  -d, --disable"
   echo "  -e, --enable"
   echo
+  echo "NOTES:"
+  echo "  Enable 'tmp cleanup' for automatic nightly cleanup"
+  echo "  of abandoned files/dirs in the tmp directory. Enable"
+  echo "  'app upgrades' for automatic nightly upgrades of"
+  echo "  enabled services."
   exit 1
 }
 
 function system__command_handler() {
   if test "${CLI_ARGS[2]+isset}"; then
-    case "${CLI_ARGS[1]}" in
-      'webproxy')
-        system__webproxy
+    case "${CLI_ARGS[1]} ${CLI_ARGS[2]}" in
+      'app upgrades')
+        system__app_upgrades
+        ;;
+      'tmp cleanup')
+        system__tmp_cleanup
+        ;;
+      'web proxy')
+        system__web_proxy
         ;;
       *)
         system__help
@@ -31,9 +44,47 @@ function system__command_handler() {
   fi
 }
 
-function system__webproxy() {
-  if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    case "${CLI_ARGS[2]}" in
+function system__app_upgrades() {
+  if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
+    case "${CLI_ARGS[3]}" in
+      '-d' | '--disable')
+        option="disable"
+        ;;
+      '-e' | '--enable')
+        option="enable"
+        ;;
+      *)
+        shares__help
+    esac
+  else
+    shares__help
+  fi
+  
+  echo $option
+}
+
+function system__tmp_cleanup() {
+  if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
+    case "${CLI_ARGS[3]}" in
+      '-d' | '--disable')
+        option="disable"
+        ;;
+      '-e' | '--enable')
+        option="enable"
+        ;;
+      *)
+        shares__help
+    esac
+  else
+    shares__help
+  fi
+  
+  echo $option
+}
+
+function system__web_proxy() {
+  if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
+    case "${CLI_ARGS[3]}" in
       '-d' | '--disable')
         option="disable"
         ;;
