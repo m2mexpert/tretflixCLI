@@ -167,7 +167,7 @@ function storage__set_share() {
       # Copy the existing tmp files to the new path/.tmp 
 		  sudo su -c -u $osUser \
 		    "shopt -s dotglob && \
-				rsync -av --progress --human-readable $tmpLink $tmpPath && \
+				rsync -av --progress --human-readable $tmpLink/. $tmpPath && \
 				shopt -u dotglob"
 				
 		  if [ $? -ne 0 ]; then
