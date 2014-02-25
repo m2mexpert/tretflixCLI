@@ -51,6 +51,23 @@ function config__command_handler() {
 
 function config__wizard() {
   if [ "${#CLI_ARGS[@]}" -eq 2 ]; then
+  
+    # If the system has not been configured or restored yet, prompt the user first
+    if [ ! -f $configFlag -a ! -f $restoreFlag ]; then
+      while true; do
+        read -p "Do you want to run the config wizard? (y/n): " input
+        case "$input" in
+          [yY] | [yY][Ee][Ss] )
+            break;;
+          [nN] | [n|N][O|o] )
+            return;;
+          * )
+            echo "!! ERROR: Invalid entry."
+            echo
+        esac      
+      done    
+    fi
+  
     clear
     echo "  __                  __    _____ __   __        "
     echo "_/  |________   _____/  |__/ ____\  | |__|__  ___"
