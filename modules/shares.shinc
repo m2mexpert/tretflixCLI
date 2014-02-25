@@ -13,7 +13,7 @@ function shares__help() {
   echo "  tretflix shares mount all"
   echo "  tretflix shares show config"
   echo
-  echo "TYPES: CIFS, NFS, SMB"
+  echo "TYPES: CIFS, NFS"
   echo
   echo "OPTIONS:"
   echo "  -u, --user [USERNAME] [PASSWORD]"
@@ -42,12 +42,6 @@ function shares__command_handler() {
     	  shares__add_share
     	  ;;
     	'del nfs')
-    	  shares__del_share
-    	  ;;
-    	'add smb')
-    	  shares__add_share
-    	  ;;
-    	'del smb')
     	  shares__del_share
     	  ;;
     	'mount all')
@@ -87,11 +81,6 @@ function shares__add_share() {
   host="${CLI_ARGS[3]}"
   share="${CLI_ARGS[4]}"
   type="${CLI_ARGS[2]}"
-  
-  # Change type to "cifs" if user entered "smb"
-  if [ "$type" == "smb" ]; then
-    type="cifs"
-  fi
 
   # Build the share and mount point syntax depending on share type
   if [ "$type" == "cifs" ]; then
