@@ -78,7 +78,7 @@ function shares__add_share() {
   # Assign friendly names to passed variables
   host="${CLI_ARGS[3]}"
   share="${CLI_ARGS[4]}"
-  type="${CLI_ARGS[2]}"
+  type=$(echo "${CLI_ARGS[2]}" | tr '[:upper:]' '[:lower:]')
 
   # Build the share and mount point syntax depending on share type
   if [ "$type" == "cifs" ]; then
@@ -132,7 +132,7 @@ function shares__del_share() {
     # Assign friendly names to passed variables
     host="${CLI_ARGS[3]}"
     share="${CLI_ARGS[4]}"
-    type="${CLI_ARGS[2]}"
+    type=$(echo "${CLI_ARGS[2]}" | tr '[:upper:]' '[:lower:]')
     
     # Build the share and mount point syntax depending on share type
     if [ "$type" == "cifs" ]; then
