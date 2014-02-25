@@ -12,9 +12,10 @@ function storage__help() {
   echo "  tretflix storage set share [PATH]"
   echo "  tretflix storage show config"
   echo
-  echo "  Note: Existing files will be copied. This may take a while if there"
-  echo "        are large amounts of data to be copied and/or depending on"
-  echo "        network speed, congestion, etc. Be patient."
+  echo "NOTES:"
+  echo "  Existing files will be copied. This may take a while if there"
+  echo "  are large amounts of data to be copied and/or depending on"
+  echo "  network speed, congestion, etc. Be patient."
   echo
   exit 1
 }
