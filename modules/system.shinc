@@ -37,7 +37,7 @@ function system__webproxy() {
       '-d' | '--disable')
         option="disable"
         ;;
-      '-2' | '--enable')
+      '-e' | '--enable')
         option="enable"
         ;;
       *)
