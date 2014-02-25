@@ -80,6 +80,7 @@ function help() {
   echo "  tretflix service"
   echo "  tretflix shares"
   echo "  tretflix storage"
+  echo "  tretflix system"
   echo
   exit 1
 }
