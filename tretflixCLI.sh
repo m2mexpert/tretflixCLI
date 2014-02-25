@@ -104,9 +104,12 @@ import "modules/service"
 import "modules/shares"
 import "modules/sickbeard"
 import "modules/storage"
+import "modules/system"
 import "modules/tools"
 import "modules/transmission"
 import "modules/update"
+import "modules/webproxy"
+
 
 # Import variables (used by modules)
 source "$script_absolute_dir/script.conf"
@@ -132,7 +135,10 @@ if test "${CLI_ARGS[0]+isset}"; then
       ;;
     storage)
       storage__command_handler
-      ;;      
+      ;;   
+    system)
+      system__command_handler
+      ;;
     update)
       update__command_handler
       ;;

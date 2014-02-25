@@ -1,0 +1,51 @@
+# avoid double inclusion
+if test "${system__imported+defined}" == "defined"; then
+  return 0
+fi
+system__imported=1
+
+function system__help() {
+  echo "Usage: tretflix system [COMMAND] [OPTION]"
+  echo
+  echo "COMMANDS:"
+  echo "  tretflix system webproxy [OPTION]"
+  echo
+  echo "OPTIONS:"
+  echo "  -d, --disable"
+  echo "  -e, --enable"
+  echo
+  exit 1
+}
+
+function system__command_handler() {
+  if test "${CLI_ARGS[2]+isset}"; then
+    case "${CLI_ARGS[1]}" in
+      'webproxy')
+        system__webproxy
+        ;;
+      *)
+        system__help
+    esac
+  else
+    system__help
+  fi
+}
+
+function system__webproxy() {
+  if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
+    case "${CLI_ARGS[2]}" in
+      '-d' | '--disable')
+        option="disable"
+        ;;
+      '-2' | '--enable')
+        option="enable"
+        ;;
+      *)
+        shares__help
+    esac
+  else
+    shares__help
+  fi
+  
+  echo $option
+}
