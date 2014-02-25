@@ -21,6 +21,7 @@ function system__help() {
   echo "  of abandoned files/dirs in the tmp directory. Enable"
   echo "  'app upgrades' for automatic nightly upgrades of"
   echo "  enabled services."
+  echo
   exit 1
 }
 
