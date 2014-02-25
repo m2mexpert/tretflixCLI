@@ -41,11 +41,11 @@ function storage__command_handler() {
 
 function storage__set_local() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    newPath="/media/disk2/downloads"
+    newPath="$downloadsPath"
   
     # Exit if the "downloads" symlink is already pointed to /media/disk2/downloads
-    downloadsPath="$(readlink $downloadsLink)"
-    if [ "$downloadsPath" == "$newPath" ]; then
+    currentDownloadsPath="$(readlink $downloadsLink)"
+    if [ "$currentDownloadsPath" == "$newPath" ]; then
       echo "Error: Downloads are already stored locally"
       echo
       exit 1
@@ -117,9 +117,9 @@ function storage__set_share() {
     fi
     
     # Get the "tmp" symlink's target path
-    tmpPath="$(readlink $tmpLink)"
-    # If the "tmp" symlink is still pointed to /media/disk2/tmp include it in the copy
-    if [ "$tmpPath" != "$downloadsLink/.tmp" ]; then
+    currentTmpPath="$(readlink $tmpLink)"
+    # If the "tmp" symlink is still pointed to /media/disk2/tmp (old path) include it in the copy
+    if [ "$currentTmpPath" != "$tmpPath" ]; then
       tmpAction=true
     else
       tmpAction=false
@@ -164,22 +164,10 @@ function storage__set_share() {
     
     # Copy and Set "tmp" to "downloads/.tmp" if it isn't already
     if $tmpAction; then
-      # If the .tmp directory doesn't exist in "Downloads", create it
-      if [ "$(tools__path_istype $downloadsLink/.tmp)" != "Directory" ]; then
-        sudo su -c -u $osUser \
-          "mkdir $downloadsLink/.tmp"
-          
-        if [ $? -ne 0 ]; then
-				  echo "Error: Failed to create .tmp directory"
-				  echo
-				  exit 1
-			  fi
-      fi
-    
       # Copy the existing tmp files to the new path/.tmp 
 		  sudo su -c -u $osUser \
 		    "shopt -s dotglob && \
-				rsync -av --progress --human-readable $tmpLink/* $downloadsLink/.tmp/ && \
+				rsync -av --progress --human-readable $tmpLink $tmpPath && \
 				shopt -u dotglob"
 				
 		  if [ $? -ne 0 ]; then
@@ -187,7 +175,7 @@ function storage__set_share() {
 		  fi
 			
 			# Change the symbolic link to point to the new path/.tmp
-			ln -sfn $downloadsLink/.tmp $tmpLink
+			ln -sfn $tmpPath $tmpLink
 			if [ $? -ne 0 ]; then
 				echo "Error: Failed to update the symbolic link"
 				echo
