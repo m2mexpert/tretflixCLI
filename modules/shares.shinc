@@ -29,8 +29,6 @@ function shares__help() {
 
 function shares__command_handler() {
   if test "${CLI_ARGS[2]+isset}"; then
-    # Make sure the "share type" string is lowercase
-    CLI_ARGS[2]=$(echo "${CLI_ARGS[2]}" | tr '[:upper:]' '[:lower:]')
     case "${CLI_ARGS[1]} ${CLI_ARGS[2]}" in
     	'add cifs')
     	  shares__add_share
