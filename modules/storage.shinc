@@ -220,6 +220,6 @@ function storage__show_config() {
 	avail="$(df -h "$downloadsLink" | awk '{ print $4 }' | egrep -v "Avail")"
 	uPerc="$(df -h "$downloadsLink" | awk '{ print $5 }' | egrep -v "Use%")"
 
-	printf "%-40s %-7s %-7s %-7s %-7s\n" "Path" "Size" "Used" "Avail" "Use%"
+	printf "%-40s %-7s %-7s %-7s %-7s\n" "Storage Path" "Size" "Used" "Avail" "Use%"
 	printf "%-40s %-7s %-7s %-7s %-7s\n" "$path" "$size" "$used" "$avail" "$uPerc"
 }
