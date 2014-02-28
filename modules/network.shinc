@@ -24,16 +24,41 @@ function network__command_handler() {
   if test "${CLI_ARGS[2]+isset}"; then
     case "${CLI_ARGS[1]} ${CLI_ARGS[2]}" in
       'add ip')
-        network__add_ip
+        if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
+          network__add_ip "${CLI_ARGS[3]}"
+        else
+          network__help
+        fi
         ;;
       'del ip')
-        network__del_ip
+        if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
+          network__del_ip "${CLI_ARGS[3]}"
+        else
+          network__help
+        fi          
         ;;
       'reverse proxy')
-        network__reverse_proxy
+        if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
+          case "${CLI_ARGS[3]}" in
+            '-e' | '--enable')
+              network__reverse_proxy "enable"
+              ;;
+            '-d' | '--disable')
+              network__reverse_proxy "disable"
+              ;;
+            *)
+              network__help
+          esac
+        else
+          network__help
+        fi
         ;;
       'show config')
-        network__show_config
+        if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
+          network__show_config
+        else
+          network__help
+        fi
         ;;
       *)
         network__help
@@ -44,16 +69,13 @@ function network__command_handler() {
 }
 
 function network__add_ip() {
-  if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
-    ifaceIP="${CLI_ARGS[3]}"
-    ifaceNetmask="$(ifconfig eth0 | sed -rn '2s/ .*:(.*)$/\1/p')"
-    ifaceBroadcast=$(ipcalc $ifaceIP $ifaceNetmask | egrep "^Broadcast:" | awk '{ print $2}')
-    ifaceNetwork=$(ipcalc $ifaceIP $ifaceNetmask | egrep "^Network:" | awk '{ print $2}' | sed 's/\/.*$//g')
-  else
-    network__help
-  fi
+  IPv4="$1"
+  ifaceNetmask="$(ifconfig eth0 | sed -rn '2s/ .*:(.*)$/\1/p')"
+  ifaceBroadcast=$(ipcalc $IPv4 $ifaceNetmask | egrep "^Broadcast:" | awk '{ print $2}')
+  ifaceNetwork=$(ipcalc $IPv4 $ifaceNetmask | egrep "^Network:" | awk '{ print $2}' | sed 's/\/.*$//g')
 
-  ping -c 1 "$ifaceIP" > /dev/null 2>&1
+
+  ping -c 1 "$IPv4" > /dev/null 2>&1
   if [ $? -eq 0 ]; then
     echo "IP address already in use on the network"
     echo
@@ -86,7 +108,7 @@ function network__add_ip() {
     "# Added by tretflix, do not modify!\n" \
     "auto $ifaceLabel\n" \
     "iface $ifaceLabel inet static\n" \
-    "\taddress $ifaceIP\n" \
+    "\taddress $IPv4\n" \
     "\tnetmask $ifaceNetmask\n" \
     "\tnetwork $ifaceNetwork\n" \
     "\tbroadcast $ifaceBroadcast\n" \
@@ -102,17 +124,15 @@ function network__add_ip() {
   sudo /etc/init.d/networking restart > /dev/null 2>&1
   ifconfig $ifaceLabel up > /dev/null 2>&1
   
-  echo "Done."
+  echo
+  network__show_config
 }
 
 function network__del_ip() {
-  if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
-    ifaceIP="${CLI_ARGS[3]}"
-  else
-    network__help
-  fi
+  IPv4="$1"
 
-  ifaceLabel=$(ifconfig | awk '/'$ifaceIP'/ {print $1}' RS="\n\n")
+
+  ifaceLabel=$(ifconfig | awk '/'$IPv4'/ {print $1}' RS="\n\n")
   if [ ! "$ifaceLabel" ]; then
     echo "The IP address specified is not currently configured"
     echo
@@ -145,32 +165,17 @@ function network__del_ip() {
   sed -i '/^$/N;/^\n$/D' /etc/network/interfaces
 
   sudo /etc/init.d/networking restart > /dev/null 2>&1
-  echo "Done."
+  
+  echo
+  network__show_config
 }
 
 function network__reverse_proxy() {
-  if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
-    case "${CLI_ARGS[3]}" in
-      '-d' | '--disable')
-        option="disable"
-        ;;
-      '-e' | '--enable')
-        option="enable"
-        ;;
-      *)
-        network__help
-    esac
-  else
-    network__help
-  fi
+  option="$1"
   
   echo $option
 }
 
 function network__show_config() {
-  if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    ifconfig | grep -v "inet6" | egrep -A 2 "eth[0-9]|eth[0-9]:[0-9]" | sed 's/^--//g'
-  else
-    network__help
-  fi
+  ifconfig | grep -v "inet6" | egrep -A 2 "eth[0-9]|eth[0-9]:[0-9]" | sed 's/^--//g'
 }

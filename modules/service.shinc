@@ -40,19 +40,39 @@ function service__command_handler() {
   if test "${CLI_ARGS[3]+isset}"; then
     case "${CLI_ARGS[2]} ${CLI_ARGS[3]}" in
       'set username')
-        service__set_username
+        if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
+          service__set_username "${CLI_ARGS[1]}" "${CLI_ARGS[4]}"
+        else
+          service__help
+        fi
         ;;
       'set password')
-        service__set_password
+        if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
+          service__set_password "${CLI_ARGS[1]}" "${CLI_ARGS[4]}"
+        else
+          service__help
+        fi
         ;;
       'set port')
-        service__set_port
+        if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
+          service__set_port "${CLI_ARGS[1]}" "${CLI_ARGS[4]}"
+        else
+          service__help
+        fi
         ;;
       'new apikey')
-        service__new_apikey
+        if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
+          service__new_apikey "${CLI_ARGS[1]}"
+        else
+          service__help
+        fi
         ;;
       'show config')
-        service__show_config
+        if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
+          service__show_config "${CLI_ARGS[1]}"
+        else
+          service__help
+        fi
         ;;			
       *)
         service__help
@@ -60,13 +80,25 @@ function service__command_handler() {
   elif test "${CLI_ARGS[2]+isset}"; then
     case "${CLI_ARGS[2]}" in
       enable)
-        service__enable
+        if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
+          service__enable "${CLI_ARGS[1]}"
+        else
+          service__help
+        fi
         ;;
       disable)
-        service__disable
+        if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
+          service__disable "${CLI_ARGS[1]}"
+        else
+          service__help
+        fi
         ;;
       upgrade)
-        service__upgrade
+        if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
+          service__upgrade "${CLI_ARGS[1]}"
+        else
+          service__help
+        fi
         ;;
       *)
         service__help
@@ -77,660 +109,647 @@ function service__command_handler() {
 }
 
 function service__enable() {
-  if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    case "${CLI_ARGS[1]}" in
-      '-a' | '--all')
-        allservices__enable
-        ;;
-      '-b' | '--sickbeard')
-        if ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-          # Install the service if not already installed
-          if [ "$(sickbeard__get_status)" == "Not Installed" ]; then
-            sickbeard__install
-          fi
+  option="$1"
 
-          # Upgrade the service if a newer version is available
-          if sickbeard__version_check; then
-            sickbeard__stop
-            sickbeard__upgrade
-          fi
-          
-          # Stop the service
-          sickbeard__stop
+	case "$option" in
+		'-a' | '--all')
+			allservices__enable
+			;;
+		'-b' | '--sickbeard')
+			if ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+				# Install the service if not already installed
+				if [ "$(sickbeard__get_status)" == "Not Installed" ]; then
+					sickbeard__install
+				fi
 
-          # Sync Sick Beard to the current SABnzbd+ config
-          echo "* Configuring Sick Beard"
-          sickbeard__sabnzbd_sync
-          
-          # Enable the service
-          sickbeard__enable
-        fi
-        # Start the service
-        sickbeard__start
-        echo
-        sickbeard__show_config
-        ;;
-      '-c' | '--couchpotato')
-        if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
-          # Install the service if not already installed
-          if [ "$(couchpotato__get_status)" == "Not Installed" ]; then
-            couchpotato__install
-          fi
+				# Upgrade the service if a newer version is available
+				if sickbeard__version_check; then
+					sickbeard__stop
+					sickbeard__upgrade
+				fi
+				
+				# Stop the service
+				sickbeard__stop
 
-          # Upgrade the service if a newer version is available
-          if couchpotato__version_check; then
-            couchpotato__stop
-            couchpotato__upgrade
-          fi
-          
-          # Stop the service
-          couchpotato__stop
+				# Sync Sick Beard to the current SABnzbd+ config
+				echo "* Configuring Sick Beard"
+				sickbeard__sabnzbd_sync
+				
+				# Enable the service
+				sickbeard__enable
+			fi
+			# Start the service
+			sickbeard__start
+			echo
+			sickbeard__show_config
+			;;
+		'-c' | '--couchpotato')
+			if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+				# Install the service if not already installed
+				if [ "$(couchpotato__get_status)" == "Not Installed" ]; then
+					couchpotato__install
+				fi
 
-          # Sync CouchPotato to the current SABnzbd+ config
-          echo "* Configuring CouchPotato"
-          couchpotato__sabnzbd_sync
-          
-          # Enable the service
-          couchpotato__enable
-        fi
-        # Start the service
-        couchpotato__start
-        echo
-        couchpotato__show_config
-        ;;
-      '-h' | '--headphones')
-        if ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-          # Install the service if not already installed
-          if [ "$(headphones__get_status)" == "Not Installed" ]; then
-            headphones__install
-          fi
+				# Upgrade the service if a newer version is available
+				if couchpotato__version_check; then
+					couchpotato__stop
+					couchpotato__upgrade
+				fi
+				
+				# Stop the service
+				couchpotato__stop
 
-          # Upgrade the service if a newer version is available
-          if headphones__version_check; then
-            headphones__stop
-            headphones__upgrade
-          fi
-          
-          # Stop the service
-          headphones__stop
+				# Sync CouchPotato to the current SABnzbd+ config
+				echo "* Configuring CouchPotato"
+				couchpotato__sabnzbd_sync
+				
+				# Enable the service
+				couchpotato__enable
+			fi
+			# Start the service
+			couchpotato__start
+			echo
+			couchpotato__show_config
+			;;
+		'-h' | '--headphones')
+			if ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
+				# Install the service if not already installed
+				if [ "$(headphones__get_status)" == "Not Installed" ]; then
+					headphones__install
+				fi
 
-          # Sync Headphones to the current SABnzbd+ config
-          echo "* Configuring Headphones"
-          headphones__sabnzbd_sync
-      
-          # Enable the service
-          headphones__enable
-        fi
-        # Start the service
-        headphones__start
-        echo
-        headphones__show_config
-        ;;
-      '-n' | '--nzbdrone')
-        if ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-          # Install the service if not already installed
-          if [ "$(nzbdrone__get_status)" == "Not Installed" ]; then
-            nzbdrone__install
-          fi
+				# Upgrade the service if a newer version is available
+				if headphones__version_check; then
+					headphones__stop
+					headphones__upgrade
+				fi
+				
+				# Stop the service
+				headphones__stop
 
-          # Upgrade the service if a newer version is available
-          if nzbdrone__version_check; then
-            nzbdrone__stop
-            nzbdrone__upgrade
-          fi
-          
-          # Stop the service
-          nzbdrone__stop
+				# Sync Headphones to the current SABnzbd+ config
+				echo "* Configuring Headphones"
+				headphones__sabnzbd_sync
+		
+				# Enable the service
+				headphones__enable
+			fi
+			# Start the service
+			headphones__start
+			echo
+			headphones__show_config
+			;;
+		'-n' | '--nzbdrone')
+			if ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+				# Install the service if not already installed
+				if [ "$(nzbdrone__get_status)" == "Not Installed" ]; then
+					nzbdrone__install
+				fi
 
-          # Sync NzbDrone to the current SABnzbd+ config
-          echo "* Configuring NzbDrone"
-          nzbdrone__sabnzbd_sync
-      
-          # Enable the service
-          nzbdrone__enable
-        fi
-        # Start the service
-        nzbdrone__start
-        echo
-        nzbdrone__show_config
-        ;;
-      '-p' | '--plexserver')
-        if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
-          # Install the service if not already installed
-          if [ "$(plexserver__get_status)" == "Not Installed" ]; then
-            plexserver__install
-          fi
+				# Upgrade the service if a newer version is available
+				if nzbdrone__version_check; then
+					nzbdrone__stop
+					nzbdrone__upgrade
+				fi
+				
+				# Stop the service
+				nzbdrone__stop
 
-          # Upgrade the service if a newer version is available
-          if plexserver__version_check; then
-            plexserver__stop
-            plexserver__upgrade
-          fi
-      
-          # Enable the service
-          plexserver__enable
-        fi
-        # Start the service
-        plexserver__start
-        echo
-        plexserver__show_config
-        ;;
-      '-s' | '--sabnzbd')
-        if ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
-          # Install the service if not already installed
-          if [ "$(sabnzbd__get_status)" == "Not Installed" ]; then
-            sabnzbd__install
-          fi
+				# Sync NzbDrone to the current SABnzbd+ config
+				echo "* Configuring NzbDrone"
+				nzbdrone__sabnzbd_sync
+		
+				# Enable the service
+				nzbdrone__enable
+			fi
+			# Start the service
+			nzbdrone__start
+			echo
+			nzbdrone__show_config
+			;;
+		'-p' | '--plexserver')
+			if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
+				# Install the service if not already installed
+				if [ "$(plexserver__get_status)" == "Not Installed" ]; then
+					plexserver__install
+				fi
 
-          # Upgrade the service if a newer version is available
-          if sabnzbd__version_check; then
-            sabnzbd__stop
-            sabnzbd__upgrade
-          fi
-      
-          # Enable the service
-          sabnzbd__enable
-        fi
-        # Start the service
-        sabnzbd__start
-        echo
-        sabnzbd__show_config
-        ;;
-      '-t' | '--transmission')
-        if ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
-          # Install the service if not already installed
-          if [ "$(transmission__get_status)" == "Not Installed" ]; then
-            transmission__install
-          fi
+				# Upgrade the service if a newer version is available
+				if plexserver__version_check; then
+					plexserver__stop
+					plexserver__upgrade
+				fi
+		
+				# Enable the service
+				plexserver__enable
+			fi
+			# Start the service
+			plexserver__start
+			echo
+			plexserver__show_config
+			;;
+		'-s' | '--sabnzbd')
+			if ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
+				# Install the service if not already installed
+				if [ "$(sabnzbd__get_status)" == "Not Installed" ]; then
+					sabnzbd__install
+				fi
 
-          # Upgrade the service if a newer version is available
-          if transmission__version_check; then
-            transmission__stop
-            transmission__upgrade
-          fi
-      
-          # Enable the service
-          transmission__enable
-        fi
-        # Start the service
-        transmission__start
-        echo
-        transmission__show_config
-        ;;
-      *)
-      	service__help
-    esac
-  else
-    service__help
-  fi
+				# Upgrade the service if a newer version is available
+				if sabnzbd__version_check; then
+					sabnzbd__stop
+					sabnzbd__upgrade
+				fi
+		
+				# Enable the service
+				sabnzbd__enable
+			fi
+			# Start the service
+			sabnzbd__start
+			echo
+			sabnzbd__show_config
+			;;
+		'-t' | '--transmission')
+			if ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
+				# Install the service if not already installed
+				if [ "$(transmission__get_status)" == "Not Installed" ]; then
+					transmission__install
+				fi
+
+				# Upgrade the service if a newer version is available
+				if transmission__version_check; then
+					transmission__stop
+					transmission__upgrade
+				fi
+		
+				# Enable the service
+				transmission__enable
+			fi
+			# Start the service
+			transmission__start
+			echo
+			transmission__show_config
+			;;
+		*)
+			service__help
+	esac
 }
 
 function service__disable() {
-  if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    case "${CLI_ARGS[1]}" in
-      '-a' | '--all')
-        allservices__disable
-        ;;
-      '-b' | '--sickbeard')
-      	sickbeard__stop
-        sickbeard__disable
-        echo
-        sickbeard__show_config
-        ;;    
-      '-c' | '--couchpotato')
-        couchpotato__stop
-        couchpotato__disable
-        echo
-        couchpotato__show_config
-        ;;
-      '-h' | '--headphones')
-        headphones__stop
-        headphones__disable
-        echo
-        headphones__show_config
-        ;;
-      '-n' | '--nzbdrone')
-        nzbdrone__stop
-        nzbdrone__disable
-        echo
-        nzbdrone__show_config
-        ;;
-      '-p' | '--plexserver')
-        plexserver__stop
-        plexserver__disable
-        echo
-        plexserver__show_config
-        ;;
-      '-s' | '--sabnzbd')
-        sabnzbd__stop
-        sabnzbd__disable
-        echo
-        sabnzbd__show_config
-        ;;
-      '-t' | '--transmission')
-        transmission__stop
-        transmission__disable
-        echo
-        transmission__show_config
-        ;;
-      *)
-      	service__help
-    esac
-  else
-    service__help
-  fi
+  option="$1"
+  
+	case "$option" in
+		'-a' | '--all')
+			allservices__disable
+			;;
+		'-b' | '--sickbeard')
+			sickbeard__stop
+			sickbeard__disable
+			echo
+			sickbeard__show_config
+			;;    
+		'-c' | '--couchpotato')
+			couchpotato__stop
+			couchpotato__disable
+			echo
+			couchpotato__show_config
+			;;
+		'-h' | '--headphones')
+			headphones__stop
+			headphones__disable
+			echo
+			headphones__show_config
+			;;
+		'-n' | '--nzbdrone')
+			nzbdrone__stop
+			nzbdrone__disable
+			echo
+			nzbdrone__show_config
+			;;
+		'-p' | '--plexserver')
+			plexserver__stop
+			plexserver__disable
+			echo
+			plexserver__show_config
+			;;
+		'-s' | '--sabnzbd')
+			sabnzbd__stop
+			sabnzbd__disable
+			echo
+			sabnzbd__show_config
+			;;
+		'-t' | '--transmission')
+			transmission__stop
+			transmission__disable
+			echo
+			transmission__show_config
+			;;
+		*)
+			service__help
+	esac
 }
 
 function service__upgrade() {
-  if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    case "${CLI_ARGS[1]}" in
-      '-a' | '--all')
-        echo "* Updating apt repository package lists"
-        apt-get update
-        allservices__upgrade
-        ;;
-      '-b' | '--sickbeard')
-        if sickbeard__version_check; then
-          sickbeard__stop
-          sickbeard__upgrade
-          sickbeard__start
-        fi
-        ;;    
-      '-c' | '--couchpotato')
-        if couchpotato__version_check; then
-          couchpotato__stop
-          couchpotato__upgrade
-          couchpotato__start
-        fi
-        ;;
-      '-h' | '--headphones')
-        if headphones__version_check; then
-          headphones__stop
-          headphones__upgrade
-          headphones__start
-        fi
-        ;;
-      '-n' | '--nzbdrone')
-        echo "* Updating apt repository package lists"
-        apt-get update
-        if nzbdrone__version_check; then
-          nzbdrone__stop
-          nzbdrone__upgrade
-          nzbdrone__start
-        fi
-        ;;
-      '-p' | '--plexserver')
-        if plexserver__version_check; then
-          plexserver__stop
-          plexserver__upgrade
-          plexserver__start
-        fi
-        ;;
-      '-s' | '--sabnzbd')
-        echo "* Updating apt repository package lists"
-        apt-get update
-        if sabnzbd__version_check; then
-          sabnzbd__stop
-          sabnzbd__upgrade
-          sabnzbd__start
-        fi
-        ;;
-      '-t' | '--transmission')
-        echo "* Updating apt repository package lists"
-        apt-get update
-        if transmission__version_check; then
-          transmission__stop
-          transmission__upgrade
-          transmission__start
-        fi
-        ;;
-      *)
-      	service__help
-    esac
-  else
-    service__help
-  fi
+  option="$1"
+
+	case "$option" in
+		'-a' | '--all')
+			echo "* Updating apt repository package lists"
+			apt-get update
+			allservices__upgrade
+			;;
+		'-b' | '--sickbeard')
+			if sickbeard__version_check; then
+				sickbeard__stop
+				sickbeard__upgrade
+				sickbeard__start
+			fi
+			;;    
+		'-c' | '--couchpotato')
+			if couchpotato__version_check; then
+				couchpotato__stop
+				couchpotato__upgrade
+				couchpotato__start
+			fi
+			;;
+		'-h' | '--headphones')
+			if headphones__version_check; then
+				headphones__stop
+				headphones__upgrade
+				headphones__start
+			fi
+			;;
+		'-n' | '--nzbdrone')
+			echo "* Updating apt repository package lists"
+			apt-get update
+			if nzbdrone__version_check; then
+				nzbdrone__stop
+				nzbdrone__upgrade
+				nzbdrone__start
+			fi
+			;;
+		'-p' | '--plexserver')
+			if plexserver__version_check; then
+				plexserver__stop
+				plexserver__upgrade
+				plexserver__start
+			fi
+			;;
+		'-s' | '--sabnzbd')
+			echo "* Updating apt repository package lists"
+			apt-get update
+			if sabnzbd__version_check; then
+				sabnzbd__stop
+				sabnzbd__upgrade
+				sabnzbd__start
+			fi
+			;;
+		'-t' | '--transmission')
+			echo "* Updating apt repository package lists"
+			apt-get update
+			if transmission__version_check; then
+				transmission__stop
+				transmission__upgrade
+				transmission__start
+			fi
+			;;
+		*)
+			service__help
+	esac
 }
 
 function service__set_username() {
-  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
-    case "${CLI_ARGS[1]}" in
-      '-a' | '--all')
-        allservices__set_username "${CLI_ARGS[4]}"
-        ;;
-      '-b' | '--sickbeard')
-        echo "* Applying changes to Sick Beard"
-        sickbeard__stop
-        sickbeard__set_username "${CLI_ARGS[4]}"
-        sickbeard__start
-        ;;    
-      '-c' | '--couchpotato')
-        echo "* Applying changes to CouchPotato"
-        couchpotato__stop
-        couchpotato__set_username "${CLI_ARGS[4]}"
-        couchpotato__start
-        ;;
-      '-h' | '--headphones')
-        echo "* Applying changes to Headphones"
-        headphones__stop
-        headphones__set_username "${CLI_ARGS[4]}"
-        headphones__start
-        ;;
-      '-n' | '--nzbdrone')
-        echo "* Applying changes to NzbDrone"
-        nzbdrone__stop
-        nzbdrone__set_username "${CLI_ARGS[4]}"
-        nzbdrone__start
-        ;;
-      '-p' | '--plexserver')
-        echo "This command is not available for Plex Media Server"
-        echo
-        exit 1
-        ;;
-      '-s' | '--sabnzbd')
-        echo "* Applying changes to SABnzbd+"
-        sabnzbd__stop
-        sabnzbd__set_username "${CLI_ARGS[4]}"
-        sabnzbd__start
-        if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-          echo "* Applying changes to Headphones"
-          headphones__stop
-          headphones__set_sabnzbd_username "${CLI_ARGS[4]}"
-          headphones__start
-        fi
-        if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-          echo "* Applying changes to NzbDrone"
-          nzbdrone__stop
-          nzbdrone__set_sabnzbd_username "${CLI_ARGS[4]}"
-          nzbdrone__start
-        fi
-        if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-          echo "* Applying changes to Sick Beard"
-          sickbeard__stop
-          sickbeard__set_sabnzbd_username "${CLI_ARGS[4]}"
-          sickbeard__start
-        fi  
-        ;;
-      '-t' | '--transmission')
-        echo "* Applying changes to Transmission"
-        transmission__stop
-        transmission__set_username "${CLI_ARGS[4]}"
-        transmission__start
-        ;;
-      *)
-      	service__help
-    esac
-  else
-    service__help
-  fi
+  option="$1"
+  username="$2"
+
+	case "$option" in
+		'-a' | '--all')
+			allservices__set_username "$username"
+			;;
+		'-b' | '--sickbeard')
+			echo "* Applying changes to Sick Beard"
+			sickbeard__stop
+			sickbeard__set_username "$username"
+			sickbeard__start
+			;;    
+		'-c' | '--couchpotato')
+			echo "* Applying changes to CouchPotato"
+			couchpotato__stop
+			couchpotato__set_username "$username"
+			couchpotato__start
+			;;
+		'-h' | '--headphones')
+			echo "* Applying changes to Headphones"
+			headphones__stop
+			headphones__set_username "$username"
+			headphones__start
+			;;
+		'-n' | '--nzbdrone')
+			echo "* Applying changes to NzbDrone"
+			nzbdrone__stop
+			nzbdrone__set_username "$username"
+			nzbdrone__start
+			;;
+		'-p' | '--plexserver')
+			echo "This command is not available for Plex Media Server"
+			echo
+			exit 1
+			;;
+		'-s' | '--sabnzbd')
+			echo "* Applying changes to SABnzbd+"
+			sabnzbd__stop
+			sabnzbd__set_username "$username"
+			sabnzbd__start
+			if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
+				echo "* Applying changes to Headphones"
+				headphones__stop
+				headphones__set_sabnzbd_username "$username"
+				headphones__start
+			fi
+			if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+				echo "* Applying changes to NzbDrone"
+				nzbdrone__stop
+				nzbdrone__set_sabnzbd_username "$username"
+				nzbdrone__start
+			fi
+			if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+				echo "* Applying changes to Sick Beard"
+				sickbeard__stop
+				sickbeard__set_sabnzbd_username "$username"
+				sickbeard__start
+			fi  
+			;;
+		'-t' | '--transmission')
+			echo "* Applying changes to Transmission"
+			transmission__stop
+			transmission__set_username "$username"
+			transmission__start
+			;;
+		*)
+			service__help
+	esac
 }
 
 function service__set_password() {
-  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
-    case "${CLI_ARGS[1]}" in
-      '-a' | '--all')
-        allservices__set_password "${CLI_ARGS[4]}"
-        ;;
-      '-b' | '--sickbeard')
-        echo "* Applying changes to Sick Beard"
-        sickbeard__stop
-        sickbeard__set_password "${CLI_ARGS[4]}"
-        sickbeard__start
-        ;;    
-      '-c' | '--couchpotato')
-        echo "* Applying changes to CouchPotato"
-        couchpotato__stop
-        couchpotato__set_password "${CLI_ARGS[4]}"
-        couchpotato__start
-        ;;
-      '-h' | '--headphones')
-        echo "* Applying changes to Headphones"
-        headphones__stop
-        headphones__set_password "${CLI_ARGS[4]}"
-        headphones__start
-        ;;
-      '-n' | '--nzbdrone')
-        echo "* Applying changes to NzbDrone"
-        nzbdrone__stop
-        nzbdrone__set_password "${CLI_ARGS[4]}"
-        nzbdrone__start
-        ;;
-      '-p' | '--plexserver')
-        echo "This command is not available for Plex Media Server"
-        echo
-        exit 1
-        ;;
-      '-s' | '--sabnzbd')
-        echo "* Applying changes to SABnzbd+"
-        sabnzbd__stop
-        sabnzbd__set_password "${CLI_ARGS[4]}"
-        sabnzbd__start
-        if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-          echo "* Applying changes to Headphones"
-          headphones__stop
-          headphones__set_sabnzbd_password "${CLI_ARGS[4]}"
-          headphones__start
-        fi
-        if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-          echo "* Applying changes to NzbDrone"
-          nzbdrone__stop
-          nzbdrone__set_sabnzbd_password "${CLI_ARGS[4]}"
-          nzbdrone__start
-        fi
-        if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-          echo "* Applying changes to Sick Beard"
-          sickbeard__stop
-          sickbeard__set_sabnzbd_password "${CLI_ARGS[4]}"
-          sickbeard__start
-        fi
-        ;;
-      '-t' | '--transmission')
-        echo "* Applying changes to Transmission"
-        transmission__stop
-        transmission__set_password "${CLI_ARGS[4]}"
-        transmission__start
-        ;;
-      *)
-      	service__help
-    esac
-  else
-    service__help
-  fi
+  option="$1"
+  password="$2"
+  
+	case "$option" in
+		'-a' | '--all')
+			allservices__set_password "$password"
+			;;
+		'-b' | '--sickbeard')
+			echo "* Applying changes to Sick Beard"
+			sickbeard__stop
+			sickbeard__set_password "$password"
+			sickbeard__start
+			;;    
+		'-c' | '--couchpotato')
+			echo "* Applying changes to CouchPotato"
+			couchpotato__stop
+			couchpotato__set_password "$password"
+			couchpotato__start
+			;;
+		'-h' | '--headphones')
+			echo "* Applying changes to Headphones"
+			headphones__stop
+			headphones__set_password "$password"
+			headphones__start
+			;;
+		'-n' | '--nzbdrone')
+			echo "* Applying changes to NzbDrone"
+			nzbdrone__stop
+			nzbdrone__set_password "$password"
+			nzbdrone__start
+			;;
+		'-p' | '--plexserver')
+			echo "This command is not available for Plex Media Server"
+			echo
+			exit 1
+			;;
+		'-s' | '--sabnzbd')
+			echo "* Applying changes to SABnzbd+"
+			sabnzbd__stop
+			sabnzbd__set_password "$password"
+			sabnzbd__start
+			if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
+				echo "* Applying changes to Headphones"
+				headphones__stop
+				headphones__set_sabnzbd_password "$password"
+				headphones__start
+			fi
+			if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+				echo "* Applying changes to NzbDrone"
+				nzbdrone__stop
+				nzbdrone__set_sabnzbd_password "$password"
+				nzbdrone__start
+			fi
+			if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+				echo "* Applying changes to Sick Beard"
+				sickbeard__stop
+				sickbeard__set_sabnzbd_password "$password"
+				sickbeard__start
+			fi
+			;;
+		'-t' | '--transmission')
+			echo "* Applying changes to Transmission"
+			transmission__stop
+			transmission__set_password "$password"
+			transmission__start
+			;;
+		*)
+			service__help
+	esac
 }
 
 function service__set_port() {
-  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
-    case "${CLI_ARGS[1]}" in
-      '-a' | '--all')
-        echo "This command requires an individual service to be specified"
-        ;;
-      '-b' | '--sickbeard')
-        echo "* Applying changes to Sick Beard"
-        sickbeard__stop
-        sickbeard__set_port "${CLI_ARGS[4]}"
-        sickbeard__start
-        ;;    
-      '-c' | '--couchpotato')
-        echo "* Applying changes to CouchPotato"
-        couchpotato__stop
-        couchpotato__set_port "${CLI_ARGS[4]}"
-        couchpotato__start
-        ;;
-      '-h' | '--headphones')
-        echo "* Applying changes to Headphones"
-        headphones__stop
-        headphones__set_port "${CLI_ARGS[4]}"
-        headphones__start
-        ;;
-      '-n' | '--nzbdrone')
-        echo "* Applying changes to NzbDrone"
-        nzbdrone__stop
-        nzbdrone__set_port "${CLI_ARGS[4]}"
-        nzbdrone__start
-        ;;
-      '-p' | '--plexserver')
-        echo "This command is not available for Plex Media Server"
-        echo
-        exit 1
-        ;;
-      '-s' | '--sabnzbd')
-        echo "* Applying changes to SABnzbd+"
-        sabnzbd__stop
-        sabnzbd__set_port "${CLI_ARGS[4]}"
-        sabnzbd__start
-        if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
-          echo "* Applying changes to CouchPotato"
-          couchpotato__stop
-          couchpotato__set_sabnzbd_port "${CLI_ARGS[4]}"
-          couchpotato__start
-        fi
-        if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-          echo "* Applying changes to Headphones"
-          headphones__stop
-          headphones__set_sabnzbd_port "${CLI_ARGS[4]}"
-          headphones__start
-        fi
-        if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-          echo "* Applying changes to NzbDrone"
-          nzbdrone__stop
-          nzbdrone__set_sabnzbd_port "${CLI_ARGS[4]}"
-          nzbdrone__start
-        fi
-        if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-          echo "* Applying changes to Sick Beard"
-          sickbeard__stop
-          sickbeard__set_sabnzbd_port "${CLI_ARGS[4]}"
-          sickbeard__start
-        fi
-        ;;
-      '-t' | '--transmission')
-        echo "* Applying changes to Transmission"
-        transmission__stop
-        transmission__set_port "${CLI_ARGS[4]}"
-        transmission__start
-        ;;
-      *)
-      	service__help
-    esac
-  else
-    service__help
-  fi
+  option="$1"
+  port="$2"
+
+	case "$option" in
+		'-a' | '--all')
+			echo "This command requires an individual service to be specified"
+			;;
+		'-b' | '--sickbeard')
+			echo "* Applying changes to Sick Beard"
+			sickbeard__stop
+			sickbeard__set_port "$port"
+			sickbeard__start
+			;;    
+		'-c' | '--couchpotato')
+			echo "* Applying changes to CouchPotato"
+			couchpotato__stop
+			couchpotato__set_port "$port"
+			couchpotato__start
+			;;
+		'-h' | '--headphones')
+			echo "* Applying changes to Headphones"
+			headphones__stop
+			headphones__set_port "$port"
+			headphones__start
+			;;
+		'-n' | '--nzbdrone')
+			echo "* Applying changes to NzbDrone"
+			nzbdrone__stop
+			nzbdrone__set_port "$port"
+			nzbdrone__start
+			;;
+		'-p' | '--plexserver')
+			echo "This command is not available for Plex Media Server"
+			echo
+			exit 1
+			;;
+		'-s' | '--sabnzbd')
+			echo "* Applying changes to SABnzbd+"
+			sabnzbd__stop
+			sabnzbd__set_port "$port"
+			sabnzbd__start
+			if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+				echo "* Applying changes to CouchPotato"
+				couchpotato__stop
+				couchpotato__set_sabnzbd_port "$port"
+				couchpotato__start
+			fi
+			if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
+				echo "* Applying changes to Headphones"
+				headphones__stop
+				headphones__set_sabnzbd_port "$port"
+				headphones__start
+			fi
+			if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+				echo "* Applying changes to NzbDrone"
+				nzbdrone__stop
+				nzbdrone__set_sabnzbd_port "$port"
+				nzbdrone__start
+			fi
+			if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+				echo "* Applying changes to Sick Beard"
+				sickbeard__stop
+				sickbeard__set_sabnzbd_port "$port"
+				sickbeard__start
+			fi
+			;;
+		'-t' | '--transmission')
+			echo "* Applying changes to Transmission"
+			transmission__stop
+			transmission__set_port "$port"
+			transmission__start
+			;;
+		*)
+			service__help
+	esac
 }
 
 function service__new_apikey() {
-  if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
-    case "${CLI_ARGS[1]}" in
-      '-a' | '--all')
-        allservices__set_apikey
-        ;;
-      '-b' | '--sickbeard')
-        echo "* Applying changes to Sick Beard"
-        apikey="$(tools__gen_apikey)"
-        sickbeard__stop
-        sickbeard__set_apikey "$apikey"
-        sickbeard__start
-        ;;    
-      '-c' | '--couchpotato')
-        echo "* Applying changes to CouchPotato"
-        apikey="$(tools__gen_apikey)"
-        couchpotato__stop
-        couchpotato__set_apikey "$apikey"
-        couchpotato__start
-        ;;
-      '-h' | '--headphones')
-        echo "* Applying changes to Headphones"
-        apikey="$(tools__gen_apikey)"
-        headphones__stop
-        headphones__set_apikey "$apikey"
-        headphones__start
-        ;;
-      '-n' | '--nzbdrone')
-        echo "* Applying changes to NzbDrone"
-        apikey="$(tools__gen_apikey)"
-        nzbdrone__stop
-        nzbdrone__set_apikey "$apikey"
-        nzbdrone__start
-        ;;
-      '-p' | '--plexserver')
-        echo "This command is not available for Plex Media Server"
-        echo
-        exit 1
-        ;;
-      '-s' | '--sabnzbd')
-        echo "* Applying changes to SABnzbd+"
-        apikey="$(tools__gen_apikey)"
-        sabnzbd__stop
-        sabnzbd__set_apikey "$apikey"
-        sabnzbd__start
-        if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
-          echo "* Applying changes to CouchPotato"
-          couchpotato__stop
-          couchpotato__set_sabnzbd_apikey "$apikey"
-          couchpotato__start
-        fi
-        if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-          echo "* Applying changes to Headphones"
-          headphones__stop
-          headphones__set_sabnzbd_apikey "$apikey"
-          headphones__start
-        fi
-        if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-          echo "* Applying changes to NzbDrone"
-          nzbdrone__stop
-          nzbdrone__set_sabnzbd_apikey "$apikey"
-          nzbdrone__start
-        fi
-        if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-          echo "* Applying changes to Sick Beard"
-          sickbeard__stop
-          sickbeard__set_sabnzbd_apikey "$apikey"
-          sickbeard__start
-        fi
-        ;;
-      '-t' | '--transmission')
-        echo "This command is not available for Transmission"
-        echo
-        exit 1
-        ;;
-      *)
-      	service__help
-    esac
-  else
-    service__help
-  fi
+  option="$1"
+
+	case "$option" in
+		'-a' | '--all')
+			allservices__set_apikey
+			;;
+		'-b' | '--sickbeard')
+			echo "* Applying changes to Sick Beard"
+			apikey="$(tools__gen_apikey)"
+			sickbeard__stop
+			sickbeard__set_apikey "$apikey"
+			sickbeard__start
+			;;    
+		'-c' | '--couchpotato')
+			echo "* Applying changes to CouchPotato"
+			apikey="$(tools__gen_apikey)"
+			couchpotato__stop
+			couchpotato__set_apikey "$apikey"
+			couchpotato__start
+			;;
+		'-h' | '--headphones')
+			echo "* Applying changes to Headphones"
+			apikey="$(tools__gen_apikey)"
+			headphones__stop
+			headphones__set_apikey "$apikey"
+			headphones__start
+			;;
+		'-n' | '--nzbdrone')
+			echo "* Applying changes to NzbDrone"
+			apikey="$(tools__gen_apikey)"
+			nzbdrone__stop
+			nzbdrone__set_apikey "$apikey"
+			nzbdrone__start
+			;;
+		'-p' | '--plexserver')
+			echo "This command is not available for Plex Media Server"
+			echo
+			exit 1
+			;;
+		'-s' | '--sabnzbd')
+			echo "* Applying changes to SABnzbd+"
+			apikey="$(tools__gen_apikey)"
+			sabnzbd__stop
+			sabnzbd__set_apikey "$apikey"
+			sabnzbd__start
+			if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+				echo "* Applying changes to CouchPotato"
+				couchpotato__stop
+				couchpotato__set_sabnzbd_apikey "$apikey"
+				couchpotato__start
+			fi
+			if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
+				echo "* Applying changes to Headphones"
+				headphones__stop
+				headphones__set_sabnzbd_apikey "$apikey"
+				headphones__start
+			fi
+			if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+				echo "* Applying changes to NzbDrone"
+				nzbdrone__stop
+				nzbdrone__set_sabnzbd_apikey "$apikey"
+				nzbdrone__start
+			fi
+			if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+				echo "* Applying changes to Sick Beard"
+				sickbeard__stop
+				sickbeard__set_sabnzbd_apikey "$apikey"
+				sickbeard__start
+			fi
+			;;
+		'-t' | '--transmission')
+			echo "This command is not available for Transmission"
+			echo
+			exit 1
+			;;
+		*)
+			service__help
+	esac
 }
 
 function service__show_config() {
-  if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
-    case "${CLI_ARGS[1]}" in
-      '-a' | '--all')
-        allservices__show_config
-        ;;
-      '-b' | '--sickbeard')
-        sickbeard__show_config
-        ;;    
-      '-c' | '--couchpotato')
-        couchpotato__show_config
-        ;;
-      '-h' | '--headphones')
-        headphones__show_config
-        ;;
-      '-n' | '--nzbdrone')
-        nzbdrone__show_config
-        ;;
-      '-p' | '--plexserver')
-        plexserver__show_config
-        ;;
-      '-s' | '--sabnzbd')
-        sabnzbd__show_config
-        ;;
-      '-t' | '--transmission')
-        transmission__show_config
-        ;;
-      *)
-      	service__help
-    esac
-  else
-    service__help
-  fi
+  option="$1"
+  
+	case "$option" in
+		'-a' | '--all')
+			allservices__show_config
+			;;
+		'-b' | '--sickbeard')
+			sickbeard__show_config
+			;;    
+		'-c' | '--couchpotato')
+			couchpotato__show_config
+			;;
+		'-h' | '--headphones')
+			headphones__show_config
+			;;
+		'-n' | '--nzbdrone')
+			nzbdrone__show_config
+			;;
+		'-p' | '--plexserver')
+			plexserver__show_config
+			;;
+		'-s' | '--sabnzbd')
+			sabnzbd__show_config
+			;;
+		'-t' | '--transmission')
+			transmission__show_config
+			;;
+		*)
+			service__help
+	esac
 }

@@ -30,23 +30,41 @@ function shares__help() {
 function shares__command_handler() {
   if test "${CLI_ARGS[2]+isset}"; then
     case "${CLI_ARGS[1]} ${CLI_ARGS[2]}" in
-    	'add cifs')
-    	  shares__add_share
+    	'add cifs'|'add nfs')
+				if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
+					shares__add_share "${CLI_ARGS[2]}" "${CLI_ARGS[3]}" "${CLI_ARGS[4]}" "guest" ""
+				elif [ "${#CLI_ARGS[@]}" -eq 8 ]; then
+					case "${CLI_ARGS[5]}" in
+						'-u' | '--user')
+							shares__add_share "${CLI_ARGS[2]}" "${CLI_ARGS[3]}" "${CLI_ARGS[4]}" "${CLI_ARGS[6]}" "${CLI_ARGS[7]}"
+							;;
+						*)
+							shares__help
+					esac
+				else
+					shares__help
+				fi
     	  ;;
-    	'del cifs')
-    	  shares__del_share
-    	  ;;
-    	'add nfs')
-    	  shares__add_share
-    	  ;;
-    	'del nfs')
-    	  shares__del_share
+    	'del cifs'|'del nfs')
+				if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
+					shares__del_share "${CLI_ARGS[2]}" "${CLI_ARGS[3]}" "${CLI_ARGS[4]}"
+				else
+					shares__help
+				fi
     	  ;;
     	'mount all')
-    	  shares__mount_all
+				if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
+					shares__mount_all
+				else
+					shares__help
+				fi     
     	  ;;    	  
       'show config')
-        shares__show_config
+        if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
+          shares__show_config
+				else
+					shares__help
+				fi          
         ;;
       *)
         shares__help
@@ -57,42 +75,23 @@ function shares__command_handler() {
 }
 
 function shares__add_share() {
-  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
-    # Assign the user/pass variables for guest cifs shares
-    user="guest"
-    pass=""
-  elif [ "${#CLI_ARGS[@]}" -eq 8 ]; then
-    case "${CLI_ARGS[5]}" in
-      '-u' | '--user')
-        # Assign the user/pass variables for authenticated cifs shares
-        user="${CLI_ARGS[6]}"
-        pass="${CLI_ARGS[7]}"
-        ;;
-      *)
-        shares__help
-    esac
-  else
-    shares__help
-  fi
+  type="$1"
+  host="$2"
+  share="$3"
+  user="$4"
+  pass="$5"
 
-  # Assign friendly names to passed variables
-  host="${CLI_ARGS[3]}"
-  share="${CLI_ARGS[4]}"
-  type=$(echo "${CLI_ARGS[2]}" | tr '[:upper:]' '[:lower:]')
+  # Make sure the 'type' string is lowercase (in case the user entered it otherwise)
+  type=$(echo "$type" | tr '[:upper:]' '[:lower:]')
 
   # Build the share and mount point syntax depending on share type
   if [ "$type" == "cifs" ]; then
-    shareStr="//${CLI_ARGS[3]}/${CLI_ARGS[4]}"
-    mountPointStr="/mnt/${CLI_ARGS[3]}/${CLI_ARGS[4]}"
+    shareStr="//$host/$share"
+    mountPointStr="/mnt/$host/$share"
     optionStr="auto,sec=ntlm,uid=$osUser,gid=$osUser,username=$user,password=$pass"
   elif [ "$type" == "nfs" ]; then
-    # Change user authentication to "guest" if it isn't already
-    if [ "$user" != "guest" ]; then
-      user="guest"
-      pass=""
-    fi
-    shareStr="${CLI_ARGS[3]}:${CLI_ARGS[4]}"
-    mountPointStr="/mnt/${CLI_ARGS[3]}${CLI_ARGS[4]}"
+    shareStr="$host:$share"
+    mountPointStr="/mnt/$host$share"
     optionStr="auto"
   else
     echo "Invalid share type"
@@ -124,95 +123,88 @@ function shares__add_share() {
     exit 1
   fi
   
-  echo "Done."
+  echo
+  shares__show_config
 }
 
 function shares__del_share() {
-  if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
-    # Assign friendly names to passed variables
-    host="${CLI_ARGS[3]}"
-    share="${CLI_ARGS[4]}"
-    type=$(echo "${CLI_ARGS[2]}" | tr '[:upper:]' '[:lower:]')
+  type="$1"
+  host="$2"
+  share="$3"
+  
+  # Make sure the 'type' string is lowercase (in case the user entered it otherwise)
+  type=$(echo "$type" | tr '[:upper:]' '[:lower:]')
+  
     
-    # Build the share and mount point syntax depending on share type
-    if [ "$type" == "cifs" ]; then
-      shareStr="//${CLI_ARGS[3]}/${CLI_ARGS[4]}"
-      mountPointStr="/mnt/${CLI_ARGS[3]}/${CLI_ARGS[4]}"
-    elif [ "$type" == "nfs" ]; then
-      shareStr="${CLI_ARGS[3]}:${CLI_ARGS[4]}"
-      mountPointStr="/mnt/${CLI_ARGS[3]}${CLI_ARGS[4]}"
-    else
-      echo "Invalid share type"
-      echo
-      exit 1
-    fi
-    
-    # Exit if the share isn't found in /etc/fstab
-    if ! cat /etc/fstab | grep -q "^$shareStr $mountPointStr $type"; then
-      echo "Share not found in fstab"
-      echo
-      exit 1
-    fi
-    
-    # Unmount the share if currently mounted, display error if unmount fails
-    if df -T | grep -q "^$shareStr.*$type.*$mountPointStr$"; then
-      echo "Unmounting share..."
-      sudo umount $mountPointStr > /dev/null 2>&1
-      if [ $? -ne 0 ]; then
-        echo "Unmount failed, unable to remove the share"
-        echo
-        exit 1
-      fi
-    fi
+	# Build the share and mount point syntax depending on share type
+	if [ "$type" == "cifs" ]; then
+		shareStr="//$host/$share"
+		mountPointStr="/mnt/$host/$share"
+	elif [ "$type" == "nfs" ]; then
+		shareStr="$host:$share"
+		mountPointStr="/mnt/$host$share"
+	else
+		echo "Invalid share type"
+		echo
+		exit 1
+	fi
+	
+	# Exit if the share isn't found in /etc/fstab
+	if ! cat /etc/fstab | grep -q "^$shareStr $mountPointStr $type"; then
+		echo "Share not found in fstab"
+		echo
+		exit 1
+	fi
+	
+	# Unmount the share if currently mounted, display error if unmount fails
+	if df -T | grep -q "^$shareStr.*$type.*$mountPointStr$"; then
+		echo "Unmounting share..."
+		sudo umount $mountPointStr > /dev/null 2>&1
+		if [ $? -ne 0 ]; then
+			echo "Unmount failed, unable to remove the share"
+			echo
+			exit 1
+		fi
+	fi
 
-    # Remove the share entry from /etc/fstab
-    echo "Applying changes to fstab..."
-    sudo sed -i '\#^'"$shareStr"' '"$mountPointStr"' '"$type"'#d' /etc/fstab
+	# Remove the share entry from /etc/fstab
+	echo "Applying changes to fstab..."
+	sudo sed -i '\#^'"$shareStr"' '"$mountPointStr"' '"$type"'#d' /etc/fstab
 
-		# Share removal verification, display error if the share was not successfully removed
-    if cat /etc/fstab | grep -q "^$shareStr $mountPointStr $type"; then
-      echo "Failed to remove the share from fstab"
-      echo
-      exit 1
-    fi
-    
-    echo "Done."
-  else
-    shares__help
-  fi
+	# Share removal verification, display error if the share was not successfully removed
+	if cat /etc/fstab | grep -q "^$shareStr $mountPointStr $type"; then
+		echo "Failed to remove the share from fstab"
+		echo
+		exit 1
+	fi
+  
+  echo
+  shares__show_config
 }
 
 function shares__mount_all() {
-  if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    mount -a > /dev/null 2>&1
-    shares__show_config
-  else
-    shares__help
-  fi
+  mount -a > /dev/null 2>&1
+  shares__show_config
 }    
 
 function shares__show_config() {
-  if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-    # If cifs/nfs shares are found in fstab, display the df headers
-    if egrep -i -q "cifs|nfs" /etc/fstab; then
-      df -hT | head -1
-      # Loop through the cifs/nfs shares in fstab
-      egrep -i "cifs|nfs" /etc/fstab | while read -r line; do
-        share=$(echo $line | awk '{print $1}')
-        # If the current share from fstab is mounted, display the df -hT output
-        if df -hT | grep -q "$share"; then
-          df -hT | grep "$share"
-        # If the current share from fstab is nout mounted, display the share syntax + (Not Mounted)
-        else
-          echo -e "$share \t (Not Mounted)"
-        fi
-      done  
-    else
-      echo "No shares have been added"
-    fi
-  else
-    shares__help
-  fi
+	# If cifs/nfs shares are found in fstab, display the df headers
+	if egrep -i -q "cifs|nfs" /etc/fstab; then
+		df -hT | head -1
+		# Loop through the cifs/nfs shares in fstab
+		egrep -i "cifs|nfs" /etc/fstab | while read -r line; do
+			share=$(echo $line | awk '{print $1}')
+			# If the current share from fstab is mounted, display the df -hT output
+			if df -hT | grep -q "$share"; then
+				df -hT | grep "$share"
+			# If the current share from fstab is nout mounted, display the share syntax + (Not Mounted)
+			else
+				echo -e "$share \t (Not Mounted)"
+			fi
+		done  
+	else
+		echo "No shares are mounted"
+	fi
 }
 
 function shares__validate_share() {
@@ -225,11 +217,11 @@ function shares__validate_share() {
   
   # Build the share and mount point syntax depending on share type
   if [ "$type" == "cifs" ]; then
-    shareStr="//${CLI_ARGS[3]}/${CLI_ARGS[4]}"
-    mountPointStr="/mnt/${CLI_ARGS[3]}/${CLI_ARGS[4]}"
+    shareStr="//$host/$share"
+    mountPointStr="/mnt/$host/$share"
   elif [ "$type" == "nfs" ]; then
-    shareStr="${CLI_ARGS[3]}:${CLI_ARGS[4]}"
-    mountPointStr="/mnt/${CLI_ARGS[3]}${CLI_ARGS[4]}"
+    shareStr="$host:$share"
+    mountPointStr="/mnt/$host$share"
   else
     echo "Invalid share type"
     echo

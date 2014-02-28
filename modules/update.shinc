@@ -8,7 +8,6 @@ function update__help() {
   echo "Usage: tretflix update [COMMAND] [OPTION]"
   echo
   echo "COMMANDS:"
-  echo "  tretflix update appliance"
   echo "  tretflix update cli [OPTION] ..."
   echo
   echo "OPTIONS:"
@@ -20,12 +19,21 @@ function update__help() {
 function update__command_handler() {
   if test "${CLI_ARGS[1]+isset}"; then
     case "${CLI_ARGS[1]}" in
-    	'appliance')
-    	  update__appliance
-    	  ;;
     	'cli')
-    	  update__cli
-    	  ;;
+    	  if [ "${#CLI_ARGS[@]}" -eq 2 ]; then
+    	    update__cli "master"
+    	  elif [ "${#CLI_ARGS[@]}" -eq 4 ]; then
+    	    case "${CLI_ARGS[2]}" in
+            '-b' | '--branch')
+              update__cli "${CLI_ARGS[3]}"
+              ;;
+						*)
+							update__help
+					esac
+				else
+					update__help
+				fi
+				;;
       *)
         update__help
     esac
@@ -34,66 +42,26 @@ function update__command_handler() {
   fi
 }
 
-function update__appliance() {
-  # 1.0.x CLI to 1.1.x CLI update requirements
-  # Update ~/.profile to run appliance update anytime CLI is updated
-  # Remove /opt/tretflix/.sys/config
-  # Fix plex media server bug (remove identity strings)
-  # Install NZBdrone & deploy config
-  # Install Proxy & deploy config
-  echo "Coming Soon..."
-}
-
 function update__cli() {
-  if [ "${#CLI_ARGS[@]}" -eq 2 ]; then
-    if cd $cliPath && git fetch -v --dry-run 2>&1 | grep 'master' | grep -q 'up to date'; then
-      echo "Tretflix CLI is up-to-date."
-    else
-      while true; do
-        read -p "There is an update available for Tretflix CLI. Update now? (y/n): " input
-        case "$input" in
-          [yY] | [yY][Ee][Ss] )
-            sudo su -c -u $osUser \
-              "cd $cliPath && git fetch > /dev/null 2>&1"
-            sudo su -c -u $osUser \
-              "cd $cliPath && git checkout -f master > /dev/null 2>&1"
-            sudo su -c -u $osUser \
-              "cd $cliPath && git reset --hard origin/master > /dev/null 2>&1"
-            chmod +x "$0"
-            echo "Tretflix CLI has been updated."
-            break;;
-          [nN] | [n|N][O|o] )
-            echo
-            exit 1;;
-          * )
-            echo "!! ERROR: Invalid entry."
-            echo
-        esac
-      done
-    fi
-  elif [ "${#CLI_ARGS[@]}" -eq 4 ]; then
-    case "${CLI_ARGS[2]}" in
-      '-b' | '--branch')
-        branch="${CLI_ARGS[3]}"
-        branch=$(echo "$branch" | tr '[:upper:]' '[:lower:]')
-        if [ "$branch" == "master" ] || [ "$branch" == "develop" ]; then
-          sudo su -c -u $osUser \
-            "cd $cliPath && git fetch -v"
-          sudo su -c -u $osUser \
-            "cd $cliPath && git checkout -f $branch"
-          sudo su -c -u $osUser \
-            "cd $cliPath && git reset --hard origin/$branch" 
-          chmod +x "$0"
-        else
-          echo "Invalid branch name."
-          echo
-          exit 1
-        fi
-        ;;
-      *)
-        update__help
-    esac
+  branch="$1"
+  
+  # If branch is 'master', suppress command output
+  if [ "$branch" == "master" ]; then  
+		sudo su -c -u $osUser \
+			"cd $cliPath && git fetch > /dev/null 2>&1"
+		sudo su -c -u $osUser \
+			"cd $cliPath && git checkout -f master > /dev/null 2>&1"
+		sudo su -c -u $osUser \
+			"cd $cliPath && git reset --hard origin/master > /dev/null 2>&1"
+		chmod +x "$0"
+		echo "Tretflix CLI has been updated."
   else
-    update__help
+		sudo su -c -u $osUser \
+			"cd $cliPath && git fetch -v"
+		sudo su -c -u $osUser \
+			"cd $cliPath && git checkout -f $branch"
+		sudo su -c -u $osUser \
+			"cd $cliPath && git reset --hard origin/$branch" 
+		chmod +x "$0"
   fi
 }
