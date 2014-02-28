@@ -70,7 +70,7 @@ function storage__set_local() {
 	# Exit if the "downloads" symlink is already pointed to /media/disk2/downloads
 	currentDownloadsPath="$(readlink $downloadsLink)"
 	if [ "$currentDownloadsPath" == "$newPath" ]; then
-		echo "Error: Downloads are already stored locally"
+		echo "Downloads are already stored locally"
 		echo
 		exit 1
 	fi
