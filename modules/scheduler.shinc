@@ -10,6 +10,7 @@ function scheduler__help() {
   echo "COMMANDS:"
   echo "  tretflix scheduler app upgrades [OPTION]"
   echo "  tretflix scheduler tmp cleanup [OPTION]"
+  echo "  tretflix scheduler show config"
   echo
   echo "OPTIONS:"
   echo "  -e, --enable"
