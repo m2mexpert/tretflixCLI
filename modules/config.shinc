@@ -679,7 +679,8 @@ function config__backup_appdata() {
 	echo "* Restarting Services"
 	allservices__start
 	
-	echo "* Backup Saved to $tretflixPath/backup-$timestamp.tar"
+	echo
+	echo "Backup Saved to $tretflixPath/backup-$timestamp.tar"
 }
 
 function config__list_backups() {
