@@ -58,6 +58,12 @@ function scheduler__command_handler() {
           scheduler__help
         fi
         ;;
+      'show config')
+        if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
+          scheduler__show_config
+        else
+          scheduler__help
+        fi        
       *)
         scheduler__help
     esac
@@ -76,5 +82,9 @@ function scheduler__tmp_cleanup() {
   option="$1"
   
   echo $option
+}
+
+function scheduler__show_config() {
+  echo "Show Config here"
 }
 
