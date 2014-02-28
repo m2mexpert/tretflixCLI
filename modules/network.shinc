@@ -5,7 +5,7 @@ fi
 network__imported=1
 
 function network__help() {
-  echo "Usage: tretflix network [COMMAND] [INPUT]"
+  echo "Usage: tretflix network [COMMAND] [INPUT] [OPTION]"
   echo
   echo "COMMANDS:"
   echo "  tretflix network add ip [IPv4]"
