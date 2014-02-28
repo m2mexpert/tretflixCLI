@@ -197,22 +197,9 @@ function storage__set_share() {
 }
 
 function storage__tmp_cleanup() {
-  if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
-    case "${CLI_ARGS[3]}" in
-      '-d' | '--disable')
-        option="disable"
-        ;;
-      '-e' | '--enable')
-        option="enable"
-        ;;
-      *)
-        storage__help
-    esac
-  else
-    storage__help
-  fi
-  
-  echo $option
+  if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
+
+  echo "Do tmp cleanup here"
 }
 
 function storage__show_config() {
