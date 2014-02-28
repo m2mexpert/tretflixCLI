@@ -114,34 +114,9 @@ function service__enable() {
 	case "$option" in
 		'-a' | '--all')
 			allservices__enable
-			;;
-		'-b' | '--sickbeard')
-			if ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-				# Install the service if not already installed
-				if [ "$(sickbeard__get_status)" == "Not Installed" ]; then
-					sickbeard__install
-				fi
 
-				# Upgrade the service if a newer version is available
-				if sickbeard__version_check; then
-					sickbeard__stop
-					sickbeard__upgrade
-				fi
-				
-				# Stop the service
-				sickbeard__stop
-
-				# Sync Sick Beard to the current SABnzbd+ config
-				echo "* Configuring Sick Beard"
-				sickbeard__sabnzbd_sync
-				
-				# Enable the service
-				sickbeard__enable
-			fi
-			# Start the service
-			sickbeard__start
 			echo
-			sickbeard__show_config
+			allservices__show_config
 			;;
 		'-c' | '--couchpotato')
 			if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
@@ -168,6 +143,7 @@ function service__enable() {
 			fi
 			# Start the service
 			couchpotato__start
+			
 			echo
 			couchpotato__show_config
 			;;
@@ -196,6 +172,7 @@ function service__enable() {
 			fi
 			# Start the service
 			headphones__start
+			
 			echo
 			headphones__show_config
 			;;
@@ -224,6 +201,7 @@ function service__enable() {
 			fi
 			# Start the service
 			nzbdrone__start
+			
 			echo
 			nzbdrone__show_config
 			;;
@@ -245,6 +223,7 @@ function service__enable() {
 			fi
 			# Start the service
 			plexserver__start
+			
 			echo
 			plexserver__show_config
 			;;
@@ -266,8 +245,38 @@ function service__enable() {
 			fi
 			# Start the service
 			sabnzbd__start
+			
 			echo
 			sabnzbd__show_config
+			;;
+		'-b' | '--sickbeard')
+			if ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+				# Install the service if not already installed
+				if [ "$(sickbeard__get_status)" == "Not Installed" ]; then
+					sickbeard__install
+				fi
+
+				# Upgrade the service if a newer version is available
+				if sickbeard__version_check; then
+					sickbeard__stop
+					sickbeard__upgrade
+				fi
+				
+				# Stop the service
+				sickbeard__stop
+
+				# Sync Sick Beard to the current SABnzbd+ config
+				echo "* Configuring Sick Beard"
+				sickbeard__sabnzbd_sync
+				
+				# Enable the service
+				sickbeard__enable
+			fi
+			# Start the service
+			sickbeard__start
+
+			echo
+			sickbeard__show_config
 			;;
 		'-t' | '--transmission')
 			if ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
@@ -287,6 +296,7 @@ function service__enable() {
 			fi
 			# Start the service
 			transmission__start
+			
 			echo
 			transmission__show_config
 			;;
@@ -301,46 +311,56 @@ function service__disable() {
 	case "$option" in
 		'-a' | '--all')
 			allservices__disable
-			;;
-		'-b' | '--sickbeard')
-			sickbeard__stop
-			sickbeard__disable
+
 			echo
-			sickbeard__show_config
-			;;    
+			allservices__show_config
+			;;   
 		'-c' | '--couchpotato')
 			couchpotato__stop
 			couchpotato__disable
+			
 			echo
 			couchpotato__show_config
 			;;
 		'-h' | '--headphones')
 			headphones__stop
 			headphones__disable
+			
 			echo
 			headphones__show_config
 			;;
 		'-n' | '--nzbdrone')
 			nzbdrone__stop
 			nzbdrone__disable
+			
 			echo
 			nzbdrone__show_config
 			;;
 		'-p' | '--plexserver')
 			plexserver__stop
 			plexserver__disable
+			
 			echo
 			plexserver__show_config
 			;;
 		'-s' | '--sabnzbd')
 			sabnzbd__stop
 			sabnzbd__disable
+			
 			echo
 			sabnzbd__show_config
 			;;
+		'-b' | '--sickbeard')
+			sickbeard__stop
+			sickbeard__disable
+			
+			echo
+			sickbeard__show_config
+			;; 
 		'-t' | '--transmission')
 			transmission__stop
 			transmission__disable
+			
 			echo
 			transmission__show_config
 			;;
@@ -357,14 +377,7 @@ function service__upgrade() {
 			echo "* Updating apt repository package lists"
 			apt-get update
 			allservices__upgrade
-			;;
-		'-b' | '--sickbeard')
-			if sickbeard__version_check; then
-				sickbeard__stop
-				sickbeard__upgrade
-				sickbeard__start
-			fi
-			;;    
+			;; 
 		'-c' | '--couchpotato')
 			if couchpotato__version_check; then
 				couchpotato__stop
@@ -404,6 +417,13 @@ function service__upgrade() {
 				sabnzbd__start
 			fi
 			;;
+		'-b' | '--sickbeard')
+			if sickbeard__version_check; then
+				sickbeard__stop
+				sickbeard__upgrade
+				sickbeard__start
+			fi
+			;;   
 		'-t' | '--transmission')
 			echo "* Updating apt repository package lists"
 			apt-get update
@@ -425,30 +445,36 @@ function service__set_username() {
 	case "$option" in
 		'-a' | '--all')
 			allservices__set_username "$username"
-			;;
-		'-b' | '--sickbeard')
-			echo "* Applying changes to Sick Beard"
-			sickbeard__stop
-			sickbeard__set_username "$username"
-			sickbeard__start
-			;;    
+
+			echo
+			allservices__show_config
+			;;  
 		'-c' | '--couchpotato')
 			echo "* Applying changes to CouchPotato"
 			couchpotato__stop
 			couchpotato__set_username "$username"
 			couchpotato__start
+			
+			echo
+			couchpotato__show_config
 			;;
 		'-h' | '--headphones')
 			echo "* Applying changes to Headphones"
 			headphones__stop
 			headphones__set_username "$username"
 			headphones__start
+			
+			echo
+			headphones__show_config
 			;;
 		'-n' | '--nzbdrone')
 			echo "* Applying changes to NzbDrone"
 			nzbdrone__stop
 			nzbdrone__set_username "$username"
 			nzbdrone__start
+
+			echo
+			nzbdrone__show_config
 			;;
 		'-p' | '--plexserver')
 			echo "This command is not available for Plex Media Server"
@@ -477,13 +503,28 @@ function service__set_username() {
 				sickbeard__stop
 				sickbeard__set_sabnzbd_username "$username"
 				sickbeard__start
-			fi  
+			fi
+
+			echo
+			sabnzbd__show_config
 			;;
+		'-b' | '--sickbeard')
+			echo "* Applying changes to Sick Beard"
+			sickbeard__stop
+			sickbeard__set_username "$username"
+			sickbeard__start
+			
+			echo
+			sickbeard__show_config
+			;;  
 		'-t' | '--transmission')
 			echo "* Applying changes to Transmission"
 			transmission__stop
 			transmission__set_username "$username"
 			transmission__start
+			
+			echo
+			transmission__show_config
 			;;
 		*)
 			service__help
@@ -497,30 +538,36 @@ function service__set_password() {
 	case "$option" in
 		'-a' | '--all')
 			allservices__set_password "$password"
-			;;
-		'-b' | '--sickbeard')
-			echo "* Applying changes to Sick Beard"
-			sickbeard__stop
-			sickbeard__set_password "$password"
-			sickbeard__start
-			;;    
+
+			echo
+			allservices__show_config
+			;;   
 		'-c' | '--couchpotato')
 			echo "* Applying changes to CouchPotato"
 			couchpotato__stop
 			couchpotato__set_password "$password"
 			couchpotato__start
+			
+			echo
+			couchpotato__show_config
 			;;
 		'-h' | '--headphones')
 			echo "* Applying changes to Headphones"
 			headphones__stop
 			headphones__set_password "$password"
 			headphones__start
+
+			echo
+			headphones__show_config
 			;;
 		'-n' | '--nzbdrone')
 			echo "* Applying changes to NzbDrone"
 			nzbdrone__stop
 			nzbdrone__set_password "$password"
 			nzbdrone__start
+			
+			echo
+			nzbdrone__show_config
 			;;
 		'-p' | '--plexserver')
 			echo "This command is not available for Plex Media Server"
@@ -550,12 +597,27 @@ function service__set_password() {
 				sickbeard__set_sabnzbd_password "$password"
 				sickbeard__start
 			fi
+			
+			echo
+			sabnzbd__show_config
 			;;
+		'-b' | '--sickbeard')
+			echo "* Applying changes to Sick Beard"
+			sickbeard__stop
+			sickbeard__set_password "$password"
+			sickbeard__start
+			
+			echo
+			sickbeard__show_config
+			;; 
 		'-t' | '--transmission')
 			echo "* Applying changes to Transmission"
 			transmission__stop
 			transmission__set_password "$password"
 			transmission__start
+			
+			echo
+			transmission__show_config
 			;;
 		*)
 			service__help
@@ -569,30 +631,33 @@ function service__set_port() {
 	case "$option" in
 		'-a' | '--all')
 			echo "This command requires an individual service to be specified"
-			;;
-		'-b' | '--sickbeard')
-			echo "* Applying changes to Sick Beard"
-			sickbeard__stop
-			sickbeard__set_port "$port"
-			sickbeard__start
-			;;    
+			;;   
 		'-c' | '--couchpotato')
 			echo "* Applying changes to CouchPotato"
 			couchpotato__stop
 			couchpotato__set_port "$port"
 			couchpotato__start
+			
+			echo
+			couchpotato__show_config
 			;;
 		'-h' | '--headphones')
 			echo "* Applying changes to Headphones"
 			headphones__stop
 			headphones__set_port "$port"
 			headphones__start
+
+			echo
+			headphones__show_config
 			;;
 		'-n' | '--nzbdrone')
 			echo "* Applying changes to NzbDrone"
 			nzbdrone__stop
 			nzbdrone__set_port "$port"
 			nzbdrone__start
+			
+			echo
+			nzbdrone__show_config
 			;;
 		'-p' | '--plexserver')
 			echo "This command is not available for Plex Media Server"
@@ -628,12 +693,27 @@ function service__set_port() {
 				sickbeard__set_sabnzbd_port "$port"
 				sickbeard__start
 			fi
+			
+			echo
+			sabnzbd__show_config
 			;;
+		'-b' | '--sickbeard')
+			echo "* Applying changes to Sick Beard"
+			sickbeard__stop
+			sickbeard__set_port "$port"
+			sickbeard__start
+			
+			echo
+			sickbeard__show_config
+			;; 
 		'-t' | '--transmission')
 			echo "* Applying changes to Transmission"
 			transmission__stop
 			transmission__set_port "$port"
 			transmission__start
+
+			echo
+			transmission__show_config
 			;;
 		*)
 			service__help
@@ -646,20 +726,19 @@ function service__new_apikey() {
 	case "$option" in
 		'-a' | '--all')
 			allservices__set_apikey
-			;;
-		'-b' | '--sickbeard')
-			echo "* Applying changes to Sick Beard"
-			apikey="$(tools__gen_apikey)"
-			sickbeard__stop
-			sickbeard__set_apikey "$apikey"
-			sickbeard__start
-			;;    
+			
+			echo
+			allservices__show_config
+			;;  
 		'-c' | '--couchpotato')
 			echo "* Applying changes to CouchPotato"
 			apikey="$(tools__gen_apikey)"
 			couchpotato__stop
 			couchpotato__set_apikey "$apikey"
 			couchpotato__start
+
+			echo
+			couchpotato__show_config
 			;;
 		'-h' | '--headphones')
 			echo "* Applying changes to Headphones"
@@ -667,6 +746,9 @@ function service__new_apikey() {
 			headphones__stop
 			headphones__set_apikey "$apikey"
 			headphones__start
+
+			echo
+			headphones__show_config
 			;;
 		'-n' | '--nzbdrone')
 			echo "* Applying changes to NzbDrone"
@@ -674,6 +756,9 @@ function service__new_apikey() {
 			nzbdrone__stop
 			nzbdrone__set_apikey "$apikey"
 			nzbdrone__start
+
+			echo
+			nzbdrone__show_config
 			;;
 		'-p' | '--plexserver')
 			echo "This command is not available for Plex Media Server"
@@ -710,7 +795,20 @@ function service__new_apikey() {
 				sickbeard__set_sabnzbd_apikey "$apikey"
 				sickbeard__start
 			fi
+
+			echo
+			sabnzbd__show_config
 			;;
+		'-b' | '--sickbeard')
+			echo "* Applying changes to Sick Beard"
+			apikey="$(tools__gen_apikey)"
+			sickbeard__stop
+			sickbeard__set_apikey "$apikey"
+			sickbeard__start
+
+			echo
+			sickbeard__show_config
+			;;  
 		'-t' | '--transmission')
 			echo "This command is not available for Transmission"
 			echo
@@ -727,10 +825,7 @@ function service__show_config() {
 	case "$option" in
 		'-a' | '--all')
 			allservices__show_config
-			;;
-		'-b' | '--sickbeard')
-			sickbeard__show_config
-			;;    
+			;;   
 		'-c' | '--couchpotato')
 			couchpotato__show_config
 			;;
@@ -745,6 +840,9 @@ function service__show_config() {
 			;;
 		'-s' | '--sabnzbd')
 			sabnzbd__show_config
+			;;
+		'-b' | '--sickbeard')
+			sickbeard__show_config
 			;;
 		'-t' | '--transmission')
 			transmission__show_config
