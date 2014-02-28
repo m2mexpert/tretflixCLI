@@ -337,7 +337,8 @@ function config__wizard() {
 			[yY] | [yY][Ee][Ss] )
 				break;;
 			[nN] | [n|N][O|o] )
-				exit 1;;
+			  echo
+				exit;;
 			* )
 				echo "!! ERROR: Invalid entry."
 				echo
@@ -656,6 +657,7 @@ function config__wizard() {
 				allservices__show_config
 				break;;
 			[nN] | [n|N][O|o] )
+			  echo
 				break;;
 			* )
 				echo "!! ERROR: Invalid entry."
@@ -841,7 +843,8 @@ function config__restore_appdata() {
 			[yY] | [yY][Ee][Ss] )
 				break;;
 			[nN] | [n|N][O|o] )
-				exit 1;;
+			  echo
+				exit;;
 			* )
 				echo "!! ERROR: Invalid entry."
 				echo
@@ -1123,6 +1126,7 @@ function config__restore_appdata() {
 				allservices__show_config
 				break;;
 			[nN] | [n|N][O|o] )
+			  echo
 				break;;
 			* )
 				echo "!! ERROR: Invalid entry."
