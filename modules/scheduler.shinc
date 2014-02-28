@@ -63,7 +63,8 @@ function scheduler__command_handler() {
           scheduler__show_config
         else
           scheduler__help
-        fi        
+        fi
+        ;;        
       *)
         scheduler__help
     esac
