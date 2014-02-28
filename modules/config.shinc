@@ -51,6 +51,8 @@ function config__command_handler() {
 						*)
 							config__help
 					esac
+        else
+          config__help
         fi
         ;;
       *)
