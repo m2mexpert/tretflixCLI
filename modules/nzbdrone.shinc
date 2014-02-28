@@ -127,7 +127,6 @@ function nzbdrone__show_config() {
     echo
     echo "Username: $username"
     echo "Password: $password"
-    echo "Web Port: $port"
     echo "API Key: $apikey"
   fi
 }
