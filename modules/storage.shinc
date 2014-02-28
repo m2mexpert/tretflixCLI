@@ -199,7 +199,11 @@ function storage__set_share() {
 function storage__tmp_cleanup() {
   if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
 
-  echo "Do tmp cleanup here"
+    echo "Do tmp cleanup here"
+    
+  else
+    storage__help
+  fi 
 }
 
 function storage__show_config() {
