@@ -130,3 +130,7 @@ function plexserver__upgrade() {
     
   rm -vf /tmp/"$filename"
 }
+
+function plexserver__fixit() {
+  echo "Coming Soon..."
+}

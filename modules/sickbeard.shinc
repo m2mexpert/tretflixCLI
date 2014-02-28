@@ -189,3 +189,7 @@ function sickbeard__set_sabnzbd_apikey() {
   
   sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_apikey .*/sab_apikey = '$apikey'/g}}' $sickbeardConfig
 }
+
+function sickbeard__fixit() {
+  echo "Coming Soon..."
+}

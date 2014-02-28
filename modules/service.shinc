@@ -19,12 +19,12 @@ function service__help() {
   echo
   echo "OPTIONS:"
   echo "  -a, --all"
-  echo "  -b, --sickbeard"
   echo "  -c, --couchpotato"
   echo "  -h, --headphones"
   echo "  -n, --nzbdrone"
   echo "  -p, --plexserver"
   echo "  -s, --sabnzbd"
+  echo "  -b, --sickbeard"
   echo "  -t, --transmission"
   echo
   echo "NOTES:" 

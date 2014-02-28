@@ -10,7 +10,12 @@ function network__help() {
   echo "COMMANDS:"
   echo "  tretflix network add ip [IPv4]"
   echo "  tretflix network del ip [IPv4]"
+  echo "  tretflix network reverse proxy [OPTION]"
   echo "  tretflix network show config"
+  echo
+  echo "OPTIONS:"
+  echo "  -e, --enable"
+  echo "  -d, --disable"
   echo
   exit 1
 }
@@ -23,6 +28,9 @@ function network__command_handler() {
         ;;
       'del ip')
         network__del_ip
+        ;;
+      'reverse proxy')
+        network__reverse_proxy
         ;;
       'show config')
         network__show_config
@@ -138,6 +146,25 @@ function network__del_ip() {
 
   sudo /etc/init.d/networking restart > /dev/null 2>&1
   echo "Done."
+}
+
+function network__reverse_proxy() {
+  if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
+    case "${CLI_ARGS[3]}" in
+      '-d' | '--disable')
+        option="disable"
+        ;;
+      '-e' | '--enable')
+        option="enable"
+        ;;
+      *)
+        network__help
+    esac
+  else
+    network__help
+  fi
+  
+  echo $option
 }
 
 function network__show_config() {

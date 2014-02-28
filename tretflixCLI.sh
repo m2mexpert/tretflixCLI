@@ -77,10 +77,10 @@ function help() {
   echo "COMMANDS:"
   echo "  tretflix config"
   echo "  tretflix network"
+  echo "  tretflix scheduler"
   echo "  tretflix service"
   echo "  tretflix shares"
   echo "  tretflix storage"
-  echo "  tretflix system"
   echo
   exit 1
 }
@@ -101,11 +101,11 @@ import "modules/network"
 import "modules/nzbdrone"
 import "modules/plexserver"
 import "modules/sabnzbd"
+import "modules/scheduler"
 import "modules/service"
 import "modules/shares"
 import "modules/sickbeard"
 import "modules/storage"
-import "modules/system"
 import "modules/tools"
 import "modules/transmission"
 import "modules/update"
@@ -128,6 +128,9 @@ if test "${CLI_ARGS[0]+isset}"; then
     network)
       network__command_handler
       ;;
+    scheduler)
+      scheduler__command_handler
+      ;;
     service)
       service__command_handler
       ;;
@@ -136,9 +139,6 @@ if test "${CLI_ARGS[0]+isset}"; then
       ;;
     storage)
       storage__command_handler
-      ;;   
-    system)
-      system__command_handler
       ;;
     update)
       update__command_handler

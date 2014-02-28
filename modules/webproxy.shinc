@@ -31,3 +31,7 @@ function webproxy__show_config() {
 function webproxy__install() {
   echo "Coming Soon"
 }
+
+function webproxy__fixit() {
+  echo "Coming Soon"
+}

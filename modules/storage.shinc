@@ -10,12 +10,17 @@ function storage__help() {
   echo "COMMANDS:"
   echo "  tretflix storage set local"
   echo "  tretflix storage set share [PATH]"
+  echo "  tretflix storage tmp cleanup"
   echo "  tretflix storage show config"
   echo
   echo "NOTES:"
-  echo "  Existing files will be copied. This may take a while if there"
-  echo "  are large amounts of data to be copied and/or depending on"
-  echo "  network speed, congestion, etc. Be patient."
+  echo "  Existing files/dirs in the 'downloads' and 'tmp' directories"
+  echo "  will be copied when changing the storage path. This may take"
+  echo "  a while if there are large amounts of data to be copied and/or"
+  echo "  depending on network speed, congestion, etc. Be patient and"
+  echo "  monitor the output. Running the 'tmp cleanup' command will"
+  echo "  purge any abandoned tmp files/dirs with a modified time of"
+  echo "  greater than 14 days."
   echo
   exit 1
 }
@@ -28,6 +33,9 @@ function storage__command_handler() {
         ;;
       'set share')
         storage__set_share
+        ;;
+      'tmp cleanup')
+        storage__tmp_cleanup
         ;;
       'show config')
         storage__show_config
@@ -186,6 +194,25 @@ function storage__set_share() {
   else
     storage__help
   fi
+}
+
+function storage__tmp_cleanup() {
+  if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
+    case "${CLI_ARGS[3]}" in
+      '-d' | '--disable')
+        option="disable"
+        ;;
+      '-e' | '--enable')
+        option="enable"
+        ;;
+      *)
+        storage__help
+    esac
+  else
+    storage__help
+  fi
+  
+  echo $option
 }
 
 function storage__show_config() {

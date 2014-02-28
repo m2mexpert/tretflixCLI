@@ -186,3 +186,7 @@ function headphones__set_sabnzbd_apikey() {
   
   sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_apikey .*/sab_apikey = '$apikey'/g}}' $headphonesConfig
 }
+
+function headphones__fixit() {
+  echo "Coming Soon..."
+}

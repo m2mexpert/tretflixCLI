@@ -136,3 +136,7 @@ function transmission__upgrade() {
   echo "* Upgrading Transmission"
   apt-get -y install transmission-daemon
 }
+
+function transmission__fixit() {
+  echo "Coming Soon..."
+}

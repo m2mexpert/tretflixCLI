@@ -171,3 +171,7 @@ function couchpotato__set_sabnzbd_apikey() {
   
   sed -i -e '/^\[sabnzbd\]/,/^\[/{/^\[sabnzbd\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $couchpotatoConfig
 }
+
+function couchpotato__fixit() {
+  echo "Coming Soon..."
+}

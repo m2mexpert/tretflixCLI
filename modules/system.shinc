@@ -1,51 +1,46 @@
 # avoid double inclusion
-if test "${system__imported+defined}" == "defined"; then
+if test "${scheduler__imported+defined}" == "defined"; then
   return 0
 fi
-system__imported=1
+scheduler__imported=1
 
-function system__help() {
-  echo "Usage: tretflix system [COMMAND] [OPTION]"
+function scheduler__help() {
+  echo "Usage: tretflix scheduler [COMMAND] [OPTION]"
   echo
   echo "COMMANDS:"
-  echo "  tretflix system app upgrades [OPTION]"
-  echo "  tretflix system tmp cleanup [OPTION]"
-  echo "  tretflix system web proxy [OPTION]"
+  echo "  tretflix scheduler app upgrades [OPTION]"
+  echo "  tretflix scheduler tmp cleanup [OPTION]"
   echo
   echo "OPTIONS:"
-  echo "  -d, --disable"
   echo "  -e, --enable"
+  echo "  -d, --disable"
   echo
   echo "NOTES:"
-  echo "  Enable 'tmp cleanup' for automatic nightly cleanup"
-  echo "  of abandoned files/dirs in the tmp directory. Enable"
-  echo "  'app upgrades' for automatic nightly upgrades of"
-  echo "  enabled services."
+  echo "  Enable 'app upgrades' to check for and upgrade all apps"
+  echo "  daily at 2am. Enable 'tmp cleanup' to automatically purge"
+  echo "  abandoned tmp files/dirs daily at 1am."
   echo
   exit 1
 }
 
-function system__command_handler() {
+function scheduler__command_handler() {
   if test "${CLI_ARGS[2]+isset}"; then
     case "${CLI_ARGS[1]} ${CLI_ARGS[2]}" in
       'app upgrades')
-        system__app_upgrades
+        scheduler__app_upgrades
         ;;
       'tmp cleanup')
-        system__tmp_cleanup
-        ;;
-      'web proxy')
-        system__web_proxy
+        scheduler__tmp_cleanup
         ;;
       *)
-        system__help
+        scheduler__help
     esac
   else
-    system__help
+    scheduler__help
   fi
 }
 
-function system__app_upgrades() {
+function scheduler__app_upgrades() {
   if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
     case "${CLI_ARGS[3]}" in
       '-d' | '--disable')
@@ -55,16 +50,16 @@ function system__app_upgrades() {
         option="enable"
         ;;
       *)
-        system__help
+        scheduler__help
     esac
   else
-    system__help
+    scheduler__help
   fi
   
   echo $option
 }
 
-function system__tmp_cleanup() {
+function scheduler__tmp_cleanup() {
   if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
     case "${CLI_ARGS[3]}" in
       '-d' | '--disable')
@@ -74,30 +69,12 @@ function system__tmp_cleanup() {
         option="enable"
         ;;
       *)
-        system__help
+        scheduler__help
     esac
   else
-    system__help
+    scheduler__help
   fi
   
   echo $option
 }
 
-function system__web_proxy() {
-  if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
-    case "${CLI_ARGS[3]}" in
-      '-d' | '--disable')
-        option="disable"
-        ;;
-      '-e' | '--enable')
-        option="enable"
-        ;;
-      *)
-        system__help
-    esac
-  else
-    system__help
-  fi
-  
-  echo $option
-}

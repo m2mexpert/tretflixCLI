@@ -151,3 +151,7 @@ function sabnzbd__upgrade() {
   echo "* Upgrading SABnzbd+"
   apt-get -y install sabnzbdplus
 }
+
+function sabnzbd__fixit() {
+  echo "Coming Soon..."
+}
