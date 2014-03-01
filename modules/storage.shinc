@@ -210,7 +210,18 @@ function storage__set_share() {
 }
 
 function storage__tmp_cleanup() {
-  echo "Do tmp cleanup here"
+dirs=( \
+"/opt/tretflix/tmp/plexmediaserver/transcodes" \
+"/opt/tretflix/tmp/sabnzbdplus/couchpotato" \
+"/opt/tretflix/tmp/sabnzbdplus/headphones" \
+"/opt/tretflix/tmp/sabnzbdplus/incomplete" \
+"/opt/tretflix/tmp/sabnzbdplus/nzbdrone" \
+"/opt/tretflix/tmp/sabnzbdplus/sickbeard" \
+"/opt/tretflix/tmp/transmission-daemon/incomplete")
+
+for dir in dirs; do
+  find "$dir/." -mtime +14 -exec ls -l {} \;
+done
 }
 
 function storage__show_config() {
