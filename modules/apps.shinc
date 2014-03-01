@@ -911,8 +911,8 @@ function apps__sabnzbd() {
 			nzbdrone__start
 		fi
 		if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-			echo "* Configuring Sick Beard"
 			sickbeard__stop
+			echo "* Configuring Sick Beard"
 			sickbeard__set_sabnzbd_username "$username"
 			sickbeard__start
 		fi
@@ -938,8 +938,8 @@ function apps__sabnzbd() {
 			nzbdrone__start
 		fi
 		if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-			echo "* Configuring Sick Beard"
 			sickbeard__stop
+			echo "* Configuring Sick Beard"
 			sickbeard__set_sabnzbd_password "$password"
 			sickbeard__start
 		fi
@@ -965,8 +965,8 @@ function apps__sabnzbd() {
 			nzbdrone__start
 		fi
 		if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-			echo "* Configuring Sick Beard"
 			sickbeard__stop
+			echo "* Configuring Sick Beard"
 			sickbeard__set_sabnzbd_port "$port"
 			sickbeard__start
 		fi
@@ -992,8 +992,8 @@ function apps__sabnzbd() {
 			nzbdrone__start
 		fi
 		if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-			echo "* Configuring Sick Beard"
 			sickbeard__stop
+			echo "* Configuring Sick Beard"
 			sickbeard__set_sabnzbd_apikey "$apikey"
 			sickbeard__start
 		fi
