@@ -600,21 +600,18 @@ function apps__couchpotato() {
 			# Install the app if not already installed
 			if [ "$(couchpotato__get_status)" == "Not Installed" ]; then
 				couchpotato__install
-			else
-
-				# Upgrade the app if a newer version is available
-				if couchpotato__version_check; then
-					couchpotato__stop
-					couchpotato__upgrade
-				fi
-			
-				# Stop the app
+			elif couchpotato__version_check; then
+				# Upgrade the app if a newer version is available			
 				couchpotato__stop
-
-				# Sync CouchPotato to the current SABnzbd+ config
-				echo "* Configuring CouchPotato"
-				couchpotato__sabnzbd_sync
+				couchpotato__upgrade
 			fi
+
+			# Stop the app
+			couchpotato__stop
+
+			# Sync CouchPotato to the current SABnzbd+ config
+			echo "* Configuring CouchPotato"
+			couchpotato__sabnzbd_sync
 			
 			# Enable the app
 			couchpotato__enable
@@ -675,21 +672,18 @@ function apps__headphones() {
 			# Install the app if not already installed
 			if [ "$(headphones__get_status)" == "Not Installed" ]; then
 				headphones__install
-			else
-
-				# Upgrade the app if a newer version is available
-				if headphones__version_check; then
-					headphones__stop
-					headphones__upgrade
-				fi
-			
-				# Stop the app
+			elif headphones__version_check; then
+				# Upgrade the app if a newer version is available			
 				headphones__stop
-
-				# Sync Headphones to the current SABnzbd+ config
-				echo "* Configuring Headphones"
-				headphones__sabnzbd_sync
+				headphones__upgrade
 			fi
+			
+			# Stop the app
+			headphones__stop
+
+			# Sync Headphones to the current SABnzbd+ config
+			echo "* Configuring Headphones"
+			headphones__sabnzbd_sync
 			
 			# Enable the app
 			headphones__enable
@@ -750,21 +744,18 @@ function apps__nzbdrone() {
 			# Install the app if not already installed
 			if [ "$(nzbdrone__get_status)" == "Not Installed" ]; then
 				nzbdrone__install
-			else
-
-			  # Upgrade the app if a newer version is available
-			  if nzbdrone__version_check; then
-				  nzbdrone__stop
-				  nzbdrone__upgrade
-			  fi
-			
-			  # Stop the app
-			  nzbdrone__stop
-
-			  # Sync NzbDrone to the current SABnzbd+ config
-			  echo "* Configuring NzbDrone"
-			  nzbdrone__sabnzbd_sync
+			elif nzbdrone__version_check; then
+				# Upgrade the app if a newer version is available			
+				nzbdrone__stop
+				nzbdrone__upgrade
 			fi
+			
+			# Stop the app
+			nzbdrone__stop
+
+			# Sync NzbDrone to the current SABnzbd+ config
+			echo "* Configuring NzbDrone"
+			nzbdrone__sabnzbd_sync
 			
 			# Enable the app
 			nzbdrone__enable
@@ -825,14 +816,14 @@ function apps__plexserver() {
 			# Install the app if not already installed
 			if [ "$(plexserver__get_status)" == "Not Installed" ]; then
 				plexserver__install
-			else
-
-				# Upgrade the app if a newer version is available
-				if plexserver__version_check; then
-					plexserver__stop
-					plexserver__upgrade
-				fi
+			elif plexserver__version_check; then
+				# Upgrade the app if a newer version is available			
+				plexserver__stop
+				plexserver__upgrade
 			fi
+			
+			# Stop the app
+			plexserver__stop
 			
 			# Enable the app
 			plexserver__enable
@@ -873,14 +864,14 @@ function apps__sabnzbd() {
 			# Install the app if not already installed
 			if [ "$(sabnzbd__get_status)" == "Not Installed" ]; then
 				sabnzbd__install
-			else
-
-				# Upgrade the app if a newer version is available
-				if sabnzbd__version_check; then
-					sabnzbd__stop
-					sabnzbd__upgrade
-				fi
+			elif sabnzbd__version_check; then
+				# Upgrade the app if a newer version is available			
+				sabnzbd__stop
+				sabnzbd__upgrade
 			fi
+			
+			# Stop the app
+			sabnzbd__stop
 			
 			# Enable the app
 			sabnzbd__enable
@@ -1018,21 +1009,18 @@ function apps__sickbeard() {
 			# Install the app if not already installed
 			if [ "$(sickbeard__get_status)" == "Not Installed" ]; then
 				sickbeard__install
-			else
-
-				# Upgrade the app if a newer version is available
-				if sickbeard__version_check; then
-					sickbeard__stop
-					sickbeard__upgrade
-				fi
-			
-				# Stop the app
+			elif sickbeard__version_check; then
+				# Upgrade the app if a newer version is available			
 				sickbeard__stop
-
-				# Sync Sick Beard to the current SABnzbd+ config
-				echo "* Configuring Sick Beard"
-				sickbeard__sabnzbd_sync
+				sickbeard__upgrade
 			fi
+			
+			# Stop the app
+			sickbeard__stop
+
+			# Sync Sick Beard to the current SABnzbd+ config
+			echo "* Configuring Sick Beard"
+			sickbeard__sabnzbd_sync
 			
 			# Enable the app
 			sickbeard__enable
@@ -1093,14 +1081,14 @@ function apps__transmission() {
 			# Install the app if not already installed
 			if [ "$(transmission__get_status)" == "Not Installed" ]; then
 				transmission__install
-			else
-
-				# Upgrade the app if a newer version is available
-				if transmission__version_check; then
-					transmission__stop
-					transmission__upgrade
-				fi
+			elif transmission__version_check; then
+				# Upgrade the app if a newer version is available			
+				transmission__stop
+				transmission__upgrade
 			fi
+			
+			# Stop the app
+			transmission__stop
 			
 			# Enable the app
 			transmission__enable
