@@ -5,7 +5,7 @@ fi
 services__imported=1
 
 function services__help() {
-  echo "Usage: tretflix services [OPTION] [COMMAND] [INPUT]"
+  echo "Usage: tretflix services [OPTION] [COMMAND]"
   echo
   echo "COMMANDS:"
   echo "  tretflix services [OPTION] enable"
