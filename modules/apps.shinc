@@ -112,6 +112,9 @@ function apps__enable() {
 
 	case "$option" in
 		'-a' | '--all')
+			echo "* Updating apt repository package lists"
+			apt-get update
+			
       apps__couchpotato "enable"
       apps__headphones "enable"
       apps__nzbdrone "enable"
@@ -136,6 +139,9 @@ function apps__enable() {
 			headphones__show_config
 			;;
 		'-n' | '--nzbdrone')
+			echo "* Updating apt repository package lists"
+			apt-get update
+
       apps__nzbdrone "enable"
 			
 			echo
@@ -148,6 +154,9 @@ function apps__enable() {
 			plexserver__show_config
 			;;
 		'-s' | '--sabnzbd')
+			echo "* Updating apt repository package lists"
+			apt-get update
+			
       apps__sabnzbd "enable"
 			
 			echo
@@ -160,6 +169,9 @@ function apps__enable() {
 			sickbeard__show_config
 			;;
 		'-t' | '--transmission')
+			echo "* Updating apt repository package lists"
+			apt-get update
+			
       apps__transmission "enable"
 			
 			echo
@@ -256,18 +268,27 @@ function apps__upgrade() {
 			apps__headphones "upgrade"
 			;;
 		'-n' | '--nzbdrone')
+			echo "* Updating apt repository package lists"
+			apt-get update
+			
 			apps__nzbdrone "upgrade"
 			;;
 		'-p' | '--plexserver')
 			apps__plexserver "upgrade"
 			;;
 		'-s' | '--sabnzbd')
+			echo "* Updating apt repository package lists"
+			apt-get update
+			
       apps__sabnzbd "upgrade"
 			;;
 		'-b' | '--sickbeard')
       apps__sickbeard "upgrade"
 			;;   
 		'-t' | '--transmission')
+			echo "* Updating apt repository package lists"
+			apt-get update
+			
       apps__transmission "upgrade"
 			;;
 		*)
@@ -731,9 +752,6 @@ function apps__nzbdrone() {
 				nzbdrone__install
 			else
 
-			  echo "* Updating apt repository package lists"
-			  apt-get update
-
 			  # Upgrade the app if a newer version is available
 			  if nzbdrone__version_check; then
 				  nzbdrone__stop
@@ -856,9 +874,6 @@ function apps__sabnzbd() {
 			if [ "$(sabnzbd__get_status)" == "Not Installed" ]; then
 				sabnzbd__install
 			else
-			
-				echo "* Updating apt repository package lists"
-			  apt-get update
 
 				# Upgrade the app if a newer version is available
 				if sabnzbd__version_check; then
@@ -1079,9 +1094,6 @@ function apps__transmission() {
 			if [ "$(transmission__get_status)" == "Not Installed" ]; then
 				transmission__install
 			else
-			
-				echo "* Updating apt repository package lists"
-			  apt-get update
 
 				# Upgrade the app if a newer version is available
 				if transmission__version_check; then
