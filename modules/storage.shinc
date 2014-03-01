@@ -224,7 +224,7 @@ for dir in "${dirs[@]}"; do
 done
 
 for dir in "${dirs[@]}"; do
-  find "$dir/" -type d -empty -print
+  find "$dir/" -mindepth 1 -type d -empty -print
 done
 }
 
