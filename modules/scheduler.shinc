@@ -87,7 +87,7 @@ function scheduler__app_upgrades() {
     if grep -q "service -a upgrade" $tmpfile; then
       echo "The job is already scheduled"
       echo
-      echo scheduler__show_config
+      scheduler__show_config
       echo
       exit 1
     else
@@ -100,7 +100,7 @@ function scheduler__app_upgrades() {
         "crontab $tmpfile"
       
       echo
-      echo scheduler__show_config
+      scheduler__show_config
     fi
 
   # If the user option is "disable" and the cronjob is present, remove it
@@ -108,7 +108,7 @@ function scheduler__app_upgrades() {
     if ! grep -q "service -a upgrade" $tmpfile; then
       echo "The job is already disabled"
       echo
-      echo scheduler__show_config
+      scheduler__show_config
       echo
       exit 1
     else
@@ -120,7 +120,7 @@ function scheduler__app_upgrades() {
         "crontab $tmpfile"
         
       echo
-      echo scheduler__show_config
+      scheduler__show_config
     fi
   fi
   
@@ -140,7 +140,7 @@ function scheduler__tmp_cleanup() {
     if grep -q "storage tmp cleanup" $tmpfile; then
       echo "The job is already scheduled"
       echo
-      echo scheduler__show_config
+      scheduler__show_config
       echo
       exit 1
     else
@@ -153,7 +153,7 @@ function scheduler__tmp_cleanup() {
         "crontab $tmpfile"
       
       echo
-      echo scheduler__show_config
+      scheduler__show_config
     fi
 
   # If the user option is "disable" and the cronjob is present, remove it
@@ -161,7 +161,7 @@ function scheduler__tmp_cleanup() {
     if ! grep -q "storage tmp cleanup" $tmpfile; then
       echo "The job is already disabled"
       echo
-      echo scheduler__show_config
+      scheduler__show_config
       echo
       exit 1
     else
@@ -173,7 +173,7 @@ function scheduler__tmp_cleanup() {
         "crontab $tmpfile"
         
       echo
-      echo scheduler__show_config
+      scheduler__show_config
     fi
   fi
   
