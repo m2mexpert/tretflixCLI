@@ -76,7 +76,7 @@ function scheduler__command_handler() {
 
 function scheduler__app_upgrades() {
   option="$1"
-  tmpfile="/tmp/cront.tmp"
+  tmpfile="/tmp/cron.tmp"
   
   # Output the current crontab to a tmp file
   sudo su -c -u $osUser \
@@ -88,8 +88,6 @@ function scheduler__app_upgrades() {
       echo "The job is already scheduled"
       echo
       scheduler__show_config
-      echo
-      exit 1
     else
       echo "* Adding the job to crontab"
 
@@ -109,8 +107,6 @@ function scheduler__app_upgrades() {
       echo "The job is already disabled"
       echo
       scheduler__show_config
-      echo
-      exit 1
     else
       echo "* Removing the job from crontab"
       
@@ -141,8 +137,6 @@ function scheduler__tmp_cleanup() {
       echo "The job is already scheduled"
       echo
       scheduler__show_config
-      echo
-      exit 1
     else
       echo "* Adding the job to crontab"
 
@@ -162,8 +156,6 @@ function scheduler__tmp_cleanup() {
       echo "The job is already disabled"
       echo
       scheduler__show_config
-      echo
-      exit 1
     else
       echo "* Removing the job from crontab"
       
