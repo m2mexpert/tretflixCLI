@@ -582,14 +582,12 @@ function apps__couchpotato() {
 		if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
 			# Install the app if not already installed
 			if [ "$(couchpotato__get_status)" == "Not Installed" ]; then
-			  echo "* Installing CouchPotato"
 				couchpotato__install
 			else
 
 				# Upgrade the app if a newer version is available
 				if couchpotato__version_check; then
 					couchpotato__stop
-					echo "* Upgrading CouchPotato"
 					couchpotato__upgrade
 				fi
 			
@@ -602,7 +600,6 @@ function apps__couchpotato() {
 			fi
 			
 			# Enable the app
-			echo "* Enabling CouchPotato"
 			couchpotato__enable
 		fi
 		# Start the app
@@ -615,7 +612,6 @@ function apps__couchpotato() {
 	elif [ "$option" == "upgrade" ]; then
 		if couchpotato__version_check; then
 			couchpotato__stop
-			echo "* Upgrading CouchPotato"
 			couchpotato__upgrade
 			couchpotato__start
 		fi
@@ -661,14 +657,12 @@ function apps__headphones() {
 		if ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
 			# Install the app if not already installed
 			if [ "$(headphones__get_status)" == "Not Installed" ]; then
-			  echo "* Installing Headphones"
 				headphones__install
 			else
 
 				# Upgrade the app if a newer version is available
 				if headphones__version_check; then
 					headphones__stop
-					echo "* Upgrading Headphones"
 					headphones__upgrade
 				fi
 			
@@ -681,7 +675,6 @@ function apps__headphones() {
 			fi
 			
 			# Enable the app
-			echo "* Enabling Headphones"
 			headphones__enable
 		fi
 		# Start the app
@@ -694,7 +687,6 @@ function apps__headphones() {
 	elif [ "$option" == "upgrade" ]; then
 		if headphones__version_check; then
 			headphones__stop
-			echo "* Upgrading Headphones"
 			headphones__upgrade
 			headphones__start
 		fi
@@ -740,7 +732,6 @@ function apps__nzbdrone() {
 		if ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
 			# Install the app if not already installed
 			if [ "$(nzbdrone__get_status)" == "Not Installed" ]; then
-			  echo "* Installing NzbDrone"
 				nzbdrone__install
 			else
 
@@ -750,7 +741,6 @@ function apps__nzbdrone() {
 			  # Upgrade the app if a newer version is available
 			  if nzbdrone__version_check; then
 				  nzbdrone__stop
-			    echo "* Upgrading NzbDrone"
 				  nzbdrone__upgrade
 			  fi
 			
@@ -763,7 +753,6 @@ function apps__nzbdrone() {
 			fi
 			
 			# Enable the app
-			echo "* Enabling NzbDrone"
 			nzbdrone__enable
 		fi
 		# Start the app
@@ -776,7 +765,6 @@ function apps__nzbdrone() {
 	elif [ "$option" == "upgrade" ]; then
 		if nzbdrone__version_check; then
 			nzbdrone__stop
-			echo "* Upgrading NzbDrone"
 			nzbdrone__upgrade
 			nzbdrone__start
 		fi
@@ -822,20 +810,17 @@ function apps__plexserver() {
 		if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
 			# Install the app if not already installed
 			if [ "$(plexserver__get_status)" == "Not Installed" ]; then
-			  echo "* Installing Plex Media Server"
 				plexserver__install
 			else
 
 				# Upgrade the app if a newer version is available
 				if plexserver__version_check; then
 					plexserver__stop
-					echo "* Upgrading Plex Media Server"
 					plexserver__upgrade
 				fi
 			fi
 			
 			# Enable the app
-			echo "* Enabling Plex Media Server"
 			plexserver__enable
 		fi
 		# Start the app
@@ -848,7 +833,6 @@ function apps__plexserver() {
 	elif [ "$option" == "upgrade" ]; then
 		if plexserver__version_check; then
 			plexserver__stop
-			echo "* Upgrading Plex Media Server"
 			plexserver__upgrade
 			plexserver__start
 		fi
@@ -874,7 +858,6 @@ function apps__sabnzbd() {
 		if ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
 			# Install the app if not already installed
 			if [ "$(sabnzbd__get_status)" == "Not Installed" ]; then
-			  echo "* Installing SABnzbd+"
 				sabnzbd__install
 			else
 			
@@ -884,13 +867,11 @@ function apps__sabnzbd() {
 				# Upgrade the app if a newer version is available
 				if sabnzbd__version_check; then
 					sabnzbd__stop
-					echo "* Upgrading SABnzbd+"
 					sabnzbd__upgrade
 				fi
 			fi
 			
 			# Enable the app
-			echo "* Enabling SABnzbd+"
 			sabnzbd__enable
 		fi
 		# Start the app
@@ -903,7 +884,6 @@ function apps__sabnzbd() {
 	elif [ "$option" == "upgrade" ]; then
 		if sabnzbd__version_check; then
 			sabnzbd__stop
-			echo "* Upgrading SABnzbd+"
 			sabnzbd__upgrade
 			sabnzbd__start
 		fi
@@ -1026,14 +1006,12 @@ function apps__sickbeard() {
 		if ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
 			# Install the app if not already installed
 			if [ "$(sickbeard__get_status)" == "Not Installed" ]; then
-			  echo "* Installing Sick Beard"
 				sickbeard__install
 			else
 
 				# Upgrade the app if a newer version is available
 				if sickbeard__version_check; then
 					sickbeard__stop
-					echo "* Upgrading Sick Beard"
 					sickbeard__upgrade
 				fi
 			
@@ -1046,7 +1024,6 @@ function apps__sickbeard() {
 			fi
 			
 			# Enable the app
-			echo "* Enabling Sick Beard"
 			sickbeard__enable
 		fi
 		# Start the app
@@ -1059,7 +1036,6 @@ function apps__sickbeard() {
 	elif [ "$option" == "upgrade" ]; then
 		if sickbeard__version_check; then
 			sickbeard__stop
-			echo "* Upgrading Sick Beard"
 			sickbeard__upgrade
 			sickbeard__start
 		fi
@@ -1105,7 +1081,6 @@ function apps__transmission() {
 		if ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
 			# Install the app if not already installed
 			if [ "$(transmission__get_status)" == "Not Installed" ]; then
-			  echo "* Installing Transmission"
 				transmission__install
 			else
 			
@@ -1115,13 +1090,11 @@ function apps__transmission() {
 				# Upgrade the app if a newer version is available
 				if transmission__version_check; then
 					transmission__stop
-					echo "* Upgrading Transmission"
 					transmission__upgrade
 				fi
 			fi
 			
 			# Enable the app
-			echo "* Enabling Transmission"
 			transmission__enable
 		fi
 		# Start the app
@@ -1134,7 +1107,6 @@ function apps__transmission() {
 	elif [ "$option" == "upgrade" ]; then
 		if transmission__version_check; then
 			transmission__stop
-			echo "* Upgrading Transmission"
 			transmission__upgrade
 			transmission__start
 		fi
