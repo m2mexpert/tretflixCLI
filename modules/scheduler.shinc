@@ -180,9 +180,9 @@ function scheduler__cleanup() {
 
   elif [ "$option" == "show config" ]; then
 		if sudo su -c -u $osUser "crontab -l" | grep -q "storage tmp cleanup"; then
-			echo "Cleanup: Enabled, scheduled for 1am daily"
+			echo "Cleanup: Scheduled to run daily at 1am"
 		else
-			echo "Cleanup: Disabled, not scheduled to run"
+			echo "Cleanup: Not scheduled"
 		fi  
   fi
 
@@ -230,9 +230,9 @@ function scheduler__upgrades() {
 
   elif [ "$option" == "show config" ]; then
 		if sudo su -c -u $osUser "crontab -l" | grep -q "service -a upgrade"; then
-			echo "Upgrades: Enabled, scheduled for 2am daily"
+			echo "Upgrades: Scheduled to run daily at 2am"
 		else
-			echo "Upgrades: Disabled, not scheduled to run"
+			echo "Upgrades: Not scheduled"
 		fi
   fi
   
