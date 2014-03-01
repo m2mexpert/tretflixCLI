@@ -617,9 +617,13 @@ function apps__couchpotato() {
 			
 			# Enable the app
 			couchpotato__enable
+
+		elif [ "$(couchpotato__get_status)" == "Enabled|Stopped" ]; then
+		  # Start the app
+		  couchpotato__start
+		else
+		  echo "CouchPotato is already enabled and running"
 		fi
-		# Start the app
-		couchpotato__start
 	
 	elif [ "$option" == "disable" ]; then
 	  couchpotato__stop
@@ -689,9 +693,13 @@ function apps__headphones() {
 			
 			# Enable the app
 			headphones__enable
+
+		elif [ "$(headphones__get_status)" == "Enabled|Stopped" ]; then
+		  # Start the app
+		  headphones__start
+		else
+		  echo "Headphones is already enabled and running"
 		fi
-		# Start the app
-		headphones__start
 	
 	elif [ "$option" == "disable" ]; then
 	  headphones__stop
@@ -761,9 +769,13 @@ function apps__nzbdrone() {
 			
 			# Enable the app
 			nzbdrone__enable
+
+		elif [ "$(nzbdrone__get_status)" == "Enabled|Stopped" ]; then
+		  # Start the app
+		  nzbdrone__start
+		else
+		  echo "NzbDrone is already enabled and running"
 		fi
-		# Start the app
-		nzbdrone__start
 	
 	elif [ "$option" == "disable" ]; then
 	  nzbdrone__stop
@@ -829,9 +841,13 @@ function apps__plexserver() {
 			
 			# Enable the app
 			plexserver__enable
+
+		elif [ "$(plexserver__get_status)" == "Enabled|Stopped" ]; then
+		  # Start the app
+		  plexserver__start
+		else
+		  echo "Plex Media Server is already enabled and running"
 		fi
-		# Start the app
-		plexserver__start
 	
 	elif [ "$option" == "disable" ]; then
 	  plexserver__stop
@@ -877,9 +893,13 @@ function apps__sabnzbd() {
 			
 			# Enable the app
 			sabnzbd__enable
+
+		elif [ "$(sabnzbd__get_status)" == "Enabled|Stopped" ]; then
+		  # Start the app
+		  sabnzbd__start
+		else
+		  echo "SABnzbd+ is already enabled and running"
 		fi
-		# Start the app
-		sabnzbd__start
 	
 	elif [ "$option" == "disable" ]; then
 	  sabnzbd__stop
@@ -1039,9 +1059,13 @@ function apps__sickbeard() {
 			
 			# Enable the app
 			sickbeard__enable
+
+		elif [ "$(sickbeard__get_status)" == "Enabled|Stopped" ]; then
+		  # Start the app
+		  sickbeard__start
+		else
+		  echo "Sick Beard is already enabled and running"
 		fi
-		# Start the app
-		sickbeard__start
 	
 	elif [ "$option" == "disable" ]; then
 	  sickbeard__stop
@@ -1107,9 +1131,13 @@ function apps__transmission() {
 			
 			# Enable the app
 			transmission__enable
+
+		elif [ "$(transmission__get_status)" == "Enabled|Stopped" ]; then
+		  # Start the app
+		  transmission__start
+		else
+		  echo "Transmission is already enabled and running"
 		fi
-		# Start the app
-		transmission__start
 	
 	elif [ "$option" == "disable" ]; then
 	  transmission__stop
