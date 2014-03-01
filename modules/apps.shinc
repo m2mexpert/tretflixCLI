@@ -112,13 +112,7 @@ function apps__enable() {
 
 	case "$option" in
 		'-a' | '--all')
-		  apps__enable "--couchpotato"
-		  apps__enable "--headphones"
-		  apps__enable "--nzbdrone"
-		  apps__enable "-p"
-		  apps__enable "-s"
-		  apps__enable "-b"
-		  apps__enable "-t"
+      allservices__enable
 
 			echo
 			allservices__show_config
@@ -823,12 +817,14 @@ function apps__couchpotato() {
 		if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
 			# Install the app if not already installed
 			if [ "$(couchpotato__get_status)" == "Not Installed" ]; then
+			  echo "* Installing CouchPotato"
 				couchpotato__install
 			fi
 
 			# Upgrade the app if a newer version is available
 			if couchpotato__version_check; then
 				couchpotato__stop
+			  echo "* Upgrading CouchPotato"
 				couchpotato__upgrade
 			fi
 			
@@ -840,6 +836,7 @@ function apps__couchpotato() {
 			couchpotato__sabnzbd_sync
 			
 			# Enable the app
+			echo "* Enabling CouchPotato"
 			couchpotato__enable
 		fi
 		# Start the app
@@ -852,6 +849,7 @@ function apps__couchpotato() {
 	elif [ "$option" == "upgrade" ]; then
 		if couchpotato__version_check; then
 			couchpotato__stop
+			echo "* Upgrading CouchPotato"
 			couchpotato__upgrade
 			couchpotato__start
 		fi
@@ -859,32 +857,32 @@ function apps__couchpotato() {
 	elif [ "$option" == "set username" ]; then
 	  username="$2"
 	  
-		echo "* Applying changes to CouchPotato"
 		couchpotato__stop
+		echo "* Configuring CouchPotato"
 		couchpotato__set_username "$username"
 		couchpotato__start
 
 	elif [ "$option" == "set password" ]; then
 	  password="$2"
 	  
-		echo "* Applying changes to CouchPotato"
 		couchpotato__stop
+		echo "* Configuring CouchPotato"
 		couchpotato__set_password "$password"
 		couchpotato__start
 		
 	elif [ "$option" == "set port" ]; then
 	  port="$2"
 	  
-		echo "* Applying changes to CouchPotato"
 		couchpotato__stop
+		echo "* Configuring CouchPotato"
 		couchpotato__set_port "$port"
 		couchpotato__start
 		
 	elif [ "$option" == "new apikey" ]; then
 	  apikey="$(tools__gen_apikey)"
 	  
-		echo "* Applying changes to CouchPotato"
 		couchpotato__stop
+		echo "* Configuring CouchPotato"
 		couchpotato__set_apikey "$apikey"
 		couchpotato__start
 	fi
