@@ -110,7 +110,7 @@ import "modules/storage"
 import "modules/tools"
 import "modules/transmission"
 import "modules/update"
-import "modules/webproxy"
+import "modules/proxy"
 
 
 # Import variables (used by modules)
