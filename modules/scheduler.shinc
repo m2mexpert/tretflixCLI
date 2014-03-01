@@ -89,13 +89,16 @@ function scheduler__app_upgrades() {
       echo
       exit 1
     else
+      echo "* Adding the job to crontab"
+
       sudo su -c -u $osUser \
         "echo '0 1 * * * /opt/tretflix/.sys/cli/./tretflixCLI.sh service -a upgrade' >> $tmpfile"
         
       sudo su -c -u $osUser \
         "crontab $tmpfile"
       
-      echo "The job is scheduled to run daily at 1am"
+      echo
+      echo scheduler__show_config
     fi
 
   # If the user option is "disable" and the cronjob is present, remove it
@@ -138,13 +141,16 @@ function scheduler__tmp_cleanup() {
       echo
       exit 1
     else
+      echo "* Adding the job to crontab"
+
       sudo su -c -u $osUser \
         "echo '0 2 * * * /opt/tretflix/.sys/cli/./tretflixCLI.sh storage tmp cleanup' >> $tmpfile"
         
       sudo su -c -u $osUser \
         "crontab $tmpfile"
       
-      echo "The job is scheduled to run daily at 2am"
+      echo
+      echo scheduler__show_config
     fi
 
   # If the user option is "disable" and the cronjob is present, remove it
