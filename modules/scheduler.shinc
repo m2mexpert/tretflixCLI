@@ -173,13 +173,13 @@ function scheduler__tmp_cleanup() {
 }
 
 function scheduler__show_config() {
-  if crontab -l | grep -q "service -a upgrade"; then
+  if sudo su -c -u $osUser "crontab -l" | grep -q "service -a upgrade"; then
     echo "app upgrades: enabled, scheduled for 1am daily"
   else
     echo "app upgrades: disabled"
   fi
   
-  if crontab -l | grep -q "storage tmp cleanup"; then
+  if sudo su -c -u $osUser "crontab -l" | grep -q "storage tmp cleanup"; then
     echo "tmp cleanup: enabled, scheduled for 2am daily"
   else
     echo "tmp cleanup: disabled"
