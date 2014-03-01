@@ -284,7 +284,6 @@ function apps__set_username() {
       apps__couchpotato "set username" "$username"
       apps__headphones "set username" "$username"
       apps__nzbdrone "set username" "$username"
-      apps__plexserver "set username" "$username"
       apps__sabnzbd "set username" "$username"
       apps__sickbeard "set username" "$username"
       apps__transmission "set username" "$username"
@@ -348,7 +347,6 @@ function apps__set_password() {
       apps__couchpotato "set password" "$password"
       apps__headphones "set password" "$password"
       apps__nzbdrone "set password" "$password"
-      apps__plexserver "set password" "$password"
       apps__sabnzbd "set password" "$password"
       apps__sickbeard "set password" "$password"
       apps__transmission "set password" "$password"
@@ -466,10 +464,8 @@ function apps__new_apikey() {
       apps__couchpotato "new apikey"
       apps__headphones "new apikey"
       apps__nzbdrone "new apikey"
-      apps__plexserver "new apikey"
       apps__sabnzbd "new apikey"
       apps__sickbeard "new apikey"
-      apps__transmission "new apikey"
 
 			echo
 			apps__show_config "--all"

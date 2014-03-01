@@ -38,7 +38,6 @@ function transmission__start() {
         sleep 2
       fi
       if [ "$(transmission__get_status)" != "Enabled|Running" ]; then
-        echo "* Starting Transmission"
         service transmission-daemon start
       else
         break
@@ -53,7 +52,6 @@ function transmission__stop() {
       sleep 2
     fi
     if [ "$(transmission__get_status)" == "Enabled|Running" ]; then
-      echo "* Stopping Transmission"
       service transmission-daemon stop
     else
       break

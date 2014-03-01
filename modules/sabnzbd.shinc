@@ -38,7 +38,6 @@ function sabnzbd__start() {
         sleep 2
       fi
       if [ "$(sabnzbd__get_status)" != "Enabled|Running" ]; then
-        echo "* Starting SABnzbd+"
         service sabnzbdplus start
       else
         break
@@ -53,7 +52,6 @@ function sabnzbd__stop() {
       sleep 2
     fi
     if [ "$(sabnzbd__get_status)" == "Enabled|Running" ]; then
-      echo "* Stopping SABnzbd+"
       service sabnzbdplus stop
     else
       break

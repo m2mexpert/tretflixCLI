@@ -38,7 +38,6 @@ function headphones__start() {
         sleep 2
       fi
       if [ "$(headphones__get_status)" != "Enabled|Running" ]; then
-        echo "* Starting Headphones"
         service headphones start
       else
         break
@@ -53,7 +52,6 @@ function headphones__stop() {
       sleep 2
     fi
     if [ "$(headphones__get_status)" == "Enabled|Running" ]; then
-      echo "* Stopping Headphones"
       service headphones stop
     else
       break

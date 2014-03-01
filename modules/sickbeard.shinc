@@ -38,7 +38,6 @@ function sickbeard__start() {
         sleep 2
       fi
       if [ "$(sickbeard__get_status)" != "Enabled|Running" ]; then
-        echo "* Starting Sick Beard"
         service sickbeard start
       else
         break
@@ -53,7 +52,6 @@ function sickbeard__stop() {
       sleep 2
     fi
     if [ "$(sickbeard__get_status)" == "Enabled|Running" ]; then
-      echo "* Stopping Sick Beard"
       service sickbeard stop
     else
       break

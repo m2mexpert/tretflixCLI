@@ -39,7 +39,6 @@ function plexserver__start() {
         sleep 5
       fi
       if [ "$(plexserver__get_status)" != "Enabled|Running" ]; then
-        echo "* Starting Plex Media Server"
         service plexmediaserver start
       else
         break
@@ -54,7 +53,6 @@ function plexserver__stop() {
       sleep 5
     fi
     if [ "$(plexserver__get_status)" == "Enabled|Running" ]; then
-      echo "* Stopping Plex Media Server"
       service plexmediaserver stop
     else
       break

@@ -39,7 +39,6 @@ function nzbdrone__start() {
         sleep 2
       fi
       if [ "$(nzbdrone__get_status)" != "Enabled|Running" ]; then
-        echo "* Starting NzbDrone"
         service nzbdrone start
       else
         break
@@ -54,7 +53,6 @@ function nzbdrone__stop() {
       sleep 2
     fi
     if [ "$(nzbdrone__get_status)" == "Enabled|Running" ]; then
-      echo "* Stopping NzbDrone"
       service nzbdrone stop
     else
       break
