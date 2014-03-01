@@ -654,7 +654,7 @@ function config__wizard() {
 				echo " |__|  |__|    \_____/__|  |__|  |____/__/__/\__\\"
 				echo
 				echo    
-				allservices__show_config
+				apps__show_config "--all"
 				break;;
 			[nN] | [n|N][O|o] )
 			  echo
@@ -674,14 +674,26 @@ function config__backup_appdata() {
 	timestamp=$(date "+%Y%m%d%H%M%S")
 
 	echo "* Stopping Services"
-	allservices__stop
+  plexserver__stop
+  couchpotato__stop
+  headphones__stop
+  nzbdrone__stop
+  sabnzbd__stop
+  sickbeard__stop
+  transmission__stop
 	
 	echo "* Creating Backup Archive"
 	sudo su -c -u $osUser \
 		"cd $tretflixPath && tar cvf backup-$timestamp.tar appdata/"
 	
 	echo "* Restarting Services"
-	allservices__start
+  couchpotato__start
+  headphones__start
+  nzbdrone__start
+  sabnzbd__start
+  sickbeard__start
+  transmission__start
+  plexserver__start
 	
 	echo
 	echo "Backup Saved to $tretflixPath/backup-$timestamp.tar"
@@ -1123,7 +1135,7 @@ function config__restore_appdata() {
 				echo " |__|  |__|    \_____/__|  |__|  |____/__/__/\__\\"
 				echo
 				echo    
-				allservices__show_config
+				apps__show_config "--all"
 				break;;
 			[nN] | [n|N][O|o] )
 			  echo

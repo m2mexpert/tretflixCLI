@@ -95,7 +95,6 @@ script_absolute_dir=$FCN_RESULT
 # Import modules
 import "modules/about"
 import "modules/apps"
-import "modules/allservices"
 import "modules/config"
 import "modules/couchpotato"
 import "modules/headphones"
