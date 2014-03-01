@@ -219,7 +219,7 @@ dirs=( \
 "/opt/tretflix/tmp/sabnzbdplus/sickbeard" \
 "/opt/tretflix/tmp/transmission-daemon/incomplete")
 
-for dir in dirs; do
+for dir in "$dirs"; do
   find "$dir/." -mtime +14 -exec ls -l {} \;
 done
 }
