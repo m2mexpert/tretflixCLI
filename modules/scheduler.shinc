@@ -146,7 +146,7 @@ function scheduler__cleanup() {
   # If the user option is "enable" and the cronjob isn't present, add it
   if [ "$option" == "enable" ]; then
     if ! sudo su -c -u $osUser "crontab -l" | grep -q "storage tmp cleanup"; then
-      echo "* Adding the job to crontab"
+      echo "* Adding the 'cleanup' job to crontab"
 
       # Output the current crontab to a tmp file
       sudo su -c -u $osUser \
@@ -158,13 +158,13 @@ function scheduler__cleanup() {
       sudo su -c -u $osUser \
         "crontab $tmpfile"
     else
-      echo "* Skipping, already enabled"
+      echo "* Skipping, 'cleanup' is already enabled"
     fi
 
   # If the user option is "disable" and the cronjob is present, remove it
   elif [ "$option" == "disable" ]; then
     if sudo su -c -u $osUser "crontab -l" | grep -q "storage tmp cleanup"; then
-      echo "* Removing the job from crontab"
+      echo "* Removing the 'cleanup' job from crontab"
       
       # Output the current crontab to a tmp file
       sudo su -c -u $osUser \
@@ -175,7 +175,7 @@ function scheduler__cleanup() {
       sudo su -c -u $osUser \
         "crontab $tmpfile"
     else
-      echo "* Skipping, already disabled"
+      echo "* Skipping, 'cleanup' is already disabled"
     fi
 
   elif [ "$option" == "show config" ]; then
@@ -196,7 +196,7 @@ function scheduler__upgrades() {
   # If the user option is "enable" and the cronjob isn't present, add it
   if [ "$option" == "enable" ]; then
     if ! sudo su -c -u $osUser "crontab -l" | grep -q "service -a upgrade"; then
-      echo "* Adding the job to crontab"
+      echo "* Adding the 'upgrades' job to crontab"
 
       # Output the current crontab to a tmp file
       sudo su -c -u $osUser \
@@ -208,13 +208,13 @@ function scheduler__upgrades() {
       sudo su -c -u $osUser \
         "crontab $tmpfile"
     else
-      echo "* Skipping, already enabled"
+      echo "* Skipping, 'upgrades' is already enabled"
     fi
 
   # If the user option is "disable" and the cronjob is present, remove it
   elif [ "$option" == "disable" ]; then
     if sudo su -c -u $osUser "crontab -l" | grep -q "service -a upgrade"; then
-      echo "* Removing the job from crontab"
+      echo "* Removing the 'upgrades' job from crontab"
       
       # Output the current crontab to a tmp file
       sudo su -c -u $osUser \
@@ -225,7 +225,7 @@ function scheduler__upgrades() {
       sudo su -c -u $osUser \
         "crontab $tmpfile"
     else
-      echo "* Skipping, already disabled"
+      echo "* Skipping, 'upgrades' is already disabled"
     fi
 
   elif [ "$option" == "show config" ]; then
