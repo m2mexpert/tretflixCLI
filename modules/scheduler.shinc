@@ -106,7 +106,7 @@ function scheduler__tmp_cleanup() {
 
   # If the user option is "disable" and the cronjob is present, remove it
   elif [ "$option" == "disable" ]; then
-    if grep -q "storage tmp cleanup" $tmpfile; then
+    if ! grep -q "storage tmp cleanup" $tmpfile; then
       echo "The job is already disabled"
       echo
       exit 1
