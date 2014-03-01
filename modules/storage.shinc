@@ -14,13 +14,12 @@ function storage__help() {
   echo "  tretflix storage show config"
   echo
   echo "NOTES:"
-  echo "  Existing files/dirs in the 'downloads' and 'tmp' directories"
-  echo "  will be copied when changing the storage path. This may take"
-  echo "  a while if there are large amounts of data to be copied and/or"
-  echo "  depending on network speed, congestion, etc. Be patient and"
-  echo "  monitor the output. Running the 'tmp cleanup' command will"
-  echo "  purge any abandoned tmp files/dirs with a modified time of"
-  echo "  greater than 14 days."
+  echo "  Existing files and directories in '/opt/tretflix/downloads' and in"
+  echo "  '/opt/tretflix/tmp' will be copied/synced when changing the storage"
+  echo "  location. This may take a while if there is a large existing data"
+  echo "  set to be copied and/or depending on network speed, congestion, etc."
+  echo "  Running the 'tmp cleanup' command will purge any abandoned files/dirs"
+  echo "  in '/opt/tretflix/tmp' with a modified time of greater than 14 days."
   echo
   exit 1
 }

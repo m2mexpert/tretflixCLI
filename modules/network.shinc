@@ -10,7 +10,6 @@ function network__help() {
   echo "COMMANDS:"
   echo "  tretflix network add ip [IPv4]"
   echo "  tretflix network del ip [IPv4]"
-  echo "  tretflix network reverse proxy [OPTION]"
   echo "  tretflix network show config"
   echo
   echo "OPTIONS:"
@@ -36,22 +35,6 @@ function network__command_handler() {
         else
           network__help
         fi          
-        ;;
-      'reverse proxy')
-        if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
-          case "${CLI_ARGS[3]}" in
-            '-e' | '--enable')
-              network__reverse_proxy "enable"
-              ;;
-            '-d' | '--disable')
-              network__reverse_proxy "disable"
-              ;;
-            *)
-              network__help
-          esac
-        else
-          network__help
-        fi
         ;;
       'show config')
         if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
@@ -168,12 +151,6 @@ function network__del_ip() {
   
   echo
   network__show_config
-}
-
-function network__reverse_proxy() {
-  option="$1"
-  
-  echo $option
 }
 
 function network__show_config() {

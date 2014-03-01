@@ -1,0 +1,9 @@
+# avoid double inclusion
+if test "${services__imported+defined}" == "defined"; then
+  return 0
+fi
+services__imported=1
+
+function services__command_handler() {
+  echo "Coming Soon..."
+}

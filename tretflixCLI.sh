@@ -75,10 +75,11 @@ function help() {
   echo "Usage: tretflix [COMMAND] ....."
   echo
   echo "COMMANDS:"
+  echo "  tretflix apps"
   echo "  tretflix config"
   echo "  tretflix network"
   echo "  tretflix scheduler"
-  echo "  tretflix service"
+  echo "  tretflix services"
   echo "  tretflix shares"
   echo "  tretflix storage"
   echo
@@ -93,6 +94,7 @@ script_absolute_dir=$FCN_RESULT
 
 # Import modules
 import "modules/about"
+import "modules/apps"
 import "modules/allservices"
 import "modules/config"
 import "modules/couchpotato"
@@ -102,7 +104,7 @@ import "modules/nzbdrone"
 import "modules/plexserver"
 import "modules/sabnzbd"
 import "modules/scheduler"
-import "modules/service"
+import "modules/services"
 import "modules/shares"
 import "modules/sickbeard"
 import "modules/storage"
@@ -122,6 +124,9 @@ if test "${CLI_ARGS[0]+isset}"; then
     about)
       about__command_handler
       ;;
+    apps)
+      apps__command_handler
+      ;;
     config)
       config__command_handler
       ;;
@@ -131,8 +136,8 @@ if test "${CLI_ARGS[0]+isset}"; then
     scheduler)
       scheduler__command_handler
       ;;
-    service)
-      service__command_handler
+    services)
+      services__command_handler
       ;;
     shares)
       shares__command_handler

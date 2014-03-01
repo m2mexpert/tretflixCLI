@@ -1,21 +1,21 @@
 # avoid double inclusion
-if test "${service__imported+defined}" == "defined"; then
+if test "${apps__imported+defined}" == "defined"; then
   return 0
 fi
-service__imported=1
+apps__imported=1
 
-function service__help() {
-  echo "Usage: tretflix service [OPTION] [COMMAND] [INPUT]"
+function apps__help() {
+  echo "Usage: tretflix apps [OPTION] [COMMAND] [INPUT]"
   echo
   echo "COMMANDS:"
-  echo "  tretflix service [OPTION] enable"
-  echo "  tretflix service [OPTION] disable"
-  echo "  tretflix service [OPTION] upgrade"
-  echo "  tretflix service [OPTION] set username [USERNAME]"
-  echo "  tretflix service [OPTION] set password [PASSWORD]"
-  echo "  tretflix service [OPTION] set port [PORT]"
-  echo "  tretflix service [OPTION] new apikey"
-  echo "  tretflix service [OPTION] show config"
+  echo "  tretflix apps [OPTION] enable"
+  echo "  tretflix apps [OPTION] disable"
+  echo "  tretflix apps [OPTION] upgrade"
+  echo "  tretflix apps [OPTION] set username [USERNAME]"
+  echo "  tretflix apps [OPTION] set password [PASSWORD]"
+  echo "  tretflix apps [OPTION] set port [PORT]"
+  echo "  tretflix apps [OPTION] new apikey"
+  echo "  tretflix apps [OPTION] show config"
   echo
   echo "OPTIONS:"
   echo "  -a, --all"
@@ -28,149 +28,131 @@ function service__help() {
   echo "  -t, --transmission"
   echo
   echo "NOTES:" 
-  echo "  The 'set port' command requires an individual application to be"
-  echo "  specified. The 'new apikey' command is only available for the"
-  echo "  services where api keys are used. Plex Media Server commands"
-  echo "  are limited to 'enable', 'disable' and 'show config'."
+  echo "  The 'new apikey' command is only available for the apps that use"
+  echo "  api keys. The 'set port' command requires an individual app to be"
+  echo "  specified."
   echo
   exit 1
 }
 
-function service__command_handler() {
+function apps__command_handler() {
   if test "${CLI_ARGS[3]+isset}"; then
     case "${CLI_ARGS[2]} ${CLI_ARGS[3]}" in
       'set username')
         if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
-          service__set_username "${CLI_ARGS[1]}" "${CLI_ARGS[4]}"
+          apps__set_username "${CLI_ARGS[1]}" "${CLI_ARGS[4]}"
         else
-          service__help
+          apps__help
         fi
         ;;
       'set password')
         if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
-          service__set_password "${CLI_ARGS[1]}" "${CLI_ARGS[4]}"
+          apps__set_password "${CLI_ARGS[1]}" "${CLI_ARGS[4]}"
         else
-          service__help
+          apps__help
         fi
         ;;
       'set port')
         if [ "${#CLI_ARGS[@]}" -eq 5 ]; then
-          service__set_port "${CLI_ARGS[1]}" "${CLI_ARGS[4]}"
+          apps__set_port "${CLI_ARGS[1]}" "${CLI_ARGS[4]}"
         else
-          service__help
+          apps__help
         fi
         ;;
       'new apikey')
         if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
-          service__new_apikey "${CLI_ARGS[1]}"
+          apps__new_apikey "${CLI_ARGS[1]}"
         else
-          service__help
+          apps__help
         fi
         ;;
       'show config')
         if [ "${#CLI_ARGS[@]}" -eq 4 ]; then
-          service__show_config "${CLI_ARGS[1]}"
+          apps__show_config "${CLI_ARGS[1]}"
         else
-          service__help
+          apps__help
         fi
         ;;			
       *)
-        service__help
+        apps__help
     esac
   elif test "${CLI_ARGS[2]+isset}"; then
     case "${CLI_ARGS[2]}" in
       enable)
         if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-          service__enable "${CLI_ARGS[1]}"
+          apps__enable "${CLI_ARGS[1]}"
         else
-          service__help
+          apps__help
         fi
         ;;
       disable)
         if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-          service__disable "${CLI_ARGS[1]}"
+          apps__disable "${CLI_ARGS[1]}"
         else
-          service__help
+          apps__help
         fi
         ;;
       upgrade)
         if [ "${#CLI_ARGS[@]}" -eq 3 ]; then
-          service__upgrade "${CLI_ARGS[1]}"
+          apps__upgrade "${CLI_ARGS[1]}"
         else
-          service__help
+          apps__help
         fi
         ;;
       *)
-        service__help
+        apps__help
     esac
   else
-    service__help
+    apps__help
   fi
 }
 
-function service__enable() {
+function apps__enable() {
   option="$1"
 
 	case "$option" in
 		'-a' | '--all')
-			allservices__enable
+		  apps__enable "--couchpotato"
+		  apps__enable "--headphones"
+		  apps__enable "--nzbdrone"
+		  apps__enable "-p"
+		  apps__enable "-s"
+		  apps__enable "-b"
+		  apps__enable "-t"
 
 			echo
 			allservices__show_config
 			;;
 		'-c' | '--couchpotato')
-			if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
-				# Install the service if not already installed
-				if [ "$(couchpotato__get_status)" == "Not Installed" ]; then
-					couchpotato__install
-				fi
-
-				# Upgrade the service if a newer version is available
-				if couchpotato__version_check; then
-					couchpotato__stop
-					couchpotato__upgrade
-				fi
-				
-				# Stop the service
-				couchpotato__stop
-
-				# Sync CouchPotato to the current SABnzbd+ config
-				echo "* Configuring CouchPotato"
-				couchpotato__sabnzbd_sync
-				
-				# Enable the service
-				couchpotato__enable
-			fi
-			# Start the service
-			couchpotato__start
+      apps__couchpotato "enable"
 			
 			echo
 			couchpotato__show_config
 			;;
 		'-h' | '--headphones')
 			if ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-				# Install the service if not already installed
+				# Install the app if not already installed
 				if [ "$(headphones__get_status)" == "Not Installed" ]; then
 					headphones__install
 				fi
 
-				# Upgrade the service if a newer version is available
+				# Upgrade the app if a newer version is available
 				if headphones__version_check; then
 					headphones__stop
 					headphones__upgrade
 				fi
 				
-				# Stop the service
+				# Stop the app
 				headphones__stop
 
 				# Sync Headphones to the current SABnzbd+ config
 				echo "* Configuring Headphones"
 				headphones__sabnzbd_sync
 		
-				# Enable the service
+				# Enable the app
 				headphones__enable
 			fi
-			# Start the service
+			# Start the app
 			headphones__start
 			
 			echo
@@ -178,28 +160,28 @@ function service__enable() {
 			;;
 		'-n' | '--nzbdrone')
 			if ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-				# Install the service if not already installed
+				# Install the app if not already installed
 				if [ "$(nzbdrone__get_status)" == "Not Installed" ]; then
 					nzbdrone__install
 				fi
 
-				# Upgrade the service if a newer version is available
+				# Upgrade the app if a newer version is available
 				if nzbdrone__version_check; then
 					nzbdrone__stop
 					nzbdrone__upgrade
 				fi
 				
-				# Stop the service
+				# Stop the app
 				nzbdrone__stop
 
 				# Sync NzbDrone to the current SABnzbd+ config
 				echo "* Configuring NzbDrone"
 				nzbdrone__sabnzbd_sync
 		
-				# Enable the service
+				# Enable the app
 				nzbdrone__enable
 			fi
-			# Start the service
+			# Start the app
 			nzbdrone__start
 			
 			echo
@@ -207,21 +189,21 @@ function service__enable() {
 			;;
 		'-p' | '--plexserver')
 			if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
-				# Install the service if not already installed
+				# Install the app if not already installed
 				if [ "$(plexserver__get_status)" == "Not Installed" ]; then
 					plexserver__install
 				fi
 
-				# Upgrade the service if a newer version is available
+				# Upgrade the app if a newer version is available
 				if plexserver__version_check; then
 					plexserver__stop
 					plexserver__upgrade
 				fi
 		
-				# Enable the service
+				# Enable the app
 				plexserver__enable
 			fi
-			# Start the service
+			# Start the app
 			plexserver__start
 			
 			echo
@@ -229,21 +211,21 @@ function service__enable() {
 			;;
 		'-s' | '--sabnzbd')
 			if ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
-				# Install the service if not already installed
+				# Install the app if not already installed
 				if [ "$(sabnzbd__get_status)" == "Not Installed" ]; then
 					sabnzbd__install
 				fi
 
-				# Upgrade the service if a newer version is available
+				# Upgrade the app if a newer version is available
 				if sabnzbd__version_check; then
 					sabnzbd__stop
 					sabnzbd__upgrade
 				fi
 		
-				# Enable the service
+				# Enable the app
 				sabnzbd__enable
 			fi
-			# Start the service
+			# Start the app
 			sabnzbd__start
 			
 			echo
@@ -251,28 +233,28 @@ function service__enable() {
 			;;
 		'-b' | '--sickbeard')
 			if ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-				# Install the service if not already installed
+				# Install the app if not already installed
 				if [ "$(sickbeard__get_status)" == "Not Installed" ]; then
 					sickbeard__install
 				fi
 
-				# Upgrade the service if a newer version is available
+				# Upgrade the app if a newer version is available
 				if sickbeard__version_check; then
 					sickbeard__stop
 					sickbeard__upgrade
 				fi
 				
-				# Stop the service
+				# Stop the app
 				sickbeard__stop
 
 				# Sync Sick Beard to the current SABnzbd+ config
 				echo "* Configuring Sick Beard"
 				sickbeard__sabnzbd_sync
 				
-				# Enable the service
+				# Enable the app
 				sickbeard__enable
 			fi
-			# Start the service
+			# Start the app
 			sickbeard__start
 
 			echo
@@ -280,32 +262,32 @@ function service__enable() {
 			;;
 		'-t' | '--transmission')
 			if ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
-				# Install the service if not already installed
+				# Install the app if not already installed
 				if [ "$(transmission__get_status)" == "Not Installed" ]; then
 					transmission__install
 				fi
 
-				# Upgrade the service if a newer version is available
+				# Upgrade the app if a newer version is available
 				if transmission__version_check; then
 					transmission__stop
 					transmission__upgrade
 				fi
 		
-				# Enable the service
+				# Enable the app
 				transmission__enable
 			fi
-			# Start the service
+			# Start the app
 			transmission__start
 			
 			echo
 			transmission__show_config
 			;;
 		*)
-			service__help
+			apps__help
 	esac
 }
 
-function service__disable() {
+function apps__disable() {
   option="$1"
   
 	case "$option" in
@@ -316,8 +298,7 @@ function service__disable() {
 			allservices__show_config
 			;;   
 		'-c' | '--couchpotato')
-			couchpotato__stop
-			couchpotato__disable
+      apps__couchpotato "disable"
 			
 			echo
 			couchpotato__show_config
@@ -365,11 +346,11 @@ function service__disable() {
 			transmission__show_config
 			;;
 		*)
-			service__help
+			apps__help
 	esac
 }
 
-function service__upgrade() {
+function apps__upgrade() {
   option="$1"
 
 	case "$option" in
@@ -379,11 +360,7 @@ function service__upgrade() {
 			allservices__upgrade
 			;; 
 		'-c' | '--couchpotato')
-			if couchpotato__version_check; then
-				couchpotato__stop
-				couchpotato__upgrade
-				couchpotato__start
-			fi
+			apps__couchpotato "upgrade"
 			;;
 		'-h' | '--headphones')
 			if headphones__version_check; then
@@ -434,11 +411,11 @@ function service__upgrade() {
 			fi
 			;;
 		*)
-			service__help
+			apps__help
 	esac
 }
 
-function service__set_username() {
+function apps__set_username() {
   option="$1"
   username="$2"
 
@@ -450,10 +427,7 @@ function service__set_username() {
 			allservices__show_config
 			;;  
 		'-c' | '--couchpotato')
-			echo "* Applying changes to CouchPotato"
-			couchpotato__stop
-			couchpotato__set_username "$username"
-			couchpotato__start
+      apps__couchpotato "set username" "$username"
 			
 			echo
 			couchpotato__show_config
@@ -527,11 +501,11 @@ function service__set_username() {
 			transmission__show_config
 			;;
 		*)
-			service__help
+			apps__help
 	esac
 }
 
-function service__set_password() {
+function apps__set_password() {
   option="$1"
   password="$2"
   
@@ -543,10 +517,7 @@ function service__set_password() {
 			allservices__show_config
 			;;   
 		'-c' | '--couchpotato')
-			echo "* Applying changes to CouchPotato"
-			couchpotato__stop
-			couchpotato__set_password "$password"
-			couchpotato__start
+      apps__couchpotato "set password" "$password"
 			
 			echo
 			couchpotato__show_config
@@ -620,23 +591,20 @@ function service__set_password() {
 			transmission__show_config
 			;;
 		*)
-			service__help
+			apps__help
 	esac
 }
 
-function service__set_port() {
+function apps__set_port() {
   option="$1"
   port="$2"
 
 	case "$option" in
 		'-a' | '--all')
-			echo "This command requires an individual service to be specified"
+			echo "This command requires an individual app to be specified"
 			;;   
 		'-c' | '--couchpotato')
-			echo "* Applying changes to CouchPotato"
-			couchpotato__stop
-			couchpotato__set_port "$port"
-			couchpotato__start
+      apps__couchpotato "set port" "$port"
 			
 			echo
 			couchpotato__show_config
@@ -716,11 +684,11 @@ function service__set_port() {
 			transmission__show_config
 			;;
 		*)
-			service__help
+			apps__help
 	esac
 }
 
-function service__new_apikey() {
+function apps__new_apikey() {
   option="$1"
 
 	case "$option" in
@@ -731,12 +699,8 @@ function service__new_apikey() {
 			allservices__show_config
 			;;  
 		'-c' | '--couchpotato')
-			echo "* Applying changes to CouchPotato"
-			apikey="$(tools__gen_apikey)"
-			couchpotato__stop
-			couchpotato__set_apikey "$apikey"
-			couchpotato__start
-
+      apps__couchpotato "new apikey"
+			
 			echo
 			couchpotato__show_config
 			;;
@@ -815,11 +779,11 @@ function service__new_apikey() {
 			exit 1
 			;;
 		*)
-			service__help
+			apps__help
 	esac
 }
 
-function service__show_config() {
+function apps__show_config() {
   option="$1"
   
 	case "$option" in
@@ -848,6 +812,80 @@ function service__show_config() {
 			transmission__show_config
 			;;
 		*)
-			service__help
+			apps__help
 	esac
+}
+
+function apps__couchpotato() {
+  option="$1"
+  
+  if [ "$option" == "enable" ]; then  
+		if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+			# Install the app if not already installed
+			if [ "$(couchpotato__get_status)" == "Not Installed" ]; then
+				couchpotato__install
+			fi
+
+			# Upgrade the app if a newer version is available
+			if couchpotato__version_check; then
+				couchpotato__stop
+				couchpotato__upgrade
+			fi
+			
+			# Stop the app
+			couchpotato__stop
+
+			# Sync CouchPotato to the current SABnzbd+ config
+			echo "* Configuring CouchPotato"
+			couchpotato__sabnzbd_sync
+			
+			# Enable the app
+			couchpotato__enable
+		fi
+		# Start the app
+		couchpotato__start
+	
+	elif [ "$option" == "disable" ]; then
+	  couchpotato__stop
+		couchpotato__disable
+		
+	elif [ "$option" == "upgrade" ]; then
+		if couchpotato__version_check; then
+			couchpotato__stop
+			couchpotato__upgrade
+			couchpotato__start
+		fi
+		
+	elif [ "$option" == "set username" ]; then
+	  username="$2"
+	  
+		echo "* Applying changes to CouchPotato"
+		couchpotato__stop
+		couchpotato__set_username "$username"
+		couchpotato__start
+
+	elif [ "$option" == "set password" ]; then
+	  password="$2"
+	  
+		echo "* Applying changes to CouchPotato"
+		couchpotato__stop
+		couchpotato__set_password "$password"
+		couchpotato__start
+		
+	elif [ "$option" == "set port" ]; then
+	  port="$2"
+	  
+		echo "* Applying changes to CouchPotato"
+		couchpotato__stop
+		couchpotato__set_port "$port"
+		couchpotato__start
+		
+	elif [ "$option" == "new apikey" ]; then
+	  apikey="$(tools__gen_apikey)"
+	  
+		echo "* Applying changes to CouchPotato"
+		couchpotato__stop
+		couchpotato__set_apikey "$apikey"
+		couchpotato__start
+	fi
 }
