@@ -25,7 +25,7 @@ function proxy__stop() {
 }
 
 function proxy__show_config() {
-  echo "Coming Soon"
+  echo "Show config here"
 }
 
 function proxy__install() {
