@@ -952,6 +952,13 @@ function apps__sabnzbd() {
 		sabnzbd__set_port "$port"
 		sabnzbd__start
 
+
+		if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+			couchpotato__stop
+			echo "* Updating CouchPotato"
+			couchpotato__set_sabnzbd_port "$port"
+			couchpotato__start
+		fi
 		if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
 			headphones__stop
 			echo "* Updating Headphones"
@@ -979,6 +986,12 @@ function apps__sabnzbd() {
 		sabnzbd__set_apikey "$apikey"
 		sabnzbd__start
 
+		if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+			couchpotato__stop
+			echo "* Updating CouchPotato"
+			couchpotato__set_sabnzbd_apikey "$apikey"
+			couchpotato__start
+		fi
 		if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
 			headphones__stop
 			echo "* Updating Headphones"
