@@ -220,11 +220,11 @@ dirs=( \
 "/opt/tretflix/tmp/transmission-daemon/incomplete")
 
 for dir in "${dirs[@]}"; do
-  find "$dir/" -type f -mtime +14 -delete
+  find "$dir/" -type f -mtime +14 -print
 done
 
 for dir in "${dirs[@]}"; do
-  find "$dir/" -type d -empty -delete
+  find "$dir/" -type d -empty -print
 done
 }
 
