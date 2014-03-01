@@ -900,19 +900,19 @@ function apps__sabnzbd() {
 
 		if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
 			headphones__stop
-			echo "* Configuring Headphones"
+			echo "* Updating Headphones"
 			headphones__set_sabnzbd_username "$username"
 			headphones__start
 		fi
 		if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
 			nzbdrone__stop
-			echo "* Configuring NzbDrone"
+			echo "* Updating NzbDrone"
 			nzbdrone__set_sabnzbd_username "$username"
 			nzbdrone__start
 		fi
 		if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
 			sickbeard__stop
-			echo "* Configuring Sick Beard"
+			echo "* Updating Sick Beard"
 			sickbeard__set_sabnzbd_username "$username"
 			sickbeard__start
 		fi
@@ -927,19 +927,19 @@ function apps__sabnzbd() {
 
 		if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
 			headphones__stop
-			echo "* Configuring Headphones"
+			echo "* Updating Headphones"
 			headphones__set_sabnzbd_password "$password"
 			headphones__start
 		fi
 		if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
 			nzbdrone__stop
-			echo "* Configuring NzbDrone"
+			echo "* Updating NzbDrone"
 			nzbdrone__set_sabnzbd_password "$password"
 			nzbdrone__start
 		fi
 		if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
 			sickbeard__stop
-			echo "* Configuring Sick Beard"
+			echo "* Updating Sick Beard"
 			sickbeard__set_sabnzbd_password "$password"
 			sickbeard__start
 		fi
@@ -954,19 +954,19 @@ function apps__sabnzbd() {
 
 		if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
 			headphones__stop
-			echo "* Configuring Headphones"
+			echo "* Updating Headphones"
 			headphones__set_sabnzbd_port "$port"
 			headphones__start
 		fi
 		if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
 			nzbdrone__stop
-			echo "* Configuring NzbDrone"
+			echo "* Updating NzbDrone"
 			nzbdrone__set_sabnzbd_port "$port"
 			nzbdrone__start
 		fi
 		if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
 			sickbeard__stop
-			echo "* Configuring Sick Beard"
+			echo "* Updating Sick Beard"
 			sickbeard__set_sabnzbd_port "$port"
 			sickbeard__start
 		fi
@@ -981,19 +981,19 @@ function apps__sabnzbd() {
 
 		if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
 			headphones__stop
-			echo "* Configuring Headphones"
+			echo "* Updating Headphones"
 			headphones__set_sabnzbd_apikey "$apikey"
 			headphones__start
 		fi
 		if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
 			nzbdrone__stop
-			echo "* Configuring NzbDrone"
+			echo "* Updating NzbDrone"
 			nzbdrone__set_sabnzbd_apikey "$apikey"
 			nzbdrone__start
 		fi
 		if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
 			sickbeard__stop
-			echo "* Configuring Sick Beard"
+			echo "* Updating Sick Beard"
 			sickbeard__set_sabnzbd_apikey "$apikey"
 			sickbeard__start
 		fi
