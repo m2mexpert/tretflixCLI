@@ -78,18 +78,20 @@ function scheduler__app_upgrades() {
   option="$1"
   tmpfile="/tmp/cron.tmp"
   
-  # Output the current crontab to a tmp file
-  sudo su -c -u $osUser \
-    "crontab -l > $tmpfile 2> /dev/null"
-  
   # If the user option is "enable" and the cronjob isn't present, add it
   if [ "$option" == "enable" ]; then
-    if grep -q "service -a upgrade" $tmpfile; then
+    if sudo su -c -u $osUser "crontab -l" | grep -q "service -a upgrade"; then
       echo "The job is already scheduled"
       echo
       scheduler__show_config
+      echo
+      exit 1
     else
       echo "* Adding the job to crontab"
+
+      # Output the current crontab to a tmp file
+      sudo su -c -u $osUser \
+        "crontab -l > $tmpfile 2> /dev/null"
 
       sudo su -c -u $osUser \
         "echo '0 1 * * * /opt/tretflix/.sys/cli/./tretflixCLI.sh service -a upgrade' >> $tmpfile"
@@ -103,12 +105,18 @@ function scheduler__app_upgrades() {
 
   # If the user option is "disable" and the cronjob is present, remove it
   elif [ "$option" == "disable" ]; then
-    if ! grep -q "service -a upgrade" $tmpfile; then
+    if ! sudo su -c -u $osUser "crontab -l" | grep -q "service -a upgrade"; then
       echo "The job is already disabled"
       echo
       scheduler__show_config
+      echo
+      exit 1
     else
       echo "* Removing the job from crontab"
+      
+      # Output the current crontab to a tmp file
+      sudo su -c -u $osUser \
+        "crontab -l > $tmpfile 2> /dev/null"
       
       sed -i '/tretflixCLI.sh service -a upgrade/d' $tmpfile
       
@@ -127,18 +135,20 @@ function scheduler__tmp_cleanup() {
   option="$1"
   tmpfile="/tmp/cron.tmp"
   
-  # Output the current crontab to a tmp file
-  sudo su -c -u $osUser \
-    "crontab -l > $tmpfile 2> /dev/null"
-  
   # If the user option is "enable" and the cronjob isn't present, add it
   if [ "$option" == "enable" ]; then
-    if grep -q "storage tmp cleanup" $tmpfile; then
+    if sudo su -c -u $osUser "crontab -l" | grep -q "storage tmp cleanup"; then
       echo "The job is already scheduled"
       echo
       scheduler__show_config
+      echo
+      exit 1
     else
       echo "* Adding the job to crontab"
+
+      # Output the current crontab to a tmp file
+      sudo su -c -u $osUser \
+        "crontab -l > $tmpfile 2> /dev/null"
 
       sudo su -c -u $osUser \
         "echo '0 2 * * * /opt/tretflix/.sys/cli/./tretflixCLI.sh storage tmp cleanup' >> $tmpfile"
@@ -152,12 +162,18 @@ function scheduler__tmp_cleanup() {
 
   # If the user option is "disable" and the cronjob is present, remove it
   elif [ "$option" == "disable" ]; then
-    if ! grep -q "storage tmp cleanup" $tmpfile; then
+    if ! sudo su -c -u $osUser "crontab -l" | grep -q "storage tmp cleanup"; then
       echo "The job is already disabled"
       echo
       scheduler__show_config
+      echo
+      exit 1
     else
       echo "* Removing the job from crontab"
+      
+      # Output the current crontab to a tmp file
+      sudo su -c -u $osUser \
+        "crontab -l > $tmpfile 2> /dev/null"
       
       sed -i '/tretflixCLI.sh storage tmp cleanup/d' $tmpfile
       
