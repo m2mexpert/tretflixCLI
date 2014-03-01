@@ -87,6 +87,8 @@ function scheduler__app_upgrades() {
     if grep -q "service -a upgrade" $tmpfile; then
       echo "The job is already scheduled"
       echo
+      echo scheduler__show_config
+      echo
       exit 1
     else
       echo "* Adding the job to crontab"
@@ -106,21 +108,20 @@ function scheduler__app_upgrades() {
     if ! grep -q "service -a upgrade" $tmpfile; then
       echo "The job is already disabled"
       echo
+      echo scheduler__show_config
+      echo
       exit 1
     else
+      echo "* Removing the job from crontab"
+      
       sed -i '/tretflixCLI.sh service -a upgrade/d' $tmpfile
       
       sudo su -c -u $osUser \
         "crontab $tmpfile"
         
-      echo "The job has been disabled"
+      echo
+      echo scheduler__show_config
     fi
-
-  # If option is neither, output an error
-  else
-    echo "Invalid option"
-    echo
-    exit 1
   fi
   
   rm -f $tmpfile > /dev/null 2>&1
@@ -138,6 +139,8 @@ function scheduler__tmp_cleanup() {
   if [ "$option" == "enable" ]; then
     if grep -q "storage tmp cleanup" $tmpfile; then
       echo "The job is already scheduled"
+      echo
+      echo scheduler__show_config
       echo
       exit 1
     else
@@ -158,21 +161,20 @@ function scheduler__tmp_cleanup() {
     if ! grep -q "storage tmp cleanup" $tmpfile; then
       echo "The job is already disabled"
       echo
+      echo scheduler__show_config
+      echo
       exit 1
     else
+      echo "* Removing the job from crontab"
+      
       sed -i '/tretflixCLI.sh storage tmp cleanup/d' $tmpfile
       
       sudo su -c -u $osUser \
         "crontab $tmpfile"
         
-      echo "The job has been disabled"
+      echo
+      echo scheduler__show_config
     fi
-
-  # If option is neither, output an error
-  else
-    echo "Invalid option"
-    echo
-    exit 1
   fi
   
   rm -f $tmpfile > /dev/null 2>&1
