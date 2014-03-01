@@ -125,7 +125,7 @@ function scheduler__app_upgrades() {
 
 function scheduler__tmp_cleanup() {
   option="$1"
-  tmpfile="/tmp/cront.tmp"
+  tmpfile="/tmp/cron.tmp"
   
   # Output the current crontab to a tmp file
   sudo su -c -u $osUser \
