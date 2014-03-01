@@ -157,6 +157,8 @@ function scheduler__cleanup() {
         
       sudo su -c -u $osUser \
         "crontab $tmpfile"
+    else
+      echo "* Skipping, already enabled"
     fi
 
   # If the user option is "disable" and the cronjob is present, remove it
@@ -172,6 +174,8 @@ function scheduler__cleanup() {
       
       sudo su -c -u $osUser \
         "crontab $tmpfile"
+    else
+      echo "* Skipping, already disabled"
     fi
 
   elif [ "$option" == "show config" ]; then
@@ -203,6 +207,8 @@ function scheduler__upgrades() {
         
       sudo su -c -u $osUser \
         "crontab $tmpfile"
+    else
+      echo "* Skipping, already enabled"
     fi
 
   # If the user option is "disable" and the cronjob is present, remove it
@@ -218,6 +224,8 @@ function scheduler__upgrades() {
       
       sudo su -c -u $osUser \
         "crontab $tmpfile"
+    else
+      echo "* Skipping, already disabled"
     fi
 
   elif [ "$option" == "show config" ]; then
