@@ -530,6 +530,8 @@ function apps__new_apikey() {
 		'-t' | '--transmission')
       apps__transmission "new apikey"
       
+			echo
+			transmission__show_config      
 			;;
 		*)
 			apps__help
