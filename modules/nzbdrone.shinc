@@ -88,6 +88,17 @@ function nzbdrone__set_apikey() {
   sed -i 's#\(<ApiKey>\).*\(</ApiKey>\)#\1'$apikey'\2#g' $nzbdroneConfig
 }
 
+function nzbdrone__set_urlbase() {
+  urlbase="nzbdrone"
+  
+   if grep -A 1 "<UrlBase>$" $nzbdroneConfig | grep -q "</UrlBase>$"; then
+     sed -i '/<\/UrlBase>$/d' $nzbdroneConfig
+     sed -i 's/<UrlBase>$/<UrlBase><\/UrlBase>/' $nzbdroneConfig
+    fi
+  
+  sed -i 's#\(<UrlBase>\).*\(</UrlBase>\)#\1'$urlbase'\2#g' $nzbdroneConfig
+}
+
 function nzbdrone__get_username() {
   username=$(grep "<Username>.*</Username>" $nzbdroneConfig | awk -F "[<>]" '{ print $3 }')
   

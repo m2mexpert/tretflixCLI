@@ -87,6 +87,12 @@ function headphones__set_apikey() {
   sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $headphonesConfig
 }
 
+function headphones__set_urlbase() {
+  urlbase="/headphones"
+  
+  sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^http_root .*/http_root = \'$urlbase'/g}}' $headphonesConfig
+}
+
 function headphones__get_username() {
   username=$(sed -n '/^\[General\]/,/^\[/p' $headphonesConfig | grep "^http_username " | awk '{ print $3 }')
   

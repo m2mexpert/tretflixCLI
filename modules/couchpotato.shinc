@@ -88,6 +88,12 @@ function couchpotato__set_apikey() {
   sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $couchpotatoConfig
 }
 
+function couchpotato__set_urlbase() {
+  urlbase="/couchpotato"
+  
+  sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^url_base .*/url_base = \'$urlbase'/g}}' $couchpotatoConfig
+}
+
 function couchpotato__get_username() {
   username=$(sed -n '/^\[core\]/,/^\[/p' $couchpotatoConfig | grep "^username " | awk '{ print $3 }')
   

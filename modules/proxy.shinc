@@ -154,6 +154,27 @@ function proxy__install() {
   proxy__set_sabnzbd_port
   proxy__set_sickbeard_port
   proxy__set_transmission_port
+  
+  # Configure the apps (if installed) with a urlbase
+  couchpotato__stop
+  "* Updating CouchPotato Config"
+  couchpotato__set_urlbase
+  couchpotato__start
+  
+  headphones__stop
+  "* Updating Headphones Config"
+  headphones__set_urlbase
+  headphones__start
+  
+  nzbdrone__stop
+  "* Updating NzbDrone Config"
+  nzbdrone__set_urlbase
+  nzbdrone__start
+  
+  sickbeard__stop
+  "* Updating Sick Beard Config"
+  sickbeard__set_urlbase
+  sickbeard__start
 }
 
 

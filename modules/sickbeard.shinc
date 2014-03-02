@@ -90,6 +90,12 @@ function sickbeard__set_apikey() {
   sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $sickbeardConfig
 }
 
+function sickbeard__set_urlbase() {
+  urlbase="/sickbeard"
+  
+  sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^web_root .*/web_root = \'$urlbase'/g}}' $sickbeardConfig
+}
+
 function sickbeard__get_username() {
   username=$(sed -n '/^\[General\]/,/^\[/p' $sickbeardConfig | grep "^web_username " | awk '{ print $3 }')
   
