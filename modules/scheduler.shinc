@@ -145,7 +145,7 @@ function scheduler__cleanup() {
   
   # If the user option is "enable" and the cronjob isn't present, add it
   if [ "$option" == "enable" ]; then
-    if ! sudo su -c -u $osUser "crontab -l" | grep -q "storage tmp cleanup"; then
+    if ! sudo su -c -u $osUser "crontab -l" 2> /dev/null | grep -q "storage tmp cleanup"; then
       echo "* Enabling automatic tmp cleanup"
 
       # Output the current crontab to a tmp file
@@ -163,7 +163,7 @@ function scheduler__cleanup() {
 
   # If the user option is "disable" and the cronjob is present, remove it
   elif [ "$option" == "disable" ]; then
-    if sudo su -c -u $osUser "crontab -l" | grep -q "storage tmp cleanup"; then
+    if sudo su -c -u $osUser "crontab -l" 2> /dev/null | grep -q "storage tmp cleanup"; then
       echo "* Disabling automatic tmp cleanup"
       
       # Output the current crontab to a tmp file
@@ -179,7 +179,7 @@ function scheduler__cleanup() {
     fi
 
   elif [ "$option" == "show config" ]; then
-		if sudo su -c -u $osUser "crontab -l" | grep -q "storage tmp cleanup"; then
+		if sudo su -c -u $osUser "crontab -l" 2> /dev/null | grep -q "storage tmp cleanup"; then
 			echo "Cleanup: Scheduled to run daily at 1am"
 		else
 			echo "Cleanup: Not scheduled"
@@ -195,7 +195,7 @@ function scheduler__upgrades() {
   
   # If the user option is "enable" and the cronjob isn't present, add it
   if [ "$option" == "enable" ]; then
-    if ! sudo su -c -u $osUser "crontab -l" | grep -q "service -a upgrade"; then
+    if ! sudo su -c -u $osUser "crontab -l" 2> /dev/null | grep -q "service -a upgrade"; then
       echo "* Enabling automatic app upgrades"
 
       # Output the current crontab to a tmp file
@@ -213,7 +213,7 @@ function scheduler__upgrades() {
 
   # If the user option is "disable" and the cronjob is present, remove it
   elif [ "$option" == "disable" ]; then
-    if sudo su -c -u $osUser "crontab -l" | grep -q "service -a upgrade"; then
+    if sudo su -c -u $osUser "crontab -l" 2> /dev/null | grep -q "service -a upgrade"; then
       echo "* Disabling automatic app upgrades"
       
       # Output the current crontab to a tmp file
@@ -229,7 +229,7 @@ function scheduler__upgrades() {
     fi
 
   elif [ "$option" == "show config" ]; then
-		if sudo su -c -u $osUser "crontab -l" | grep -q "service -a upgrade"; then
+		if sudo su -c -u $osUser "crontab -l" 2> /dev/null | grep -q "service -a upgrade"; then
 			echo "Upgrades: Scheduled to run daily at 2am"
 		else
 			echo "Upgrades: Not scheduled"
