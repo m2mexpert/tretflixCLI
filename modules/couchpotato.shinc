@@ -8,17 +8,21 @@ function couchpotato__get_status() {
   if service couchpotato status 2>&1 | grep -q "unrecognized service"; then
     status="Not Installed"
   elif service couchpotato status > /dev/null 2>&1; then
-    status="Enabled|Running"
+    if ls /etc/rc?.d/*couchpotato > /dev/null 2>&1; then
+      status="Enabled|Running"
+    else
+      status="Disabled|Running"
+    fi
   elif ls /etc/rc?.d/*couchpotato > /dev/null 2>&1; then
     status="Enabled|Stopped"
   else
-    status="Disabled"
+    status="Disabled|Stopped"
   fi
   echo "$status"
 }
 
 function couchpotato__enable() {
-  if [ "$(couchpotato__get_status)" == "Disabled" ]; then
+  if echo "$(couchpotato__get_status)" | grep -q "^Disabled"; then
     echo "* Enabling CouchPotato"
     update-rc.d couchpotato defaults
   fi

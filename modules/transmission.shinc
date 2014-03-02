@@ -8,17 +8,21 @@ function transmission__get_status() {
   if service transmission-daemon status 2>&1 | grep -q "unrecognized service"; then
     status="Not Installed"
   elif service transmission-daemon status > /dev/null 2>&1; then
-    status="Enabled|Running"
+    if ls /etc/rc?.d/*transmission-daemon > /dev/null 2>&1; then
+      status="Enabled|Running"
+    else
+      status="Disabled|Running"
+    fi
   elif ls /etc/rc?.d/*transmission-daemon > /dev/null 2>&1; then
     status="Enabled|Stopped"
   else
-    status="Disabled"
+    status="Disabled|Stopped"
   fi
   echo "$status"
 }
 
 function transmission__enable() {
-  if [ "$(transmission__get_status)" == "Disabled" ]; then
+  if echo "$(transmission__get_status)" | grep -q "^Disabled"; then
     echo "* Enabling Transmission"
     update-rc.d transmission-daemon defaults
   fi

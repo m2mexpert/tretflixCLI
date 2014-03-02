@@ -5,32 +5,145 @@ fi
 proxy__imported=1
 
 function proxy__get_status() {
-  echo "Coming Soon"
+  if service apache2 status 2>&1 | grep -q "unrecognized service"; then
+    status="Not Installed"
+  elif service apache2 status > /dev/null 2>&1; then
+    if ls /etc/rc?.d/*apache2 > /dev/null 2>&1; then
+      status="Enabled|Running"
+    else
+      status="Disabled|Running"
+    fi
+  elif ls /etc/rc?.d/*apache2 > /dev/null 2>&1; then
+    status="Enabled|Stopped"
+  else
+    status="Disabled|Stopped"
+  fi
+  echo "$status"
 }
 
 function proxy__enable() {
-  echo "Coming Soon"
+  if echo "$(proxy__get_status)" | grep -q "^Disabled"; then
+    echo "* Enabling Reverse Proxy"
+    update-rc.d apache2 defaults
+  fi
 }
 
 function proxy__disable() {
-  echo "Coming Soon"
+  if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
+    echo "* Disabling Reverse Proxy"
+    update-rc.d -f apache2 remove
+  fi
 }
 
 function proxy__start() {
-  echo "Coming Soon"
+  if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
+    for i in {1..3}; do
+      if [ $i -gt 1 ]; then
+        sleep 2
+      fi
+      if [ "$(proxy__get_status)" != "Enabled|Running" ]; then
+        service apache2 start
+      else
+        break
+      fi
+    done
+  fi
 }
 
 function proxy__stop() {
-  echo "Coming Soon"
+  for i in {1..3}; do
+    if [ $i -gt 1 ]; then
+      sleep 2
+    fi
+    if [ "$(proxy__get_status)" == "Enabled|Running" ]; then
+      service apache2 stop
+    else
+      break
+    fi
+  done
 }
 
-function proxy__show_config() {
-  echo "Show config here"
+function proxy__set_couchpotato_port() {
+  couchpotatoPort=$(couchpotato__get_port)
+  
+  sed -i '/^ProxyPass http:.*couchpotato$/s/localhost:[0-9]*/localhost:'$couchpotatoPort'/' $proxyConfig
+  sed -i '/^ProxyPassReverse http:.*couchpotato$/s/localhost:[0-9]*/localhost:'$couchpotatoPort'/' $proxyConfig
+}
+
+function proxy__set_headphones_port() {
+  headphonesPort=$(headphones__get_port)
+  
+  sed -i '/^ProxyPass http:.*headphones$/s/localhost:[0-9]*/localhost:'$headphonesPort'/' $proxyConfig
+  sed -i '/^ProxyPassReverse http:.*headphones$/s/localhost:[0-9]*/localhost:'$headphonesPort'/' $proxyConfig
+}
+
+function proxy__set_nzbdrone_port() {
+  nzbdronePort=$(nzbdrone__get_port)
+  
+  sed -i '/^ProxyPass http:.*nzbdrone$/s/localhost:[0-9]*/localhost:'$nzbdronePort'/' $proxyConfig
+  sed -i '/^ProxyPassReverse http:.*nzbdrone$/s/localhost:[0-9]*/localhost:'$nzbdronePort'/' $proxyConfig
+}
+
+function proxy__set_sabnzbd_port() {
+  sabnzbdPort=$(sabnzbd__get_port)
+  
+  sed -i '/^ProxyPass http:.*sabnzbd$/s/localhost:[0-9]*/localhost:'$sabnzbdPort'/' $proxyConfig
+  sed -i '/^ProxyPassReverse http:.*sabnzbd$/s/localhost:[0-9]*/localhost:'$sabnzbdPort'/' $proxyConfig 
+}
+
+function proxy__set_sickbeard_port() {
+  sickbeardPort=$(sickbeard__get_port)
+  
+  sed -i '/^ProxyPass http:.*sickbeard$/s/localhost:[0-9]*/localhost:'$sickbeardPort'/' $proxyConfig
+  sed -i '/^ProxyPassReverse http:.*sickbeard$/s/localhost:[0-9]*/localhost:'$sickbeardPort'/' $proxyConfig
+}
+
+function proxy__set_transmission_port() {
+  transmissionPort=$(transmission__get_port)
+  
+  sed -i '/^ProxyPass http:.*transmission$/s/localhost:[0-9]*/localhost:'$transmissionPort'/' $proxyConfig
+  sed -i '/^ProxyPassReverse http:.*transmission$/s/localhost:[0-9]*/localhost:'$transmissionPort'/' $proxyConfig
 }
 
 function proxy__install() {
-  echo "Coming Soon"
+  echo "* Installing Reverse Proxy"
+  
+  # Update apt repository package lists
+  apt-get update
+
+  # Install Apache2
+  apt-get -y install apache2
+  
+  # Stop and disable Apache2
+  service apache2 stop
+  update-rc.d -f apache2 remove
+  
+  # Link the necessary modules (enables them)
+  if ! tools__path_exists "/etc/apache2/mods-enabled/proxy.load"; then
+    ln -s /etc/apache2/mods-available/proxy.load /etc/apache2/mods-enabled/proxy.load
+  fi
+  
+  if ! tools__path_exists "/etc/apache2/mods-enabled/proxy_http.load"; then
+    ln -s /etc/apache2/mods-available/proxy_http.load /etc/apache2/mods-enabled/proxy_http.load
+  fi
+
+  if ! tools__path_exists "/etc/apache2/sites-available/proxiedhosts"; then
+    tar xf $configBundle --strip-components 2 -C /etc/apache2/sites-available/ config/apache2/proxiedhosts
+  fi
+  
+  if ! tools__path_exists "/etc/apache2/sites-enabled/proxiedhosts"; then
+    ln -s /etc/apache2/sites-available/proxiedhosts /etc/apache2/sites-enabled/proxiedhosts
+  fi
+  
+  # Sync w/ current port settings
+  proxy__set_couchpotato_port
+  proxy__set_headphones_port
+  proxy__set_nzbdrone_port
+  proxy__set_sabnzbd_port
+  proxy__set_sickbeard_port
+  proxy__set_transmission_port
 }
+
 
 function proxy__fixit() {
   echo "Coming Soon"

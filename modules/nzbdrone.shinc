@@ -8,17 +8,21 @@ function nzbdrone__get_status() {
   if service nzbdrone status 2>&1 | grep -q "unrecognized service"; then
     status="Not Installed"
   elif service nzbdrone status 2>&1 | egrep -q "start|running"; then
-    status="Enabled|Running"
+    if ! ls -l /etc/init/nzbdrone.override > /dev/null 2>&1; then
+      status="Enabled|Running"
+    else
+      status="Disabled|Running"
+    fi
   elif ! ls -l /etc/init/nzbdrone.override > /dev/null 2>&1; then
     status="Enabled|Stopped"
   else
-    status="Disabled"
+    status="Disabled|Stopped"
   fi
   echo "$status"
 }
 
 function nzbdrone__enable() {
-  if [ "$(nzbdrone__get_status)" == "Disabled" ]; then
+  if echo "$(nzbdrone__get_status)" | grep -q "^Disabled"; then
     echo "* Enabling NzbDrone"
     rm -v /etc/init/nzbdrone.override
   fi
@@ -136,18 +140,33 @@ function nzbdrone__install() {
   if ! grep -q "^deb http://update.nzbdrone.com/repos/apt/debian master main" /etc/apt/sources.list; then 
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys FDA5DFFC
     echo "deb http://update.nzbdrone.com/repos/apt/debian master main" | tee -a /etc/apt/sources.list
+    
+    # Update apt repository package lists
+    apt-get update
   fi
-  
-  # Update apt repository package lists
-  apt-get update
   
   # Install NzbDrone (and dependencies)
   apt-get -q -y install nzbdrone sqlite3
+  
+  # Stop and disable NzbDrone (If necessary)
+  nzbdrone__stop
+  nzbdrone__disable
+  
+  # Copy runlevel config files into init
+  if ! tools__path_exists "/etc/init/nzbdrone.conf"; then
+    tar xf $configBundle --strip-components 2 -C /etc/init/ config/init/nzbdrone.conf
+  fi
   
   # Create the sabnzbd+ temp dir for nzbdrone downloads
   if ! tools__path_exists "/opt/tretflix/tmp/sabnzbdplus/nzbdrone"; then
     sudo su -c -u $osUser \
       "mkdir /opt/tretflix/tmp/sabnzbdplus/nzbdrone"
+  fi
+  
+  # Copy the app data dir into appdata/
+  if ! tools__path_exists "/opt/tretflix/appdata/nzbdrone"; then
+    sudo su -c -u $osUser \
+      "tar xf $appdataBundle --strip-components 1 -C $tretflixPath/appdata/ appdata/nzbdrone"
   fi
   
   # Create a symbolic link for NzbDrone config (Can't configure appdata dir)
@@ -163,24 +182,11 @@ function nzbdrone__install() {
     sudo su -c -u $osUser \
       "ln -s /opt/tretflix/appdata/nzbdrone/ /home/sysadmin/.config/NzbDrone"
   fi
-  
-  # Copy runlevel config files into init
-  if ! tools__path_exists "/etc/init/nzbdrone.conf"; then
-    tar xf $configBundle --strip-components 2 -C /etc/init/ config/init/nzbdrone.conf
-  fi
-  if ! tools__path_exists "/etc/init/nzbdrone.override"; then
-    tar xf $configBundle --strip-components 2 -C /etc/init/ config/init/nzbdrone.override
-  fi
-  
-  # Copy the app data dir into appdata/
-  if ! tools__path_exists "/opt/tretflix/appdata/nzbdrone"; then
-    sudo su -c -u $osUser \
-      "tar xf $appdataBundle --strip-components 1 -C $tretflixPath/appdata/ appdata/nzbdrone"
-  fi
-    
+
   # Add the nzbdrone category to the SABnzbd config
   if ! egrep "^\[\[nzbdrone\]\]" $sabnzbdConfig; then
     sabnzbd__stop
+    echo "* Updating SABnzbd+ Config"
     sed -i '/^\[categories\].*/a \
       [[nzbdrone]]\npriority = -100 pp = ""\nname = nzbdrone\nscript = Default\nnewzbin = ""\ndir = nzbdrone' $sabnzbdConfig
     sabnzbd__start

@@ -660,6 +660,13 @@ function apps__couchpotato() {
 		couchpotato__set_port "$port"
 		couchpotato__start
 		
+		if echo "$(proxy__get_status)" | egrep -q "^Enabled|Running$"; then
+		  proxy__stop
+		  "* Updating the Reverse Proxy Config"
+		  proxy__set_couchpotato_port
+		  proxy__start
+		fi
+		
 	elif [ "$option" == "new apikey" ]; then
 	  apikey="$(tools__gen_apikey)"
 	  
@@ -735,6 +742,13 @@ function apps__headphones() {
 		echo "* Configuring Headphones"
 		headphones__set_port "$port"
 		headphones__start
+
+		if echo "$(proxy__get_status)" | egrep -q "^Enabled|Running$"; then
+		  proxy__stop
+		  "* Updating the Reverse Proxy Config"
+		  proxy__set_headphones_port
+		  proxy__start
+		fi
 		
 	elif [ "$option" == "new apikey" ]; then
 	  apikey="$(tools__gen_apikey)"
@@ -811,6 +825,13 @@ function apps__nzbdrone() {
 		echo "* Configuring NzbDrone"
 		nzbdrone__set_port "$port"
 		nzbdrone__start
+
+		if echo "$(proxy__get_status)" | egrep -q "^Enabled|Running$"; then
+		  proxy__stop
+		  "* Updating the Reverse Proxy Config"
+		  proxy__set_nzbdrone_port
+		  proxy__start
+		fi
 		
 	elif [ "$option" == "new apikey" ]; then
 	  apikey="$(tools__gen_apikey)"
@@ -922,19 +943,19 @@ function apps__sabnzbd() {
 
 		if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
 			headphones__stop
-			echo "* Updating Headphones"
+			echo "* Updating Headphones Config"
 			headphones__set_sabnzbd_username "$username"
 			headphones__start
 		fi
 		if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
 			nzbdrone__stop
-			echo "* Updating NzbDrone"
+			echo "* Updating NzbDrone Config"
 			nzbdrone__set_sabnzbd_username "$username"
 			nzbdrone__start
 		fi
 		if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
 			sickbeard__stop
-			echo "* Updating Sick Beard"
+			echo "* Updating Sick Beard Config"
 			sickbeard__set_sabnzbd_username "$username"
 			sickbeard__start
 		fi
@@ -949,19 +970,19 @@ function apps__sabnzbd() {
 
 		if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
 			headphones__stop
-			echo "* Updating Headphones"
+			echo "* Updating Headphones Config"
 			headphones__set_sabnzbd_password "$password"
 			headphones__start
 		fi
 		if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
 			nzbdrone__stop
-			echo "* Updating NzbDrone"
+			echo "* Updating NzbDrone Config"
 			nzbdrone__set_sabnzbd_password "$password"
 			nzbdrone__start
 		fi
 		if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
 			sickbeard__stop
-			echo "* Updating Sick Beard"
+			echo "* Updating Sick Beard Config"
 			sickbeard__set_sabnzbd_password "$password"
 			sickbeard__start
 		fi
@@ -974,30 +995,36 @@ function apps__sabnzbd() {
 		sabnzbd__set_port "$port"
 		sabnzbd__start
 
-
 		if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
 			couchpotato__stop
-			echo "* Updating CouchPotato"
+			echo "* Updating CouchPotato Config"
 			couchpotato__set_sabnzbd_port "$port"
 			couchpotato__start
 		fi
 		if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
 			headphones__stop
-			echo "* Updating Headphones"
+			echo "* Updating Headphones Config"
 			headphones__set_sabnzbd_port "$port"
 			headphones__start
 		fi
 		if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
 			nzbdrone__stop
-			echo "* Updating NzbDrone"
+			echo "* Updating NzbDrone Config"
 			nzbdrone__set_sabnzbd_port "$port"
 			nzbdrone__start
 		fi
 		if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
 			sickbeard__stop
-			echo "* Updating Sick Beard"
+			echo "* Updating Sick Beard Config"
 			sickbeard__set_sabnzbd_port "$port"
 			sickbeard__start
+		fi
+		
+		if echo "$(proxy__get_status)" | egrep -q "^Enabled|Running$"; then
+		  proxy__stop
+		  "* Updating the Reverse Proxy Config"
+		  proxy__set_sabnzbd_port
+		  proxy__start
 		fi
 		
 	elif [ "$option" == "new apikey" ]; then
@@ -1010,25 +1037,25 @@ function apps__sabnzbd() {
 
 		if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
 			couchpotato__stop
-			echo "* Updating CouchPotato"
+			echo "* Updating CouchPotato Config"
 			couchpotato__set_sabnzbd_apikey "$apikey"
 			couchpotato__start
 		fi
 		if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
 			headphones__stop
-			echo "* Updating Headphones"
+			echo "* Updating Headphones Config"
 			headphones__set_sabnzbd_apikey "$apikey"
 			headphones__start
 		fi
 		if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
 			nzbdrone__stop
-			echo "* Updating NzbDrone"
+			echo "* Updating NzbDrone Config"
 			nzbdrone__set_sabnzbd_apikey "$apikey"
 			nzbdrone__start
 		fi
 		if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
 			sickbeard__stop
-			echo "* Updating Sick Beard"
+			echo "* Updating Sick Beard Config"
 			sickbeard__set_sabnzbd_apikey "$apikey"
 			sickbeard__start
 		fi
@@ -1102,6 +1129,13 @@ function apps__sickbeard() {
 		sickbeard__set_port "$port"
 		sickbeard__start
 		
+		if echo "$(proxy__get_status)" | egrep -q "^Enabled|Running$"; then
+		  proxy__stop
+		  "* Updating the Reverse Proxy Config"
+		  proxy__set_sickbeard_port
+		  proxy__start
+		fi
+		
 	elif [ "$option" == "new apikey" ]; then
 	  apikey="$(tools__gen_apikey)"
 	  
@@ -1173,6 +1207,13 @@ function apps__transmission() {
 		echo "* Configuring Transmission"
 		transmission__set_port "$port"
 		transmission__start
+		
+		if echo "$(proxy__get_status)" | egrep -q "^Enabled|Running$"; then
+		  proxy__stop
+		  "* Updating the Reverse Proxy Config"
+		  proxy__set_transmission_port
+		  proxy__start
+		fi
 		
 	elif [ "$option" == "new apikey" ]; then
 	  echo "The 'new apikey' command is not available for Transmission"

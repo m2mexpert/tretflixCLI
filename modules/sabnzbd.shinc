@@ -8,17 +8,21 @@ function sabnzbd__get_status() {
   if service sabnzbdplus status 2>&1 | grep -q "unrecognized service"; then
     status="Not Installed"
   elif service sabnzbdplus status > /dev/null 2>&1; then
-    status="Enabled|Running"
+    if ls /etc/rc?.d/*sabnzbdplus > /dev/null 2>&1; then
+      status="Enabled|Running"
+    else
+      status="Disabled|Running"
+    fi
   elif ls /etc/rc?.d/*sabnzbdplus > /dev/null 2>&1; then
     status="Enabled|Stopped"
   else
-    status="Disabled"
+    status="Disabled|Stopped"
   fi
   echo "$status"
 }
 
 function sabnzbd__enable() {
-  if [ "$(sabnzbd__get_status)" == "Disabled" ]; then
+  if echo "$(sabnzbd__get_status)" | grep -q "^Disabled"; then
     echo "* Enabling SABnzbd+"
     update-rc.d sabnzbdplus defaults
   fi

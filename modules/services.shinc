@@ -69,13 +69,13 @@ function services__enable() {
 			services__proxy "enable"
 			
 			echo
-			proxy__show_config
+			services__proxy "show config"
 			;;
 		'-p' | '--reverseproxy')
 			services__proxy "enable"
 			
 			echo
-			proxy__show_config
+			services__proxy "show config"
 			;;
 		*)
 			services__help
@@ -90,13 +90,13 @@ function services__disable() {
 			services__proxy "disable"
 			
 			echo
-			proxy__show_config
+			services__proxy "show config"
 			;;
 		'-p' | '--reverseproxy')
 			services__proxy "disable"
 			
 			echo
-			proxy__show_config
+			services__proxy "show config"
 			;;
 		*)
 			services__help
@@ -108,10 +108,10 @@ function services__show_config() {
 
 	case "$option" in
 		'-a' | '--all')
-			proxy__show_config
+			services__proxy "show config"
 			;;
 		'-p' | '--reverseproxy')
-			proxy__show_config
+			services__proxy "show config"
 			;;
 		*)
 			services__help
@@ -122,8 +122,40 @@ function services__proxy() {
   option="$1"
   
   if [ "$option" == "enable" ]; then
-    echo "Do enable workflow"
+		if ! echo "$(proxy__get_status)" | grep -q "^Enabled"; then
+			# Install the app if not already installed
+			if [ "$(proxy__get_status)" == "Not Installed" ]; then
+				proxy__install
+			fi
+
+			# Stop the app
+			proxy__stop
+
+			# Sync w/ current port settings
+			echo "* Configuring the Reverse Proxy"
+			proxy__set_couchpotato_port
+			proxy__set_headphones_port
+			proxy__set_nzbdrone_port
+			proxy__set_sabnzbd_port
+			proxy__set_sickbeard_port
+			proxy__set_transmission_port
+			
+			# Enable the app
+			proxy__enable
+
+		elif [ "$(proxy__get_status)" == "Enabled|Stopped" ]; then
+		  # Start the app
+		  proxy__start
+		else
+		  echo "The Reverse Proxy service is already enabled and running"
+		fi
+		
   elif [ "$option" == "disable" ]; then
-    echo "Do disable workflow"  
+	  proxy__stop
+		proxy__disable
+		 
+  elif [ "$option" == "show config" ]; then
+    echo "Reverse Proxy: $(proxy__get_status)"
+    
   fi
 }

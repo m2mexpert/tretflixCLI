@@ -330,6 +330,22 @@ function config__wizard() {
 		esac      
 	done
 	
+	echo
+	while true; do
+		read -p "Do you want to use the Reverse Proxy service? (y/n): " input
+		case "$input" in
+			[yY] | [yY][Ee][Ss] )
+				proxyAction="Enable"
+				break;;
+			[nN] | [n|N][O|o] )
+				proxyAction="Disable"
+				break;;
+			* )
+				echo "!! ERROR: Invalid entry."
+				echo
+		esac      
+	done
+	
 	echo	
 	while true; do
 		read -p "Apply these changes? (y/n): " input
@@ -651,6 +667,43 @@ function config__wizard() {
 			transmission__disable
 		fi
 	fi
+	
+  # Reverse Proxy Section
+	if [ "$proxyAction" == "Enable" ]; then
+		if ! echo "$(proxy__get_status)" | grep -q "^Enabled"; then
+			# Install the service if not already installed
+			if [ "$(proxy__get_status)" == "Not Installed" ]; then
+				proxy__install
+			fi
+
+			# Stop the service
+			proxy__stop
+
+			# Enable the service
+			proxy__enable
+		fi
+
+		# Stop the service
+		proxy__stop
+
+		# Sync w/ current port settings
+		echo "* Configuring the Reverse Proxy"
+		proxy__set_couchpotato_port
+		proxy__set_headphones_port
+		proxy__set_nzbdrone_port
+		proxy__set_sabnzbd_port
+		proxy__set_sickbeard_port
+		proxy__set_transmission_port
+		
+		# Start the service
+		proxy__start
+	else
+		# Stop and disable the service if not already disabled
+		if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
+			proxy__stop
+			proxy__disable
+		fi
+	fi
 
 	echo    
 	while true; do
@@ -858,6 +911,22 @@ function config__restore_appdata() {
 			esac      
 		done
 	fi
+
+	echo
+	while true; do
+		read -p "Do you want to use the Reverse Proxy service? (y/n): " input
+		case "$input" in
+			[yY] | [yY][Ee][Ss] )
+				proxyAction="Enable"
+				break;;
+			[nN] | [n|N][O|o] )
+				proxyAction="Disable"
+				break;;
+			* )
+				echo "!! ERROR: Invalid entry."
+				echo
+		esac      
+	done
 
 	echo	
 	while true; do
@@ -1145,6 +1214,43 @@ function config__restore_appdata() {
 
 		# Start the service
 		transmission__start
+	fi
+
+  # Reverse Proxy Section
+	if [ "$proxyAction" == "Enable" ]; then
+		if ! echo "$(proxy__get_status)" | grep -q "^Enabled"; then
+			# Install the service if not already installed
+			if [ "$(proxy__get_status)" == "Not Installed" ]; then
+				proxy__install
+			fi
+
+			# Stop the service
+			proxy__stop
+
+			# Enable the service
+			proxy__enable
+		fi
+
+		# Stop the service
+		proxy__stop
+
+		# Sync w/ current port settings
+		echo "* Configuring the Reverse Proxy"
+		proxy__set_couchpotato_port
+		proxy__set_headphones_port
+		proxy__set_nzbdrone_port
+		proxy__set_sabnzbd_port
+		proxy__set_sickbeard_port
+		proxy__set_transmission_port
+		
+		# Start the service
+		proxy__start
+	else
+		# Stop and disable the service if not already disabled
+		if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
+			proxy__stop
+			proxy__disable
+		fi
 	fi
 
 	echo    
