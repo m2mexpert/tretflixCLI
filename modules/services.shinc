@@ -14,7 +14,7 @@ function services__help() {
   echo
   echo "OPTIONS:"
   echo "  -a, --all"
-  echo "  -r, --reverseproxy"
+  echo "  -p, --reverseproxy"
   echo
   echo "NOTES:" 
   echo "  Enabling the Reverse Proxy service will provide easier access to an app's"
