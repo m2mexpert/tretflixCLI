@@ -111,7 +111,7 @@ function proxy__syncup() {
     proxy__set_couchpotato_port
 
     couchpotato__stop
-    "* Updating CouchPotato Config"
+    echo "* Updating CouchPotato Config"
     couchpotato__set_urlbase
     couchpotato__start  
   fi 
@@ -120,7 +120,7 @@ function proxy__syncup() {
     proxy__set_headphones_port
 
 		headphones__stop
-		"* Updating Headphones Config"
+		echo "* Updating Headphones Config"
 		headphones__set_urlbase
 		headphones__start
 	fi
@@ -129,7 +129,7 @@ function proxy__syncup() {
     proxy__set_nzbdrone_port
 
 		nzbdrone__stop
-		"* Updating NzbDrone Config"
+		echo "* Updating NzbDrone Config"
 		nzbdrone__set_urlbase
 		nzbdrone__start
 	fi
@@ -142,7 +142,7 @@ function proxy__syncup() {
 		proxy__set_sickbeard_port
 	
 		sickbeard__stop
-		"* Updating Sick Beard Config"
+		echo "* Updating Sick Beard Config"
 		sickbeard__set_urlbase
 		sickbeard__start
 	fi
