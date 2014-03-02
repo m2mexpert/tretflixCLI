@@ -607,6 +607,9 @@ function apps__couchpotato() {
 				couchpotato__stop
 				couchpotato__upgrade
 			fi
+			
+			# Enable the app
+			couchpotato__enable
 
 			# Stop the app
 			couchpotato__stop
@@ -615,8 +618,8 @@ function apps__couchpotato() {
 			echo "* Configuring CouchPotato"
 			couchpotato__sabnzbd_sync
 			
-			# Enable the app
-			couchpotato__enable
+			# Start the app
+			couchpotato__start
 
 		elif [ "$(couchpotato__get_status)" == "Enabled|Stopped" ]; then
 		  # Start the app
@@ -690,6 +693,9 @@ function apps__headphones() {
 				headphones__stop
 				headphones__upgrade
 			fi
+
+			# Enable the app
+			headphones__enable
 			
 			# Stop the app
 			headphones__stop
@@ -698,8 +704,8 @@ function apps__headphones() {
 			echo "* Configuring Headphones"
 			headphones__sabnzbd_sync
 			
-			# Enable the app
-			headphones__enable
+			# Start the app
+			headphones__start
 
 		elif [ "$(headphones__get_status)" == "Enabled|Stopped" ]; then
 		  # Start the app
@@ -774,6 +780,9 @@ function apps__nzbdrone() {
 				nzbdrone__upgrade
 			fi
 			
+			# Enable the app
+			nzbdrone__enable
+			
 			# Stop the app
 			nzbdrone__stop
 
@@ -781,8 +790,8 @@ function apps__nzbdrone() {
 			echo "* Configuring NzbDrone"
 			nzbdrone__sabnzbd_sync
 			
-			# Enable the app
-			nzbdrone__enable
+			# Start the app
+			nzbdrone__start
 
 		elif [ "$(nzbdrone__get_status)" == "Enabled|Stopped" ]; then
 		  # Start the app
@@ -857,11 +866,11 @@ function apps__plexserver() {
 				plexserver__upgrade
 			fi
 			
-			# Stop the app
-			plexserver__stop
-			
 			# Enable the app
 			plexserver__enable
+			
+			# Start the app
+			plexserver__start
 
 		elif [ "$(plexserver__get_status)" == "Enabled|Stopped" ]; then
 		  # Start the app
@@ -909,11 +918,11 @@ function apps__sabnzbd() {
 				sabnzbd__upgrade
 			fi
 			
-			# Stop the app
-			sabnzbd__stop
-			
 			# Enable the app
 			sabnzbd__enable
+			
+			# Start the app
+			sabnzbd__start
 
 		elif [ "$(sabnzbd__get_status)" == "Enabled|Stopped" ]; then
 		  # Start the app
@@ -1076,6 +1085,9 @@ function apps__sickbeard() {
 				sickbeard__stop
 				sickbeard__upgrade
 			fi
+
+			# Enable the app
+			sickbeard__enable
 			
 			# Stop the app
 			sickbeard__stop
@@ -1084,8 +1096,8 @@ function apps__sickbeard() {
 			echo "* Configuring Sick Beard"
 			sickbeard__sabnzbd_sync
 			
-			# Enable the app
-			sickbeard__enable
+			# Start the app
+			sickbeard__start
 
 		elif [ "$(sickbeard__get_status)" == "Enabled|Stopped" ]; then
 		  # Start the app
@@ -1160,11 +1172,11 @@ function apps__transmission() {
 				transmission__upgrade
 			fi
 			
-			# Stop the app
-			transmission__stop
-			
 			# Enable the app
 			transmission__enable
+
+			# Start the app
+			transmission__start
 
 		elif [ "$(transmission__get_status)" == "Enabled|Stopped" ]; then
 		  # Start the app

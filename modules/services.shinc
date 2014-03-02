@@ -123,10 +123,13 @@ function services__proxy() {
   
   if [ "$option" == "enable" ]; then
 		if ! echo "$(proxy__get_status)" | grep -q "^Enabled"; then
-			# Install the app if not already installed
+			# Install the service if not already installed
 			if [ "$(proxy__get_status)" == "Not Installed" ]; then
 				proxy__install
 			fi
+
+			# Enable the service
+			proxy__enable
 
 			# Stop the app
 			proxy__stop
@@ -140,11 +143,11 @@ function services__proxy() {
 			proxy__set_sickbeard_port
 			proxy__set_transmission_port
 			
-			# Enable the app
-			proxy__enable
+			# Start the service
+			proxy__start
 
 		elif [ "$(proxy__get_status)" == "Enabled|Stopped" ]; then
-		  # Start the app
+		  # Start the service
 		  proxy__start
 		else
 		  echo "The Reverse Proxy service is already enabled and running"
