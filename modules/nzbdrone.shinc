@@ -229,15 +229,17 @@ function nzbdrone__upgrade() {
 }
 
 function nzbdrone__sabnzbd_sync() {
-  username=$(sabnzbd__get_username)
-  password=$(sabnzbd__get_password)
-  port=$(sabnzbd__get_port)
-  apikey=$(sabnzbd__get_apikey)
-  
-  nzbdrone__set_sabnzbd_username "$username"
-  nzbdrone__set_sabnzbd_password "$password"
-  nzbdrone__set_sabnzbd_port "$port"
-  nzbdrone__set_sabnzbd_apikey "$apikey"
+  if [ "$(sabnzbd__get_status)" != "Not Installed" ]; then
+		username=$(sabnzbd__get_username)
+		password=$(sabnzbd__get_password)
+		port=$(sabnzbd__get_port)
+		apikey=$(sabnzbd__get_apikey)
+	
+		nzbdrone__set_sabnzbd_username "$username"
+		nzbdrone__set_sabnzbd_password "$password"
+		nzbdrone__set_sabnzbd_port "$port"
+		nzbdrone__set_sabnzbd_apikey "$apikey"
+	fi
 }
 
 function nzbdrone__set_sabnzbd_username() {

@@ -167,11 +167,13 @@ function couchpotato__upgrade() {
 }
 
 function couchpotato__sabnzbd_sync() {
-  port=$(sabnzbd__get_port)
-  apikey=$(sabnzbd__get_apikey)
-  
-  couchpotato__set_sabnzbd_port "$port"
-  couchpotato__set_sabnzbd_apikey "$apikey"
+  if [ "$(sabnzbd__get_status)" != "Not Installed" ]; then
+		port=$(sabnzbd__get_port)
+		apikey=$(sabnzbd__get_apikey)
+	
+		couchpotato__set_sabnzbd_port "$port"
+		couchpotato__set_sabnzbd_apikey "$apikey"
+	fi
 }
 
 function couchpotato__set_sabnzbd_port() {

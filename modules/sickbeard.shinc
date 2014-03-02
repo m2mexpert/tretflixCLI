@@ -169,15 +169,17 @@ function sickbeard__upgrade() {
 }
 
 function sickbeard__sabnzbd_sync() {
-  username=$(sabnzbd__get_username)
-  password=$(sabnzbd__get_password)
-  port=$(sabnzbd__get_port)
-  apikey=$(sabnzbd__get_apikey)
+  if [ "$(sabnzbd__get_status)" != "Not Installed" ]; then
+		username=$(sabnzbd__get_username)
+		password=$(sabnzbd__get_password)
+		port=$(sabnzbd__get_port)
+		apikey=$(sabnzbd__get_apikey)
 
-  sickbeard__set_sabnzbd_username "$username"
-  sickbeard__set_sabnzbd_password "$password"
-  sickbeard__set_sabnzbd_port "$port"
-  sickbeard__set_sabnzbd_apikey "$apikey"
+		sickbeard__set_sabnzbd_username "$username"
+		sickbeard__set_sabnzbd_password "$password"
+		sickbeard__set_sabnzbd_port "$port"
+		sickbeard__set_sabnzbd_apikey "$apikey"
+	fi
 }
 
 function sickbeard__set_sabnzbd_username() {
