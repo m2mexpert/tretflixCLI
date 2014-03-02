@@ -64,45 +64,57 @@ function proxy__stop() {
 }
 
 function proxy__set_couchpotato_port() {
-  couchpotatoPort=$(couchpotato__get_port)
+  if [ "$(couchpotato__get_status)" != "Not Installed" ]; then
+    couchpotatoPort=$(couchpotato__get_port)
   
-  sed -i '/^ProxyPass http:.*couchpotato$/s/localhost:[0-9]*/localhost:'$couchpotatoPort'/' $proxyConfig
-  sed -i '/^ProxyPassReverse http:.*couchpotato$/s/localhost:[0-9]*/localhost:'$couchpotatoPort'/' $proxyConfig
+    sed -i '/^ProxyPass http:.*couchpotato$/s/localhost:[0-9]*/localhost:'$couchpotatoPort'/' $proxyConfig
+    sed -i '/^ProxyPassReverse http:.*couchpotato$/s/localhost:[0-9]*/localhost:'$couchpotatoPort'/' $proxyConfig
+  fi
 }
 
 function proxy__set_headphones_port() {
-  headphonesPort=$(headphones__get_port)
-  
-  sed -i '/^ProxyPass http:.*headphones$/s/localhost:[0-9]*/localhost:'$headphonesPort'/' $proxyConfig
-  sed -i '/^ProxyPassReverse http:.*headphones$/s/localhost:[0-9]*/localhost:'$headphonesPort'/' $proxyConfig
+  if [ "$(headphones__get_status)" != "Not Installed" ]; then
+		headphonesPort=$(headphones__get_port)
+	
+		sed -i '/^ProxyPass http:.*headphones$/s/localhost:[0-9]*/localhost:'$headphonesPort'/' $proxyConfig
+		sed -i '/^ProxyPassReverse http:.*headphones$/s/localhost:[0-9]*/localhost:'$headphonesPort'/' $proxyConfig
+	fi
 }
 
 function proxy__set_nzbdrone_port() {
-  nzbdronePort=$(nzbdrone__get_port)
-  
-  sed -i '/^ProxyPass http:.*nzbdrone$/s/localhost:[0-9]*/localhost:'$nzbdronePort'/' $proxyConfig
-  sed -i '/^ProxyPassReverse http:.*nzbdrone$/s/localhost:[0-9]*/localhost:'$nzbdronePort'/' $proxyConfig
+  if [ "$(nzbdrone__get_status)" != "Not Installed" ]; then
+		nzbdronePort=$(nzbdrone__get_port)
+	
+		sed -i '/^ProxyPass http:.*nzbdrone$/s/localhost:[0-9]*/localhost:'$nzbdronePort'/' $proxyConfig
+		sed -i '/^ProxyPassReverse http:.*nzbdrone$/s/localhost:[0-9]*/localhost:'$nzbdronePort'/' $proxyConfig
+	fi
 }
 
 function proxy__set_sabnzbd_port() {
-  sabnzbdPort=$(sabnzbd__get_port)
-  
-  sed -i '/^ProxyPass http:.*sabnzbd$/s/localhost:[0-9]*/localhost:'$sabnzbdPort'/' $proxyConfig
-  sed -i '/^ProxyPassReverse http:.*sabnzbd$/s/localhost:[0-9]*/localhost:'$sabnzbdPort'/' $proxyConfig 
+  if [ "$(sabnzbd__get_status)" != "Not Installed" ]; then
+		sabnzbdPort=$(sabnzbd__get_port)
+	
+		sed -i '/^ProxyPass http:.*sabnzbd$/s/localhost:[0-9]*/localhost:'$sabnzbdPort'/' $proxyConfig
+		sed -i '/^ProxyPassReverse http:.*sabnzbd$/s/localhost:[0-9]*/localhost:'$sabnzbdPort'/' $proxyConfig
+	fi
 }
 
 function proxy__set_sickbeard_port() {
-  sickbeardPort=$(sickbeard__get_port)
-  
-  sed -i '/^ProxyPass http:.*sickbeard$/s/localhost:[0-9]*/localhost:'$sickbeardPort'/' $proxyConfig
-  sed -i '/^ProxyPassReverse http:.*sickbeard$/s/localhost:[0-9]*/localhost:'$sickbeardPort'/' $proxyConfig
+  if [ "$(sickbeard__get_status)" != "Not Installed" ]; then
+		sickbeardPort=$(sickbeard__get_port)
+	
+		sed -i '/^ProxyPass http:.*sickbeard$/s/localhost:[0-9]*/localhost:'$sickbeardPort'/' $proxyConfig
+		sed -i '/^ProxyPassReverse http:.*sickbeard$/s/localhost:[0-9]*/localhost:'$sickbeardPort'/' $proxyConfig
+	fi
 }
 
 function proxy__set_transmission_port() {
-  transmissionPort=$(transmission__get_port)
-  
-  sed -i '/^ProxyPass http:.*transmission$/s/localhost:[0-9]*/localhost:'$transmissionPort'/' $proxyConfig
-  sed -i '/^ProxyPassReverse http:.*transmission$/s/localhost:[0-9]*/localhost:'$transmissionPort'/' $proxyConfig
+  if [ "$(transmission__get_status)" != "Not Installed" ]; then
+		transmissionPort=$(transmission__get_port)
+	
+		sed -i '/^ProxyPass http:.*transmission$/s/localhost:[0-9]*/localhost:'$transmissionPort'/' $proxyConfig
+		sed -i '/^ProxyPassReverse http:.*transmission$/s/localhost:[0-9]*/localhost:'$transmissionPort'/' $proxyConfig
+	fi
 }
 
 function proxy__install() {
