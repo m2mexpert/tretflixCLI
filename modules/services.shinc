@@ -136,12 +136,7 @@ function services__proxy() {
 
 			# Sync w/ current port settings
 			echo "* Configuring the Reverse Proxy"
-			proxy__set_couchpotato_port
-			proxy__set_headphones_port
-			proxy__set_nzbdrone_port
-			proxy__set_sabnzbd_port
-			proxy__set_sickbeard_port
-			proxy__set_transmission_port
+			proxy__syncup
 			
 			# Start the service
 			proxy__start
