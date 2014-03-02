@@ -119,9 +119,6 @@ function proxy__set_transmission_port() {
 
 function proxy__install() {
   echo "* Installing Reverse Proxy"
-  
-  # Update apt repository package lists
-  apt-get update
 
   # Install Apache2
   apt-get -y install apache2
