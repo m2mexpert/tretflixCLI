@@ -119,12 +119,18 @@ function sabnzbd__show_config() {
   password=$(sabnzbd__get_password)
   port=$(sabnzbd__get_port)
   apikey=$(sabnzbd__get_apikey)
+  
+  if echo "$(proxy__get_status)" | egrep -q "^Enabled|Running$"; then
+    url="http://$ipv4/sabnzbd"
+  else
+    url="http://$ipv4:$port/"
+  fi
 
   echo "SABnzbd+ Config:"
   echo "----------------------------"
   echo "Status: $status"
   if [ "$status" == "Enabled|Running" ]; then
-    echo "Web UI: http://$ipv4:$port/sabnzbd/"
+    echo "Web UI: $url"
     echo
     echo "Username: $username"
     echo "Password: $password"

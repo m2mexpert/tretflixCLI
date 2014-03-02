@@ -121,13 +121,19 @@ function sickbeard__show_config() {
   username=$(sickbeard__get_username)
   password=$(sickbeard__get_password)
   port=$(sickbeard__get_port)
-  apikey=$(sickbeard__get_apikey)  
+  apikey=$(sickbeard__get_apikey)
+  
+  if echo "$(proxy__get_status)" | egrep -q "^Enabled|Running$"; then
+    url="http://$ipv4/sickbeard"
+  else
+    url="http://$ipv4:$port/"
+  fi 
 
   echo "Sick Beard Config:"
   echo "----------------------------"
   echo "Status: $status"
   if [ "$status" == "Enabled|Running" ]; then
-    echo "Web UI: http://$ipv4:$port/home/"
+    echo "Web UI: $url"
     echo
     echo "Username: $username"
     echo "Password: $password"

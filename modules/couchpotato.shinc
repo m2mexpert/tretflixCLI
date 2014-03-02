@@ -119,13 +119,19 @@ function couchpotato__show_config() {
   username=$(couchpotato__get_username)
   password=$(couchpotato__get_password)
   port=$(couchpotato__get_port)
-  apikey=$(couchpotato__get_apikey)  
+  apikey=$(couchpotato__get_apikey) 
+  
+  if echo "$(proxy__get_status)" | egrep -q "^Enabled|Running$"; then
+    url="http://$ipv4/couchpotato"
+  else
+    url="http://$ipv4:$port/"
+  fi
   
   echo "CouchPotato Config:"
   echo "----------------------------"
   echo "Status: $status"
   if [ "$status" == "Enabled|Running" ]; then
-    echo "Web UI: http://$ipv4:$port/"
+    echo "Web UI: $url"
     echo
     echo "Username: $username"
     echo "Password: $password"

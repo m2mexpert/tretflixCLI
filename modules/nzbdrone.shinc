@@ -120,12 +120,18 @@ function nzbdrone__show_config() {
   password=$(nzbdrone__get_password)
   port=$(nzbdrone__get_port)
   apikey=$(nzbdrone__get_apikey)
+  
+  if echo "$(proxy__get_status)" | egrep -q "^Enabled|Running$"; then
+    url="http://$ipv4/nzbdrone"
+  else
+    url="http://$ipv4:$port/"
+  fi
 
   echo "NzbDrone Config:"
   echo "----------------------------"
   echo "Status: $status"
   if [ "$status" == "Enabled|Running" ]; then
-    echo "Web UI: http://$ipv4:$port/"
+    echo "Web UI: $url"
     echo
     echo "Username: $username"
     echo "Password: $password"

@@ -119,12 +119,18 @@ function headphones__show_config() {
   password=$(headphones__get_password)
   port=$(headphones__get_port)
   apikey=$(headphones__get_apikey)
+  
+  if echo "$(proxy__get_status)" | egrep -q "^Enabled|Running$"; then
+    url="http://$ipv4/headphones"
+  else
+    url="http://$ipv4:$port/"
+  fi
 
   echo "Headphones Config:"
   echo "----------------------------"
   echo "Status: $status"
   if [ "$status" == "Enabled|Running" ]; then
-    echo "Web UI: http://$ipv4:$port/"
+    echo "Web UI: $url"
     echo
     echo "Username: $username"
     echo "Password: $password"
