@@ -166,7 +166,7 @@ function sabnzbd__set_apikey() {
 function sabnzbd__set_couchpotato_category() {
   sabnzbd__stop
   
-	if ! egrep "\[\[couchpotato\]\]" $sabnzbdConfig; then
+	if ! egrep -q "\[\[couchpotato\]\]" $sabnzbdConfig; then
 		sed -i '/^\[categories\].*/a \
 			[[couchpotato]]\npriority = -100 pp = ""\nname = couchpotato\nscript = Default\nnewzbin = ""\ndir = couchpotato' $sabnzbdConfig
 	fi
@@ -180,7 +180,7 @@ function sabnzbd__set_couchpotato_category() {
 function sabnzbd__set_headphones_category() {
   sabnzbd__stop
   
-	if ! egrep "\[\[headphones\]\]" $sabnzbdConfig; then
+	if ! egrep -q "\[\[headphones\]\]" $sabnzbdConfig; then
 		sed -i '/^\[categories\].*/a \
 			[[headphones]]\npriority = -100 pp = ""\nname = headphones\nscript = Default\nnewzbin = ""\ndir = headphones' $sabnzbdConfig
 	fi
@@ -194,7 +194,7 @@ function sabnzbd__set_headphones_category() {
 function sabnzbd__set_nzbdrone_category() {
   sabnzbd__stop
   
-	if ! egrep "\[\[nzbdrone\]\]" $sabnzbdConfig; then
+	if ! egrep -q "\[\[nzbdrone\]\]" $sabnzbdConfig; then
 		sed -i '/^\[categories\].*/a \
 			[[nzbdrone]]\npriority = -100 pp = ""\nname = nzbdrone\nscript = Default\nnewzbin = ""\ndir = nzbdrone' $sabnzbdConfig  
 	fi
@@ -208,7 +208,7 @@ function sabnzbd__set_nzbdrone_category() {
 function sabnzbd__set_sickbeard_category() {
   sabnzbd__stop
   
-	if ! egrep "\[\[sickbeard\]\]" $sabnzbdConfig; then
+	if ! egrep -q "\[\[sickbeard\]\]" $sabnzbdConfig; then
 		sed -i '/^\[categories\].*/a \
 			[[sickbeard]]\npriority = -100 pp = ""\nname = sickbeard\nscript = Default\nnewzbin = ""\ndir = sickbeard' $sabnzbdConfig  
 	fi

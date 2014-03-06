@@ -213,6 +213,14 @@ function sickbeard__set_sabnzbd_apikey() {
   sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_apikey .*/sab_apikey = '$apikey'/g}}' $sickbeardConfig
 }
 
+function sickbeard__set_sabnzbd_category() {
+  category="$1"
+  category=$(echo "$category" | sed 's/\//\\\//g')
+
+  sickbeard__stop
+  sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_category .*/sab_category = '$category'/g}}' $sickbeardConfig
+}
+
 function sickbeard__set_plexserver_enabled() {
   enabled="1"
 

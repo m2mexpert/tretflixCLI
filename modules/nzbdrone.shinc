@@ -248,7 +248,7 @@ function nzbdrone__set_sabnzbd_settings() {
   sqlite3 $nzbdroneDB "UPDATE DownloadClients SET Settings='$settings' WHERE Name='Sabnzbd' AND Implementation='Sabnzbd'"
 }
 
-function nzbdrone__set_plexserver_onoff() {
+function nzbdrone__set_plexserver_enabled() {
 	if [[ -z $(nzbdrone__get_plexserver_settings) ]]; then
 	  # Build "Settings" for a new Plex Media Server record
 	  settings="

@@ -447,9 +447,6 @@ function config__wizard() {
     if [ "$sabnzbdAction" == "Enable" ]; then
       headphones__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
     fi
-    if [ "$plexserverAction" == "Enable" ]; then
-      headphones__config_plexserver
-    fi
     if [ "$proxyAction" == "Enable" ]; then
       headphones__config_proxy
     fi
@@ -565,13 +562,13 @@ function config__wizard() {
       sabnzbd__set_couchpotato_category
     fi
     if [ "$headphonesAction" == "Enable" ]; then
-      sabnzbd__set_couchpotato_category
+      sabnzbd__set_headphones_category
     fi
     if [ "$nzbdroneAction" == "Enable" ]; then
-      sabnzbd__set_couchpotato_category
+      sabnzbd__set_nzbdrone_category
     fi
     if [ "$sickbeardAction" == "Enable" ]; then
-      sabnzbd__set_couchpotato_category
+      sabnzbd__set_sickbeard_category
     fi
 
 		# Start the app
