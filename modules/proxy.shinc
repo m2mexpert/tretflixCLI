@@ -85,7 +85,10 @@ function proxy__stop() {
 # ---------------------------------------------------------------------------------------
 
 function proxy__set_couchpotato_location() {
-	host="$1"
+	port="$1"
+	host="$2"
+	
+	port=$(echo "$port" | sed 's/\//\\\//g')
 	host=$(echo "$host" | sed 's/\//\\\//g')
 	
 	if ! grep -q "<Location /couchpotato>" "$proxyConfig"; then
@@ -94,8 +97,8 @@ function proxy__set_couchpotato_location() {
       order deny,allow
       deny from all
       allow from all
-      ProxyPass http://$host/couchpotato
-      ProxyPassReverse http://$host/couchpotato
+      ProxyPass http://$host:$port/couchpotato
+      ProxyPassReverse http://$host:$port/couchpotato
       </Location>"
       
     location=$(echo "$location" | sed -e 's/^[ \t]*//')
@@ -110,7 +113,10 @@ function proxy__set_couchpotato_location() {
 }
 
 function proxy__set_headphones_location() {
-	host="$1"
+	port="$1"
+	host="$2"
+	
+	port=$(echo "$port" | sed 's/\//\\\//g')
 	host=$(echo "$host" | sed 's/\//\\\//g')
 	
 	if ! grep -q "<Location /headphones>" "$proxyConfig"; then
@@ -119,8 +125,8 @@ function proxy__set_headphones_location() {
       order deny,allow
       deny from all
       allow from all
-      ProxyPass http://$host/headphones
-      ProxyPassReverse http://$host/headphones
+      ProxyPass http://$host:$port/headphones
+      ProxyPassReverse http://$host:$port/headphones
       </Location>"
       
     location=$(echo "$location" | sed -e 's/^[ \t]*//')
@@ -135,7 +141,10 @@ function proxy__set_headphones_location() {
 }
 
 function proxy__set_nzbdrone_location() {
-	host="$1"
+	port="$1"
+	host="$2"
+	
+	port=$(echo "$port" | sed 's/\//\\\//g')
 	host=$(echo "$host" | sed 's/\//\\\//g')
 	
 	if ! grep -q "<Location /nzbdrone>" "$proxyConfig"; then
@@ -144,8 +153,8 @@ function proxy__set_nzbdrone_location() {
       order deny,allow
       deny from all
       allow from all
-      ProxyPass http://$host/nzbdrone
-      ProxyPassReverse http://$host/nzbdrone
+      ProxyPass http://$host:$port/nzbdrone
+      ProxyPassReverse http://$host:$port/nzbdrone
       </Location>"
       
     location=$(echo "$location" | sed -e 's/^[ \t]*//')
@@ -160,7 +169,10 @@ function proxy__set_nzbdrone_location() {
 }
 
 function proxy__set_sabnzbd_location() {
-	host="$1"
+	port="$1"
+	host="$2"
+	
+	port=$(echo "$port" | sed 's/\//\\\//g')
 	host=$(echo "$host" | sed 's/\//\\\//g')
 	
 	if ! grep -q "<Location /sabnzbd>" "$proxyConfig"; then
@@ -169,8 +181,8 @@ function proxy__set_sabnzbd_location() {
       order deny,allow
       deny from all
       allow from all
-      ProxyPass http://$host/sabnzbd
-      ProxyPassReverse http://$host/sabnzbd
+      ProxyPass http://$host:$port/sabnzbd
+      ProxyPassReverse http://$host:$port/sabnzbd
       </Location>"
       
     location=$(echo "$location" | sed -e 's/^[ \t]*//')
@@ -185,7 +197,10 @@ function proxy__set_sabnzbd_location() {
 }
 
 function proxy__set_sickbeard_location() {
-	host="$1"
+	port="$1"
+	host="$2"
+	
+	port=$(echo "$port" | sed 's/\//\\\//g')
 	host=$(echo "$host" | sed 's/\//\\\//g')
 	
 	if ! grep -q "<Location /sickbeard>" "$proxyConfig"; then
@@ -194,8 +209,8 @@ function proxy__set_sickbeard_location() {
       order deny,allow
       deny from all
       allow from all
-      ProxyPass http://$host/sickbeard
-      ProxyPassReverse http://$host/sickbeard
+      ProxyPass http://$host:$port/sickbeard
+      ProxyPassReverse http://$host:$port/sickbeard
       </Location>"
       
     location=$(echo "$location" | sed -e 's/^[ \t]*//')
@@ -210,7 +225,10 @@ function proxy__set_sickbeard_location() {
 }
 
 function proxy__set_transmission_location() {
-	host="$1"
+	port="$1"
+	host="$2"
+	
+	port=$(echo "$port" | sed 's/\//\\\//g')
 	host=$(echo "$host" | sed 's/\//\\\//g')
 	
 	if ! grep -q "<Location /transmission>" "$proxyConfig"; then
@@ -219,8 +237,8 @@ function proxy__set_transmission_location() {
       order deny,allow
       deny from all
       allow from all
-      ProxyPass http://$host/transmission
-      ProxyPassReverse http://$host/transmission
+      ProxyPass http://$host:$port/transmission
+      ProxyPassReverse http://$host:$port/transmission
       </Location>"
       
     location=$(echo "$location" | sed -e 's/^[ \t]*//')
