@@ -4,6 +4,10 @@ if test "${nzbdrone__imported+defined}" == "defined"; then
 fi
 nzbdrone__imported=1
 
+
+# Service Status & App Config Output
+# ---------------------------------------------------------------------------------------
+
 function nzbdrone__get_status() {
   if service nzbdrone status 2>&1 | grep -q "unrecognized service"; then
     status="Not Installed"
@@ -19,108 +23,6 @@ function nzbdrone__get_status() {
     status="Disabled|Stopped"
   fi
   echo "$status"
-}
-
-function nzbdrone__enable() {
-  if echo "$(nzbdrone__get_status)" | grep -q "^Disabled"; then
-    echo "* Enabling NzbDrone"
-    rm -v /etc/init/nzbdrone.override
-  fi
-}
-
-function nzbdrone__disable() {
-  if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-    echo "* Disabling NzbDrone"
-    tar xf $configBundle --strip-components 2 -C /etc/init/ config/init/nzbdrone.override
-    echo "added \`/etc/init/nzbdrone.override'"
-  fi
-}
-
-function nzbdrone__start() {
-  if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-    for i in {1..3}; do
-      if [ $i -gt 1 ]; then
-        sleep 2
-      fi
-      if [ "$(nzbdrone__get_status)" != "Enabled|Running" ]; then
-        service nzbdrone start
-      else
-        break
-      fi
-    done
-  fi
-}
-
-function nzbdrone__stop() {
-  for i in {1..3}; do
-    if [ $i -gt 1 ]; then
-      sleep 2
-    fi
-    if [ "$(nzbdrone__get_status)" == "Enabled|Running" ]; then
-      service nzbdrone stop
-    else
-      break
-    fi
-  done
-}
-
-function nzbdrone__set_username() {
-  username="$1"
-
-  sed -i 's#\(<Username>\).*\(</Username>\)#\1'$username'\2#g' $nzbdroneConfig
-}
-
-function nzbdrone__set_password() {
-  password="$1"
-
-  sed -i 's#\(<Password>\).*\(</Password>\)#\1'$password'\2#g' $nzbdroneConfig
-}
-
-function nzbdrone__set_port() {
-  port="$1"
-
-  sed -i 's#\(<Port>\).*\(</Port>\)#\1'$port'\2#g' $nzbdroneConfig
-}
-
-function nzbdrone__set_apikey() {
-  apikey="$1"
-
-  sed -i 's#\(<ApiKey>\).*\(</ApiKey>\)#\1'$apikey'\2#g' $nzbdroneConfig
-}
-
-function nzbdrone__set_urlbase() {
-  urlbase="nzbdrone"
-  
-   if grep -A 1 "<UrlBase>$" $nzbdroneConfig | grep -q "</UrlBase>$"; then
-     sed -i '/<\/UrlBase>$/d' $nzbdroneConfig
-     sed -i 's/<UrlBase>$/<UrlBase><\/UrlBase>/' $nzbdroneConfig
-    fi
-  
-  sed -i 's#\(<UrlBase>\).*\(</UrlBase>\)#\1'$urlbase'\2#g' $nzbdroneConfig
-}
-
-function nzbdrone__get_username() {
-  username=$(grep "<Username>.*</Username>" $nzbdroneConfig | awk -F "[<>]" '{ print $3 }')
-  
-  echo "$username"
-}
-
-function nzbdrone__get_password() {
-  password=$(grep "<Password>.*</Password>" $nzbdroneConfig | awk -F "[<>]" '{ print $3 }')
-  
-  echo "$password"
-}
-
-function nzbdrone__get_port() {
-  port=$(grep "<Port>.*</Port>" $nzbdroneConfig | awk -F "[<>]" '{ print $3 }')
-  
-  echo "$port"
-}
-
-function nzbdrone__get_apikey() {
-  apikey=$(grep "<ApiKey>.*</ApiKey>" $nzbdroneConfig | awk -F "[<>]" '{ print $3 }')
-  
-  echo "$apikey"
 }
 
 function nzbdrone__show_config() {
@@ -150,6 +52,282 @@ function nzbdrone__show_config() {
   fi
 }
 
+
+# Service Controls
+# ---------------------------------------------------------------------------------------
+
+function nzbdrone__enable() {
+  if echo "$(nzbdrone__get_status)" | grep -q "^Disabled"; then
+    echo "* Enabling NzbDrone"
+    rm -v /etc/init/nzbdrone.override
+  fi
+}
+
+function nzbdrone__disable() {
+  if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+    echo "* Disabling NzbDrone"
+    nzbdrone__stop
+    tar xf $configBundle --strip-components 2 -C /etc/init/ config/init/nzbdrone.override
+    echo "added \`/etc/init/nzbdrone.override'"
+  fi
+}
+
+function nzbdrone__start() {
+  if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+    for i in {1..3}; do
+      if [ $i -gt 1 ]; then
+        sleep 2
+      fi
+      if [ "$(nzbdrone__get_status)" != "Enabled|Running" ]; then
+        service nzbdrone start
+      else
+        break
+      fi
+    done
+  fi
+}
+
+function nzbdrone__stop() {
+  for i in {1..3}; do
+    if [ $i -gt 1 ]; then
+      sleep 2
+    fi
+    if echo "$(nzbdrone__get_status)" | grep -q "Running$"; then
+      service nzbdrone stop
+    else
+      break
+    fi
+  done
+}
+
+
+# Get App Configuration
+# ---------------------------------------------------------------------------------------
+
+function nzbdrone__get_username() {
+  username=$(grep "<Username>.*</Username>" $nzbdroneConfig | awk -F "[<>]" '{ print $3 }')
+  
+  echo "$username"
+}
+
+function nzbdrone__get_password() {
+  password=$(grep "<Password>.*</Password>" $nzbdroneConfig | awk -F "[<>]" '{ print $3 }')
+  
+  echo "$password"
+}
+
+function nzbdrone__get_port() {
+  port=$(grep "<Port>.*</Port>" $nzbdroneConfig | awk -F "[<>]" '{ print $3 }')
+  
+  echo "$port"
+}
+
+function nzbdrone__get_apikey() {
+  apikey=$(grep "<ApiKey>.*</ApiKey>" $nzbdroneConfig | awk -F "[<>]" '{ print $3 }')
+  
+  echo "$apikey"
+}
+
+function nzbdrone__get_sabnzbd_settings() {
+  settings=$(sqlite3 $nzbdroneDB "SELECT Settings from DownloadClients WHERE Name='Sabnzbd' AND Implementation='Sabnzbd'")
+  
+  echo "$settings"
+}
+
+function nzbdrone__get_plexserver_settings() {
+  settings=$(sqlite3 $nzbdroneDB "SELECT Settings from Notifications WHERE Name='Tretflix' AND Implementation='PlexServer'")
+  
+  echo "$settings"
+}
+
+
+# Set App Configuration
+# ---------------------------------------------------------------------------------------
+
+function nzbdrone__set_username() {
+  username="$1"
+  username=$(echo "$username" | sed 's/\//\\\//g')
+
+  nzbdrone__stop
+  sed -i 's#\(<Username>\).*\(</Username>\)#\1'$username'\2#g' $nzbdroneConfig
+}
+
+function nzbdrone__set_password() {
+  password="$1"
+  password=$(echo "$password" | sed 's/\//\\\//g')
+
+  nzbdrone__stop
+  sed -i 's#\(<Password>\).*\(</Password>\)#\1'$password'\2#g' $nzbdroneConfig
+}
+
+function nzbdrone__set_port() {
+  port="$1"
+  port=$(echo "$port" | sed 's/\//\\\//g')
+
+  nzbdrone__stop
+  sed -i 's#\(<Port>\).*\(</Port>\)#\1'$port'\2#g' $nzbdroneConfig
+}
+
+function nzbdrone__set_apikey() {
+  apikey="$1"
+  apikey=$(echo "$apikey" | sed 's/\//\\\//g')
+
+  nzbdrone__stop
+  sed -i 's#\(<ApiKey>\).*\(</ApiKey>\)#\1'$apikey'\2#g' $nzbdroneConfig
+}
+
+function nzbdrone__set_urlbase() {
+  urlbase="nzbdrone"
+  urlbase=$(echo "$urlbase" | sed 's/\//\\\//g')
+
+  nzbdrone__stop
+  if grep -A 1 "<UrlBase>$" $nzbdroneConfig | grep -q "</UrlBase>$"; then
+    sed -i '/<\/UrlBase>$/d' $nzbdroneConfig
+    sed -i 's/<UrlBase>$/<UrlBase><\/UrlBase>/' $nzbdroneConfig
+  fi
+  
+  sed -i 's#\(<UrlBase>\).*\(</UrlBase>\)#\1'$urlbase'\2#g' $nzbdroneConfig
+}
+
+function nzbdrone__set_sabnzbd_enabled() {
+	if [[ -z $(nzbdrone__get_sabnzbd_settings) ]]; then
+		# Build "Settings" for a new SABnzbd record
+		settings="
+		\"host\": \"localhost\",
+		\"port\": 8080,
+		\"apiKey\": \"mjgwnjbhnzm0njk4zmi2mwqzyjnjmjy2\",
+		\"username\": \"admin\",
+		\"password\": \"admin\",
+		\"tvCategory\": \"nzbdrone\",
+		\"recentTvPriority\": 0,
+		\"olderTvPriority\": 0,
+		\"useSsl\": false"
+      
+    # Clean up formatting
+	  settings=$(echo "$settings" | sed '/^$/d' | sed -e 's/^[ \t]*/  /')
+	  settings=$(echo -e "{\n$settings\n}")
+	  
+	  # Add/Insert the new SABnzbd record
+	  nzbdrone__stop
+		sqlite3 $nzbdroneDB "INSERT INTO DownloadClients VALUES(?, 1,'Sabnzbd','Sabnzbd','$settings','SabnzbdSettings',1);"
+	else
+	  # Enable the existing SABnzbd record
+	  nzbdrone__stop
+	  sqlite3 $nzbdroneDB "UPDATE DownloadClients SET Enable='1' WHERE Name='Sabnzbd' AND Implementation='Sabnzbd'"
+	fi
+}
+
+function nzbdrone__set_sabnzbd_settings() {
+	port="$1"
+	apikey="$2"
+	username="$3"
+	password="$4"
+	host="$5"
+	category="$6"
+	
+	port=$(echo "$port" | sed 's/\//\\\//g')
+	apikey=$(echo "$apikey" | sed 's/\//\\\//g')
+	username=$(echo "$username" | sed 's/\//\\\//g')
+	password=$(echo "$password" | sed 's/\//\\\//g')
+	host=$(echo "$host" | sed 's/\//\\\//g')
+	category=$(echo "$category" | sed 's/\//\\\//g')
+	
+  # Get the existing SABnzbd record "Settings"
+	settings=$(nzbdrone__get_sabnzbd_settings)
+	
+	# Modify the existing SABnzbd record "Settings"
+	settings=$(echo "$settings" | sed 's/  "username": ".*",$/  "username": "'$username'",/')
+	settings=$(echo "$settings" | sed 's/  "password": ".*",$/  "password": "'$password'",/')
+	settings=$(echo "$settings" | sed 's/  "host": ".*",$/  "host": "'$host'",/')
+	settings=$(echo "$settings" | sed 's/  "port": .*,$/  "port": '$port',/')
+	settings=$(echo "$settings" | sed 's/  "apiKey": ".*",$/  "apiKey": "'$apikey'",/')
+	settings=$(echo "$settings" | sed 's/  "tvCategory": ".*",$/  "tvCategory": "'$category'",/')
+  
+  # Update the existing SABnzbd record w/ the modified "Settings"
+  nzbdrone__stop
+  sqlite3 $nzbdroneDB "UPDATE DownloadClients SET Settings='$settings' WHERE Name='Sabnzbd' AND Implementation='Sabnzbd'"
+}
+
+function nzbdrone__set_plexserver_onoff() {
+	if [[ -z $(nzbdrone__get_plexserver_settings) ]]; then
+	  # Build "Settings" for a new Plex Media Server record
+	  settings="
+		\"host\": \"localhost\",
+		\"port\": 32400,
+		\"updateLibrary\": true,
+		\"isValid\": true"
+      
+    # Clean up formatting
+	  settings=$(echo "$settings" | sed '/^$/d' | sed -e 's/^[ \t]*/  /')
+	  settings=$(echo -e "{\n$settings\n}")
+	  
+	  # Add/Insert the new Plex Media Server record
+	  nzbdrone__stop
+		sqlite3 $nzbdroneDB "INSERT INTO Notifications VALUES(?,'Tretflix',1,1,'$settings','PlexServer','PlexServerSettings',1);"
+	fi
+}
+
+function nzbdrone__set_plexserver_settings() {  
+	port="$1"
+	host="$2"
+	
+	port=$(echo "$port" | sed 's/\//\\\//g')
+	host=$(echo "$host" | sed 's/\//\\\//g')
+	
+  # Get the existing Plex Media Server record "Settings"
+	settings=$(nzbdrone__get_plexserver_settings)
+	
+	# Modify the existing Plex Media Server record "Settings"
+	settings=$(echo "$settings" | sed 's/  "host": ".*",$/  "host": "'$host'",/')
+	settings=$(echo "$settings" | sed 's/  "port": .*,$/  "port": '$port',/')
+	settings=$(echo "$settings" | sed 's/  "updateLibrary": .*,$/  "updateLibrary": 'true'/') 
+  
+  # Update the existing Plex Media Server record w/ the modified "Settings"
+  nzbdrone__stop
+  sqlite3 $nzbdroneDB "UPDATE Notifications SET Settings='$settings' WHERE Name='Tretflix' AND Implementation='PlexServer'"
+}
+
+
+# Enable, Disable & Configure Supporting Apps
+# ---------------------------------------------------------------------------------------
+
+# SABnzbd Section
+# ---------------------------
+
+function nzbdrone__config_sabnzbd() {
+	port="$1"
+	apikey="$2"
+	username="$3"
+	password="$4"	
+	host="localhost"
+	category="nzbdrone"
+	
+	nzbdrone__set_sabnzbd_enabled
+	nzbdrone__set_sabnzbd_settings "$port" "$apikey" "$username" "$password" "$host" "$category"
+}
+
+# Plex Media Server Section
+# ---------------------------
+
+function nzbdrone__config_plexserver() {
+  port="32400"
+  host="localhost"
+  
+	nzbdrone__set_plexserver_enabled
+	nzbdrone__set_plexserver_settings "$port" "$host"
+}
+
+# Reverse Proxy Section
+# ---------------------------
+
+function nzbdrone__config_proxy() {
+  nzbdrone__set_urlbase "nzbdrone"
+}
+
+
+# Install, Configure & Upgrade
+# ---------------------------------------------------------------------------------------
+
 function nzbdrone__install() {
   echo "* Installing NzbDrone"
   
@@ -162,52 +340,54 @@ function nzbdrone__install() {
     apt-get update
   fi
   
-  # Install NzbDrone (and dependencies)
-  apt-get -q -y install nzbdrone sqlite3
+  # Install Dependencies (Required for editing the DB)
+  apt-get -q -y install sqlite3
   
-  # Stop and disable NzbDrone (If necessary)
+  # Install NzbDrone
+  apt-get -q -y install nzbdrone
+  
+  # Stop and Disable, apt-get install sometimes automatically enables and starts apps
   nzbdrone__stop
   nzbdrone__disable
   
-  # Copy runlevel config files into init
-  if ! tools__path_exists "/etc/init/nzbdrone.conf"; then
-    tar xf $configBundle --strip-components 2 -C /etc/init/ config/init/nzbdrone.conf
-  fi
-  
-  # Create the sabnzbd+ temp dir for nzbdrone downloads
-  if ! tools__path_exists "/opt/tretflix/tmp/sabnzbdplus/nzbdrone"; then
-    sudo su -c -u $osUser \
-      "mkdir /opt/tretflix/tmp/sabnzbdplus/nzbdrone"
-  fi
-  
-  # Copy the app data dir into appdata/
-  if ! tools__path_exists "/opt/tretflix/appdata/nzbdrone"; then
+  # Copy/Replace the init file
+  tar xf $configBundle --strip-components 2 -C /etc/init/ config/init/nzbdrone.conf
+
+  # Copy the config/data directory into appdata
+  if [ ! -d "$nzbdroneData" ]; then
     sudo su -c -u $osUser \
       "tar xf $appdataBundle --strip-components 1 -C $tretflixPath/appdata/ appdata/nzbdrone"
   fi
   
-  # Create a symbolic link for NzbDrone config (Can't configure appdata dir)
-  if ! tools__path_exists "/home/sysadmin/.config/NzbDrone"; then
-  
-    # Create the ~/.config directory
-    if ! tools__path_exists "/home/sysadmin/.config"; then
+  # Create a Symlink to the appdata directory
+  if [ -d "/home/$osUser/.config/NzbDrone" ]; then
+    # If NzbDrone appdata directory exists at the default path, move it and link to the tretflix appdata path
+    if [ "$(realpath /home/$osUser/.config/NzbDrone)" != "$nzbdroneData" ]; then
       sudo su -c -u $osUser \
-        "mkdir /home/sysadmin/.config"
+        "mv /home/$osUser/.config/NzbDrone /home/$osUser/NzbDrone.tretflix_backup"
+
+      sudo su -c -u $osUser \
+        "ln -s $nzbdroneData /home/$osUser/.config/NzbDrone"                
+    fi
+    
+  else
+    # Create the ~/.config directory if necessary
+    if [ ! -d "/home/$osUser/.config" ]; then
+      sudo su -c -u $osUser \
+        "mkdir /home/$osUser/.config"
     fi
     
     # Create the symbolic link in ~/.config
     sudo su -c -u $osUser \
-      "ln -s /opt/tretflix/appdata/nzbdrone/ /home/sysadmin/.config/NzbDrone"
+      "ln -s $nzbdroneData /home/$osUser/.config/NzbDrone"
   fi
+}
 
-  # Add the nzbdrone category to the SABnzbd config
-  if ! egrep "^\[\[nzbdrone\]\]" $sabnzbdConfig; then
-    sabnzbd__stop
-    echo "* Updating SABnzbd+ Config"
-    sed -i '/^\[categories\].*/a \
-      [[nzbdrone]]\npriority = -100 pp = ""\nname = nzbdrone\nscript = Default\nnewzbin = ""\ndir = nzbdrone' $sabnzbdConfig
-    sabnzbd__start
-  fi
+function nzbdrone__upgrade() {  
+  echo "* Upgrading NzbDrone"
+  
+  nzbdrone__stop
+  apt-get -y install nzbdrone
 }
 
 function nzbdrone__version_check() {
@@ -223,49 +403,10 @@ function nzbdrone__version_check() {
   fi
 }
 
-function nzbdrone__upgrade() {
-  echo "* Upgrading NzbDrone"
-  apt-get -y install nzbdrone
-}
 
-function nzbdrone__sabnzbd_sync() {
-  if [ "$(sabnzbd__get_status)" != "Not Installed" ]; then
-		username=$(sabnzbd__get_username)
-		password=$(sabnzbd__get_password)
-		port=$(sabnzbd__get_port)
-		apikey=$(sabnzbd__get_apikey)
-	
-		nzbdrone__set_sabnzbd_username "$username"
-		nzbdrone__set_sabnzbd_password "$password"
-		nzbdrone__set_sabnzbd_port "$port"
-		nzbdrone__set_sabnzbd_apikey "$apikey"
-	fi
-}
-
-function nzbdrone__set_sabnzbd_username() {
-  username="$1"
-  
-  sqlite3 $nzbdroneDB "UPDATE Config SET value='$username' WHERE key='sabusername'"
-}
-
-function nzbdrone__set_sabnzbd_password() {
-  password="$1"
- 
-  sqlite3 $nzbdroneDB "UPDATE Config SET value='$password' WHERE key='sabpassword'"
-}
-
-function nzbdrone__set_sabnzbd_port() {
-  port="$1"
-
- sqlite3 $nzbdroneDB "UPDATE Config SET value='$port' WHERE key='sabport'"
-}
-
-function nzbdrone__set_sabnzbd_apikey() {
-  apikey="$1"
-  
-  sqlite3 $nzbdroneDB "UPDATE Config SET value='$apikey' WHERE key='sabapikey'"
-}
+# Misc, Extras
+# ---------------------------------------------------------------------------------------
 
 function nzbdrone__fixit() {
-  echo "Coming Soon..."
+  echo "Coming Soon..." > /dev/null
 }

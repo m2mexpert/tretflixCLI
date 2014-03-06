@@ -4,6 +4,10 @@ if test "${sabnzbd__imported+defined}" == "defined"; then
 fi
 sabnzbd__imported=1
 
+
+# Service Status & App Config Output
+# ---------------------------------------------------------------------------------------
+
 function sabnzbd__get_status() {
   if service sabnzbdplus status 2>&1 | grep -q "unrecognized service"; then
     status="Not Installed"
@@ -19,96 +23,6 @@ function sabnzbd__get_status() {
     status="Disabled|Stopped"
   fi
   echo "$status"
-}
-
-function sabnzbd__enable() {
-  if echo "$(sabnzbd__get_status)" | grep -q "^Disabled"; then
-    echo "* Enabling SABnzbd+"
-    update-rc.d sabnzbdplus defaults
-  fi
-}
-
-function sabnzbd__disable() {
-  if echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
-    echo "* Disabling SABnzbd+"
-    update-rc.d -f sabnzbdplus remove
-  fi
-}
-
-function sabnzbd__start() {
-  if echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
-    for i in {1..3}; do
-      if [ $i -gt 1 ]; then
-        sleep 2
-      fi
-      if [ "$(sabnzbd__get_status)" != "Enabled|Running" ]; then
-        service sabnzbdplus start
-      else
-        break
-      fi
-    done
-  fi
-}
-
-function sabnzbd__stop() {
-  for i in {1..3}; do
-    if [ $i -gt 1 ]; then
-      sleep 2
-    fi
-    if [ "$(sabnzbd__get_status)" == "Enabled|Running" ]; then
-      service sabnzbdplus stop
-    else
-      break
-    fi
-  done
-}
-
-function sabnzbd__set_username() {
-  username="$1"
-
-  sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/^[ \t]*username .*/username = '$username'/g}}' $sabnzbdConfig
-}
-
-function sabnzbd__set_password() {
-  password="$1"
-
-  sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/^[ \t]*password .*/password = '$password'/g}}' $sabnzbdConfig
-}
-
-function sabnzbd__set_port() {
-  port="$1"
-  
-  sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/^[ \t]*port .*/port = '$port'/g}}' $sabnzbdConfig
-}
-
-function sabnzbd__set_apikey() {
-  apikey="$1"
-
-  sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/^[ \t]*api_key .*/api_key = '$apikey'/g}}' $sabnzbdConfig
-}
-
-function sabnzbd__get_username() {
-  username=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdConfig | egrep "(^|^.* )username " | awk '{ print $3 }')
-  
-  echo "$username"
-}
-
-function sabnzbd__get_password() {
-  password=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdConfig | egrep "(^|^.* )password " | awk '{ print $3 }')
-  
-  echo "$password"
-}
-
-function sabnzbd__get_port() {
-  port=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdConfig | egrep "(^|^.* )port " | awk '{ print $3 }')
-  
-  echo "$port"
-}
-
-function sabnzbd__get_apikey() {
-  apikey=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdConfig | egrep "(^|^.* )api_key " | awk '{ print $3 }')
-  
-  echo "$apikey"
 }
 
 function sabnzbd__show_config() {
@@ -138,8 +52,254 @@ function sabnzbd__show_config() {
   fi
 }
 
+
+# Service Controls
+# ---------------------------------------------------------------------------------------
+
+function sabnzbd__enable() {
+  if echo "$(sabnzbd__get_status)" | grep -q "^Disabled"; then
+    echo "* Enabling SABnzbd+"
+    update-rc.d sabnzbdplus defaults
+  fi
+}
+
+function sabnzbd__disable() {
+  if echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
+    echo "* Disabling SABnzbd+"
+    sabnzbd__stop
+    update-rc.d -f sabnzbdplus remove
+  fi
+}
+
+function sabnzbd__start() {
+  if echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
+    for i in {1..3}; do
+      if [ $i -gt 1 ]; then
+        sleep 2
+      fi
+      if [ "$(sabnzbd__get_status)" != "Enabled|Running" ]; then
+        service sabnzbdplus start
+      else
+        break
+      fi
+    done
+  fi
+}
+
+function sabnzbd__stop() {
+  for i in {1..3}; do
+    if [ $i -gt 1 ]; then
+      sleep 2
+    fi
+    if echo "$(sabnzbd__get_status)" | grep -q "Running$"; then
+      service sabnzbdplus stop
+    else
+      break
+    fi
+  done
+}
+
+
+# Get App Configuration
+# ---------------------------------------------------------------------------------------
+
+function sabnzbd__get_username() {
+  username=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdConfig | egrep "(^|^.* )username " | awk '{ print $3 }')
+  
+  echo "$username"
+}
+
+function sabnzbd__get_password() {
+  password=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdConfig | egrep "(^|^.* )password " | awk '{ print $3 }')
+  
+  echo "$password"
+}
+
+function sabnzbd__get_port() {
+  port=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdConfig | egrep "(^|^.* )port " | awk '{ print $3 }')
+  
+  echo "$port"
+}
+
+function sabnzbd__get_apikey() {
+  apikey=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdConfig | egrep "(^|^.* )api_key " | awk '{ print $3 }')
+  
+  echo "$apikey"
+}
+
+
+# Set App Configuration
+# ---------------------------------------------------------------------------------------
+
+function sabnzbd__set_username() {
+  username="$1"
+  username=$(echo "$username" | sed 's/\//\\\//g')
+  
+  sabnzbd__stop
+  sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/^[ \t]*username .*/username = '$username'/g}}' $sabnzbdConfig
+}
+
+function sabnzbd__set_password() {
+  password="$1"
+  password=$(echo "$password" | sed 's/\//\\\//g')
+  
+  sabnzbd__stop
+  sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/^[ \t]*password .*/password = '$password'/g}}' $sabnzbdConfig
+}
+
+function sabnzbd__set_port() {
+  port="$1"
+  port=$(echo "$port" | sed 's/\//\\\//g')
+  
+  sabnzbd__stop
+  sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/^[ \t]*port .*/port = '$port'/g}}' $sabnzbdConfig
+}
+
+function sabnzbd__set_apikey() {
+  apikey="$1"
+  apikey=$(echo "$apikey" | sed 's/\//\\\//g')
+  
+  sabnzbd__stop
+  sed -i -e '/^\[misc\]/,/^\[/{/^\[misc\]/n;/^\[/!{s/^[ \t]*api_key .*/api_key = '$apikey'/g}}' $sabnzbdConfig
+}
+
+function sabnzbd__set_couchpotato_category() {
+  sabnzbd__stop
+  
+	if ! egrep "\[\[couchpotato\]\]" $sabnzbdConfig; then
+		sed -i '/^\[categories\].*/a \
+			[[couchpotato]]\npriority = -100 pp = ""\nname = couchpotato\nscript = Default\nnewzbin = ""\ndir = couchpotato' $sabnzbdConfig
+	fi
+	
+	if [ ! -d "/opt/tretflix/tmp/sabnzbdplus/couchpotato" ]; then
+		sudo su -c -u $osUser \
+			"mkdir -p /opt/tretflix/tmp/sabnzbdplus/couchpotato"
+	fi
+}
+
+function sabnzbd__set_headphones_category() {
+  sabnzbd__stop
+  
+	if ! egrep "\[\[headphones\]\]" $sabnzbdConfig; then
+		sed -i '/^\[categories\].*/a \
+			[[headphones]]\npriority = -100 pp = ""\nname = headphones\nscript = Default\nnewzbin = ""\ndir = headphones' $sabnzbdConfig
+	fi
+
+	if [ ! -d "/opt/tretflix/tmp/sabnzbdplus/headphones" ]; then
+		sudo su -c -u $osUser \
+			"mkdir -p /opt/tretflix/tmp/sabnzbdplus/headphones"
+	fi
+}
+
+function sabnzbd__set_nzbdrone_category() {
+  sabnzbd__stop
+  
+	if ! egrep "\[\[nzbdrone\]\]" $sabnzbdConfig; then
+		sed -i '/^\[categories\].*/a \
+			[[nzbdrone]]\npriority = -100 pp = ""\nname = nzbdrone\nscript = Default\nnewzbin = ""\ndir = nzbdrone' $sabnzbdConfig  
+	fi
+
+	if [ ! -d "/opt/tretflix/tmp/sabnzbdplus/nzbdrone" ]; then
+		sudo su -c -u $osUser \
+			"mkdir -p /opt/tretflix/tmp/sabnzbdplus/nzbdrone"
+	fi
+}
+
+function sabnzbd__set_sickbeard_category() {
+  sabnzbd__stop
+  
+	if ! egrep "\[\[sickbeard\]\]" $sabnzbdConfig; then
+		sed -i '/^\[categories\].*/a \
+			[[sickbeard]]\npriority = -100 pp = ""\nname = sickbeard\nscript = Default\nnewzbin = ""\ndir = sickbeard' $sabnzbdConfig  
+	fi
+
+	if [ ! -d "/opt/tretflix/tmp/sabnzbdplus/sickbeard" ]; then
+		sudo su -c -u $osUser \
+			"mkdir -p /opt/tretflix/tmp/sabnzbdplus/sickbeard"
+	fi
+}
+
+
+# Enable, Disable & Configure Supporting Apps
+# ---------------------------------------------------------------------------------------
+
+# CouchPotato Section
+# ---------------------------
+
+function sabnzbd__config_couchpotato() {
+	sabnzbd__set_couchpotato_category
+}
+
+# Headphones Section
+# ---------------------------
+
+function sabnzbd__config_headphones() {
+	sabnzbd__set_headphones_category
+}
+
+# NzbDrone Section
+# ---------------------------
+
+function sabnzbd__config_nzbdrone() {
+	sabnzbd__set_nzbdrone_category
+}
+
+# Sick Beard Section
+# ---------------------------
+
+function sabnzbd__config_sickbeard() {
+	sabnzbd__set_sickbeard_category
+}
+
+
+# Install, Configure & Upgrade
+# ---------------------------------------------------------------------------------------
+
 function sabnzbd__install() {
   echo "* Installing SABnzbd+"
+  
+  # Add the apt repository
+  if [ ! -f "/etc/apt/sources.list.d/jcfp-ppa-precise.list" ]; then
+    add-apt-repository -y ppa:jcfp/ppa
+    
+    # Update apt repository package lists
+    apt-get update
+  fi
+  
+  # Install Dependencies
+  #### Not Needed, apt-get handles this
+  
+  # Install SABnzbd+
+  sudo apt-get -y install sabnzbdplus sabnzbdplus-theme-mobile
+  
+  # Stop and Disable, apt-get install sometimes automatically enables and starts apps
+  sabnzbd__stop
+  sabnzbd__disable
+  
+  # Copy/Replace the init file
+  tar xf $configBundle --strip-components 2 -C /etc/init.d/ config/init.d/sabnzbdplus
+
+  # Copy/Replace the default config file
+  tar xf $configBundle --strip-components 2 -C /etc/default/ config/default/sabnzbdplus
+  
+  # Copy the config/data directory into appdata
+  if [ ! -d "/opt/tretflix/appdata/sabnzbdplus" ]; then
+    sudo su -c -u $osUser \
+      "tar xf $appdataBundle --strip-components 1 -C $tretflixPath/appdata/ appdata/sabnzbdplus"
+  fi
+  
+  # Create the tmp downloads directory
+  if [ ! -d "/opt/tretflix/tmp/sabnzbdplus/incomplete" ]; then
+    sudo su -c -u $osUser \
+      "mkdir -p /opt/tretflix/tmp/sabnzbdplus/incomplete"
+  fi
+}
+
+function sabnzbd__upgrade() {
+  echo "* Upgrading SABnzbd+"
+  
+  sabnzbd__stop
+  apt-get -y install sabnzbdplus
 }
 
 function sabnzbd__version_check() {
@@ -155,10 +315,9 @@ function sabnzbd__version_check() {
   fi
 }
 
-function sabnzbd__upgrade() {
-  echo "* Upgrading SABnzbd+"
-  apt-get -y install sabnzbdplus
-}
+
+# Misc, Extras
+# ---------------------------------------------------------------------------------------
 
 function sabnzbd__fixit() {
   echo "Coming Soon..."

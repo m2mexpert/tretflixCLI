@@ -4,6 +4,10 @@ if test "${couchpotato__imported+defined}" == "defined"; then
 fi
 couchpotato__imported=1
 
+
+# Service Status & App Config Output
+# ---------------------------------------------------------------------------------------
+
 function couchpotato__get_status() {
   if service couchpotato status 2>&1 | grep -q "unrecognized service"; then
     status="Not Installed"
@@ -19,103 +23,6 @@ function couchpotato__get_status() {
     status="Disabled|Stopped"
   fi
   echo "$status"
-}
-
-function couchpotato__enable() {
-  if echo "$(couchpotato__get_status)" | grep -q "^Disabled"; then
-    echo "* Enabling CouchPotato"
-    update-rc.d couchpotato defaults
-  fi
-}
-
-function couchpotato__disable() {
-  if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
-    echo "* Disabling CouchPotato"
-    update-rc.d -f couchpotato remove
-  fi
-}
-
-function couchpotato__start() {
-  if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
-    for i in {1..3}; do
-      if [ $i -gt 1 ]; then
-        sleep 2
-      fi
-      if [ "$(couchpotato__get_status)" != "Enabled|Running" ]; then
-        service couchpotato start
-      else
-        break
-      fi
-    done
-  fi
-}
-
-function couchpotato__stop() {
-  for i in {1..3}; do
-    if [ $i -gt 1 ]; then
-      sleep 2
-    fi
-    if [ "$(couchpotato__get_status)" == "Enabled|Running" ]; then
-      service couchpotato stop
-    else
-      break
-    fi
-  done
-}
-
-function couchpotato__set_username() {
-  username="$1"
-  
-  sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^username .*/username = '$username'/g}}' $couchpotatoConfig
-}
-
-function couchpotato__set_password() {
-  password="$1"
-  passwordmd5=$(echo -n $password | md5sum | awk '{print $1}')
-
-  sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^password .*/password = '$passwordmd5'/g}}' $couchpotatoConfig
-}
-
-function couchpotato__set_port() {
-  port="$1"
-
-  sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^port .*/port = '$port'/g}}' $couchpotatoConfig
-}
-
-function couchpotato__set_apikey() {
-  apikey="$1"
-
-  sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $couchpotatoConfig
-}
-
-function couchpotato__set_urlbase() {
-  urlbase="/couchpotato"
-  
-  sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^url_base .*/url_base = \'$urlbase'/g}}' $couchpotatoConfig
-}
-
-function couchpotato__get_username() {
-  username=$(sed -n '/^\[core\]/,/^\[/p' $couchpotatoConfig | grep "^username " | awk '{ print $3 }')
-  
-  echo "$username"
-}
-
-function couchpotato__get_password() {
-  password="N/A (ENCRYPTED)"
-  
-  echo "$password"
-}
-
-function couchpotato__get_port() {
-  port=$(sed -n '/^\[core\]/,/^\[/p' $couchpotatoConfig | grep "^port " | awk '{ print $3 }')
-  
-  echo "$port"
-}
-
-function couchpotato__get_apikey() {
-  apikey=$(sed -n '/^\[core\]/,/^\[/p' $couchpotatoConfig | grep "^api_key " | awk '{ print $3 }')
-  
-  echo "$apikey"
 }
 
 function couchpotato__show_config() {
@@ -145,8 +52,257 @@ function couchpotato__show_config() {
   fi
 }
 
+
+# Service Controls
+# ---------------------------------------------------------------------------------------
+
+function couchpotato__enable() {
+  if echo "$(couchpotato__get_status)" | grep -q "^Disabled"; then
+    echo "* Enabling CouchPotato"
+    update-rc.d couchpotato defaults
+  fi
+}
+
+function couchpotato__disable() {
+  if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+    echo "* Disabling CouchPotato"
+    couchpotato__stop
+    update-rc.d -f couchpotato remove
+  fi
+}
+
+function couchpotato__start() {
+  if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+    for i in {1..3}; do
+      if [ $i -gt 1 ]; then
+        sleep 2
+      fi
+      if [ "$(couchpotato__get_status)" != "Enabled|Running" ]; then
+        service couchpotato start
+      else
+        break
+      fi
+    done
+  fi
+}
+
+function couchpotato__stop() {
+  for i in {1..3}; do
+    if [ $i -gt 1 ]; then
+      sleep 2
+    fi
+    if echo "$(couchpotato__get_status)" | grep -q "Running$"; then
+      service couchpotato stop
+    else
+      break
+    fi
+  done
+}
+
+
+# Get App Configuration
+# ---------------------------------------------------------------------------------------
+
+function couchpotato__get_username() {
+  username=$(sed -n '/^\[core\]/,/^\[/p' $couchpotatoConfig | grep "^username " | awk '{ print $3 }')
+  
+  echo "$username"
+}
+
+function couchpotato__get_password() {
+  password="N/A (ENCRYPTED)"
+  
+  echo "$password"
+}
+
+function couchpotato__get_port() {
+  port=$(sed -n '/^\[core\]/,/^\[/p' $couchpotatoConfig | grep "^port " | awk '{ print $3 }')
+  
+  echo "$port"
+}
+
+function couchpotato__get_apikey() {
+  apikey=$(sed -n '/^\[core\]/,/^\[/p' $couchpotatoConfig | grep "^api_key " | awk '{ print $3 }')
+  
+  echo "$apikey"
+}
+
+
+# Set App Configuration
+# ---------------------------------------------------------------------------------------
+
+function couchpotato__set_username() {
+  username="$1"
+  username=$(echo "$username" | sed 's/\//\\\//g')
+  
+  couchpotato__stop
+  sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^username .*/username = '$username'/g}}' $couchpotatoConfig
+}
+
+function couchpotato__set_password() {
+  password="$1"
+  passwordmd5=$(echo -n $password | md5sum | awk '{print $1}')
+  passwordmd5=$(echo "$passwordmd5" | sed 's/\//\\\//g')
+
+  couchpotato__stop
+  sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^password .*/password = '$passwordmd5'/g}}' $couchpotatoConfig
+}
+
+function couchpotato__set_port() {
+  port="$1"
+  port=$(echo "$port" | sed 's/\//\\\//g')
+
+  couchpotato__stop
+  sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^port .*/port = '$port'/g}}' $couchpotatoConfig
+}
+
+function couchpotato__set_apikey() {
+  apikey="$1"
+  apikey=$(echo "$apikey" | sed 's/\//\\\//g')
+
+  couchpotato__stop
+  sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $couchpotatoConfig
+}
+
+function couchpotato__set_urlbase() {
+  urlbase="$1"
+  urlbase=$(echo "$urlbase" | sed 's/\//\\\//g')
+
+  couchpotato__stop
+  sed -i -e '/^\[core\]/,/^\[/{/^\[core\]/n;/^\[/!{s/^url_base .*/url_base = '$urlbase'/g}}' $couchpotatoConfig
+}
+
+function couchpotato__set_sabnzbd_enabled() {
+  enabled="1"
+  
+  couchpotato__stop
+  sed -i -e '/^\[sabnzbd\]/,/^\[/{/^\[sabnzbd\]/n;/^\[/!{s/^enabled .*/enabled = '$enabled'/g}}' $couchpotatoConfig
+}
+
+function couchpotato__set_sabnzbd_host() {
+  host="$1"
+  host=$(echo "$host" | sed 's/\//\\\//g')
+
+  couchpotato__stop
+  sed -i -e '/^\[sabnzbd\]/,/^\[/{/^\[sabnzbd\]/n;/^\[/!{s/^host .*/host = '$host'/g}}' $couchpotatoConfig
+}
+
+function couchpotato__set_sabnzbd_apikey() {
+  apikey="$1"
+  apikey=$(echo "$apikey" | sed 's/\//\\\//g')
+  
+  couchpotato__stop
+  sed -i -e '/^\[sabnzbd\]/,/^\[/{/^\[sabnzbd\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $couchpotatoConfig
+}
+
+function couchpotato__set_sabnzbd_category() {
+  category="$1"
+  category=$(echo "$category" | sed 's/\//\\\//g')
+
+  couchpotato__stop
+  sed -i -e '/^\[sabnzbd\]/,/^\[/{/^\[sabnzbd\]/n;/^\[/!{s/^category .*/category = '$category'/g}}' $couchpotatoConfig
+}
+
+function couchpotato__set_plexserver_enabled() {
+  enabled="1"
+  
+  couchpotato__stop
+  sed -i -e '/^\[plex\]/,/^\[/{/^\[plex\]/n;/^\[/!{s/^enabled .*/enabled = '$enabled'/g}}' $couchpotatoConfig
+}
+
+function couchpotato__set_plexserver_host() {
+  host="$1"
+  host=$(echo "$host" | sed 's/\//\\\//g')
+  
+  couchpotato__stop
+  sed -i -e '/^\[plex\]/,/^\[/{/^\[plex\]/n;/^\[/!{s/^host .*/host = '$host'/g}}' $couchpotatoConfig
+}
+
+function couchpotato__set_plexserver_mediaserver() {
+  mediaserver="$1"
+  mediaserver=$(echo "$mediaserver" | sed 's/\//\\\//g')
+  
+  couchpotato__stop
+  sed -i -e '/^\[plex\]/,/^\[/{/^\[plex\]/n;/^\[/!{s/^media_server .*/media_server = '$mediaserver'/g}}' $couchpotatoConfig
+}
+
+
+# Enable, Disable & Configure Supporting Apps
+# ---------------------------------------------------------------------------------------
+
+# SABnzbd Section
+# ---------------------------
+
+function couchpotato__config_sabnzbd() {
+	port="$1"
+	apikey="$2"
+	host="localhost"
+	category="couchpotato"
+	
+	couchpotato__set_sabnzbd_enabled
+	couchpotato__set_sabnzbd_host "$host:$port"
+	couchpotato__set_sabnzbd_apikey "$apikey"
+	couchpotato__set_sabnzbd_category "$category"
+}
+
+# Plex Media Server Section
+# ---------------------------
+
+function couchpotato__config_plexserver() {
+  port="32400"
+  host="localhost"
+  
+  couchpotato__set_plexserver_enabled
+  couchpotato__set_plexserver_host "$host"
+  couchpotato__set_plexserver_mediaserver "$host:$port"
+}
+
+# Reverse Proxy Section
+# ---------------------------
+
+function couchpotato__config_proxy() {
+  urlbase="/couchpotato"
+  
+  couchpotato__set_urlbase "$urlbase"
+}
+
+
+# Install, Configure & Upgrade
+# ---------------------------------------------------------------------------------------
+
 function couchpotato__install() {
   echo "* Installing CouchPotato"
+  
+  # Install Dependencies
+  ##### Coming Soon
+  
+  # Git Clone From the Remote Repository
+  git clone https://github.com/RuudBurger/CouchPotatoServer.git $couchpotatoSource
+  
+  # Fix Permissions
+  chown -R $osUser:$osUser $couchpotatoSource
+  
+  # Copy/Replace the init file
+  tar xf $configBundle --strip-components 2 -C /etc/init.d/ config/init.d/couchpotato
+
+  # Copy/Replace the default config file
+  tar xf $configBundle --strip-components 2 -C /etc/default/ config/default/couchpotato 
+  
+  # Copy the config/data directory into appdata
+  if [ ! -d "$couchpotatoData" ]; then
+    sudo su -c -u $osUser \
+      "tar xf $appdataBundle --strip-components 1 -C $tretflixPath/appdata/ appdata/couchpotato"
+  fi
+}
+
+function couchpotato__upgrade() {
+  echo "* Upgrading CouchPotato"
+
+  couchpotato__stop
+  sudo su -c -u $osUser \
+    "cd $couchpotatoSource && git remote update"
+  sudo su -c -u $osUser \
+    "cd $couchpotatoSource && git pull --all"
 }
 
 function couchpotato__version_check() {
@@ -158,35 +314,9 @@ function couchpotato__version_check() {
   fi
 }
 
-function couchpotato__upgrade() {
-  echo "* Upgrading CouchPotato"
-  sudo su -c -u $osUser \
-    "cd $couchpotatoSource && git remote update"
-  sudo su -c -u $osUser \
-    "cd $couchpotatoSource && git pull --all"
-}
 
-function couchpotato__sabnzbd_sync() {
-  if [ "$(sabnzbd__get_status)" != "Not Installed" ]; then
-		port=$(sabnzbd__get_port)
-		apikey=$(sabnzbd__get_apikey)
-	
-		couchpotato__set_sabnzbd_port "$port"
-		couchpotato__set_sabnzbd_apikey "$apikey"
-	fi
-}
-
-function couchpotato__set_sabnzbd_port() {
-  port="$1"
-
- sed -i -e '/^\[sabnzbd\]/,/^\[/{/^\[sabnzbd\]/n;/^\[/!{s/^host .*/host = localhost:'$port'/g}}' $couchpotatoConfig
-}
-
-function couchpotato__set_sabnzbd_apikey() {
-  apikey="$1"
-  
-  sed -i -e '/^\[sabnzbd\]/,/^\[/{/^\[sabnzbd\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $couchpotatoConfig
-}
+# Misc, Extras
+# ---------------------------------------------------------------------------------------
 
 function couchpotato__fixit() {
   echo "Coming Soon..."

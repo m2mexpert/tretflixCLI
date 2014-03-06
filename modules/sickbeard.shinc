@@ -4,6 +4,10 @@ if test "${sickbeard__imported+defined}" == "defined"; then
 fi
 sickbeard__imported=1
 
+
+# Service Status & App Config Output
+# ---------------------------------------------------------------------------------------
+
 function sickbeard__get_status() {
   if service sickbeard status 2>&1 | grep -q "unrecognized service"; then
     status="Not Installed"
@@ -19,105 +23,6 @@ function sickbeard__get_status() {
     status="Disabled|Stopped"
   fi
   echo "$status"
-}
-
-function sickbeard__enable() {
-  if echo "$(sickbeard__get_status)" | grep -q "^Disabled"; then
-    echo "* Enabling Sick Beard"
-    update-rc.d sickbeard defaults
-  fi
-}
-
-function sickbeard__disable() {
-  if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-    echo "* Disabling Sick Beard"
-    update-rc.d -f sickbeard remove
-  fi
-}
-
-function sickbeard__start() {
-  if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-    for i in {1..3}; do
-      if [ $i -gt 1 ]; then
-        sleep 2
-      fi
-      if [ "$(sickbeard__get_status)" != "Enabled|Running" ]; then
-        service sickbeard start
-      else
-        break
-      fi
-    done
-  fi
-}
-
-function sickbeard__stop() {
-  for i in {1..3}; do
-    if [ $i -gt 1 ]; then
-      sleep 2
-    fi
-    if [ "$(sickbeard__get_status)" == "Enabled|Running" ]; then
-      service sickbeard stop
-    else
-      break
-    fi
-  done
-}
-
-function sickbeard__set_username() {
-  username="$1"
-
-  sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^web_username .*/web_username = '$username'/g}}' $sickbeardConfig
-  sed -i -e '/^\[SickBeard\]/,/^\[/{/^\[SickBeard\]/n;/^\[/!{s/^username.*/username='$username'/g}}' $sickbeardScriptConfig
-}
-
-function sickbeard__set_password() {
-  password="$1"
-
-  sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^web_password .*/web_password = '$password'/g}}' $sickbeardConfig
-  sed -i -e '/^\[SickBeard\]/,/^\[/{/^\[SickBeard\]/n;/^\[/!{s/^password.*/password='$password'/g}}' $sickbeardScriptConfig
-}
-
-function sickbeard__set_port() {
-  port="$1"
-
-  sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^web_port .*/web_port = '$port'/g}}' $sickbeardConfig
-  sed -i -e '/^\[SickBeard\]/,/^\[/{/^\[SickBeard\]/n;/^\[/!{s/^port.*/port='$port'/g}}' $sickbeardScriptConfig
-}
-
-function sickbeard__set_apikey() {
-  apikey="$1"
-
-  sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $sickbeardConfig
-}
-
-function sickbeard__set_urlbase() {
-  urlbase="/sickbeard"
-  
-  sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^web_root .*/web_root = \'$urlbase'/g}}' $sickbeardConfig
-}
-
-function sickbeard__get_username() {
-  username=$(sed -n '/^\[General\]/,/^\[/p' $sickbeardConfig | grep "^web_username " | awk '{ print $3 }')
-  
-  echo "$username"
-}
-
-function sickbeard__get_password() {
-  password=$(sed -n '/^\[General\]/,/^\[/p' $sickbeardConfig | grep "^web_password " | awk '{ print $3 }')
-  
-  echo "$password"
-}
-
-function sickbeard__get_port() {
-  port=$(sed -n '/^\[General\]/,/^\[/p' $sickbeardConfig | grep "^web_port " | awk '{ print $3 }')
-  
-  echo "$port"
-}
-
-function sickbeard__get_apikey() {
-  apikey=$(sed -n '/^\[General\]/,/^\[/p' $sickbeardConfig | grep "^api_key " | awk '{ print $3 }')
-  
-  echo "$apikey"
 }
 
 function sickbeard__show_config() {
@@ -147,8 +52,263 @@ function sickbeard__show_config() {
   fi
 }
 
+
+# Service Controls
+# ---------------------------------------------------------------------------------------
+
+function sickbeard__enable() {
+  if echo "$(sickbeard__get_status)" | grep -q "^Disabled"; then
+    echo "* Enabling Sick Beard"
+    update-rc.d sickbeard defaults
+  fi
+}
+
+function sickbeard__disable() {
+  if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+    echo "* Disabling Sick Beard"
+    sickbeard__stop
+    update-rc.d -f sickbeard remove
+  fi
+}
+
+function sickbeard__start() {
+  if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+    for i in {1..3}; do
+      if [ $i -gt 1 ]; then
+        sleep 2
+      fi
+      if [ "$(sickbeard__get_status)" != "Enabled|Running" ]; then
+        service sickbeard start
+      else
+        break
+      fi
+    done
+  fi
+}
+
+function sickbeard__stop() {
+  for i in {1..3}; do
+    if [ $i -gt 1 ]; then
+      sleep 2
+    fi
+    if echo "$(sickbeard__get_status)" | grep -q "Running$"; then
+      service sickbeard stop
+    else
+      break
+    fi
+  done
+}
+
+
+# Get App Configuration
+# ---------------------------------------------------------------------------------------
+
+function sickbeard__get_username() {
+  username=$(sed -n '/^\[General\]/,/^\[/p' $sickbeardConfig | grep "^web_username " | awk '{ print $3 }')
+  
+  echo "$username"
+}
+
+function sickbeard__get_password() {
+  password=$(sed -n '/^\[General\]/,/^\[/p' $sickbeardConfig | grep "^web_password " | awk '{ print $3 }')
+  
+  echo "$password"
+}
+
+function sickbeard__get_port() {
+  port=$(sed -n '/^\[General\]/,/^\[/p' $sickbeardConfig | grep "^web_port " | awk '{ print $3 }')
+  
+  echo "$port"
+}
+
+function sickbeard__get_apikey() {
+  apikey=$(sed -n '/^\[General\]/,/^\[/p' $sickbeardConfig | grep "^api_key " | awk '{ print $3 }')
+  
+  echo "$apikey"
+}
+
+
+# Set App Configuration
+# ---------------------------------------------------------------------------------------
+
+function sickbeard__set_username() {
+  username="$1"
+  username=$(echo "$username" | sed 's/\//\\\//g')
+  
+  sickbeard__stop
+  sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^web_username .*/web_username = '$username'/g}}' $sickbeardConfig
+  sed -i -e '/^\[SickBeard\]/,/^\[/{/^\[SickBeard\]/n;/^\[/!{s/^username.*/username='$username'/g}}' $sickbeardScriptConfig
+}
+
+function sickbeard__set_password() {
+  password="$1"
+  password=$(echo "$password" | sed 's/\//\\\//g')
+
+  sickbeard__stop
+  sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^web_password .*/web_password = '$password'/g}}' $sickbeardConfig
+  sed -i -e '/^\[SickBeard\]/,/^\[/{/^\[SickBeard\]/n;/^\[/!{s/^password.*/password='$password'/g}}' $sickbeardScriptConfig
+}
+
+function sickbeard__set_port() {
+  port="$1"
+  port=$(echo "$port" | sed 's/\//\\\//g')
+
+  sickbeard__stop
+  sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^web_port .*/web_port = '$port'/g}}' $sickbeardConfig
+  sed -i -e '/^\[SickBeard\]/,/^\[/{/^\[SickBeard\]/n;/^\[/!{s/^port.*/port='$port'/g}}' $sickbeardScriptConfig
+}
+
+function sickbeard__set_apikey() {
+  apikey="$1"
+  apikey=$(echo "$apikey" | sed 's/\//\\\//g')
+
+  sickbeard__stop
+  sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^api_key .*/api_key = '$apikey'/g}}' $sickbeardConfig
+}
+
+function sickbeard__set_urlbase() {
+  urlbase="$1"
+  urlbase=$(echo "$urlbase" | sed 's/\//\\\//g')
+
+  sickbeard__stop  
+  sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^web_root .*/web_root = '$urlbase'/g}}' $sickbeardConfig
+}
+
+function sickbeard__set_sabnzbd_enabled() {
+  enabled="sabnzbd"
+
+  sickbeard__stop  
+  sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^nzb_method .*/nzb_method = '$enabled'/g}}' $sickbeardConfig
+}
+
+function sickbeard__set_sabnzbd_username() {
+  username="$1"
+  username=$(echo "$username" | sed 's/\//\\\//g')
+
+  sickbeard__stop  
+  sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_username .*/sab_username = '$username'/g}}' $sickbeardConfig
+}
+
+function sickbeard__set_sabnzbd_password() {
+  password="$1"
+  password=$(echo "$password" | sed 's/\//\\\//g')
+
+  sickbeard__stop 
+  sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_password .*/sab_password = '$password'/g}}' $sickbeardConfig
+}
+
+function sickbeard__set_sabnzbd_host() {
+  host="$1"
+  host=$(echo "$host" | sed 's/\//\\\//g')
+
+  sickbeard__stop
+  sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_host .*/sab_host = '$host'/g}}' $sickbeardConfig
+}
+
+function sickbeard__set_sabnzbd_apikey() {
+  apikey="$1"
+  apikey=$(echo "$apikey" | sed 's/\//\\\//g')
+
+  sickbeard__stop  
+  sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_apikey .*/sab_apikey = '$apikey'/g}}' $sickbeardConfig
+}
+
+function sickbeard__set_plexserver_enabled() {
+  enabled="1"
+
+  sickbeard__stop  
+  sed -i -e '/^\[Plex\]/,/^\[/{/^\[Plex\]/n;/^\[/!{s/^use_plex .*/use_plex = '$enabled'/g}}' $sickbeardConfig
+  sed -i -e '/^\[Plex\]/,/^\[/{/^\[Plex\]/n;/^\[/!{s/^plex_update_library .*/plex_update_library = '$enabled'/g}}' $sickbeardConfig
+}
+
+function sickbeard__set_plexserver_host() {
+  host="$1"
+  host=$(echo "$host" | sed 's/\//\\\//g')
+
+  sickbeard__stop  
+  sed -i -e '/^\[Plex\]/,/^\[/{/^\[Plex\]/n;/^\[/!{s/^plex_server_host .*/plex_server_host = '$host'/g}}' $sickbeardConfig
+}
+
+
+# Enable, Disable & Configure Supporting Apps
+# ---------------------------------------------------------------------------------------
+
+# SABnzbd Section
+# ---------------------------
+
+function sickbeard__config_sabnzbd() {
+	port="$1"
+	apikey="$2"
+	username="$3"
+	password="$4"
+	host="localhost"
+	category="sickbeard"
+	
+	sickbeard__set_sabnzbd_enabled
+	sickbeard__set_sabnzbd_username "$username"
+	sickbeard__set_sabnzbd_password "$password"
+	sickbeard__set_sabnzbd_host "http://$host:$port/"
+	sickbeard__set_sabnzbd_apikey "$apikey"
+	sickbeard__set_sabnzbd_category "$category"
+}
+
+# Plex Media Server Section
+# ---------------------------
+
+function sickbeard__config_plexserver() {
+  port="32400"
+  host="localhost"
+  
+  sickbeard__set_plexserver_enabled
+  sickbeard__set_plexserver_host "$host:$port"
+}
+
+# Reverse Proxy Section
+# ---------------------------
+
+function sickbeard__config_proxy() {
+  urlbase="/sickbeard"
+  
+  sickbeard__set_urlbase "$urlbase"
+}
+
+
+# Install, Configure & Upgrade
+# ---------------------------------------------------------------------------------------
+
 function sickbeard__install() {
   echo "* Installing Sick Beard"
+  
+  # Install Dependencies
+  ##### Coming Soon
+  
+  # Git Clone From the Remote Repository
+  git clone https://github.com/midgetspy/Sick-Beard.git $sickbeardSource
+  
+  # Fix Permissions
+  chown -R $osUser:$osUser $sickbeardSource
+  
+  # Copy/Replace the init file
+  tar xf $configBundle --strip-components 2 -C /etc/init.d/ config/init.d/sickbeard
+  
+  # Copy/Replace the default config file
+  tar xf $configBundle --strip-components 2 -C /etc/default/ config/default/sickbeard 
+  
+  # Copy the config/data directory into appdata
+  if [ ! -d "$sickbeardData" ]; then
+    sudo su -c -u $osUser \
+      "tar xf $appdataBundle --strip-components 1 -C $tretflixPath/appdata/ appdata/sickbeard"
+  fi
+}
+
+function sickbeard__upgrade() {
+  echo "* Upgrading Sick Beard"
+  
+  sickbeard__stop
+  sudo su -c -u $osUser \
+    "cd $sickbeardSource && git remote update"
+  sudo su -c -u $osUser \
+    "cd $sickbeardSource && git pull --all"
 }
 
 function sickbeard__version_check() {
@@ -160,51 +320,9 @@ function sickbeard__version_check() {
   fi
 }
 
-function sickbeard__upgrade() {
-  echo "* Upgrading Sick Beard"
-  sudo su -c -u $osUser \
-    "cd $sickbeardSource && git remote update"
-  sudo su -c -u $osUser \
-    "cd $sickbeardSource && git pull --all"
-}
 
-function sickbeard__sabnzbd_sync() {
-  if [ "$(sabnzbd__get_status)" != "Not Installed" ]; then
-		username=$(sabnzbd__get_username)
-		password=$(sabnzbd__get_password)
-		port=$(sabnzbd__get_port)
-		apikey=$(sabnzbd__get_apikey)
-
-		sickbeard__set_sabnzbd_username "$username"
-		sickbeard__set_sabnzbd_password "$password"
-		sickbeard__set_sabnzbd_port "$port"
-		sickbeard__set_sabnzbd_apikey "$apikey"
-	fi
-}
-
-function sickbeard__set_sabnzbd_username() {
-  username="$1"
-  
-  sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_username .*/sab_username = '$username'/g}}' $sickbeardConfig
-}
-
-function sickbeard__set_sabnzbd_password() {
-  password="$1"
- 
-  sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_password .*/sab_password = '$password'/g}}' $sickbeardConfig
-}
-
-function sickbeard__set_sabnzbd_port() {
-  port="$1"
-
- sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_host .*/sab_host = http:\/\/localhost:'$port'\//g}}' $sickbeardConfig
-}
-
-function sickbeard__set_sabnzbd_apikey() {
-  apikey="$1"
-  
-  sed -i -e '/^\[SABnzbd\]/,/^\[/{/^\[SABnzbd\]/n;/^\[/!{s/^sab_apikey .*/sab_apikey = '$apikey'/g}}' $sickbeardConfig
-}
+# Misc, Extras
+# ---------------------------------------------------------------------------------------
 
 function sickbeard__fixit() {
   echo "Coming Soon..."

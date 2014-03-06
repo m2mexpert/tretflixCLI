@@ -4,6 +4,10 @@ if test "${plexserver__imported+defined}" == "defined"; then
 fi
 plexserver__imported=1
 
+
+# Service Status & App Config Output
+# ---------------------------------------------------------------------------------------
+
 function plexserver__get_status() {
   if service plexmediaserver status 2>&1 | grep -q "unrecognized service"; then
     status="Not Installed"
@@ -21,6 +25,24 @@ function plexserver__get_status() {
   echo "$status"
 }
 
+function plexserver__show_config() {
+  status="$(plexserver__get_status)"
+  ipv4=$(tools__get_ip)
+  
+  port="32400"
+
+  echo "Plex Media Server Config:"
+  echo "----------------------------"
+  echo "Status: $status"
+  if [ "$status" == "Enabled|Running" ]; then
+    echo "Web UI: http://$ipv4:$port/web"
+  fi
+}
+
+
+# Service Controls
+# ---------------------------------------------------------------------------------------
+
 function plexserver__enable() {
   if echo "$(plexserver__get_status)" | grep -q "^Disabled"; then
     echo "* Enabling Plex Media Server"
@@ -31,6 +53,7 @@ function plexserver__enable() {
 function plexserver__disable() {
   if echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
     echo "* Disabling Plex Media Server"
+    plexserver__stop
     tar xf $configBundle --strip-components 2 -C /etc/init/ config/init/plexmediaserver.override
     echo "added \`/etc/init/plexmediaserver.override'"
   fi
@@ -56,7 +79,7 @@ function plexserver__stop() {
     if [ $i -gt 1 ]; then
       sleep 5
     fi
-    if [ "$(plexserver__get_status)" == "Enabled|Running" ]; then
+    if echo "$(plexserver__get_status)" | grep -q "Running$"; then
       service plexmediaserver stop
     else
       break
@@ -64,22 +87,80 @@ function plexserver__stop() {
   done
 }
 
-function plexserver__show_config() {
-  status="$(plexserver__get_status)"
-  ipv4=$(tools__get_ip)
-  
-  port="32400"
 
-  echo "Plex Media Server Config:"
-  echo "----------------------------"
-  echo "Status: $status"
-  if [ "$status" == "Enabled|Running" ]; then
-    echo "Web UI: http://$ipv4:$port/web"
-  fi
-}
+# Install, Configure & Upgrade
+# ---------------------------------------------------------------------------------------
 
 function plexserver__install() {
   echo "* Installing Plex Media Server"
+  
+  # Install Dependencies
+  #### Not Needed, gdebi handles this
+
+  releaseList=$(curl http://tretflix.com/misc/currentPlexReleases.txt 2> /dev/null)
+  if uname -a | grep -q "i386"; then
+    url=$(echo "$releaseList" | grep "i386.deb")
+  else
+    url=$(echo "$releaseList" | grep "amd64.deb")
+  fi
+
+  wget -O /tmp/"$filename" "$url"
+  if [ $? -ne 0 ]; then
+    echo "Download failed"
+    echo
+    exit 1
+  fi
+
+  gdebi --n /tmp/"$filename"
+  if [ $? -ne 0 ]; then
+    echo "Installation failed"
+    echo
+    exit 1
+  fi
+    
+  rm -vf /tmp/"$filename"
+  
+  # Stop and Disable, gdebi sometimes automatically enables and starts apps
+  plexserver__stop
+  plexserver__disable
+  
+  # Copy/Replace the init file
+  tar xf $configBundle --strip-components 2 -C /etc/init/ config/init/plexmediaserver.conf
+
+  # Copy the config/data directory into appdata
+  if [ ! -d "$plexserverData" ]; then
+    sudo su -c -u $osUser \
+      "tar xf $appdataBundle --strip-components 1 -C $tretflixPath/appdata/ appdata/plexmediaserver"
+  fi
+}
+
+function plexserver__upgrade() {
+  plexserver__stop
+  
+  echo "* Upgrading Plex Media Server"
+  
+  releaseList=$(curl http://tretflix.com/misc/currentPlexReleases.txt 2> /dev/null)
+  if uname -a | grep -q "i386"; then
+    url=$(echo "$releaseList" | grep "i386.deb")
+  else
+    url=$(echo "$releaseList" | grep "amd64.deb")
+  fi
+
+  wget -O /tmp/"$filename" "$url"
+  if [ $? -ne 0 ]; then
+    echo "Download failed"
+    echo
+    exit 1
+  fi
+
+  gdebi --n /tmp/"$filename"
+  if [ $? -ne 0 ]; then
+    echo "Installation failed"
+    echo
+    exit 1
+  fi
+    
+  rm -vf /tmp/"$filename"
 }
 
 function plexserver__version_check() {
@@ -106,32 +187,9 @@ function plexserver__version_check() {
   fi
 }
 
-function plexserver__upgrade() {
-  echo "* Upgrading Plex Media Server"
-  
-  releaseList=$(curl http://tretflix.com/misc/currentPlexReleases.txt 2> /dev/null)
-  if uname -a | grep -q "i386"; then
-    url=$(echo "$releaseList" | grep "i386.deb")
-  else
-    url=$(echo "$releaseList" | grep "amd64.deb")
-  fi
 
-  wget -O /tmp/"$filename" "$url"
-  if [ $? -ne 0 ]; then
-    echo "Download failed"
-    echo
-    exit 1
-  fi
-
-  gdebi --n /tmp/"$filename"
-  if [ $? -ne 0 ]; then
-    echo "Installation failed"
-    echo
-    exit 1
-  fi
-    
-  rm -vf /tmp/"$filename"
-}
+# Misc, Extras
+# ---------------------------------------------------------------------------------------
 
 function plexserver__fixit() {
   echo "Coming Soon..."

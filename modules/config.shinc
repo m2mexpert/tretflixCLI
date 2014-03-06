@@ -372,81 +372,7 @@ function config__wizard() {
 	# Update apt package lists (necessary for version checking & upgrading)
 	echo "* Updating apt repository package lists"
 	apt-get update
-
-
-	# SABnzbd+ Section
-	if [ "$sabnzbdAction" == "Enable" ]; then
-		if ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
-			# Install the app if not already installed
-			if [ "$(sabnzbd__get_status)" == "Not Installed" ]; then
-				sabnzbd__install
-			fi
-			
-			# Stop the app
-		  sabnzbd__stop
-			
-			# Enable the app
-			sabnzbd__enable
-		fi
-
-		if sabnzbd__version_check; then
-			# Upgrade the app if a newer version is available
-			sabnzbd__stop
-			sabnzbd__upgrade
-		fi
-		
-		# Stop the app
-		sabnzbd__stop
-		
-		# Configure the app using user input
-		echo "* Configuring SABnzbd+"
-		sabnzbd__set_username "$sabnzbdUser"
-		sabnzbd__set_password "$sabnzbdPass"
-		sabnzbd__set_port "$sabnzbdPort"
-		sabnzbd__set_apikey "$sabnzbdAPIkey"
-
-		# Start the app
-		sabnzbd__start
-	else
-		# Stop and disable the app if not already disabled
-		if echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
-			sabnzbd__stop
-			sabnzbd__disable
-		fi
-	fi
-
-
-	# Plex Media Server Section
-	if [ "$plexserverAction" == "Enable" ]; then
-		if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
-			# Install the app if not already installed
-			if [ "$(plexserver__get_status)" == "Not Installed" ]; then
-				plexserver__install
-			fi
-			
-			# Stop the app
-		  plexserver__stop
-			
-			# Enable the app
-			plexserver__enable
-		fi
-
-		if plexserver__version_check; then
-			# Upgrade the app if a newer version is available
-			plexserver__stop
-			plexserver__upgrade
-		fi
-
-		# Start the app
-		plexserver__start
-	else
-		# Stop and disable the app if not already disabled
-		if echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
-			plexserver__stop
-			plexserver__disable
-		fi
-	fi
-
+	
 
 	# CouchPotato Section
 	if [ "$couchpotatoAction" == "Enable" ]; then
@@ -456,21 +382,14 @@ function config__wizard() {
 				couchpotato__install
 			fi
 			
-			# Stop the app
-		  couchpotato__stop
-			
 			# Enable the app
 			couchpotato__enable
+		else
+			if couchpotato__version_check; then
+				# Upgrade the app if a newer version is available
+				couchpotato__upgrade
+			fi
 		fi
-
-		if couchpotato__version_check; then
-			# Upgrade the app if a newer version is available
-			couchpotato__stop
-			couchpotato__upgrade
-		fi
-
-		# Stop the app
-		couchpotato__stop
 		
 		# Configure the app using user input
 		echo "* Configuring CouchPotato"
@@ -479,15 +398,22 @@ function config__wizard() {
 		couchpotato__set_port "$couchpotatoPort"
 		couchpotato__set_apikey "$couchpotatoAPIkey"
 
-		# Sync CouchPotato to the current SABnzbd+ config
-		couchpotato__sabnzbd_sync
+
+    if [ "$sabnzbdAction" == "Enable" ]; then
+      couchpotato__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey"
+    fi
+    if [ "$plexserverAction" == "Enable" ]; then
+      couchpotato__config_plexserver
+    fi
+    if [ "$proxyAction" == "Enable" ]; then
+      couchpotato__config_proxy
+    fi
 
 		# Start the app
 		couchpotato__start
 	else
 		# Stop and disable the app if not already disabled
 		if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
-			couchpotato__stop
 			couchpotato__disable
 		fi
 	fi
@@ -501,21 +427,14 @@ function config__wizard() {
 				headphones__install
 			fi
 			
-			# Stop the app
-		  headphones__stop
-			
 			# Enable the app
 			headphones__enable
+		else
+			if headphones__version_check; then
+				# Upgrade the app if a newer version is available
+				headphones__upgrade
+			fi
 		fi
-
-		if headphones__version_check; then
-			# Upgrade the app if a newer version is available
-			headphones__stop
-			headphones__upgrade
-		fi
-		
-		# Stop the app
-		headphones__stop
 		
 		# Configure the app using user input
 		echo "* Configuring Headphones"
@@ -524,15 +443,22 @@ function config__wizard() {
 		headphones__set_port "$headphonesPort"
 		headphones__set_apikey "$headphonesAPIkey"
 
-		# Sync Headphones to the current SABnzbd+ config
-		headphones__sabnzbd_sync
+
+    if [ "$sabnzbdAction" == "Enable" ]; then
+      headphones__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
+    fi
+    if [ "$plexserverAction" == "Enable" ]; then
+      headphones__config_plexserver
+    fi
+    if [ "$proxyAction" == "Enable" ]; then
+      headphones__config_proxy
+    fi
 
 		# Start the app
 		headphones__start
 	else
 		# Stop and disable the app if not already disabled
 		if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-			headphones__stop
 			headphones__disable
 		fi
 	fi
@@ -546,21 +472,14 @@ function config__wizard() {
 				nzbdrone__install
 			fi
 			
-			# Stop the app
-		  nzbdrone__stop
-			
 			# Enable the app
 			nzbdrone__enable
+		else
+			if nzbdrone__version_check; then
+				# Upgrade the app if a newer version is available
+				nzbdrone__upgrade
+			fi
 		fi
-
-		if nzbdrone__version_check; then
-			# Upgrade the app if a newer version is available
-			nzbdrone__stop
-			nzbdrone__upgrade
-		fi
-
-		# Stop the app
-		nzbdrone__stop
 		
 		# Configure the app using user input
 		echo "* Configuring NzbDrone"
@@ -568,21 +487,103 @@ function config__wizard() {
 		nzbdrone__set_password "$nzbdronePass"
 		nzbdrone__set_port "$nzbdronePort"
 		nzbdrone__set_apikey "$nzbdroneAPIkey"
+		
 
-		# Sync NzbDrone to the current SABnzbd+ config
-		nzbdrone__sabnzbd_sync
+    if [ "$sabnzbdAction" == "Enable" ]; then
+      nzbdrone__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
+    fi
+    if [ "$plexserverAction" == "Enable" ]; then
+      nzbdrone__config_plexserver
+    fi
+    if [ "$proxyAction" == "Enable" ]; then
+      nzbdrone__config_proxy
+    fi
 
 		# Start the app
 		nzbdrone__start
 	else
 		# Stop and disable the app if not already disabled
 		if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-			nzbdrone__stop
 			nzbdrone__disable
 		fi
-	fi    
+	fi
 	
 
+	# Plex Media Server Section
+	if [ "$plexserverAction" == "Enable" ]; then
+		if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
+			# Install the app if not already installed
+			if [ "$(plexserver__get_status)" == "Not Installed" ]; then
+				plexserver__install
+			fi
+			
+			# Enable the app
+			plexserver__enable
+		else
+			if plexserver__version_check; then
+				# Upgrade the app if a newer version is available
+				plexserver__upgrade
+			fi
+		fi
+
+		# Start the app
+		plexserver__start
+	else
+		# Stop and disable the app if not already disabled
+		if echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
+			plexserver__disable
+		fi
+	fi
+
+
+	# SABnzbd+ Section
+	if [ "$sabnzbdAction" == "Enable" ]; then
+		if ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
+			# Install the app if not already installed
+			if [ "$(sabnzbd__get_status)" == "Not Installed" ]; then
+				sabnzbd__install
+			fi
+
+			# Enable the app
+			sabnzbd__enable
+		else
+      if sabnzbd__version_check; then
+				# Upgrade the app if a newer version is available
+				sabnzbd__upgrade
+		  fi
+		fi
+
+		# Configure the app using user input
+		echo "* Configuring SABnzbd+"
+		sabnzbd__set_username "$sabnzbdUser"
+		sabnzbd__set_password "$sabnzbdPass"
+		sabnzbd__set_port "$sabnzbdPort"
+		sabnzbd__set_apikey "$sabnzbdAPIkey"
+
+		
+    if [ "$couchpotatoAction" == "Enable" ]; then
+      sabnzbd__set_couchpotato_category
+    fi
+    if [ "$headphonesAction" == "Enable" ]; then
+      sabnzbd__set_couchpotato_category
+    fi
+    if [ "$nzbdroneAction" == "Enable" ]; then
+      sabnzbd__set_couchpotato_category
+    fi
+    if [ "$sickbeardAction" == "Enable" ]; then
+      sabnzbd__set_couchpotato_category
+    fi
+
+		# Start the app
+		sabnzbd__start
+	else
+		# Stop and disable the app if not already disabled
+		if echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
+			sabnzbd__disable
+		fi
+	fi
+	
+	
 	# Sick Beard Section
 	if [ "$sickbeardAction" == "Enable" ]; then
 		if ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
@@ -591,21 +592,14 @@ function config__wizard() {
 				sickbeard__install
 			fi
 			
-			# Stop the app
-		  sickbeard__stop
-			
 			# Enable the app
 			sickbeard__enable
+		else
+			if sickbeard__version_check; then
+				# Upgrade the app if a newer version is available
+				sickbeard__upgrade
+			fi
 		fi
-
-		if sickbeard__version_check; then
-			# Upgrade the app if a newer version is available
-			sickbeard__stop
-			sickbeard__upgrade
-		fi
-		
-		# Stop the app
-		sickbeard__stop
 		
 		# Configure the app using user input
 		echo "* Configuring Sick Beard"
@@ -613,19 +607,26 @@ function config__wizard() {
 		sickbeard__set_password "$sickbeardPass"
 		sickbeard__set_port "$sickbeardPort"
 		sickbeard__set_apikey "$sickbeardAPIkey"
+		
 
-		# Sync Sick Beard to the current SABnzbd+ config
-		sickbeard__sabnzbd_sync
+    if [ "$sabnzbdAction" == "Enable" ]; then
+      sickbeard__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
+    fi
+    if [ "$plexserverAction" == "Enable" ]; then
+      sickbeard__config_plexserver
+    fi
+    if [ "$proxyAction" == "Enable" ]; then
+      sickbeard__config_proxy
+    fi
 
 		# Start the app
 		sickbeard__start
 	else
 		# Stop and disable the app if not already disabled
 		if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-			sickbeard__stop
 			sickbeard__disable
 		fi
-	fi 
+	fi
 	
 	
 	# Transmission Section
@@ -636,21 +637,15 @@ function config__wizard() {
 				transmission__install
 			fi
 			
-			# Stop the app
-		  transmission__stop
-			
 			# Enable the app
 			transmission__enable
+		else
+			if transmission__version_check; then
+				# Upgrade the app if a newer version is available
+				transmission__stop
+				transmission__upgrade
+			fi
 		fi
-
-		if transmission__version_check; then
-			# Upgrade the app if a newer version is available
-			transmission__stop
-			transmission__upgrade
-		fi
-		
-		# Stop the app
-		transmission__stop
 		
 		# Configure the app using user input
 		echo "* Configuring Transmission"
@@ -663,7 +658,6 @@ function config__wizard() {
 	else
 		# Stop and disable the app if not already disabled
 		if echo "$(transmission__get_status)" | grep -q "^Enabled"; then
-			transmission__stop
 			transmission__disable
 		fi
 	fi
@@ -676,26 +670,37 @@ function config__wizard() {
 				proxy__install
 			fi
 
-			# Stop the service
-			proxy__stop
-
 			# Enable the service
 			proxy__enable
 		fi
 
-		# Stop the service
-		proxy__stop
-
 		# Sync w/ current port settings
 		echo "* Configuring the Reverse Proxy"
-		proxy__syncup
+
+    if [ "$couchpotatoAction" == "Enable" ]; then
+      proxy__set_couchpotato_location "$couchpotatoPort"
+    fi
+    if [ "$headphonesAction" == "Enable" ]; then
+      proxy__set_headphones_location "$headphonesPort"
+    fi
+    if [ "$nzbdroneAction" == "Enable" ]; then
+      proxy__set_nzbdrone_location "$nzbdronePort"
+    fi
+    if [ "$sabnzbdAction" == "Enable" ]; then
+      proxy__set_sabnzbd_location "$sabnzbdPort"
+    fi
+    if [ "$sickbeardAction" == "Enable" ]; then
+      proxy__set_sickbeard_location "$sickbeardPort"
+    fi
+    if [ "$transmissionAction" == "Enable" ]; then
+      proxy__set_transmission_location "$transmissionPort"
+    fi
 		
 		# Start the service
 		proxy__start
 	else
 		# Stop and disable the service if not already disabled
 		if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
-			proxy__stop
 			proxy__disable
 		fi
 	fi

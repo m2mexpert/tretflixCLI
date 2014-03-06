@@ -4,6 +4,10 @@ if test "${proxy__imported+defined}" == "defined"; then
 fi
 proxy__imported=1
 
+
+# Service Status & App Config Output
+# ---------------------------------------------------------------------------------------
+
 function proxy__get_status() {
   if service apache2 status 2>&1 | grep -q "unrecognized service"; then
     status="Not Installed"
@@ -21,6 +25,14 @@ function proxy__get_status() {
   echo "$status"
 }
 
+function proxy__show_config() {
+  echo "Coming Soon" > /dev/null
+}
+
+
+# Service Controls
+# ---------------------------------------------------------------------------------------
+
 function proxy__enable() {
   if echo "$(proxy__get_status)" | grep -q "^Disabled"; then
     echo "* Enabling Reverse Proxy"
@@ -31,6 +43,7 @@ function proxy__enable() {
 function proxy__disable() {
   if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
     echo "* Disabling Reverse Proxy"
+    proxy__stop
     update-rc.d -f apache2 remove
   fi
 }
@@ -55,7 +68,7 @@ function proxy__stop() {
     if [ $i -gt 1 ]; then
       sleep 2
     fi
-    if [ "$(proxy__get_status)" == "Enabled|Running" ]; then
+    if echo "$(proxy__get_status)" | grep -q "Running$"; then
       service apache2 stop 2> /dev/null
     else
       break
@@ -63,126 +76,266 @@ function proxy__stop() {
   done
 }
 
-function proxy__set_couchpotato_port() {
-	couchpotatoPort=$(couchpotato__get_port)
 
-	sed -i '/^ProxyPass http:.*couchpotato$/s/localhost:[0-9]*/localhost:'$couchpotatoPort'/' $proxyConfig
-	sed -i '/^ProxyPassReverse http:.*couchpotato$/s/localhost:[0-9]*/localhost:'$couchpotatoPort'/' $proxyConfig
-}
+# Get App Configuration
+# ---------------------------------------------------------------------------------------
 
-function proxy__set_headphones_port() {
-	headphonesPort=$(headphones__get_port)
 
-	sed -i '/^ProxyPass http:.*headphones$/s/localhost:[0-9]*/localhost:'$headphonesPort'/' $proxyConfig
-	sed -i '/^ProxyPassReverse http:.*headphones$/s/localhost:[0-9]*/localhost:'$headphonesPort'/' $proxyConfig
-}
+# Set App Configuration
+# ---------------------------------------------------------------------------------------
 
-function proxy__set_nzbdrone_port() {
-	nzbdronePort=$(nzbdrone__get_port)
-
-	sed -i '/^ProxyPass http:.*nzbdrone$/s/localhost:[0-9]*/localhost:'$nzbdronePort'/' $proxyConfig
-	sed -i '/^ProxyPassReverse http:.*nzbdrone$/s/localhost:[0-9]*/localhost:'$nzbdronePort'/' $proxyConfig
-}
-
-function proxy__set_sabnzbd_port() {
-	sabnzbdPort=$(sabnzbd__get_port)
-
-	sed -i '/^ProxyPass http:.*sabnzbd$/s/localhost:[0-9]*/localhost:'$sabnzbdPort'/' $proxyConfig
-	sed -i '/^ProxyPassReverse http:.*sabnzbd$/s/localhost:[0-9]*/localhost:'$sabnzbdPort'/' $proxyConfig
-}
-
-function proxy__set_sickbeard_port() {
-	sickbeardPort=$(sickbeard__get_port)
-
-	sed -i '/^ProxyPass http:.*sickbeard$/s/localhost:[0-9]*/localhost:'$sickbeardPort'/' $proxyConfig
-	sed -i '/^ProxyPassReverse http:.*sickbeard$/s/localhost:[0-9]*/localhost:'$sickbeardPort'/' $proxyConfig
-}
-
-function proxy__set_transmission_port() {
-	transmissionPort=$(transmission__get_port)
-
-	sed -i '/^ProxyPass http:.*transmission$/s/localhost:[0-9]*/localhost:'$transmissionPort'/' $proxyConfig
-	sed -i '/^ProxyPassReverse http:.*transmission$/s/localhost:[0-9]*/localhost:'$transmissionPort'/' $proxyConfig
-}
-
-function proxy__syncup() {
-  # Sync w/ current port settings
-  if [ "$(couchpotato__get_status)" != "Not Installed" ]; then
-    proxy__set_couchpotato_port
-
-    couchpotato__stop
-    echo "* Updating CouchPotato Config"
-    couchpotato__set_urlbase
-    couchpotato__start  
-  fi 
-  
-  if [ "$(headphones__get_status)" != "Not Installed" ]; then
-    proxy__set_headphones_port
-
-		headphones__stop
-		echo "* Updating Headphones Config"
-		headphones__set_urlbase
-		headphones__start
-	fi
-    
-  if [ "$(nzbdrone__get_status)" != "Not Installed" ]; then    
-    proxy__set_nzbdrone_port
-
-		nzbdrone__stop
-		echo "* Updating NzbDrone Config"
-		nzbdrone__set_urlbase
-		nzbdrone__start
-	fi
-    
-  if [ "$(sabnzbd__get_status)" != "Not Installed" ]; then 
-    proxy__set_sabnzbd_port
-  fi
-  
-  if [ "$(sickbeard__get_status)" != "Not Installed" ]; then  
-		proxy__set_sickbeard_port
+function proxy__set_couchpotato_location() {
+	host="$1"
+	host=$(echo "$host" | sed 's/\//\\\//g')
 	
-		sickbeard__stop
-		echo "* Updating Sick Beard Config"
-		sickbeard__set_urlbase
-		sickbeard__start
+	if ! echo "$proxyConfig" | grep -q "<Location /couchpotato>"; then
+	  location="
+	    <Location /couchpotato>
+      order deny,allow
+      deny from all
+      allow from all
+      ProxyPass http://$host/couchpotato
+      ProxyPassReverse http://$host/couchpotato
+      </Location>"
+      
+    location=$(echo "$location" | sed -e 's/^[ \t]*//')
+
+    proxy__stop
+    echo "$location" | tee -a $proxyConfig
+  else
+    proxy__stop
+	  sed -i '/^ProxyPass http:.*couchpotato$/s/localhost:[0-9]*/'$host'/' $proxyConfig
+	  sed -i '/^ProxyPassReverse http:.*couchpotato$/s/localhost:[0-9]*/'$host'/' $proxyConfig
 	fi
-  
-  
-  if [ "$(transmission__get_status)" != "Not Installed" ]; then  
-    proxy__set_transmission_port
-  fi
 }
+
+function proxy__set_headphones_location() {
+	host="$1"
+	host=$(echo "$host" | sed 's/\//\\\//g')
+	
+	if ! echo "$proxyConfig" | grep -q "<Location /headphones>"; then
+	  location="
+	    <Location /headphones>
+      order deny,allow
+      deny from all
+      allow from all
+      ProxyPass http://$host/headphones
+      ProxyPassReverse http://$host/headphones
+      </Location>"
+      
+    location=$(echo "$location" | sed -e 's/^[ \t]*//')
+    
+    proxy__stop
+    echo "$location" | tee -a $proxyConfig 
+  else
+    proxy__stop
+	  sed -i '/^ProxyPass http:.*headphones$/s/localhost:[0-9]*/'$host'/' $proxyConfig
+	  sed -i '/^ProxyPassReverse http:.*headphones$/s/localhost:[0-9]*/'$host'/' $proxyConfig
+	fi
+}
+
+function proxy__set_nzbdrone_location() {
+	host="$1"
+	host=$(echo "$host" | sed 's/\//\\\//g')
+	
+	if ! echo "$proxyConfig" | grep -q "<Location /nzbdrone>"; then
+	  location="
+	    <Location /nzbdrone>
+      order deny,allow
+      deny from all
+      allow from all
+      ProxyPass http://$host/nzbdrone
+      ProxyPassReverse http://$host/nzbdrone
+      </Location>"
+      
+    location=$(echo "$location" | sed -e 's/^[ \t]*//')
+
+    proxy__stop
+    echo "$location" | tee -a $proxyConfig
+  else
+    proxy__stop
+	  sed -i '/^ProxyPass http:.*nzbdrone$/s/localhost:[0-9]*/'$host'/' $proxyConfig
+	  sed -i '/^ProxyPassReverse http:.*nzbdrone$/s/localhost:[0-9]*/'$host'/' $proxyConfig
+	fi
+}
+
+function proxy__set_sabnzbd_location() {
+	host="$1"
+	host=$(echo "$host" | sed 's/\//\\\//g')
+	
+	if ! echo "$proxyConfig" | grep -q "<Location /sabnzbd>"; then
+	  location="
+	    <Location /sabnzbd>
+      order deny,allow
+      deny from all
+      allow from all
+      ProxyPass http://$host/sabnzbd
+      ProxyPassReverse http://$host/sabnzbd
+      </Location>"
+      
+    location=$(echo "$location" | sed -e 's/^[ \t]*//')
+
+    proxy__stop
+    echo "$location" | tee -a $proxyConfig  
+  else
+    proxy__stop
+	  sed -i '/^ProxyPass http:.*sabnzbd$/s/localhost:[0-9]*/'$host'/' $proxyConfig
+	  sed -i '/^ProxyPassReverse http:.*sabnzbd$/s/localhost:[0-9]*/'$host'/' $proxyConfig
+	fi
+}
+
+function proxy__set_sickbeard_location() {
+	host="$1"
+	host=$(echo "$host" | sed 's/\//\\\//g')
+	
+	if ! echo "$proxyConfig" | grep -q "<Location /sickbeard>"; then
+	  location="
+	    <Location /sickbeard>
+      order deny,allow
+      deny from all
+      allow from all
+      ProxyPass http://$host/sickbeard
+      ProxyPassReverse http://$host/sickbeard
+      </Location>"
+      
+    location=$(echo "$location" | sed -e 's/^[ \t]*//')
+
+    proxy__stop
+    echo "$location" | tee -a $proxyConfig
+  else
+    proxy__stop
+	  sed -i '/^ProxyPass http:.*sickbeard$/s/localhost:[0-9]*/'$host'/' $proxyConfig
+	  sed -i '/^ProxyPassReverse http:.*sickbeard$/s/localhost:[0-9]*/'$host'/' $proxyConfig
+	fi
+}
+
+function proxy__set_transmission_location() {
+	host="$1"
+	host=$(echo "$host" | sed 's/\//\\\//g')
+	
+	if ! echo "$proxyConfig" | grep -q "<Location /transmission>"; then
+	  location="
+	    <Location /transmission>
+      order deny,allow
+      deny from all
+      allow from all
+      ProxyPass http://$host/transmission
+      ProxyPassReverse http://$host/transmission
+      </Location>"
+      
+    location=$(echo "$location" | sed -e 's/^[ \t]*//')
+
+    proxy__stop
+    echo "$location" | tee -a $proxyConfig
+  else
+    proxy__stop
+	  sed -i '/^ProxyPass http:.*transmission$/s/localhost:[0-9]*/'$host'/' $proxyConfig
+	  sed -i '/^ProxyPassReverse http:.*transmission$/s/localhost:[0-9]*/'$host'/' $proxyConfig
+	fi
+}
+
+
+# Enable, Disable & Configure Supporting Apps
+# ---------------------------------------------------------------------------------------
+
+# CouchPotato Section
+# ---------------------------
+
+function proxy__config_couchpotato() {
+	port="$1
+	host="localhost"
+
+  proxy__set_couchpotato_location "$host:$port"
+}
+
+# Headphones Section
+# ---------------------------
+
+function proxy__config_headphones() {
+	port="$1
+  host="localhost"
+  
+  proxy__set_couchpotato_location "$host:$port"
+}
+
+# NzbDrone Section
+# ---------------------------
+
+function proxy__config_nzbdrone() {
+	port="$1
+  host="localhost"
+  
+  proxy__set_couchpotato_location "$host:$port"
+}
+
+# SABnzbd Section
+# ---------------------------
+
+function proxy__config_sabnzbd() {
+	port="$1
+  host="localhost"
+  
+  proxy__set_couchpotato_location "$host:$port"
+}
+
+# Sick Beard Section
+# ---------------------------
+
+function proxy__config_sickbeard() {
+	port="$1
+  host="localhost"
+  
+  proxy__set_couchpotato_location "$host:$port"
+}
+
+# Transmission Section
+# ---------------------------
+
+function proxy__config_transmission() {
+	port="$1
+  host="localhost"
+  
+  proxy__set_couchpotato_location "$host:$port"
+}
+
+
+# Install, Configure & Upgrade
+# ---------------------------------------------------------------------------------------
 
 function proxy__install() {
   echo "* Installing Reverse Proxy"
 
+  # Install Dependencies
+  #### Not Needed, apt-get handles this
+
   # Install Apache2
   apt-get -y install apache2
   
-  # Stop and disable Apache2
-  service apache2 stop
-  update-rc.d -f apache2 remove
+  # Stop and Disable, apt-get install sometimes automatically enables and starts apps
+  proxy__stop
+  proxy__disable
   
   # Link the necessary modules (enables them)
-  if ! tools__path_exists "/etc/apache2/mods-enabled/proxy.load"; then
+  if [ ! -f "/etc/apache2/mods-enabled/proxy.load" ]; then
     ln -s /etc/apache2/mods-available/proxy.load /etc/apache2/mods-enabled/proxy.load
   fi
   
-  if ! tools__path_exists "/etc/apache2/mods-enabled/proxy_http.load"; then
+  if [ ! -f "/etc/apache2/mods-enabled/proxy_http.load" ]; then
     ln -s /etc/apache2/mods-available/proxy_http.load /etc/apache2/mods-enabled/proxy_http.load
   fi
-
-  if ! tools__path_exists "/etc/apache2/sites-available/proxiedhosts"; then
-    tar xf $configBundle --strip-components 2 -C /etc/apache2/sites-available/ config/apache2/proxiedhosts
-  fi
   
-  if ! tools__path_exists "/etc/apache2/sites-enabled/proxiedhosts"; then
+  if [ ! -f "/etc/apache2/sites-enabled/proxiedhosts" ]; then
     ln -s /etc/apache2/sites-available/proxiedhosts /etc/apache2/sites-enabled/proxiedhosts
   fi
   
-  proxy__syncup
+  if [ ! -f "/etc/apache2/sites-available/proxiedhosts" ]; then
+    tar xf $configBundle --strip-components 2 -C /etc/apache2/sites-available/ config/apache2/proxiedhosts
+  fi
 }
 
+
+# Misc, Extras
+# ---------------------------------------------------------------------------------------
 
 function proxy__fixit() {
   echo "Coming Soon"

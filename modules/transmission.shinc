@@ -4,6 +4,10 @@ if test "${transmission__imported+defined}" == "defined"; then
 fi
 transmission__imported=1
 
+
+# Service Status & App Config Output
+# ---------------------------------------------------------------------------------------
+
 function transmission__get_status() {
   if service transmission-daemon status 2>&1 | grep -q "unrecognized service"; then
     status="Not Installed"
@@ -19,84 +23,6 @@ function transmission__get_status() {
     status="Disabled|Stopped"
   fi
   echo "$status"
-}
-
-function transmission__enable() {
-  if echo "$(transmission__get_status)" | grep -q "^Disabled"; then
-    echo "* Enabling Transmission"
-    update-rc.d transmission-daemon defaults
-  fi
-}
-
-function transmission__disable() {
-  if echo "$(transmission__get_status)" | grep -q "^Enabled"; then
-    echo "* Disabling Transmission"
-    update-rc.d -f transmission-daemon remove
-  fi
-}
-
-function transmission__start() {
-  if echo "$(transmission__get_status)" | grep -q "^Enabled"; then
-    for i in {1..3}; do
-      if [ $i -gt 1 ]; then
-        sleep 2
-      fi
-      if [ "$(transmission__get_status)" != "Enabled|Running" ]; then
-        service transmission-daemon start
-      else
-        break
-      fi
-    done
-  fi
-}
-
-function transmission__stop() {
-  for i in {1..3}; do
-    if [ $i -gt 1 ]; then
-      sleep 2
-    fi
-    if [ "$(transmission__get_status)" == "Enabled|Running" ]; then
-      service transmission-daemon stop
-    else
-      break
-    fi
-  done
-}
-
-function transmission__set_username() {
-  username="$1"
-
-  sed -i -e 's/"rpc-username".*/"rpc-username": "'$username'",/g' $transmissionConfig
-}
-
-function transmission__set_password() {
-  password="$1"
-
-  sed -i -e 's/"rpc-password".*/"rpc-password": "'$password'",/g' $transmissionConfig
-}
-
-function transmission__set_port() {
-  port="$1"
-
-  sed -i -e 's/"rpc-port".*/"rpc-port": '$port',/g' $transmissionConfig
-}
-
-function transmission__get_username() {
-  username=$(grep "rpc-username" $transmissionConfig | awk '{ print $2 }' | awk -F '"' '{ print $2 }')
-  
-  echo "$username"
-}
-
-function transmission__get_password() {
-  password="N/A (ENCRYPTED)"
-  
-  echo "$password"
-}
-
-function transmission__get_port() {
-  port=$(grep "rpc-port" $transmissionConfig | awk '{ print $2 }' | sed 's/,$//g')
-  
-  echo "$port"
 }
 
 function transmission__show_config() {
@@ -124,8 +50,138 @@ function transmission__show_config() {
   fi
 }
 
+
+# Service Controls
+# ---------------------------------------------------------------------------------------
+
+function transmission__enable() {
+  if echo "$(transmission__get_status)" | grep -q "^Disabled"; then
+    echo "* Enabling Transmission"
+    update-rc.d transmission-daemon defaults
+  fi
+}
+
+function transmission__disable() {
+  if echo "$(transmission__get_status)" | grep -q "^Enabled"; then
+    echo "* Disabling Transmission"
+    transmission__stop
+    update-rc.d -f transmission-daemon remove
+  fi
+}
+
+function transmission__start() {
+  if echo "$(transmission__get_status)" | grep -q "^Enabled"; then
+    for i in {1..3}; do
+      if [ $i -gt 1 ]; then
+        sleep 2
+      fi
+      if [ "$(transmission__get_status)" != "Enabled|Running" ]; then
+        service transmission-daemon start
+      else
+        break
+      fi
+    done
+  fi
+}
+
+function transmission__stop() {
+  for i in {1..3}; do
+    if [ $i -gt 1 ]; then
+      sleep 2
+    fi
+    if echo "$(transmission__get_status)" | grep -q "Running$"; then
+      service transmission-daemon stop
+    else
+      break
+    fi
+  done
+}
+
+
+# Get App Configuration
+# ---------------------------------------------------------------------------------------
+
+function transmission__get_username() {
+  username=$(grep "rpc-username" $transmissionConfig | awk '{ print $2 }' | awk -F '"' '{ print $2 }')
+  
+  echo "$username"
+}
+
+function transmission__get_password() {
+  password="N/A (ENCRYPTED)"
+  
+  echo "$password"
+}
+
+function transmission__get_port() {
+  port=$(grep "rpc-port" $transmissionConfig | awk '{ print $2 }' | sed 's/,$//g')
+  
+  echo "$port"
+}
+
+
+# Set App Configuration
+# ---------------------------------------------------------------------------------------
+
+function transmission__set_username() {
+  username="$1"
+  username=$(echo "$username" | sed 's/\//\\\//g')
+
+  transmission__stop
+  sed -i -e 's/"rpc-username".*/"rpc-username": "'$username'",/g' $transmissionConfig
+}
+
+function transmission__set_password() {
+  password="$1"
+  password=$(echo "$password" | sed 's/\//\\\//g')
+
+  transmission__stop
+  sed -i -e 's/"rpc-password".*/"rpc-password": "'$password'",/g' $transmissionConfig
+}
+
+function transmission__set_port() {
+  port="$1"
+  port=$(echo "$port" | sed 's/\//\\\//g')
+
+  transmission__stop
+  sed -i -e 's/"rpc-port".*/"rpc-port": '$port',/g' $transmissionConfig
+}
+
+
+# Install, Configure & Upgrade
+# ---------------------------------------------------------------------------------------
+
 function transmission__install() {
   echo "* Installing Transmission"
+
+  # Install Dependencies
+  #### Not Needed, apt-get handles this
+  
+  # Install NzbDrone
+  apt-get -q -y install transmission-daemon
+  
+  # Stop and Disable, apt-get install sometimes automatically enables and starts apps
+  transmission__stop
+  transmission__disable
+  
+  # Copy/Replace the init file
+  tar xf $configBundle --strip-components 2 -C /etc/init.d/ config/init.d/transmission-daemon
+  
+  # Copy/Replace the default config file
+  tar xf $configBundle --strip-components 2 -C /etc/default/ config/default/transmission-daemon 
+  
+  # Copy the config/data directory into appdata
+  if [ ! -d "$transmissionData" ]; then
+    sudo su -c -u $osUser \
+      "tar xf $appdataBundle --strip-components 1 -C $tretflixPath/appdata/ appdata/transmission-daemon"
+  fi
+}
+
+function transmission__upgrade() {
+  echo "* Upgrading Transmission"
+  
+  transmission__stop
+  apt-get -y install transmission-daemon
 }
 
 function transmission__version_check() {
@@ -141,10 +197,9 @@ function transmission__version_check() {
   fi
 }
 
-function transmission__upgrade() {
-  echo "* Upgrading Transmission"
-  apt-get -y install transmission-daemon
-}
+
+# Misc, Extras
+# ---------------------------------------------------------------------------------------
 
 function transmission__fixit() {
   echo "Coming Soon..."
