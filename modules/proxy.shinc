@@ -85,10 +85,7 @@ function proxy__stop() {
 # ---------------------------------------------------------------------------------------
 
 function proxy__set_couchpotato_location() {
-	port="$1"
-	host="$2"
-	
-	port=$(echo "$port" | sed 's/\//\\\//g')
+	host="$1"
 	host=$(echo "$host" | sed 's/\//\\\//g')
 	
 	if ! grep -q "<Location /couchpotato>" "$proxyConfig"; then
@@ -97,8 +94,8 @@ function proxy__set_couchpotato_location() {
       order deny,allow
       deny from all
       allow from all
-      ProxyPass http://$host:$port/couchpotato
-      ProxyPassReverse http://$host:$port/couchpotato
+      ProxyPass http://$host/couchpotato
+      ProxyPassReverse http://$host/couchpotato
       </Location>"
       
     location=$(echo "$location" | sed -e 's/^[ \t]*//')
@@ -107,16 +104,13 @@ function proxy__set_couchpotato_location() {
     echo "$location" >> $proxyConfig
   else
     proxy__stop
-	  sed -i '/^ProxyPass http:.*couchpotato$/s/localhost:[0-9]*/'$port'/' $proxyConfig
-	  sed -i '/^ProxyPassReverse http:.*couchpotato$/s/localhost:[0-9]*/'$port'/' $proxyConfig
+	  sed -i '/^ProxyPass http:.*couchpotato$/s/localhost:[0-9]*/'$host'/' $proxyConfig
+	  sed -i '/^ProxyPassReverse http:.*couchpotato$/s/localhost:[0-9]*/'$host'/' $proxyConfig
 	fi
 }
 
 function proxy__set_headphones_location() {
-	port="$1"
-	host="$2"
-	
-	port=$(echo "$port" | sed 's/\//\\\//g')
+	host="$1"
 	host=$(echo "$host" | sed 's/\//\\\//g')
 	
 	if ! grep -q "<Location /headphones>" "$proxyConfig"; then
@@ -125,8 +119,8 @@ function proxy__set_headphones_location() {
       order deny,allow
       deny from all
       allow from all
-      ProxyPass http://$host:$port/headphones
-      ProxyPassReverse http://$host:$port/headphones
+      ProxyPass http://$host/headphones
+      ProxyPassReverse http://$host/headphones
       </Location>"
       
     location=$(echo "$location" | sed -e 's/^[ \t]*//')
@@ -135,16 +129,13 @@ function proxy__set_headphones_location() {
     echo "$location" >> $proxyConfig 
   else
     proxy__stop
-	  sed -i '/^ProxyPass http:.*headphones$/s/localhost:[0-9]*/'$port'/' $proxyConfig
-	  sed -i '/^ProxyPassReverse http:.*headphones$/s/localhost:[0-9]*/'$port'/' $proxyConfig
+	  sed -i '/^ProxyPass http:.*headphones$/s/localhost:[0-9]*/'$host'/' $proxyConfig
+	  sed -i '/^ProxyPassReverse http:.*headphones$/s/localhost:[0-9]*/'$host'/' $proxyConfig
 	fi
 }
 
 function proxy__set_nzbdrone_location() {
-	port="$1"
-	host="$2"
-	
-	port=$(echo "$port" | sed 's/\//\\\//g')
+	host="$1"
 	host=$(echo "$host" | sed 's/\//\\\//g')
 	
 	if ! grep -q "<Location /nzbdrone>" "$proxyConfig"; then
@@ -153,8 +144,8 @@ function proxy__set_nzbdrone_location() {
       order deny,allow
       deny from all
       allow from all
-      ProxyPass http://$host:$port/nzbdrone
-      ProxyPassReverse http://$host:$port/nzbdrone
+      ProxyPass http://$host/nzbdrone
+      ProxyPassReverse http://$host/nzbdrone
       </Location>"
       
     location=$(echo "$location" | sed -e 's/^[ \t]*//')
@@ -163,16 +154,13 @@ function proxy__set_nzbdrone_location() {
     echo "$location" >> $proxyConfig
   else
     proxy__stop
-	  sed -i '/^ProxyPass http:.*nzbdrone$/s/localhost:[0-9]*/'$port'/' $proxyConfig
-	  sed -i '/^ProxyPassReverse http:.*nzbdrone$/s/localhost:[0-9]*/'$port'/' $proxyConfig
+	  sed -i '/^ProxyPass http:.*nzbdrone$/s/localhost:[0-9]*/'$host'/' $proxyConfig
+	  sed -i '/^ProxyPassReverse http:.*nzbdrone$/s/localhost:[0-9]*/'$host'/' $proxyConfig
 	fi
 }
 
 function proxy__set_sabnzbd_location() {
-	port="$1"
-	host="$2"
-	
-	port=$(echo "$port" | sed 's/\//\\\//g')
+	host="$1"
 	host=$(echo "$host" | sed 's/\//\\\//g')
 	
 	if ! grep -q "<Location /sabnzbd>" "$proxyConfig"; then
@@ -181,8 +169,8 @@ function proxy__set_sabnzbd_location() {
       order deny,allow
       deny from all
       allow from all
-      ProxyPass http://$host:$port/sabnzbd
-      ProxyPassReverse http://$host:$port/sabnzbd
+      ProxyPass http://$host/sabnzbd
+      ProxyPassReverse http://$host/sabnzbd
       </Location>"
       
     location=$(echo "$location" | sed -e 's/^[ \t]*//')
@@ -191,16 +179,13 @@ function proxy__set_sabnzbd_location() {
     echo "$location" >> $proxyConfig  
   else
     proxy__stop
-	  sed -i '/^ProxyPass http:.*sabnzbd$/s/localhost:[0-9]*/'$port'/' $proxyConfig
-	  sed -i '/^ProxyPassReverse http:.*sabnzbd$/s/localhost:[0-9]*/'$port'/' $proxyConfig
+	  sed -i '/^ProxyPass http:.*sabnzbd$/s/localhost:[0-9]*/'$host'/' $proxyConfig
+	  sed -i '/^ProxyPassReverse http:.*sabnzbd$/s/localhost:[0-9]*/'$host'/' $proxyConfig
 	fi
 }
 
 function proxy__set_sickbeard_location() {
-	port="$1"
-	host="$2"
-	
-	port=$(echo "$port" | sed 's/\//\\\//g')
+	host="$1"
 	host=$(echo "$host" | sed 's/\//\\\//g')
 	
 	if ! grep -q "<Location /sickbeard>" "$proxyConfig"; then
@@ -209,8 +194,8 @@ function proxy__set_sickbeard_location() {
       order deny,allow
       deny from all
       allow from all
-      ProxyPass http://$host:$port/sickbeard
-      ProxyPassReverse http://$host:$port/sickbeard
+      ProxyPass http://$host/sickbeard
+      ProxyPassReverse http://$host/sickbeard
       </Location>"
       
     location=$(echo "$location" | sed -e 's/^[ \t]*//')
@@ -219,16 +204,13 @@ function proxy__set_sickbeard_location() {
     echo "$location" >> $proxyConfig
   else
     proxy__stop
-	  sed -i '/^ProxyPass http:.*sickbeard$/s/localhost:[0-9]*/'$port'/' $proxyConfig
-	  sed -i '/^ProxyPassReverse http:.*sickbeard$/s/localhost:[0-9]*/'$port'/' $proxyConfig
+	  sed -i '/^ProxyPass http:.*sickbeard$/s/localhost:[0-9]*/'$host'/' $proxyConfig
+	  sed -i '/^ProxyPassReverse http:.*sickbeard$/s/localhost:[0-9]*/'$host'/' $proxyConfig
 	fi
 }
 
 function proxy__set_transmission_location() {
-	port="$1"
-	host="$2"
-	
-	port=$(echo "$port" | sed 's/\//\\\//g')
+	host="$1"
 	host=$(echo "$host" | sed 's/\//\\\//g')
 	
 	if ! grep -q "<Location /transmission>" "$proxyConfig"; then
@@ -237,8 +219,8 @@ function proxy__set_transmission_location() {
       order deny,allow
       deny from all
       allow from all
-      ProxyPass http://$host:$port/transmission
-      ProxyPassReverse http://$host:$port/transmission
+      ProxyPass http://$host/transmission
+      ProxyPassReverse http://$host/transmission
       </Location>"
       
     location=$(echo "$location" | sed -e 's/^[ \t]*//')
@@ -247,8 +229,8 @@ function proxy__set_transmission_location() {
     echo "$location" >> $proxyConfig
   else
     proxy__stop
-	  sed -i '/^ProxyPass http:.*transmission$/s/localhost:[0-9]*/'$port'/' $proxyConfig
-	  sed -i '/^ProxyPassReverse http:.*transmission$/s/localhost:[0-9]*/'$port'/' $proxyConfig
+	  sed -i '/^ProxyPass http:.*transmission$/s/localhost:[0-9]*/'$host'/' $proxyConfig
+	  sed -i '/^ProxyPassReverse http:.*transmission$/s/localhost:[0-9]*/'$host'/' $proxyConfig
 	fi
 }
 
@@ -263,7 +245,7 @@ function proxy__config_couchpotato() {
 	port="$1"
 	host="localhost"
 
-  proxy__set_couchpotato_location "$port" "$host"
+  proxy__set_couchpotato_location "$host:$port"
 }
 
 # Headphones Section
@@ -273,7 +255,7 @@ function proxy__config_headphones() {
 	port="$1"
   host="localhost"
   
-  proxy__set_headphones_location "$port" "$host"
+  proxy__set_headphones_location "$host:$port"
 }
 
 # NzbDrone Section
@@ -283,7 +265,7 @@ function proxy__config_nzbdrone() {
 	port="$1"
   host="localhost"
   
-  proxy__set_nzbdrone_location "$port" "$host"
+  proxy__set_nzbdrone_location "$host:$port"
 }
 
 # SABnzbd Section
@@ -293,7 +275,7 @@ function proxy__config_sabnzbd() {
 	port="$1"
   host="localhost"
   
-  proxy__set_sabnzbd_location "$port" "$host"
+  proxy__set_sabnzbd_location "$host:$port"
 }
 
 # Sick Beard Section
@@ -303,7 +285,7 @@ function proxy__config_sickbeard() {
 	port="$1"
   host="localhost"
   
-  proxy__set_sickbeard_location "$port" "$host"
+  proxy__set_sickbeard_location "$host:$port"
 }
 
 # Transmission Section
@@ -313,7 +295,7 @@ function proxy__config_transmission() {
 	port="$1"
   host="localhost"
   
-  proxy__set_transmission_location "$port" "$host"
+  proxy__set_transmission_location "$host:$port"
 }
 
 
