@@ -252,9 +252,9 @@ function nzbdrone__set_plexserver_enabled() {
 	if [[ -z $(nzbdrone__get_plexserver_settings) ]]; then
 	  # Build "Settings" for a new Plex Media Server record
 	  settings="
-		\"host\": \"localhost\",
 		\"port\": 32400,
 		\"updateLibrary\": true,
+		\"host\": \"localhost\",
 		\"isValid\": true"
       
     # Clean up formatting
