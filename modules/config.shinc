@@ -675,22 +675,22 @@ function config__wizard() {
 		echo "* Configuring the Reverse Proxy"
 
     if [ "$couchpotatoAction" == "Enable" ]; then
-      proxy__set_couchpotato_location "$couchpotatoPort"
+      proxy__config_couchpotato "$couchpotatoPort"
     fi
     if [ "$headphonesAction" == "Enable" ]; then
-      proxy__set_headphones_location "$headphonesPort"
+      proxy__config_headphones "$headphonesPort"
     fi
     if [ "$nzbdroneAction" == "Enable" ]; then
-      proxy__set_nzbdrone_location "$nzbdronePort"
+      proxy__config_nzbdrone "$nzbdronePort"
     fi
     if [ "$sabnzbdAction" == "Enable" ]; then
-      proxy__set_sabnzbd_location "$sabnzbdPort"
+      proxy__config_sabnzbd "$sabnzbdPort"
     fi
     if [ "$sickbeardAction" == "Enable" ]; then
-      proxy__set_sickbeard_location "$sickbeardPort"
+      proxy__config_sickbeard "$sickbeardPort"
     fi
     if [ "$transmissionAction" == "Enable" ]; then
-      proxy__set_transmission_location "$transmissionPort"
+      proxy__config_transmission "$transmissionPort"
     fi
 		
 		# Start the service
