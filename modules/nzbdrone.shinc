@@ -209,7 +209,7 @@ function nzbdrone__set_sabnzbd_enabled() {
 	  
 	  # Add/Insert the new SABnzbd record
 	  nzbdrone__stop
-		sqlite3 $nzbdroneDB "INSERT INTO DownloadClients VALUES(?, 1,'Sabnzbd','Sabnzbd','$settings','SabnzbdSettings',1);"
+		sqlite3 $nzbdroneDB "INSERT INTO DownloadClients VALUES(?, 1,'Sabnzbd','Sabnzbd','$settings','SabnzbdSettings',1)"
 	else
 	  # Enable the existing SABnzbd record
 	  nzbdrone__stop
@@ -263,7 +263,7 @@ function nzbdrone__set_plexserver_enabled() {
 	  
 	  # Add/Insert the new Plex Media Server record
 	  nzbdrone__stop
-		sqlite3 $nzbdroneDB "INSERT INTO Notifications VALUES(?,'Tretflix',1,1,'$settings','PlexServer','PlexServerSettings',1);"
+		sqlite3 $nzbdroneDB "INSERT INTO Notifications VALUES(?,'Tretflix',1,1,'$settings','PlexServer','PlexServerSettings',1)"
 	fi
 }
 
