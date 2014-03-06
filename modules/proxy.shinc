@@ -263,7 +263,7 @@ function proxy__config_couchpotato() {
 	port="$1
 	host="localhost"
 
-  proxy__set_couchpotato_location "$host:$port"
+  proxy__set_couchpotato_location "$port" "$host"
 }
 
 # Headphones Section
@@ -273,7 +273,7 @@ function proxy__config_headphones() {
 	port="$1
   host="localhost"
   
-  proxy__set_couchpotato_location "$host:$port"
+  proxy__set_couchpotato_location "$port" "$host"
 }
 
 # NzbDrone Section
@@ -283,7 +283,7 @@ function proxy__config_nzbdrone() {
 	port="$1
   host="localhost"
   
-  proxy__set_couchpotato_location "$host:$port"
+  proxy__set_couchpotato_location "$port" "$host"
 }
 
 # SABnzbd Section
@@ -293,7 +293,7 @@ function proxy__config_sabnzbd() {
 	port="$1
   host="localhost"
   
-  proxy__set_couchpotato_location "$host:$port"
+  proxy__set_couchpotato_location "$port" "$host"
 }
 
 # Sick Beard Section
@@ -303,7 +303,7 @@ function proxy__config_sickbeard() {
 	port="$1
   host="localhost"
   
-  proxy__set_couchpotato_location "$host:$port"
+  proxy__set_couchpotato_location "$port" "$host"
 }
 
 # Transmission Section
@@ -313,7 +313,7 @@ function proxy__config_transmission() {
 	port="$1
   host="localhost"
   
-  proxy__set_couchpotato_location "$host:$port"
+  proxy__set_couchpotato_location "$port" "$host"
 }
 
 
