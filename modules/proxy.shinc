@@ -89,6 +89,7 @@ function proxy__set_couchpotato_location() {
 	host=$(echo "$host" | sed 's/\//\\\//g')
 	
 	if ! echo "$proxyConfig" | grep -q "<Location /couchpotato>"; then
+	  echo "Didn't Find it"
 	  location="
 	    <Location /couchpotato>
       order deny,allow
@@ -103,6 +104,7 @@ function proxy__set_couchpotato_location() {
     proxy__stop
     echo "$location" | tee -a $proxyConfig
   else
+    echo "Found it"
     proxy__stop
 	  sed -i '/^ProxyPass http:.*couchpotato$/s/localhost:[0-9]*/'$host'/' $proxyConfig
 	  sed -i '/^ProxyPassReverse http:.*couchpotato$/s/localhost:[0-9]*/'$host'/' $proxyConfig
