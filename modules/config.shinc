@@ -497,7 +497,7 @@ function config__wizard() {
     fi
 
 		# Start the app
-		nzbdrone__start
+		# nzbdrone__start
 	else
 		# Stop and disable the app if not already disabled
 		if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then

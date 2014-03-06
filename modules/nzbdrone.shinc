@@ -261,6 +261,8 @@ function nzbdrone__set_plexserver_enabled() {
 	  settings=$(echo "$settings" | sed '/^$/d' | sed -e 's/^[ \t]*/  /')
 	  settings=$(echo -e "{\n$settings\n}")
 	  
+	  echo "$settings"
+	  
 	  # Add/Insert the new Plex Media Server record
 	  nzbdrone__stop
 		sqlite3 $nzbdroneDB "INSERT INTO Notifications VALUES(?,'Tretflix',1,1,'$settings','PlexServer','PlexServerSettings',1)"
