@@ -88,8 +88,7 @@ function proxy__set_couchpotato_location() {
 	host="$1"
 	host=$(echo "$host" | sed 's/\//\\\//g')
 	
-	if ! echo "$proxyConfig" | grep -q "<Location /couchpotato>"; then
-	  echo "Didn't Find it"
+	if ! grep -q "<Location /couchpotato>" "$proxyConfig"; then
 	  location="
 	    <Location /couchpotato>
       order deny,allow
@@ -102,9 +101,8 @@ function proxy__set_couchpotato_location() {
     location=$(echo "$location" | sed -e 's/^[ \t]*//')
 
     proxy__stop
-    echo "$location" | tee -a $proxyConfig
+    echo "$location" >> $proxyConfig
   else
-    echo "Found it"
     proxy__stop
 	  sed -i '/^ProxyPass http:.*couchpotato$/s/localhost:[0-9]*/'$host'/' $proxyConfig
 	  sed -i '/^ProxyPassReverse http:.*couchpotato$/s/localhost:[0-9]*/'$host'/' $proxyConfig
@@ -115,7 +113,7 @@ function proxy__set_headphones_location() {
 	host="$1"
 	host=$(echo "$host" | sed 's/\//\\\//g')
 	
-	if ! echo "$proxyConfig" | grep -q "<Location /headphones>"; then
+	if ! grep -q "<Location /headphones>" "$proxyConfig"; then
 	  location="
 	    <Location /headphones>
       order deny,allow
@@ -128,7 +126,7 @@ function proxy__set_headphones_location() {
     location=$(echo "$location" | sed -e 's/^[ \t]*//')
     
     proxy__stop
-    echo "$location" | tee -a $proxyConfig 
+    echo "$location" >> $proxyConfig 
   else
     proxy__stop
 	  sed -i '/^ProxyPass http:.*headphones$/s/localhost:[0-9]*/'$host'/' $proxyConfig
@@ -140,7 +138,7 @@ function proxy__set_nzbdrone_location() {
 	host="$1"
 	host=$(echo "$host" | sed 's/\//\\\//g')
 	
-	if ! echo "$proxyConfig" | grep -q "<Location /nzbdrone>"; then
+	if ! grep -q "<Location /nzbdrone>" "$proxyConfig"; then
 	  location="
 	    <Location /nzbdrone>
       order deny,allow
@@ -153,7 +151,7 @@ function proxy__set_nzbdrone_location() {
     location=$(echo "$location" | sed -e 's/^[ \t]*//')
 
     proxy__stop
-    echo "$location" | tee -a $proxyConfig
+    echo "$location" >> $proxyConfig
   else
     proxy__stop
 	  sed -i '/^ProxyPass http:.*nzbdrone$/s/localhost:[0-9]*/'$host'/' $proxyConfig
@@ -165,7 +163,7 @@ function proxy__set_sabnzbd_location() {
 	host="$1"
 	host=$(echo "$host" | sed 's/\//\\\//g')
 	
-	if ! echo "$proxyConfig" | grep -q "<Location /sabnzbd>"; then
+	if ! grep -q "<Location /sabnzbd>" "$proxyConfig"; then
 	  location="
 	    <Location /sabnzbd>
       order deny,allow
@@ -178,7 +176,7 @@ function proxy__set_sabnzbd_location() {
     location=$(echo "$location" | sed -e 's/^[ \t]*//')
 
     proxy__stop
-    echo "$location" | tee -a $proxyConfig  
+    echo "$location" >> $proxyConfig  
   else
     proxy__stop
 	  sed -i '/^ProxyPass http:.*sabnzbd$/s/localhost:[0-9]*/'$host'/' $proxyConfig
@@ -190,7 +188,7 @@ function proxy__set_sickbeard_location() {
 	host="$1"
 	host=$(echo "$host" | sed 's/\//\\\//g')
 	
-	if ! echo "$proxyConfig" | grep -q "<Location /sickbeard>"; then
+	if ! grep -q "<Location /sickbeard>" "$proxyConfig"; then
 	  location="
 	    <Location /sickbeard>
       order deny,allow
@@ -203,7 +201,7 @@ function proxy__set_sickbeard_location() {
     location=$(echo "$location" | sed -e 's/^[ \t]*//')
 
     proxy__stop
-    echo "$location" | tee -a $proxyConfig
+    echo "$location" >> $proxyConfig
   else
     proxy__stop
 	  sed -i '/^ProxyPass http:.*sickbeard$/s/localhost:[0-9]*/'$host'/' $proxyConfig
@@ -215,7 +213,7 @@ function proxy__set_transmission_location() {
 	host="$1"
 	host=$(echo "$host" | sed 's/\//\\\//g')
 	
-	if ! echo "$proxyConfig" | grep -q "<Location /transmission>"; then
+	if ! grep -q "<Location /transmission>" "$proxyConfig"; then
 	  location="
 	    <Location /transmission>
       order deny,allow
@@ -228,7 +226,7 @@ function proxy__set_transmission_location() {
     location=$(echo "$location" | sed -e 's/^[ \t]*//')
 
     proxy__stop
-    echo "$location" | tee -a $proxyConfig
+    echo "$location" >> $proxyConfig
   else
     proxy__stop
 	  sed -i '/^ProxyPass http:.*transmission$/s/localhost:[0-9]*/'$host'/' $proxyConfig
