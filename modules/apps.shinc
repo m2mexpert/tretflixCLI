@@ -597,44 +597,63 @@ function apps__show_config() {
 function apps__couchpotato() {
   option="$1"
   
-  if [ "$option" == "enable" ]; then  
-		if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
-			# Install the app if not already installed
+  if [ "$option" == "enable" ]; then
+  
+    # If the app is already enabled and running there's nothing to do
+    if [ "$(couchpotato__get_status)" == "Enabled|Running" ]; then
+      echo "CouchPotato is already enabled"
+    
+    # If the app is already enabled but stopped, start the app
+    elif [ "$(couchpotato__get_status)" == "Enabled|Stopped" ]; then
+		  # Start the app
+		  couchpotato__start
+		  
+		# If the app is not enabled, Install (or Upgrade) the app as needed, update
+		# the config as necessary to support the other associated apps and start the app
+		elif ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+		
+		  # Install the app
 			if [ "$(couchpotato__get_status)" == "Not Installed" ]; then
 				couchpotato__install
-			elif couchpotato__version_check; then
-				# Upgrade the app if a newer version is available			
-				couchpotato__stop
+				
+			# Upgrade the app
+			elif couchpotato__version_check; then	
 				couchpotato__upgrade
 			fi
 			
 			# Enable the app
 			couchpotato__enable
-
-			# Stop the app
-			couchpotato__stop
-
-			# Sync CouchPotato to the current SABnzbd+ config
-			echo "* Configuring CouchPotato"
-			couchpotato__sabnzbd_sync
 			
+			# Configure the app
+			echo "* Configuring CouchPotato"
+			
+			# Update SABnzbd+ Support
+			if echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
+			  sabnzbdPort=$(sabnzbd__get_port)
+			  sabnzbdAPIkey=$(sabnzbd__get_apikey)
+			  
+				couchpotato__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey"
+			fi
+			
+			# Enable Plex Server Support
+			if echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
+				couchpotato__config_plexserver
+			fi
+			
+			# Enable Reverse Proxy Support
+			if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
+				couchpotato__config_proxy
+			fi
+
 			# Start the app
 			couchpotato__start
-
-		elif [ "$(couchpotato__get_status)" == "Enabled|Stopped" ]; then
-		  # Start the app
-		  couchpotato__start
-		else
-		  echo "CouchPotato is already enabled and running"
 		fi
 	
 	elif [ "$option" == "disable" ]; then
-	  couchpotato__stop
 		couchpotato__disable
 		
 	elif [ "$option" == "upgrade" ]; then
 		if couchpotato__version_check; then
-			couchpotato__stop
 			couchpotato__upgrade
 			couchpotato__start
 		fi
@@ -642,7 +661,6 @@ function apps__couchpotato() {
 	elif [ "$option" == "set username" ]; then
 	  username="$2"
 	  
-		couchpotato__stop
 		echo "* Configuring CouchPotato"
 		couchpotato__set_username "$username"
 		couchpotato__start
@@ -650,7 +668,6 @@ function apps__couchpotato() {
 	elif [ "$option" == "set password" ]; then
 	  password="$2"
 	  
-		couchpotato__stop
 		echo "* Configuring CouchPotato"
 		couchpotato__set_password "$password"
 		couchpotato__start
@@ -658,22 +675,19 @@ function apps__couchpotato() {
 	elif [ "$option" == "set port" ]; then
 	  port="$2"
 	  
-		couchpotato__stop
 		echo "* Configuring CouchPotato"
 		couchpotato__set_port "$port"
 		couchpotato__start
 		
-		if echo "$(proxy__get_status)" | egrep -q "^Enabled|Running$"; then
-		  proxy__stop
+		if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
 		  "* Updating the Reverse Proxy Config"
-		  proxy__set_couchpotato_port
+		  proxy__config_couchpotato "$port"
 		  proxy__start
 		fi
 		
 	elif [ "$option" == "new apikey" ]; then
 	  apikey="$(tools__gen_apikey)"
 	  
-		couchpotato__stop
 		echo "* Configuring CouchPotato"
 		couchpotato__set_apikey "$apikey"
 		couchpotato__start
@@ -683,44 +697,60 @@ function apps__couchpotato() {
 function apps__headphones() {
   option="$1"
   
-  if [ "$option" == "enable" ]; then  
-		if ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-			# Install the app if not already installed
+  if [ "$option" == "enable" ]; then
+  
+    # If the app is already enabled and running there's nothing to do
+    if [ "$(headphones__get_status)" == "Enabled|Running" ]; then
+      echo "Headphones is already enabled"
+    
+    # If the app is already enabled but stopped, start the app
+    elif [ "$(headphones__get_status)" == "Enabled|Stopped" ]; then
+		  # Start the app
+		  headphones__start
+		  
+		# If the app is not enabled, Install (or Upgrade) the app as needed, update
+		# the config as necessary to support the other associated apps and start the app
+		elif ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
+		
+		  # Install the app
 			if [ "$(headphones__get_status)" == "Not Installed" ]; then
 				headphones__install
-			elif headphones__version_check; then
-				# Upgrade the app if a newer version is available			
-				headphones__stop
+				
+			# Upgrade the app
+			elif headphones__version_check; then	
 				headphones__upgrade
 			fi
-
+			
 			# Enable the app
 			headphones__enable
 			
-			# Stop the app
-			headphones__stop
-
-			# Sync Headphones to the current SABnzbd+ config
+			# Configure the app
 			echo "* Configuring Headphones"
-			headphones__sabnzbd_sync
 			
+			# Update SABnzbd+ Support
+			if echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
+			  sabnzbdPort=$(sabnzbd__get_port)
+			  sabnzbdAPIkey=$(sabnzbd__get_apikey)
+			  sabnzbdUsername=$(sabnzbd__get_username)
+			  sabnzbdPassword=$(sabnzbd__get_password)
+			  
+				headphones__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUsername" "$sabnzbdPassword"
+			fi
+			
+			# Enable Reverse Proxy Support
+			if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
+				headphones__config_proxy
+			fi
+
 			# Start the app
 			headphones__start
-
-		elif [ "$(headphones__get_status)" == "Enabled|Stopped" ]; then
-		  # Start the app
-		  headphones__start
-		else
-		  echo "Headphones is already enabled and running"
 		fi
 	
 	elif [ "$option" == "disable" ]; then
-	  headphones__stop
 		headphones__disable
 		
 	elif [ "$option" == "upgrade" ]; then
 		if headphones__version_check; then
-			headphones__stop
 			headphones__upgrade
 			headphones__start
 		fi
@@ -728,38 +758,33 @@ function apps__headphones() {
 	elif [ "$option" == "set username" ]; then
 	  username="$2"
 	  
-		headphones__stop
 		echo "* Configuring Headphones"
 		headphones__set_username "$username"
 		headphones__start
 
 	elif [ "$option" == "set password" ]; then
 	  password="$2"
-	  
-		headphones__stop
+
 		echo "* Configuring Headphones"
 		headphones__set_password "$password"
 		headphones__start
 		
 	elif [ "$option" == "set port" ]; then
 	  port="$2"
-	  
-		headphones__stop
+
 		echo "* Configuring Headphones"
 		headphones__set_port "$port"
 		headphones__start
 
-		if echo "$(proxy__get_status)" | egrep -q "^Enabled|Running$"; then
-		  proxy__stop
+		if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
 		  "* Updating the Reverse Proxy Config"
-		  proxy__set_headphones_port
+		  proxy__config_headphones "$port"
 		  proxy__start
 		fi
 		
 	elif [ "$option" == "new apikey" ]; then
 	  apikey="$(tools__gen_apikey)"
 	  
-		headphones__stop
 		echo "* Configuring Headphones"
 		headphones__set_apikey "$apikey"
 		headphones__start
@@ -769,44 +794,65 @@ function apps__headphones() {
 function apps__nzbdrone() {
   option="$1"
   
-  if [ "$option" == "enable" ]; then  
-		if ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-			# Install the app if not already installed
+  if [ "$option" == "enable" ]; then
+  
+    # If the app is already enabled and running there's nothing to do
+    if [ "$(nzbdrone__get_status)" == "Enabled|Running" ]; then
+      echo "NzbDrone is already enabled"
+    
+    # If the app is already enabled but stopped, start the app
+    elif [ "$(nzbdrone__get_status)" == "Enabled|Stopped" ]; then
+		  # Start the app
+		  nzbdrone__start
+		  
+		# If the app is not enabled, Install (or Upgrade) the app as needed, update
+		# the config as necessary to support the other associated apps and start the app
+		elif ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+		
+		  # Install the app
 			if [ "$(nzbdrone__get_status)" == "Not Installed" ]; then
 				nzbdrone__install
-			elif nzbdrone__version_check; then
-				# Upgrade the app if a newer version is available			
-				nzbdrone__stop
+				
+			# Upgrade the app
+			elif nzbdrone__version_check; then	
 				nzbdrone__upgrade
 			fi
 			
 			# Enable the app
 			nzbdrone__enable
 			
-			# Stop the app
-			nzbdrone__stop
-
-			# Sync NzbDrone to the current SABnzbd+ config
+			# Configure the app
 			echo "* Configuring NzbDrone"
-			nzbdrone__sabnzbd_sync
 			
+			# Update SABnzbd+ Support
+			if echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
+			  sabnzbdPort=$(sabnzbd__get_port)
+			  sabnzbdAPIkey=$(sabnzbd__get_apikey)
+			  sabnzbdUsername=$(sabnzbd__get_username)
+			  sabnzbdPassword=$(sabnzbd__get_password)
+			  
+				nzbdrone__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUsername" "$sabnzbdPassword"
+			fi
+
+			# Enable Plex Server Support
+			if echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
+				nzbdrone__config_plexserver
+			fi
+			
+			# Enable Reverse Proxy Support
+			if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
+				nzbdrone__config_proxy
+			fi
+
 			# Start the app
 			nzbdrone__start
-
-		elif [ "$(nzbdrone__get_status)" == "Enabled|Stopped" ]; then
-		  # Start the app
-		  nzbdrone__start
-		else
-		  echo "NzbDrone is already enabled and running"
 		fi
 	
 	elif [ "$option" == "disable" ]; then
-	  nzbdrone__stop
 		nzbdrone__disable
 		
 	elif [ "$option" == "upgrade" ]; then
 		if nzbdrone__version_check; then
-			nzbdrone__stop
 			nzbdrone__upgrade
 			nzbdrone__start
 		fi
@@ -814,7 +860,6 @@ function apps__nzbdrone() {
 	elif [ "$option" == "set username" ]; then
 	  username="$2"
 	  
-		nzbdrone__stop
 		echo "* Configuring NzbDrone"
 		nzbdrone__set_username "$username"
 		nzbdrone__start
@@ -822,7 +867,6 @@ function apps__nzbdrone() {
 	elif [ "$option" == "set password" ]; then
 	  password="$2"
 	  
-		nzbdrone__stop
 		echo "* Configuring NzbDrone"
 		nzbdrone__set_password "$password"
 		nzbdrone__start
@@ -830,22 +874,19 @@ function apps__nzbdrone() {
 	elif [ "$option" == "set port" ]; then
 	  port="$2"
 	  
-		nzbdrone__stop
 		echo "* Configuring NzbDrone"
 		nzbdrone__set_port "$port"
 		nzbdrone__start
 
-		if echo "$(proxy__get_status)" | egrep -q "^Enabled|Running$"; then
-		  proxy__stop
+		if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
 		  "* Updating the Reverse Proxy Config"
-		  proxy__set_nzbdrone_port
+		  proxy__config_nzbdrone "$port"
 		  proxy__start
 		fi
 		
 	elif [ "$option" == "new apikey" ]; then
 	  apikey="$(tools__gen_apikey)"
 	  
-		nzbdrone__stop
 		echo "* Configuring NzbDrone"
 		nzbdrone__set_apikey "$apikey"
 		nzbdrone__start
@@ -855,37 +896,42 @@ function apps__nzbdrone() {
 function apps__plexserver() {
   option="$1"
   
-  if [ "$option" == "enable" ]; then  
-		if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
-			# Install the app if not already installed
+  if [ "$option" == "enable" ]; then
+  
+    # If the app is already enabled and running there's nothing to do
+    if [ "$(plexserver__get_status)" == "Enabled|Running" ]; then
+      echo "Plex Media Server is already enabled"
+    
+    # If the app is already enabled but stopped, start the app
+    elif [ "$(plexserver__get_status)" == "Enabled|Stopped" ]; then
+		  # Start the app
+		  plexserver__start
+		  
+		# If the app is not enabled, Install (or Upgrade) the app as needed, update
+		# the config as necessary to support the other associated apps and start the app
+		elif ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
+		
+		  # Install the app
 			if [ "$(plexserver__get_status)" == "Not Installed" ]; then
 				plexserver__install
-			elif plexserver__version_check; then
-				# Upgrade the app if a newer version is available			
-				plexserver__stop
+				
+			# Upgrade the app
+			elif plexserver__version_check; then	
 				plexserver__upgrade
 			fi
 			
 			# Enable the app
 			plexserver__enable
-			
+
 			# Start the app
 			plexserver__start
-
-		elif [ "$(plexserver__get_status)" == "Enabled|Stopped" ]; then
-		  # Start the app
-		  plexserver__start
-		else
-		  echo "Plex Media Server is already enabled and running"
 		fi
 	
 	elif [ "$option" == "disable" ]; then
-	  plexserver__stop
 		plexserver__disable
 		
 	elif [ "$option" == "upgrade" ]; then
 		if plexserver__version_check; then
-			plexserver__stop
 			plexserver__upgrade
 			plexserver__start
 		fi
@@ -907,37 +953,58 @@ function apps__plexserver() {
 function apps__sabnzbd() {
   option="$1"
   
-  if [ "$option" == "enable" ]; then  
-		if ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
-			# Install the app if not already installed
+  if [ "$option" == "enable" ]; then
+  
+    # If the app is already enabled and running there's nothing to do
+    if [ "$(sabnzbd__get_status)" == "Enabled|Running" ]; then
+      echo "SABnzbd+ is already enabled"
+    
+    # If the app is already enabled but stopped, start the app
+    elif [ "$(sabnzbd__get_status)" == "Enabled|Stopped" ]; then
+		  # Start the app
+		  sabnzbd__start
+		  
+		# If the app is not enabled, Install (or Upgrade) the app as needed, update
+		# the config as necessary to support the other associated apps and start the app
+		elif ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
+		
+		  # Install the app
 			if [ "$(sabnzbd__get_status)" == "Not Installed" ]; then
 				sabnzbd__install
-			elif sabnzbd__version_check; then
-				# Upgrade the app if a newer version is available			
-				sabnzbd__stop
+				
+			# Upgrade the app
+			elif sabnzbd__version_check; then	
 				sabnzbd__upgrade
 			fi
 			
 			# Enable the app
 			sabnzbd__enable
 			
+			# Configure the app
+			echo "* Configuring SABnzbd+"
+			
+			if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+				sabnzbd__set_couchpotato_category
+			fi
+			if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
+				sabnzbd__set_headphones_category
+			fi
+			if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+				sabnzbd__set_nzbdrone_category
+			fi
+			if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+				sabnzbd__set_sickbeard_category
+			fi			
+
 			# Start the app
 			sabnzbd__start
-
-		elif [ "$(sabnzbd__get_status)" == "Enabled|Stopped" ]; then
-		  # Start the app
-		  sabnzbd__start
-		else
-		  echo "SABnzbd+ is already enabled and running"
 		fi
 	
 	elif [ "$option" == "disable" ]; then
-	  sabnzbd__stop
 		sabnzbd__disable
 		
 	elif [ "$option" == "upgrade" ]; then
 		if sabnzbd__version_check; then
-			sabnzbd__stop
 			sabnzbd__upgrade
 			sabnzbd__start
 		fi
@@ -945,25 +1012,21 @@ function apps__sabnzbd() {
 	elif [ "$option" == "set username" ]; then
 	  username="$2"
 	  
-		sabnzbd__stop
 		echo "* Configuring SABnzbd+"
 		sabnzbd__set_username "$username"
 		sabnzbd__start
 
 		if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-			headphones__stop
 			echo "* Updating Headphones Config"
 			headphones__set_sabnzbd_username "$username"
 			headphones__start
 		fi
 		if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-			nzbdrone__stop
 			echo "* Updating NzbDrone Config"
 			nzbdrone__set_sabnzbd_username "$username"
 			nzbdrone__start
 		fi
 		if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-			sickbeard__stop
 			echo "* Updating Sick Beard Config"
 			sickbeard__set_sabnzbd_username "$username"
 			sickbeard__start
@@ -972,25 +1035,21 @@ function apps__sabnzbd() {
 	elif [ "$option" == "set password" ]; then
 	  password="$2"
 	  
-		sabnzbd__stop
 		echo "* Configuring SABnzbd+"
 		sabnzbd__set_password "$password"
 		sabnzbd__start
 
 		if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-			headphones__stop
 			echo "* Updating Headphones Config"
 			headphones__set_sabnzbd_password "$password"
 			headphones__start
 		fi
 		if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-			nzbdrone__stop
 			echo "* Updating NzbDrone Config"
 			nzbdrone__set_sabnzbd_password "$password"
 			nzbdrone__start
 		fi
 		if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-			sickbeard__stop
 			echo "* Updating Sick Beard Config"
 			sickbeard__set_sabnzbd_password "$password"
 			sickbeard__start
@@ -999,71 +1058,60 @@ function apps__sabnzbd() {
 	elif [ "$option" == "set port" ]; then
 	  port="$2"
 	  
-		sabnzbd__stop
 		echo "* Configuring SABnzbd+"
 		sabnzbd__set_port "$port"
 		sabnzbd__start
 
 		if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
-			couchpotato__stop
 			echo "* Updating CouchPotato Config"
 			couchpotato__set_sabnzbd_port "$port"
 			couchpotato__start
 		fi
 		if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-			headphones__stop
 			echo "* Updating Headphones Config"
 			headphones__set_sabnzbd_port "$port"
 			headphones__start
 		fi
 		if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-			nzbdrone__stop
 			echo "* Updating NzbDrone Config"
 			nzbdrone__set_sabnzbd_port "$port"
 			nzbdrone__start
 		fi
 		if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-			sickbeard__stop
 			echo "* Updating Sick Beard Config"
 			sickbeard__set_sabnzbd_port "$port"
 			sickbeard__start
 		fi
 		
-		if echo "$(proxy__get_status)" | egrep -q "^Enabled|Running$"; then
-		  proxy__stop
+		if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
 		  "* Updating the Reverse Proxy Config"
-		  proxy__set_sabnzbd_port
+		  proxy__config_sabnzbd "$port"
 		  proxy__start
 		fi
 		
 	elif [ "$option" == "new apikey" ]; then
 	  apikey="$(tools__gen_apikey)"
 	  
-		sabnzbd__stop
 		echo "* Configuring SABnzbd+"
 		sabnzbd__set_apikey "$apikey"
 		sabnzbd__start
 
 		if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
-			couchpotato__stop
 			echo "* Updating CouchPotato Config"
 			couchpotato__set_sabnzbd_apikey "$apikey"
 			couchpotato__start
 		fi
 		if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-			headphones__stop
 			echo "* Updating Headphones Config"
 			headphones__set_sabnzbd_apikey "$apikey"
 			headphones__start
 		fi
 		if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-			nzbdrone__stop
 			echo "* Updating NzbDrone Config"
 			nzbdrone__set_sabnzbd_apikey "$apikey"
 			nzbdrone__start
 		fi
 		if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-			sickbeard__stop
 			echo "* Updating Sick Beard Config"
 			sickbeard__set_sabnzbd_apikey "$apikey"
 			sickbeard__start
@@ -1075,44 +1123,65 @@ function apps__sabnzbd() {
 function apps__sickbeard() {
   option="$1"
   
-  if [ "$option" == "enable" ]; then  
-		if ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-			# Install the app if not already installed
+  if [ "$option" == "enable" ]; then
+  
+    # If the app is already enabled and running there's nothing to do
+    if [ "$(sickbeard__get_status)" == "Enabled|Running" ]; then
+      echo "Sick Beard is already enabled"
+    
+    # If the app is already enabled but stopped, start the app
+    elif [ "$(sickbeard__get_status)" == "Enabled|Stopped" ]; then
+		  # Start the app
+		  sickbeard__start
+		  
+		# If the app is not enabled, Install (or Upgrade) the app as needed, update
+		# the config as necessary to support the other associated apps and start the app
+		elif ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+		
+		  # Install the app
 			if [ "$(sickbeard__get_status)" == "Not Installed" ]; then
 				sickbeard__install
-			elif sickbeard__version_check; then
-				# Upgrade the app if a newer version is available			
-				sickbeard__stop
+				
+			# Upgrade the app
+			elif sickbeard__version_check; then	
 				sickbeard__upgrade
 			fi
-
+			
 			# Enable the app
 			sickbeard__enable
 			
-			# Stop the app
-			sickbeard__stop
-
-			# Sync Sick Beard to the current SABnzbd+ config
+			# Configure the app
 			echo "* Configuring Sick Beard"
-			sickbeard__sabnzbd_sync
 			
+			# Update SABnzbd+ Support
+			if echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
+			  sabnzbdPort=$(sabnzbd__get_port)
+			  sabnzbdAPIkey=$(sabnzbd__get_apikey)
+			  sabnzbdUsername=$(sabnzbd__get_username)
+			  sabnzbdPassword=$(sabnzbd__get_password)
+			  
+				sickbeard__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUsername" "$sabnzbdPassword"
+			fi
+
+			# Enable Plex Server Support
+			if echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
+				sickbeard__config_plexserver
+			fi
+			
+			# Enable Reverse Proxy Support
+			if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
+				sickbeard__config_proxy
+			fi
+
 			# Start the app
 			sickbeard__start
-
-		elif [ "$(sickbeard__get_status)" == "Enabled|Stopped" ]; then
-		  # Start the app
-		  sickbeard__start
-		else
-		  echo "Sick Beard is already enabled and running"
 		fi
 	
 	elif [ "$option" == "disable" ]; then
-	  sickbeard__stop
 		sickbeard__disable
 		
 	elif [ "$option" == "upgrade" ]; then
 		if sickbeard__version_check; then
-			sickbeard__stop
 			sickbeard__upgrade
 			sickbeard__start
 		fi
@@ -1120,7 +1189,6 @@ function apps__sickbeard() {
 	elif [ "$option" == "set username" ]; then
 	  username="$2"
 	  
-		sickbeard__stop
 		echo "* Configuring Sick Beard"
 		sickbeard__set_username "$username"
 		sickbeard__start
@@ -1128,7 +1196,6 @@ function apps__sickbeard() {
 	elif [ "$option" == "set password" ]; then
 	  password="$2"
 	  
-		sickbeard__stop
 		echo "* Configuring Sick Beard"
 		sickbeard__set_password "$password"
 		sickbeard__start
@@ -1136,22 +1203,19 @@ function apps__sickbeard() {
 	elif [ "$option" == "set port" ]; then
 	  port="$2"
 	  
-		sickbeard__stop
 		echo "* Configuring Sick Beard"
 		sickbeard__set_port "$port"
 		sickbeard__start
 		
-		if echo "$(proxy__get_status)" | egrep -q "^Enabled|Running$"; then
-		  proxy__stop
+		if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
 		  "* Updating the Reverse Proxy Config"
-		  proxy__set_sickbeard_port
+		  proxy__config_sickbeard "$port"
 		  proxy__start
 		fi
 		
 	elif [ "$option" == "new apikey" ]; then
 	  apikey="$(tools__gen_apikey)"
 	  
-		sickbeard__stop
 		echo "* Configuring Sick Beard"
 		sickbeard__set_apikey "$apikey"
 		sickbeard__start
@@ -1161,37 +1225,50 @@ function apps__sickbeard() {
 function apps__transmission() {
   option="$1"
   
-  if [ "$option" == "enable" ]; then  
-		if ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
-			# Install the app if not already installed
+  if [ "$option" == "enable" ]; then
+  
+    # If the app is already enabled and running there's nothing to do
+    if [ "$(transmission__get_status)" == "Enabled|Running" ]; then
+      echo "Transmission is already enabled"
+    
+    # If the app is already enabled but stopped, start the app
+    elif [ "$(transmission__get_status)" == "Enabled|Stopped" ]; then
+		  # Start the app
+		  transmission__start
+		  
+		# If the app is not enabled, Install (or Upgrade) the app as needed, update
+		# the config as necessary to support the other associated apps and start the app
+		elif ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
+		
+		  # Install the app
 			if [ "$(transmission__get_status)" == "Not Installed" ]; then
 				transmission__install
-			elif transmission__version_check; then
-				# Upgrade the app if a newer version is available			
-				transmission__stop
+				
+			# Upgrade the app
+			elif transmission__version_check; then	
 				transmission__upgrade
 			fi
 			
 			# Enable the app
 			transmission__enable
+			
+			# Configure the app
+			echo "* Configuring Transmission"
+			
+			# Enable Reverse Proxy Support
+			if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
+				transmission__config_proxy
+			fi
 
 			# Start the app
 			transmission__start
-
-		elif [ "$(transmission__get_status)" == "Enabled|Stopped" ]; then
-		  # Start the app
-		  transmission__start
-		else
-		  echo "Transmission is already enabled and running"
 		fi
 	
 	elif [ "$option" == "disable" ]; then
-	  transmission__stop
 		transmission__disable
 		
 	elif [ "$option" == "upgrade" ]; then
 		if transmission__version_check; then
-			transmission__stop
 			transmission__upgrade
 			transmission__start
 		fi
@@ -1199,7 +1276,6 @@ function apps__transmission() {
 	elif [ "$option" == "set username" ]; then
 	  username="$2"
 	  
-		transmission__stop
 		echo "* Configuring Transmission"
 		transmission__set_username "$username"
 		transmission__start
@@ -1207,7 +1283,6 @@ function apps__transmission() {
 	elif [ "$option" == "set password" ]; then
 	  password="$2"
 	  
-		transmission__stop
 		echo "* Configuring Transmission"
 		transmission__set_password "$password"
 		transmission__start
@@ -1215,15 +1290,13 @@ function apps__transmission() {
 	elif [ "$option" == "set port" ]; then
 	  port="$2"
 	  
-		transmission__stop
 		echo "* Configuring Transmission"
 		transmission__set_port "$port"
 		transmission__start
 		
-		if echo "$(proxy__get_status)" | egrep -q "^Enabled|Running$"; then
-		  proxy__stop
+		if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
 		  "* Updating the Reverse Proxy Config"
-		  proxy__set_transmission_port
+		  proxy__config_transmission "$port"
 		  proxy__start
 		fi
 		
