@@ -153,7 +153,7 @@ function services__proxy() {
 		proxy__disable
 		 
   elif [ "$option" == "show config" ]; then
-    echo "Reverse Proxy: $(proxy__get_status)"
-    
+    proxy__show_config
+  
   fi
 }
