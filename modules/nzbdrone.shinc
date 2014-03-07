@@ -280,7 +280,7 @@ function nzbdrone__set_plexserver_settings() {
 	# Modify the existing Plex Media Server record "Settings"
 	settings=$(echo "$settings" | sed 's/  "host": ".*",$/  "host": "'$host'",/')
 	settings=$(echo "$settings" | sed 's/  "port": .*,$/  "port": '$port',/')
-	settings=$(echo "$settings" | sed 's/  "updateLibrary": .*,$/  "updateLibrary": 'true'/') 
+	settings=$(echo "$settings" | sed 's/  "updateLibrary": .*,$/  "updateLibrary": true,/') 
   
   # Update the existing Plex Media Server record w/ the modified "Settings"
   nzbdrone__stop
