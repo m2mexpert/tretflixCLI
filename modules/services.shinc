@@ -122,21 +122,49 @@ function services__proxy() {
   option="$1"
   
   if [ "$option" == "enable" ]; then
-		if ! echo "$(proxy__get_status)" | grep -q "^Enabled"; then
-			# Install the service if not already installed
+  
+    # If the app is already enabled and running there's nothing to do
+    if [ "$(proxy__get_status)" == "Enabled|Running" ]; then
+      echo "CouchPotato is already enabled"
+    
+    # If the app is already enabled but stopped, start the app
+    elif [ "$(proxy__get_status)" == "Enabled|Stopped" ]; then
+		  # Start the app
+		  proxy__start
+		  
+		# If the app is not enabled, Install (or Upgrade) the app as needed, update
+		# the config as necessary to support the other associated apps and start the app
+		elif ! echo "$(proxy__get_status)" | grep -q "^Enabled"; then
+		
+		  # Install the app
 			if [ "$(proxy__get_status)" == "Not Installed" ]; then
 				proxy__install
 			fi
-
-			# Enable the service
+			
+			# Enable the app
 			proxy__enable
-
-			# Stop the app
-			proxy__stop
 
 			# Sync w/ current port settings
 			echo "* Configuring the Reverse Proxy"
-			proxy__syncup
+
+			if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+				proxy__config_couchpotato "$couchpotatoPort"
+			fi
+			if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
+				proxy__config_headphones "$headphonesPort"
+			fi
+			if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+				proxy__config_nzbdrone "$nzbdronePort"
+			fi
+			if echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
+				proxy__config_sabnzbd "$sabnzbdPort"
+			fi
+			if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+				proxy__config_sickbeard "$sickbeardPort"
+			fi
+			if echo "$(transmission__get_status)" | grep -q "^Enabled"; then
+				proxy__config_transmission "$transmissionPort"
+			fi
 			
 			# Start the service
 			proxy__start
