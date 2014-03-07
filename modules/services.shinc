@@ -123,25 +123,25 @@ function services__proxy() {
   
   if [ "$option" == "enable" ]; then
   
-    # If the app is already enabled and running there's nothing to do
+    # If the service is already enabled and running there's nothing to do
     if [ "$(proxy__get_status)" == "Enabled|Running" ]; then
-      echo "CouchPotato is already enabled"
+      echo "The Reverse Proxy is already enabled"
     
-    # If the app is already enabled but stopped, start the app
+    # If the service is already enabled but stopped, start the service
     elif [ "$(proxy__get_status)" == "Enabled|Stopped" ]; then
-		  # Start the app
+		  # Start the service
 		  proxy__start
 		  
-		# If the app is not enabled, Install (or Upgrade) the app as needed, update
-		# the config as necessary to support the other associated apps and start the app
+		# If the service is not enabled, Install (or Upgrade) the service as needed, update
+		# the config as necessary to support the other associated services and start the service
 		elif ! echo "$(proxy__get_status)" | grep -q "^Enabled"; then
 		
-		  # Install the app
+		  # Install the service
 			if [ "$(proxy__get_status)" == "Not Installed" ]; then
 				proxy__install
 			fi
 			
-			# Enable the app
+			# Enable the service
 			proxy__enable
 
 			# Sync w/ current port settings
