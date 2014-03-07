@@ -148,21 +148,27 @@ function services__proxy() {
 			echo "* Configuring the Reverse Proxy"
 
 			if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+			  couchpotatoPort=$(couchpotato__get_port)
 				proxy__config_couchpotato "$couchpotatoPort"
 			fi
 			if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
+			  headphonesPort=$(headphones__get_port)
 				proxy__config_headphones "$headphonesPort"
 			fi
 			if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+			  nzbdronePort=$(nzbdrone__get_port)
 				proxy__config_nzbdrone "$nzbdronePort"
 			fi
 			if echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
+			  sabnzbdPort=$(sabnzbd__get_port)
 				proxy__config_sabnzbd "$sabnzbdPort"
 			fi
 			if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+			  sickbeardPort=$(sickbeard__get_port)
 				proxy__config_sickbeard "$sickbeardPort"
 			fi
 			if echo "$(transmission__get_status)" | grep -q "^Enabled"; then
+			  transmissionPort=$(transmission__get_port)
 				proxy__config_transmission "$transmissionPort"
 			fi
 			
