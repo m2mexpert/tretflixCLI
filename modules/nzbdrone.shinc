@@ -27,23 +27,23 @@ function nzbdrone__get_status() {
 
 function nzbdrone__show_config() {
   status=$(nzbdrone__get_status)
-  ipv4=$(tools__get_ip)
-  
-  username=$(nzbdrone__get_username)
-  password=$(nzbdrone__get_password)
-  port=$(nzbdrone__get_port)
-  apikey=$(nzbdrone__get_apikey)
-  
-  if echo "$(proxy__get_status)" | egrep -q "^Enabled|Running$"; then
-    url="http://$ipv4/nzbdrone"
-  else
-    url="http://$ipv4:$port/"
-  fi
 
   echo "NzbDrone Config:"
   echo "----------------------------"
   echo "Status: $status"
   if [ "$status" == "Enabled|Running" ]; then
+		username=$(nzbdrone__get_username)
+		password=$(nzbdrone__get_password)
+		port=$(nzbdrone__get_port)
+		apikey=$(nzbdrone__get_apikey)
+		ipv4=$(tools__get_ip)
+	
+		if echo "$(proxy__get_status)" | egrep -q "^Enabled|Running$"; then
+			url="http://$ipv4/nzbdrone"
+		else
+			url="http://$ipv4:$port/"
+		fi
+		
     echo "Web UI: $url"
     echo
     echo "Username: $username"

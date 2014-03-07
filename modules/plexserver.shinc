@@ -27,14 +27,14 @@ function plexserver__get_status() {
 
 function plexserver__show_config() {
   status="$(plexserver__get_status)"
-  ipv4=$(tools__get_ip)
-  
-  port="32400"
 
   echo "Plex Media Server Config:"
   echo "----------------------------"
   echo "Status: $status"
   if [ "$status" == "Enabled|Running" ]; then
+    port="32400"
+    ipv4=$(tools__get_ip)
+    
     echo "Web UI: http://$ipv4:$port/web"
   fi
 }

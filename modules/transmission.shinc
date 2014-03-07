@@ -27,22 +27,22 @@ function transmission__get_status() {
 
 function transmission__show_config() {
   status=$(transmission__get_status)
-  ipv4=$(tools__get_ip)
-  
-  username=$(transmission__get_username)
-  password=$(transmission__get_password)
-  port=$(transmission__get_port)
-  
-  if echo "$(proxy__get_status)" | egrep -q "^Enabled|Running$"; then
-    url="http://$ipv4/transmission"
-  else
-    url="http://$ipv4:$port/"
-  fi
 
   echo "Transmission Config:"
   echo "----------------------------"
   echo "Status: $status"
   if [ "$status" == "Enabled|Running" ]; then
+		username=$(transmission__get_username)
+		password=$(transmission__get_password)
+		port=$(transmission__get_port)
+		ipv4=$(tools__get_ip)
+	
+		if echo "$(proxy__get_status)" | egrep -q "^Enabled|Running$"; then
+			url="http://$ipv4/transmission"
+		else
+			url="http://$ipv4:$port/"
+		fi
+		
     echo "Web UI: $url"
     echo
     echo "Username: $username"

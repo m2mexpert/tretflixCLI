@@ -27,23 +27,23 @@ function sabnzbd__get_status() {
 
 function sabnzbd__show_config() {
   status=$(sabnzbd__get_status)
-  ipv4=$(tools__get_ip)
-  
-  username=$(sabnzbd__get_username)
-  password=$(sabnzbd__get_password)
-  port=$(sabnzbd__get_port)
-  apikey=$(sabnzbd__get_apikey)
-  
-  if echo "$(proxy__get_status)" | egrep -q "^Enabled|Running$"; then
-    url="http://$ipv4/sabnzbd"
-  else
-    url="http://$ipv4:$port/"
-  fi
 
   echo "SABnzbd+ Config:"
   echo "----------------------------"
   echo "Status: $status"
   if [ "$status" == "Enabled|Running" ]; then
+		username=$(sabnzbd__get_username)
+		password=$(sabnzbd__get_password)
+		port=$(sabnzbd__get_port)
+		apikey=$(sabnzbd__get_apikey)
+		ipv4=$(tools__get_ip)
+	
+		if echo "$(proxy__get_status)" | egrep -q "^Enabled|Running$"; then
+			url="http://$ipv4/sabnzbd"
+		else
+			url="http://$ipv4:$port/"
+		fi
+  
     echo "Web UI: $url"
     echo
     echo "Username: $username"
