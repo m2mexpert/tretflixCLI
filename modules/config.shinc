@@ -559,16 +559,16 @@ function config__wizard() {
 
 		
     if [ "$couchpotatoAction" == "Enable" ]; then
-      sabnzbd__set_couchpotato_category
+      sabnzbd__config_couchpotato
     fi
     if [ "$headphonesAction" == "Enable" ]; then
-      sabnzbd__set_headphones_category
+      sabnzbd__config_headphones
     fi
     if [ "$nzbdroneAction" == "Enable" ]; then
-      sabnzbd__set_nzbdrone_category
+      sabnzbd__config_nzbdrone
     fi
     if [ "$sickbeardAction" == "Enable" ]; then
-      sabnzbd__set_sickbeard_category
+      sabnzbd__config_sickbeard
     fi
 
 		# Start the app
@@ -1188,16 +1188,16 @@ function config__restore_appdata() {
 		echo "* Configuring SABnzbd+"
 		
     if [ "$couchpotatoAction" == "Enable" ]; then
-      sabnzbd__set_couchpotato_category
+      sabnzbd__config_couchpotato
     fi
     if [ "$headphonesAction" == "Enable" ]; then
-      sabnzbd__set_headphones_category
+      sabnzbd__config_headphones
     fi
     if [ "$nzbdroneAction" == "Enable" ]; then
-      sabnzbd__set_nzbdrone_category
+      sabnzbd__config_nzbdrone
     fi
     if [ "$sickbeardAction" == "Enable" ]; then
-      sabnzbd__set_sickbeard_category
+      sabnzbd__config_sickbeard
     fi
 
 		# Start the app
