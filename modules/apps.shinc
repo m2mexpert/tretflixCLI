@@ -652,7 +652,7 @@ function apps__couchpotato() {
 		fi
 	
 	elif [ "$option" == "disable" ]; then
-	  if echo "$(couchpotato__get_status)" | grep -q "^Disabled"; then
+	  if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
 	    echo "CouchPotato is already disabled"
 	  else
 		  couchpotato__disable
@@ -773,7 +773,7 @@ function apps__headphones() {
 		fi
 	
 	elif [ "$option" == "disable" ]; then
-	  if echo "$(headphones__get_status)" | grep -q "^Disabled"; then
+	  if ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
 	    echo "Headphones is already disabled"
 	  else
 		  headphones__disable
@@ -901,7 +901,7 @@ function apps__nzbdrone() {
 		fi
 	
 	elif [ "$option" == "disable" ]; then
-	  if echo "$(nzbdrone__get_status)" | grep -q "^Disabled"; then
+	  if ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
 	    echo "NzbDrone is already disabled"
 	  else
 		  nzbdrone__disable
@@ -1007,7 +1007,7 @@ function apps__plexserver() {
 		fi
 	
 	elif [ "$option" == "disable" ]; then
-	  if echo "$(plexserver__get_status)" | grep -q "^Disabled"; then
+	  if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
 	    echo "Plex Media Server is already disabled"
 	  else
 		  plexserver__disable
@@ -1098,7 +1098,7 @@ function apps__sabnzbd() {
 		fi
 	
 	elif [ "$option" == "disable" ]; then
-	  if echo "$(sabnzbd__get_status)" | grep -q "^Disabled"; then
+	  if ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
 	    echo "SABnzbd+ is already disabled"
 	  else
 		  sabnzbd__disable
@@ -1301,7 +1301,7 @@ function apps__sickbeard() {
 		fi
 	
 	elif [ "$option" == "disable" ]; then
-	  if echo "$(sickbeard__get_status)" | grep -q "^Disabled"; then
+	  if ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
 	    echo "Sick Beard is already disabled"
 	  else
 		  sickbeard__disable
@@ -1414,7 +1414,7 @@ function apps__transmission() {
 		fi
 	
 	elif [ "$option" == "disable" ]; then
-	  if echo "$(transmission__get_status)" | grep -q "^Disabled"; then
+	  if ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
 	    echo "Transmission is already disabled"
 	  else
 		  transmission__disable
