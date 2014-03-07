@@ -1294,12 +1294,6 @@ function apps__transmission() {
 		transmission__set_port "$port"
 		transmission__start
 		
-		if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
-		  "* Updating the Reverse Proxy Config"
-		  proxy__config_transmission "$port"
-		  proxy__start
-		fi
-		
 	elif [ "$option" == "new apikey" ]; then
 	  echo "The 'new apikey' command is not available for Transmission"
 
