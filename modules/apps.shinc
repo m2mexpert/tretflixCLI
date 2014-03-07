@@ -112,68 +112,58 @@ function apps__enable() {
 
 	case "$option" in
 		'-a' | '--all')
-			echo "* Updating apt repository package lists"
-			apt-get update
-			
-      apps__couchpotato "enable"
-      apps__headphones "enable"
-      apps__nzbdrone "enable"
-      apps__plexserver "enable"
-      apps__sabnzbd "enable"
-      apps__sickbeard "enable"
-      apps__transmission "enable"
-
+      apps__allapps "enable"
+      
+			# Display Config Output
 			echo
-			apps__show_config "--all"
+			apps__allapps "show config"
 			;;
 		'-c' | '--couchpotato')
       apps__couchpotato "enable"
-			
+      
+			# Display Config Output
 			echo
 			couchpotato__show_config
 			;;
 		'-h' | '--headphones')
       apps__headphones "enable"
-			
+      
+			# Display Config Output
 			echo
 			headphones__show_config
 			;;
 		'-n' | '--nzbdrone')
-			echo "* Updating apt repository package lists"
-			apt-get update
-
       apps__nzbdrone "enable"
-			
+      
+			# Display Config Output
 			echo
 			nzbdrone__show_config
 			;;
 		'-p' | '--plexserver')
       apps__plexserver "enable"
-			
+      
+			# Display Config Output
 			echo
 			plexserver__show_config
 			;;
 		'-s' | '--sabnzbd')
-			echo "* Updating apt repository package lists"
-			apt-get update
-			
       apps__sabnzbd "enable"
-			
+      
+			# Display Config Output
 			echo
 			sabnzbd__show_config
 			;;
 		'-b' | '--sickbeard')
       apps__sickbeard "enable"
-
+      
+			# Display Config Output
 			echo
 			sickbeard__show_config
 			;;
-		'-t' | '--transmission')
-			echo "* Updating apt repository package lists"
-			apt-get update
-			
+		'-t' | '--transmission')		
       apps__transmission "enable"
-			
+      
+			# Display Config Output
 			echo
 			transmission__show_config
 			;;
@@ -187,56 +177,58 @@ function apps__disable() {
   
 	case "$option" in
 		'-a' | '--all')
-      apps__couchpotato "disable"
-      apps__headphones "disable"
-      apps__nzbdrone "disable"
-      apps__plexserver "disable"
-      apps__sabnzbd "disable"
-      apps__sickbeard "disable"
-      apps__transmission "disable"
-
+		  apps__allapps "disable"
+		  
+			# Display Config Output
 			echo
-			apps__show_config "--all"
-			;;
+			apps__allapps "show config"
+      ;;
 		'-c' | '--couchpotato')
       apps__couchpotato "disable"
-			
+      
+			# Display Config Output
 			echo
 			couchpotato__show_config
 			;;
 		'-h' | '--headphones')
       apps__headphones "disable"
-			
+      
+			# Display Config Output
 			echo
 			headphones__show_config
 			;;
 		'-n' | '--nzbdrone')
       apps__nzbdrone "disable"
-			
+      
+			# Display Config Output
 			echo
 			nzbdrone__show_config
 			;;
 		'-p' | '--plexserver')
       apps__plexserver "disable"
-			
+
+			# Display Config Output
 			echo
 			plexserver__show_config
 			;;
 		'-s' | '--sabnzbd')
       apps__sabnzbd "disable"
-			
+
+			# Display Config Output
 			echo
 			sabnzbd__show_config
 			;;
 		'-b' | '--sickbeard')
       apps__sickbeard "disable"
-			
+      
+			# Display Config Output
 			echo
 			sickbeard__show_config
 			;; 
 		'-t' | '--transmission')
       apps__transmission "disable"
-			
+      
+			# Display Config Output
 			echo
 			transmission__show_config
 			;;
@@ -250,46 +242,60 @@ function apps__upgrade() {
 
 	case "$option" in
 		'-a' | '--all')
-			echo "* Updating apt repository package lists"
-			apt-get update
-
-      apps__couchpotato "upgrade"
-      apps__headphones "upgrade"
-      apps__nzbdrone "upgrade"
-      apps__plexserver "upgrade"
-      apps__sabnzbd "upgrade"
-      apps__sickbeard "upgrade"
-      apps__transmission "upgrade"
+      apps__allapps "upgrade"
+      
+			# Display Config Output
+			echo
+			apps__allapps "show config"
       ;;
 		'-c' | '--couchpotato')
 			apps__couchpotato "upgrade"
+
+			# Display Config Output
+			echo
+			couchpotato__show_config
 			;;
 		'-h' | '--headphones')
 			apps__headphones "upgrade"
+
+			# Display Config Output
+			echo
+			headphones__show_config
 			;;
 		'-n' | '--nzbdrone')
-			echo "* Updating apt repository package lists"
-			apt-get update
-			
 			apps__nzbdrone "upgrade"
+
+			# Display Config Output
+			echo
+			nzbdrone__show_config
 			;;
 		'-p' | '--plexserver')
 			apps__plexserver "upgrade"
+
+			# Display Config Output
+			echo
+			plexserver__show_config
 			;;
 		'-s' | '--sabnzbd')
-			echo "* Updating apt repository package lists"
-			apt-get update
-			
       apps__sabnzbd "upgrade"
+
+			# Display Config Output
+			echo
+			sabnzbd__show_config
 			;;
 		'-b' | '--sickbeard')
       apps__sickbeard "upgrade"
+
+			# Display Config Output
+			echo
+			sickbeard__show_config
 			;;   
 		'-t' | '--transmission')
-			echo "* Updating apt repository package lists"
-			apt-get update
-			
       apps__transmission "upgrade"
+
+			# Display Config Output
+			echo
+			transmission__show_config
 			;;
 		*)
 			apps__help
@@ -302,55 +308,58 @@ function apps__set_username() {
 
 	case "$option" in
 		'-a' | '--all')
-      apps__couchpotato "set username" "$username"
-      apps__headphones "set username" "$username"
-      apps__nzbdrone "set username" "$username"
-      apps__sabnzbd "set username" "$username"
-      apps__sickbeard "set username" "$username"
-      apps__transmission "set username" "$username"
-
+      apps__allapps "set username" "$username"
+            
+			# Display Config Output
 			echo
-			apps__show_config "--all"
+			apps__allapps "show config"
 			;;  
 		'-c' | '--couchpotato')
       apps__couchpotato "set username" "$username"
-			
+      
+			# Display Config Output
 			echo
 			couchpotato__show_config
 			;;
 		'-h' | '--headphones')
       apps__headphones "set username" "$username"
-			
+      
+			# Display Config Output
 			echo
 			headphones__show_config
 			;;
 		'-n' | '--nzbdrone')
       apps__nzbdrone "set username" "$username"
-
+      
+			# Display Config Output
 			echo
 			nzbdrone__show_config
 			;;
 		'-p' | '--plexserver')
       apps__plexserver "set username" "$username"
-
+      
+			# Display Config Output
 			echo
 			plexserver__show_config
 			;;
 		'-s' | '--sabnzbd')
       apps__sabnzbd "set username" "$username"
-
+      
+			# Display Config Output
 			echo
 			sabnzbd__show_config
 			;;
 		'-b' | '--sickbeard')
       apps__sickbeard "set username" "$username"
-			
+      
+			# Display Config Output
 			echo
 			sickbeard__show_config
 			;;  
 		'-t' | '--transmission')
       apps__transmission "set username" "$username"
-			
+      
+			# Display Config Output
 			echo
 			transmission__show_config
 			;;
@@ -365,55 +374,58 @@ function apps__set_password() {
   
 	case "$option" in
 		'-a' | '--all')
-      apps__couchpotato "set password" "$password"
-      apps__headphones "set password" "$password"
-      apps__nzbdrone "set password" "$password"
-      apps__sabnzbd "set password" "$password"
-      apps__sickbeard "set password" "$password"
-      apps__transmission "set password" "$password"
-
+      apps__allapps "set password" "$password"
+            
+			# Display Config Output
 			echo
-			apps__show_config "--all"
+			apps__allapps "show config"
 			;;   
 		'-c' | '--couchpotato')
       apps__couchpotato "set password" "$password"
-			
+            
+			# Display Config Output
 			echo
 			couchpotato__show_config
 			;;
 		'-h' | '--headphones')
       apps__headphones "set password" "$password"
-			
+            
+			# Display Config Output
 			echo
 			headphones__show_config
 			;;
 		'-n' | '--nzbdrone')
       apps__nzbdrone "set password" "$password"
-			
+            
+			# Display Config Output
 			echo
 			nzbdrone__show_config
 			;;
 		'-p' | '--plexserver')
       apps__plexserver "set password" "$password"
-
+            
+			# Display Config Output
 			echo
 			plexserver__show_config
 			;;
 		'-s' | '--sabnzbd')
       apps__sabnzbd "set password" "$password"
-			
+            
+			# Display Config Output
 			echo
 			sabnzbd__show_config
 			;;
 		'-b' | '--sickbeard')
       apps__sickbeard "set password" "$password"
-			
+            
+			# Display Config Output
 			echo
 			sickbeard__show_config
 			;; 
 		'-t' | '--transmission')
       apps__transmission "set password" "$password"
-			
+            
+			# Display Config Output
 			echo
 			transmission__show_config
 			;;
@@ -429,46 +441,55 @@ function apps__set_port() {
 	case "$option" in
 		'-a' | '--all')
 			echo "The 'set port' command is not available with the '--all' option"
+			echo
+	    exit 1
 			;;   
 		'-c' | '--couchpotato')
       apps__couchpotato "set port" "$port"
-			
+            
+			# Display Config Output
 			echo
 			couchpotato__show_config
 			;;
 		'-h' | '--headphones')
       apps__headphones "set port" "$port"
-			
+            
+			# Display Config Output
 			echo
 			headphones__show_config
 			;;
 		'-n' | '--nzbdrone')
       apps__nzbdrone "set port" "$port"
-			
+            
+			# Display Config Output
 			echo
 			nzbdrone__show_config
 			;;
 		'-p' | '--plexserver')
       apps__plexserver "set port" "$port"
-
+            
+			# Display Config Output
 			echo
 			plexserver__show_config
 			;;
 		'-s' | '--sabnzbd')
       apps__sabnzbd "set port" "$port"
-			
+            
+			# Display Config Output
 			echo
 			sabnzbd__show_config
 			;;
 		'-b' | '--sickbeard')
       apps__sickbeard "set port" "$port"
-			
+            
+			# Display Config Output
 			echo
 			sickbeard__show_config
 			;; 
 		'-t' | '--transmission')
       apps__transmission "set port" "$port"
-
+            
+			# Display Config Output
 			echo
 			transmission__show_config
 			;;
@@ -482,56 +503,60 @@ function apps__new_apikey() {
 
 	case "$option" in
 		'-a' | '--all')
-      apps__couchpotato "new apikey"
-      apps__headphones "new apikey"
-      apps__nzbdrone "new apikey"
-      apps__sabnzbd "new apikey"
-      apps__sickbeard "new apikey"
-
+      apps__allapps "new apikey"
+            
+			# Display Config Output
 			echo
-			apps__show_config "--all"
+			apps__allapps "show config"
 			;;  
 		'-c' | '--couchpotato')
       apps__couchpotato "new apikey"
-			
+            
+			# Display Config Output
 			echo
 			couchpotato__show_config
 			;;
 		'-h' | '--headphones')
       apps__headphones "new apikey"
-			
+            
+			# Display Config Output
 			echo
 			headphones__show_config
 			;;
 		'-n' | '--nzbdrone')
       apps__nzbdrone "new apikey"
-
+            
+			# Display Config Output
 			echo
 			nzbdrone__show_config
 			;;
 		'-p' | '--plexserver')
       apps__plexserver "new apikey"
-
+            
+			# Display Config Output
 			echo
 			plexserver__show_config
 			;;
 		'-s' | '--sabnzbd')
       apps__sabnzbd "new apikey"
-      
+            
+			# Display Config Output
 			echo
 			sabnzbd__show_config
 			;;
 		'-b' | '--sickbeard')
       apps__sickbeard "new apikey"
-      
+            
+			# Display Config Output
 			echo
 			sickbeard__show_config
 			;;  
 		'-t' | '--transmission')
       apps__transmission "new apikey"
-      
+            
+			# Display Config Output
 			echo
-			transmission__show_config      
+			transmission__show_config
 			;;
 		*)
 			apps__help
@@ -543,30 +568,7 @@ function apps__show_config() {
   
 	case "$option" in
 		'-a' | '--all')
-			tmpfile="/tmp/showconfig.out"
-	
-			(couchpotato__show_config) > $tmpfile
-			echo >> $tmpfile
-			echo >> $tmpfile
-			(headphones__show_config) >> $tmpfile
-			echo >> $tmpfile
-			echo >> $tmpfile
-			(nzbdrone__show_config) >> $tmpfile
-			echo >> $tmpfile
-			echo >> $tmpfile
-			(plexserver__show_config) >> $tmpfile
-			echo >> $tmpfile
-			echo >> $tmpfile
-			(sabnzbd__show_config) >> $tmpfile
-			echo >> $tmpfile
-			echo >> $tmpfile
-			(sickbeard__show_config) >> $tmpfile
-			echo >> $tmpfile
-			echo >> $tmpfile
-			(transmission__show_config) >> $tmpfile
-	
-			cat $tmpfile | more
-			rm -f $tmpfile > /dev/null 2>&1
+      apps__allapps "show config"
 			;;
 		'-c' | '--couchpotato')
 			couchpotato__show_config
@@ -644,53 +646,77 @@ function apps__couchpotato() {
 			if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
 				couchpotato__config_proxy
 			fi
-
-			# Start the app
+			
+      # Start the app
 			couchpotato__start
 		fi
 	
 	elif [ "$option" == "disable" ]; then
-		couchpotato__disable
+	  if echo "$(couchpotato__get_status)" | grep -q "^Disabled"; then
+	    echo "CouchPotato is already disabled"
+	  else
+		  couchpotato__disable
+		fi
 		
 	elif [ "$option" == "upgrade" ]; then
-		if couchpotato__version_check; then
-			couchpotato__upgrade
-			couchpotato__start
+	  if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+	    echo "CouchPotato is disabled"
+	  else
+			if couchpotato__version_check; then
+				couchpotato__upgrade
+				couchpotato__start
+			fi
 		fi
 		
 	elif [ "$option" == "set username" ]; then
 	  username="$2"
-	  
-		echo "* Configuring CouchPotato"
-		couchpotato__set_username "$username"
-		couchpotato__start
+
+	  if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+	    echo "CouchPotato is disabled"
+	  else
+			echo "* Configuring CouchPotato"
+			couchpotato__set_username "$username"
+			couchpotato__start
+    fi
 
 	elif [ "$option" == "set password" ]; then
 	  password="$2"
-	  
-		echo "* Configuring CouchPotato"
-		couchpotato__set_password "$password"
-		couchpotato__start
+
+	  if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+	    echo "CouchPotato is disabled"
+	  else
+			echo "* Configuring CouchPotato"
+			couchpotato__set_password "$password"
+			couchpotato__start
+		fi
 		
 	elif [ "$option" == "set port" ]; then
 	  port="$2"
 	  
-		echo "* Configuring CouchPotato"
-		couchpotato__set_port "$port"
-		couchpotato__start
-		
-		if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
-		  "* Updating the Reverse Proxy Config"
-		  proxy__config_couchpotato "$port"
-		  proxy__start
-		fi
+	  if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+	    echo "CouchPotato is disabled"
+	  else
+			echo "* Configuring CouchPotato"
+			couchpotato__set_port "$port"
+			couchpotato__start
+			
+			if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
+				"* Updating the Reverse Proxy Config"
+				proxy__config_couchpotato "$port"
+				proxy__start
+			fi
+	  fi
 		
 	elif [ "$option" == "new apikey" ]; then
-	  apikey="$(tools__gen_apikey)"
-	  
-		echo "* Configuring CouchPotato"
-		couchpotato__set_apikey "$apikey"
-		couchpotato__start
+	  if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+	    echo "CouchPotato is disabled"
+	  else
+	    apikey="$(tools__gen_apikey)"
+			
+			echo "* Configuring CouchPotato"
+			couchpotato__set_apikey "$apikey"
+			couchpotato__start
+		fi
 	fi
 }
 
@@ -742,52 +768,76 @@ function apps__headphones() {
 				headphones__config_proxy
 			fi
 
-			# Start the app
+      # Start the app
 			headphones__start
 		fi
 	
 	elif [ "$option" == "disable" ]; then
-		headphones__disable
+	  if echo "$(headphones__get_status)" | grep -q "^Disabled"; then
+	    echo "Headphones is already disabled"
+	  else
+		  headphones__disable
+		fi
 		
 	elif [ "$option" == "upgrade" ]; then
-		if headphones__version_check; then
-			headphones__upgrade
-			headphones__start
+	  if ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
+	    echo "Headphones is disabled"
+	  else
+			if headphones__version_check; then
+				headphones__upgrade
+				headphones__start
+			fi
 		fi
 		
 	elif [ "$option" == "set username" ]; then
 	  username="$2"
 	  
-		echo "* Configuring Headphones"
-		headphones__set_username "$username"
-		headphones__start
+	  if ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
+	    echo "Headphones is disabled"
+	  else
+			echo "* Configuring Headphones"
+			headphones__set_username "$username"
+			headphones__start
+		fi
 
 	elif [ "$option" == "set password" ]; then
 	  password="$2"
 
-		echo "* Configuring Headphones"
-		headphones__set_password "$password"
-		headphones__start
+	  if ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
+	    echo "Headphones is disabled"
+	  else
+			echo "* Configuring Headphones"
+			headphones__set_password "$password"
+			headphones__start
+		fi
 		
 	elif [ "$option" == "set port" ]; then
 	  port="$2"
 
-		echo "* Configuring Headphones"
-		headphones__set_port "$port"
-		headphones__start
+	  if ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
+	    echo "Headphones is disabled"
+	  else
+			echo "* Configuring Headphones"
+			headphones__set_port "$port"
+			headphones__start
 
-		if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
-		  "* Updating the Reverse Proxy Config"
-		  proxy__config_headphones "$port"
-		  proxy__start
-		fi
+			if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
+				"* Updating the Reverse Proxy Config"
+				proxy__config_headphones "$port"
+				proxy__start
+			fi
+	  fi
 		
 	elif [ "$option" == "new apikey" ]; then
-	  apikey="$(tools__gen_apikey)"
-	  
-		echo "* Configuring Headphones"
-		headphones__set_apikey "$apikey"
-		headphones__start
+	  if ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
+	    echo "Headphones is disabled"
+	  else
+	    apikey="$(tools__gen_apikey)"
+	    	  
+			echo "* Configuring Headphones"
+			headphones__set_apikey "$apikey"
+			headphones__start
+		fi
 	fi
 }
 
@@ -808,6 +858,8 @@ function apps__nzbdrone() {
 		# If the app is not enabled, Install (or Upgrade) the app as needed, update
 		# the config as necessary to support the other associated apps and start the app
 		elif ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+		  echo "* Updating apt repository package lists"
+			apt-get update
 		
 		  # Install the app
 			if [ "$(nzbdrone__get_status)" == "Not Installed" ]; then
@@ -844,52 +896,79 @@ function apps__nzbdrone() {
 				nzbdrone__config_proxy
 			fi
 
-			# Start the app
+      # Start the app
 			nzbdrone__start
 		fi
 	
 	elif [ "$option" == "disable" ]; then
-		nzbdrone__disable
+	  if echo "$(nzbdrone__get_status)" | grep -q "^Disabled"; then
+	    echo "NzbDrone is already disabled"
+	  else
+		  nzbdrone__disable
+		fi
 		
 	elif [ "$option" == "upgrade" ]; then
-		if nzbdrone__version_check; then
-			nzbdrone__upgrade
-			nzbdrone__start
+	  if ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+	    echo "NzbDrone is disabled"
+	  else
+			echo "* Updating apt repository package lists"
+			apt-get update
+		
+			if nzbdrone__version_check; then
+				nzbdrone__upgrade
+				nzbdrone__start
+			fi
 		fi
 		
 	elif [ "$option" == "set username" ]; then
 	  username="$2"
 	  
-		echo "* Configuring NzbDrone"
-		nzbdrone__set_username "$username"
-		nzbdrone__start
+	  if ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+	    echo "NzbDrone is disabled"
+	  else
+			echo "* Configuring NzbDrone"
+			nzbdrone__set_username "$username"
+			nzbdrone__start
+		fi
 
 	elif [ "$option" == "set password" ]; then
 	  password="$2"
 	  
-		echo "* Configuring NzbDrone"
-		nzbdrone__set_password "$password"
-		nzbdrone__start
+	  if ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+	    echo "NzbDrone is disabled"
+	  else
+			echo "* Configuring NzbDrone"
+			nzbdrone__set_password "$password"
+			nzbdrone__start
+	  fi
 		
 	elif [ "$option" == "set port" ]; then
 	  port="$2"
 	  
-		echo "* Configuring NzbDrone"
-		nzbdrone__set_port "$port"
-		nzbdrone__start
+	  if ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+	    echo "NzbDrone is disabled"
+	  else
+			echo "* Configuring NzbDrone"
+			nzbdrone__set_port "$port"
+			nzbdrone__start
 
-		if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
-		  "* Updating the Reverse Proxy Config"
-		  proxy__config_nzbdrone "$port"
-		  proxy__start
+			if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
+				"* Updating the Reverse Proxy Config"
+				proxy__config_nzbdrone "$port"
+				proxy__start
+			fi
 		fi
 		
 	elif [ "$option" == "new apikey" ]; then
-	  apikey="$(tools__gen_apikey)"
-	  
-		echo "* Configuring NzbDrone"
-		nzbdrone__set_apikey "$apikey"
-		nzbdrone__start
+	  if ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+	    echo "NzbDrone is disabled"
+	  else
+			apikey="$(tools__gen_apikey)"
+		
+			echo "* Configuring NzbDrone"
+			nzbdrone__set_apikey "$apikey"
+			nzbdrone__start
+		fi
 	fi
 }
 
@@ -923,30 +1002,46 @@ function apps__plexserver() {
 			# Enable the app
 			plexserver__enable
 
-			# Start the app
+      # Start the app
 			plexserver__start
 		fi
 	
 	elif [ "$option" == "disable" ]; then
-		plexserver__disable
+	  if echo "$(plexserver__get_status)" | grep -q "^Disabled"; then
+	    echo "Plex Media Server is already disabled"
+	  else
+		  plexserver__disable
+		fi
 		
 	elif [ "$option" == "upgrade" ]; then
-		if plexserver__version_check; then
-			plexserver__upgrade
-			plexserver__start
+	  if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
+	    echo "Plex Media Server is disabled"
+	  else
+			if plexserver__version_check; then
+				plexserver__upgrade
+				plexserver__start
+			fi
 		fi
 		
 	elif [ "$option" == "set username" ]; then
 	  echo "The 'set username' command is not available for Plex Media Server"
-
+	  echo
+	  exit 1
+	  
 	elif [ "$option" == "set password" ]; then
 	  echo "The 'set password' command is not available for Plex Media Server"
-		
+	  echo
+	  exit 1
+	  		
 	elif [ "$option" == "set port" ]; then
 	  echo "The 'set port' command is not available for Plex Media Server"
-		
+	  echo
+	  exit 1
+	  		
 	elif [ "$option" == "new apikey" ]; then
 	  echo "The 'new apikey' command is not available for Plex Media Server"
+	  echo
+	  exit 1
 	fi
 }
 
@@ -967,6 +1062,8 @@ function apps__sabnzbd() {
 		# If the app is not enabled, Install (or Upgrade) the app as needed, update
 		# the config as necessary to support the other associated apps and start the app
 		elif ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
+		  echo "* Updating apt repository package lists"
+			apt-get update
 		
 		  # Install the app
 			if [ "$(sabnzbd__get_status)" == "Not Installed" ]; then
@@ -984,139 +1081,165 @@ function apps__sabnzbd() {
 			echo "* Configuring SABnzbd+"
 			
 			if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
-				sabnzbd__set_couchpotato_category
+				sabnzbd__config_couchpotato
 			fi
 			if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-				sabnzbd__set_headphones_category
+				sabnzbd__config_headphones
 			fi
 			if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-				sabnzbd__set_nzbdrone_category
+				sabnzbd__config_headphones
 			fi
 			if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-				sabnzbd__set_sickbeard_category
+				sabnzbd__config_headphones
 			fi			
 
-			# Start the app
+      # Start the app
 			sabnzbd__start
 		fi
 	
 	elif [ "$option" == "disable" ]; then
-		sabnzbd__disable
+	  if echo "$(sabnzbd__get_status)" | grep -q "^Disabled"; then
+	    echo "SABnzbd+ is already disabled"
+	  else
+		  sabnzbd__disable
+		fi
 		
 	elif [ "$option" == "upgrade" ]; then
-		if sabnzbd__version_check; then
-			sabnzbd__upgrade
-			sabnzbd__start
+	  if ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
+	    echo "SABnzbd+ is disabled"
+	  else
+			echo "* Updating apt repository package lists"
+			apt-get update
+		
+			if sabnzbd__version_check; then
+				sabnzbd__upgrade
+				sabnzbd__start
+			fi
 		fi
 		
 	elif [ "$option" == "set username" ]; then
 	  username="$2"
 	  
-		echo "* Configuring SABnzbd+"
-		sabnzbd__set_username "$username"
-		sabnzbd__start
+	  if ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
+	    echo "SABnzbd+ is disabled"
+	  else
+			echo "* Configuring SABnzbd+"
+			sabnzbd__set_username "$username"
+			sabnzbd__start
 
-		if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-			echo "* Updating Headphones Config"
-			headphones__set_sabnzbd_username "$username"
-			headphones__start
-		fi
-		if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-			echo "* Updating NzbDrone Config"
-			nzbdrone__set_sabnzbd_username "$username"
-			nzbdrone__start
-		fi
-		if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-			echo "* Updating Sick Beard Config"
-			sickbeard__set_sabnzbd_username "$username"
-			sickbeard__start
+			if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
+				echo "* Updating Headphones Config"
+				headphones__set_sabnzbd_username "$username"
+				headphones__start
+			fi
+			if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+				echo "* Updating NzbDrone Config"
+				nzbdrone__set_sabnzbd_username "$username"
+				nzbdrone__start
+			fi
+			if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+				echo "* Updating Sick Beard Config"
+				sickbeard__set_sabnzbd_username "$username"
+				sickbeard__start
+			fi
 		fi
 
 	elif [ "$option" == "set password" ]; then
 	  password="$2"
-	  
-		echo "* Configuring SABnzbd+"
-		sabnzbd__set_password "$password"
-		sabnzbd__start
 
-		if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-			echo "* Updating Headphones Config"
-			headphones__set_sabnzbd_password "$password"
-			headphones__start
-		fi
-		if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-			echo "* Updating NzbDrone Config"
-			nzbdrone__set_sabnzbd_password "$password"
-			nzbdrone__start
-		fi
-		if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-			echo "* Updating Sick Beard Config"
-			sickbeard__set_sabnzbd_password "$password"
-			sickbeard__start
+	  if ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
+	    echo "SABnzbd+ is disabled"
+	  else
+			echo "* Configuring SABnzbd+"
+			sabnzbd__set_password "$password"
+			sabnzbd__start
+
+			if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
+				echo "* Updating Headphones Config"
+				headphones__set_sabnzbd_password "$password"
+				headphones__start
+			fi
+			if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+				echo "* Updating NzbDrone Config"
+				nzbdrone__set_sabnzbd_password "$password"
+				nzbdrone__start
+			fi
+			if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+				echo "* Updating Sick Beard Config"
+				sickbeard__set_sabnzbd_password "$password"
+				sickbeard__start
+			fi
 		fi
 		
 	elif [ "$option" == "set port" ]; then
 	  port="$2"
-	  
-		echo "* Configuring SABnzbd+"
-		sabnzbd__set_port "$port"
-		sabnzbd__start
 
-		if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
-			echo "* Updating CouchPotato Config"
-			couchpotato__set_sabnzbd_port "$port"
-			couchpotato__start
-		fi
-		if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-			echo "* Updating Headphones Config"
-			headphones__set_sabnzbd_port "$port"
-			headphones__start
-		fi
-		if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-			echo "* Updating NzbDrone Config"
-			nzbdrone__set_sabnzbd_port "$port"
-			nzbdrone__start
-		fi
-		if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-			echo "* Updating Sick Beard Config"
-			sickbeard__set_sabnzbd_port "$port"
-			sickbeard__start
-		fi
+	  if ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
+	    echo "SABnzbd+ is disabled"
+	  else	  
+			echo "* Configuring SABnzbd+"
+			sabnzbd__set_port "$port"
+			sabnzbd__start
+
+			if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+				echo "* Updating CouchPotato Config"
+				couchpotato__set_sabnzbd_port "$port"
+				couchpotato__start
+			fi
+			if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
+				echo "* Updating Headphones Config"
+				headphones__set_sabnzbd_port "$port"
+				headphones__start
+			fi
+			if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+				echo "* Updating NzbDrone Config"
+				nzbdrone__set_sabnzbd_port "$port"
+				nzbdrone__start
+			fi
+			if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+				echo "* Updating Sick Beard Config"
+				sickbeard__set_sabnzbd_port "$port"
+				sickbeard__start
+			fi
 		
-		if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
-		  "* Updating the Reverse Proxy Config"
-		  proxy__config_sabnzbd "$port"
-		  proxy__start
+			if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
+				"* Updating the Reverse Proxy Config"
+				proxy__config_sabnzbd "$port"
+				proxy__start
+			fi
 		fi
 		
 	elif [ "$option" == "new apikey" ]; then
-	  apikey="$(tools__gen_apikey)"
-	  
-		echo "* Configuring SABnzbd+"
-		sabnzbd__set_apikey "$apikey"
-		sabnzbd__start
-
-		if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
-			echo "* Updating CouchPotato Config"
-			couchpotato__set_sabnzbd_apikey "$apikey"
-			couchpotato__start
-		fi
-		if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-			echo "* Updating Headphones Config"
-			headphones__set_sabnzbd_apikey "$apikey"
-			headphones__start
-		fi
-		if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-			echo "* Updating NzbDrone Config"
-			nzbdrone__set_sabnzbd_apikey "$apikey"
-			nzbdrone__start
-		fi
-		if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-			echo "* Updating Sick Beard Config"
-			sickbeard__set_sabnzbd_apikey "$apikey"
-			sickbeard__start
-		fi
+	  if ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
+	    echo "SABnzbd+ is disabled"
+	  else
+			apikey="$(tools__gen_apikey)"
 		
+			echo "* Configuring SABnzbd+"
+			sabnzbd__set_apikey "$apikey"
+			sabnzbd__start
+
+			if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+				echo "* Updating CouchPotato Config"
+				couchpotato__set_sabnzbd_apikey "$apikey"
+				couchpotato__start
+			fi
+			if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
+				echo "* Updating Headphones Config"
+				headphones__set_sabnzbd_apikey "$apikey"
+				headphones__start
+			fi
+			if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+				echo "* Updating NzbDrone Config"
+				nzbdrone__set_sabnzbd_apikey "$apikey"
+				nzbdrone__start
+			fi
+			if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+				echo "* Updating Sick Beard Config"
+				sickbeard__set_sabnzbd_apikey "$apikey"
+				sickbeard__start
+			fi
+		fi
 	fi
 }
 
@@ -1173,52 +1296,76 @@ function apps__sickbeard() {
 				sickbeard__config_proxy
 			fi
 
-			# Start the app
+      # Start the app
 			sickbeard__start
 		fi
 	
 	elif [ "$option" == "disable" ]; then
-		sickbeard__disable
+	  if echo "$(sickbeard__get_status)" | grep -q "^Disabled"; then
+	    echo "Sick Beard is already disabled"
+	  else
+		  sickbeard__disable
+		fi
 		
 	elif [ "$option" == "upgrade" ]; then
-		if sickbeard__version_check; then
-			sickbeard__upgrade
-			sickbeard__start
+	  if ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+	    echo "Sick Beard is disabled"
+	  else
+			if sickbeard__version_check; then
+				sickbeard__upgrade
+				sickbeard__start
+			fi
 		fi
 		
 	elif [ "$option" == "set username" ]; then
 	  username="$2"
 	  
-		echo "* Configuring Sick Beard"
-		sickbeard__set_username "$username"
-		sickbeard__start
+	  if ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+	    echo "Sick Beard is disabled"
+	  else
+			echo "* Configuring Sick Beard"
+			sickbeard__set_username "$username"
+			sickbeard__start
+		fi
 
 	elif [ "$option" == "set password" ]; then
 	  password="$2"
-	  
-		echo "* Configuring Sick Beard"
-		sickbeard__set_password "$password"
-		sickbeard__start
+
+	  if ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+	    echo "Sick Beard is disabled"
+	  else
+			echo "* Configuring Sick Beard"
+			sickbeard__set_password "$password"
+			sickbeard__start
+		fi
 		
 	elif [ "$option" == "set port" ]; then
 	  port="$2"
-	  
-		echo "* Configuring Sick Beard"
-		sickbeard__set_port "$port"
-		sickbeard__start
+
+	  if ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+	    echo "Sick Beard is disabled"
+	  else	  
+			echo "* Configuring Sick Beard"
+			sickbeard__set_port "$port"
+			sickbeard__start
 		
-		if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
-		  "* Updating the Reverse Proxy Config"
-		  proxy__config_sickbeard "$port"
-		  proxy__start
+			if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
+				"* Updating the Reverse Proxy Config"
+				proxy__config_sickbeard "$port"
+				proxy__start
+			fi
 		fi
 		
 	elif [ "$option" == "new apikey" ]; then
-	  apikey="$(tools__gen_apikey)"
-	  
-		echo "* Configuring Sick Beard"
-		sickbeard__set_apikey "$apikey"
-		sickbeard__start
+	  if ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+	    echo "Sick Beard is disabled"
+	  else
+			apikey="$(tools__gen_apikey)"
+		
+			echo "* Configuring Sick Beard"
+			sickbeard__set_apikey "$apikey"
+			sickbeard__start
+		fi
 	fi
 }
 
@@ -1239,7 +1386,9 @@ function apps__transmission() {
 		# If the app is not enabled, Install (or Upgrade) the app as needed, update
 		# the config as necessary to support the other associated apps and start the app
 		elif ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
-		
+			echo "* Updating apt repository package lists"
+			apt-get update
+			
 		  # Install the app
 			if [ "$(transmission__get_status)" == "Not Installed" ]; then
 				transmission__install
@@ -1260,42 +1409,530 @@ function apps__transmission() {
 				transmission__config_proxy
 			fi
 
-			# Start the app
+      # Start the app
 			transmission__start
 		fi
 	
 	elif [ "$option" == "disable" ]; then
-		transmission__disable
+	  if echo "$(transmission__get_status)" | grep -q "^Disabled"; then
+	    echo "Transmission is already disabled"
+	  else
+		  transmission__disable
+		fi
 		
 	elif [ "$option" == "upgrade" ]; then
-		if transmission__version_check; then
-			transmission__upgrade
-			transmission__start
+	  if ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
+	    echo "Transmission is disabled"
+	  else
+			echo "* Updating apt repository package lists"
+			apt-get update
+		
+			if transmission__version_check; then
+				transmission__upgrade
+				transmission__start
+			fi
 		fi
 		
 	elif [ "$option" == "set username" ]; then
 	  username="$2"
 	  
-		echo "* Configuring Transmission"
-		transmission__set_username "$username"
-		transmission__start
+	  if ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
+	    echo "Transmission is disabled"
+	  else
+			echo "* Configuring Transmission"
+			transmission__set_username "$username"
+			transmission__start
+		fi
 
 	elif [ "$option" == "set password" ]; then
 	  password="$2"
 	  
-		echo "* Configuring Transmission"
-		transmission__set_password "$password"
-		transmission__start
+	  if ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
+	    echo "Transmission is disabled"
+	  else
+			echo "* Configuring Transmission"
+			transmission__set_password "$password"
+			transmission__start
+		fi
 		
 	elif [ "$option" == "set port" ]; then
 	  port="$2"
 	  
-		echo "* Configuring Transmission"
-		transmission__set_port "$port"
-		transmission__start
+	  if ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
+	    echo "Transmission is disabled"
+	  else
+			echo "* Configuring Transmission"
+			transmission__set_port "$port"
+			transmission__start
+			
+			if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
+				"* Updating the Reverse Proxy Config"
+				proxy__config_transmission "$port"
+				proxy__start
+			fi
+		fi
 		
 	elif [ "$option" == "new apikey" ]; then
 	  echo "The 'new apikey' command is not available for Transmission"
+	  echo
+	  exit 1
+	fi
+}
 
+function apps__allapps() {
+  option="$1"
+  
+  if [ "$option" == "enable" ]; then
+		echo "* Updating apt repository package lists"
+		apt-get update
+		
+		# Make sure all apps are installed first
+		if [ "$(couchpotato__get_status)" == "Not Installed" ]; then
+			couchpotato__install
+		fi
+		if [ "$(headphones__get_status)" == "Not Installed" ]; then
+			headphones__install
+		fi
+		if [ "$(nzbdrone__get_status)" == "Not Installed" ]; then
+			nzbdrone__install
+		fi
+		if [ "$(plexserver__get_status)" == "Not Installed" ]; then
+			plexserver__install
+		fi
+		if [ "$(sabnzbd__get_status)" == "Not Installed" ]; then
+			sabnzbd__install
+		fi
+		if [ "$(sickbeard__get_status)" == "Not Installed" ]; then
+			sickbeard__install
+		fi
+		if [ "$(transmission__get_status)" == "Not Installed" ]; then
+			transmission__install
+		fi		
+		
+
+		# CouchPotato Section
+		# ---------------------------
+
+    # If the app is already enabled and running there's nothing to do
+    if [ "$(couchpotato__get_status)" == "Enabled|Running" ]; then
+      echo "CouchPotato is already enabled"
+    
+    # If the app is already enabled but stopped, start the app
+    elif [ "$(couchpotato__get_status)" == "Enabled|Stopped" ]; then
+		  # Start the app
+		  couchpotato__start
+		  
+		# If the app is not enabled, Install (or Upgrade) the app as needed, update
+		# the config as necessary to support the other associated apps and start the app
+		elif ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+		  
+		  # Upgrade the app
+			if couchpotato__version_check; then	
+			  couchpotato__upgrade
+      fi
+			
+			# Enable the app
+			couchpotato__enable
+			
+			# Configure the app
+			echo "* Configuring CouchPotato"
+			
+		  # Update SABnzbd+ Support
+			sabnzbdPort=$(sabnzbd__get_port)
+			sabnzbdAPIkey=$(sabnzbd__get_apikey)
+			couchpotato__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey"
+	
+		  # Enable Plex Server Support
+			couchpotato__config_plexserver
+			
+			# Enable Reverse Proxy Support
+			if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
+				couchpotato__config_proxy
+			fi
+			
+      # Start the app
+			couchpotato__start
+		fi
+		
+		# Headphones Section
+		# ---------------------------
+
+    # If the app is already enabled and running there's nothing to do
+    if [ "$(headphones__get_status)" == "Enabled|Running" ]; then
+      echo "Headphones is already enabled"
+    
+    # If the app is already enabled but stopped, start the app
+    elif [ "$(headphones__get_status)" == "Enabled|Stopped" ]; then
+		  # Start the app
+		  headphones__start
+		  
+		# If the app is not enabled, Install (or Upgrade) the app as needed, update
+		# the config as necessary to support the other associated apps and start the app
+		elif ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
+		
+		  # Upgrade the app
+			if couchpotato__version_check; then	
+			  couchpotato__upgrade
+      fi
+			
+			# Enable the app
+			headphones__enable
+			
+			# Configure the app
+			echo "* Configuring Headphones"
+			
+			# Update SABnzbd+ Support
+			sabnzbdPort=$(sabnzbd__get_port)
+			sabnzbdAPIkey=$(sabnzbd__get_apikey)
+			sabnzbdUsername=$(sabnzbd__get_username)
+			sabnzbdPassword=$(sabnzbd__get_password)		  
+			headphones__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUsername" "$sabnzbdPassword"
+
+			# Enable Reverse Proxy Support
+			if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
+				headphones__config_proxy
+			fi
+
+      # Start the app
+			headphones__start
+		fi		
+		
+		# NzbDrone Section
+		# ---------------------------
+
+    # If the app is already enabled and running there's nothing to do
+    if [ "$(nzbdrone__get_status)" == "Enabled|Running" ]; then
+      echo "NzbDrone is already enabled"
+    
+    # If the app is already enabled but stopped, start the app
+    elif [ "$(nzbdrone__get_status)" == "Enabled|Stopped" ]; then
+		  # Start the app
+		  nzbdrone__start
+		  
+		# If the app is not enabled, Install (or Upgrade) the app as needed, update
+		# the config as necessary to support the other associated apps and start the app
+		elif ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+				
+			# Upgrade the app
+			if nzbdrone__version_check; then	
+				nzbdrone__upgrade
+			fi
+			
+			# Enable the app
+			nzbdrone__enable
+			
+			# Configure the app
+			echo "* Configuring NzbDrone"
+			
+			# Update SABnzbd+ Support
+			sabnzbdPort=$(sabnzbd__get_port)
+			sabnzbdAPIkey=$(sabnzbd__get_apikey)
+			sabnzbdUsername=$(sabnzbd__get_username)
+			sabnzbdPassword=$(sabnzbd__get_password)
+			nzbdrone__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUsername" "$sabnzbdPassword"
+
+			# Enable Plex Server Support
+			nzbdrone__config_plexserver
+			
+			# Enable Reverse Proxy Support
+			if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
+				nzbdrone__config_proxy
+			fi
+
+      # Start the app
+			nzbdrone__start
+		fi
+		
+		# Plex Media Server Section
+		# ---------------------------
+		
+    # If the app is already enabled and running there's nothing to do
+    if [ "$(plexserver__get_status)" == "Enabled|Running" ]; then
+      echo "Plex Media Server is already enabled"
+    
+    # If the app is already enabled but stopped, start the app
+    elif [ "$(plexserver__get_status)" == "Enabled|Stopped" ]; then
+		  # Start the app
+		  plexserver__start
+		  
+		# If the app is not enabled, Install (or Upgrade) the app as needed, update
+		# the config as necessary to support the other associated apps and start the app
+		elif ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
+				
+			# Upgrade the app
+			if plexserver__version_check; then	
+				plexserver__upgrade
+			fi
+			
+			# Enable the app
+			plexserver__enable
+
+      # Start the app
+			plexserver__start
+		fi
+		
+		# SABnzbd+ Section
+		# ---------------------------
+
+    # If the app is already enabled and running there's nothing to do
+    if [ "$(sabnzbd__get_status)" == "Enabled|Running" ]; then
+      echo "SABnzbd+ is already enabled"
+    
+    # If the app is already enabled but stopped, start the app
+    elif [ "$(sabnzbd__get_status)" == "Enabled|Stopped" ]; then
+		  # Start the app
+		  sabnzbd__start
+		  
+		# If the app is not enabled, Install (or Upgrade) the app as needed, update
+		# the config as necessary to support the other associated apps and start the app
+		elif ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
+
+			# Upgrade the app
+			if sabnzbd__version_check; then	
+				sabnzbd__upgrade
+			fi
+			
+			# Enable the app
+			sabnzbd__enable
+			
+			# Configure the app
+			echo "* Configuring SABnzbd+"		
+			sabnzbd__config_couchpotato
+			sabnzbd__config_headphones
+			sabnzbd__config_nzbdrone
+			sabnzbd__config_sickbeard
+
+      # Start the app
+			sabnzbd__start
+		fi
+		
+		# Sick Beard Section
+		# ---------------------------
+		
+    # If the app is already enabled and running there's nothing to do
+    if [ "$(sickbeard__get_status)" == "Enabled|Running" ]; then
+      echo "Sick Beard is already enabled"
+    
+    # If the app is already enabled but stopped, start the app
+    elif [ "$(sickbeard__get_status)" == "Enabled|Stopped" ]; then
+		  # Start the app
+		  sickbeard__start
+		  
+		# If the app is not enabled, Install (or Upgrade) the app as needed, update
+		# the config as necessary to support the other associated apps and start the app
+		elif ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+
+			# Upgrade the app
+			if sickbeard__version_check; then	
+				sickbeard__upgrade
+			fi
+			
+			# Enable the app
+			sickbeard__enable
+			
+			# Configure the app
+			echo "* Configuring Sick Beard"
+			
+			# Update SABnzbd+ Support
+			sabnzbdPort=$(sabnzbd__get_port)
+			sabnzbdAPIkey=$(sabnzbd__get_apikey)
+			sabnzbdUsername=$(sabnzbd__get_username)
+			sabnzbdPassword=$(sabnzbd__get_password)
+			sickbeard__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUsername" "$sabnzbdPassword"
+
+			# Enable Plex Server Support
+			sickbeard__config_plexserver
+			
+			# Enable Reverse Proxy Support
+			if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
+				sickbeard__config_proxy
+			fi
+
+      # Start the app
+			sickbeard__start
+		fi
+
+		# Transmission Section
+		# ---------------------------
+
+    # If the app is already enabled and running there's nothing to do
+    if [ "$(transmission__get_status)" == "Enabled|Running" ]; then
+      echo "Transmission is already enabled"
+    
+    # If the app is already enabled but stopped, start the app
+    elif [ "$(transmission__get_status)" == "Enabled|Stopped" ]; then
+		  # Start the app
+		  transmission__start
+		  
+		# If the app is not enabled, Install (or Upgrade) the app as needed, update
+		# the config as necessary to support the other associated apps and start the app
+		elif ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
+
+			# Upgrade the app
+			if transmission__version_check; then	
+				transmission__upgrade
+			fi
+			
+			# Enable the app
+			transmission__enable
+			
+			# Configure the app
+			echo "* Configuring Transmission"
+			
+			# Enable Reverse Proxy Support
+			if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
+				transmission__config_proxy
+			fi
+
+      # Start the app
+			transmission__start
+		fi
+		
+	elif [ "$option" == "disable" ]; then
+	  apps__couchpotato "disable"
+	  apps__headphones "disable"
+	  apps__nzbdrone "disable"
+	  apps__plexserver "disable"
+	  apps__sabnzbd "disable"
+	  apps__sickbeard "disable"
+	  apps__transmission "disable"
+
+	elif [ "$option" == "upgrade" ]; then  
+		echo "* Updating apt repository package lists"
+		apt-get update
+
+		# CouchPotato Section
+		# ---------------------------
+	  if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+	    echo "CouchPotato is disabled"
+	  else
+			if couchpotato__version_check; then
+				couchpotato__upgrade
+				couchpotato__start
+			fi
+    fi
+			
+		# Headphones Section
+		# ---------------------------
+	  if ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
+	    echo "Headphones is disabled"
+	  else
+			if headphones__version_check; then
+				headphones__upgrade
+				headphones__start
+			fi
+    fi
+    		
+		# NzbDrone Section
+		# ---------------------------
+	  if ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+	    echo "NzbDrone is disabled"
+	  else
+			if nzbdrone__version_check; then
+				nzbdrone__upgrade
+				nzbdrone__start
+			fi
+    fi
+    		
+		# Plex Media Server Section
+		# ---------------------------
+	  if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
+	    echo "Plex Media Server is disabled"
+	  else
+			if plexserver__version_check; then
+				plexserver__upgrade
+				plexserver__start
+			fi
+    fi
+    		
+		# SABnzbd+ Section
+		# ---------------------------
+	  if ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
+	    echo "SABnzbd+ is disabled"
+	  else
+			if sabnzbd__version_check; then
+				sabnzbd__upgrade
+				sabnzbd__start
+			fi
+    fi
+    		
+		# Sick Beard Section
+		# ---------------------------
+	  if ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+	    echo "Sick Beard is disabled"
+	  else
+			if sickbeard__version_check; then
+				sickbeard__upgrade
+				sickbeard__start
+			fi
+    fi
+    
+		# Transmission Section
+		# ---------------------------
+	  if ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
+	    echo "Transmission is disabled"
+	  else
+			if transmission__version_check; then
+				transmission__upgrade
+				transmission__start
+			fi
+    fi
+    
+  elif [ "$option" == "set username" ]; then
+	  username="$2"
+
+	  apps__couchpotato "set username" "$username"
+	  apps__headphones "set username" "$username"
+	  apps__nzbdrone "set username" "$username"
+	  apps__plexserver "set username" "$username"
+	  apps__sabnzbd "set username" "$username"
+	  apps__sickbeard "set username" "$username"
+	  apps__transmission "set username" "$username"
+
+  elif [ "$option" == "set password" ]; then
+	  password="$2"
+
+	  apps__couchpotato "set password" "$password"
+	  apps__headphones "set password" "$password"
+	  apps__nzbdrone "set password" "$password"
+	  apps__plexserver "set password" "$password"
+	  apps__sabnzbd "set password" "$password"
+	  apps__sickbeard "set password" "$password"
+	  apps__transmission "set password" "$password"
+	  
+  elif [ "$option" == "new apikey" ]; then
+	  apps__couchpotato "new apikey"
+	  apps__headphones "new apikey"
+	  apps__nzbdrone "new apikey"
+	  apps__plexserver "new apikey"
+	  apps__sabnzbd "new apikey"
+	  apps__sickbeard "new apikey"
+	  apps__transmission "new apikey"
+	
+	elif [ "$option" == "show config" ]; then
+		tmpfile="/tmp/showconfig.out"
+
+		(couchpotato__show_config) > $tmpfile
+		echo >> $tmpfile
+		echo >> $tmpfile
+		(headphones__show_config) >> $tmpfile
+		echo >> $tmpfile
+		echo >> $tmpfile
+		(nzbdrone__show_config) >> $tmpfile
+		echo >> $tmpfile
+		echo >> $tmpfile
+		(plexserver__show_config) >> $tmpfile
+		echo >> $tmpfile
+		echo >> $tmpfile
+		(sabnzbd__show_config) >> $tmpfile
+		echo >> $tmpfile
+		echo >> $tmpfile
+		(sickbeard__show_config) >> $tmpfile
+		echo >> $tmpfile
+		echo >> $tmpfile
+		(transmission__show_config) >> $tmpfile
+
+		cat $tmpfile | more
+		rm -f $tmpfile > /dev/null 2>&1
 	fi
 }
