@@ -253,15 +253,13 @@ function nzbdrone__set_plexserver_enabled() {
 	  # Build "Settings" for a new Plex Media Server record
 	  settings="
 		\"port\": 32400,
-		\"updateLibrary\": true,
 		\"host\": \"localhost\",
+		\"updateLibrary\": true,
 		\"isValid\": true"
       
     # Clean up formatting
 	  settings=$(echo "$settings" | sed '/^$/d' | sed -e 's/^[ \t]*/  /')
 	  settings=$(echo -e "{\n$settings\n}")
-	  
-	  echo "$settings"
 	  
 	  # Add/Insert the new Plex Media Server record
 	  nzbdrone__stop
