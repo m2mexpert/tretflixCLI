@@ -209,22 +209,25 @@ function storage__set_share() {
 }
 
 function storage__tmp_cleanup() {
-dirs=( \
-"/opt/tretflix/tmp/plexmediaserver/transcodes" \
-"/opt/tretflix/tmp/sabnzbdplus/couchpotato" \
-"/opt/tretflix/tmp/sabnzbdplus/headphones" \
-"/opt/tretflix/tmp/sabnzbdplus/incomplete" \
-"/opt/tretflix/tmp/sabnzbdplus/nzbdrone" \
-"/opt/tretflix/tmp/sabnzbdplus/sickbeard" \
-"/opt/tretflix/tmp/transmission-daemon/incomplete")
+  echo "* Cleaning up /opt/tretflix/tmp"
 
-for dir in "${dirs[@]}"; do
-  find "$dir" -type f -mtime +14 | xargs rm -vf
-done
+	dirs=( \
+	"/opt/tretflix/tmp/plexmediaserver/transcodes" \
+	"/opt/tretflix/tmp/sabnzbdplus/couchpotato" \
+	"/opt/tretflix/tmp/sabnzbdplus/headphones" \
+	"/opt/tretflix/tmp/sabnzbdplus/incomplete" \
+	"/opt/tretflix/tmp/sabnzbdplus/nzbdrone" \
+	"/opt/tretflix/tmp/sabnzbdplus/sickbeard" \
+	"/opt/tretflix/tmp/transmission-daemon/incomplete")
 
-for dir in "${dirs[@]}"; do
-  find "$dir" -mindepth 1 -type d -empty | xargs rm -rvf
-done
+	for dir in "${dirs[@]}"; do
+		find "$dir" -type f -mtime +14 | xargs rm -vf
+	done
+
+	for dir in "${dirs[@]}"; do
+		find "$dir" -mindepth 1 -type d -empty | xargs rm -rvf
+	done
+	echo "* Cleanup Complete"
 }
 
 function storage__show_config() {
