@@ -233,6 +233,7 @@ function headphones__config_sabnzbd() {
 	host="localhost"
 	category="headphones"
 	
+	echo "* Updating Headphone's SABnzbd+ Support"
 	headphones__set_sabnzbd_enabled
 	headphones__set_sabnzbd_username "$username"
 	headphones__set_sabnzbd_password "$password"
@@ -247,6 +248,7 @@ function headphones__config_sabnzbd() {
 function headphones__config_proxy() {
   urlbase="/headphones"
   
+  echo "* Updating Headphone's Reverse Proxy Support"
   headphones__set_urlbase "$urlbase"
 }
 

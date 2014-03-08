@@ -223,6 +223,7 @@ function sabnzbd__set_sickbeard_category() {
 # ---------------------------
 
 function sabnzbd__config_couchpotato() {
+  echo "* Updating SABnzbd+'s CouchPotato Support"
 	sabnzbd__set_couchpotato_category
 }
 
@@ -230,6 +231,7 @@ function sabnzbd__config_couchpotato() {
 # ---------------------------
 
 function sabnzbd__config_headphones() {
+  echo "* Updating SABnzbd+'s Headphones Support"
 	sabnzbd__set_headphones_category
 }
 
@@ -237,6 +239,7 @@ function sabnzbd__config_headphones() {
 # ---------------------------
 
 function sabnzbd__config_nzbdrone() {
+  echo "* Updating SABnzbd+'s NzbDrone Support"
 	sabnzbd__set_nzbdrone_category
 }
 
@@ -244,6 +247,7 @@ function sabnzbd__config_nzbdrone() {
 # ---------------------------
 
 function sabnzbd__config_sickbeard() {
+  echo "* Updating SABnzbd+'s Sick Beard Support"
 	sabnzbd__set_sickbeard_category
 }
 

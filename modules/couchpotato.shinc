@@ -239,6 +239,7 @@ function couchpotato__config_sabnzbd() {
 	host="localhost"
 	category="couchpotato"
 	
+	echo "* Updating CouchPotato’s SABnzbd+ Support"
 	couchpotato__set_sabnzbd_enabled
 	couchpotato__set_sabnzbd_host "$host:$port"
 	couchpotato__set_sabnzbd_apikey "$apikey"
@@ -252,6 +253,7 @@ function couchpotato__config_plexserver() {
   port="32400"
   host="localhost"
   
+  echo "* Updating CouchPotato’s Plex Media Server Support"
   couchpotato__set_plexserver_enabled
   couchpotato__set_plexserver_host "$host"
   couchpotato__set_plexserver_mediaserver "$host:$port"
@@ -263,6 +265,7 @@ function couchpotato__config_plexserver() {
 function couchpotato__config_proxy() {
   urlbase="/couchpotato"
   
+  echo "* Updating CouchPotato's Reverse Proxy Support"
   couchpotato__set_urlbase "$urlbase"
 }
 

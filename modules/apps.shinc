@@ -626,16 +626,12 @@ function apps__couchpotato() {
 			# Enable the app
 			couchpotato__enable
 			
-			# Configure the app
-			echo "* Configuring CouchPotato"
-			
 			# Update SABnzbd+ Support
 			if echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
 			  sabnzbdPort=$(sabnzbd__get_port)
 			  sabnzbdAPIkey=$(sabnzbd__get_apikey)
 				couchpotato__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey"
 				
-				echo "* Updating SABnzbd+ Config"
 				sabnzbd__config_couchpotato
 				sabnzbd__start
 			fi
@@ -649,7 +645,6 @@ function apps__couchpotato() {
 			if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
 				couchpotato__config_proxy
 				
-				echo "* Updating the Reverse Proxy Config"
 				couchpotatoPort=$(couchpotato__get_port)
 				proxy__config_couchpotato "$couchpotatoPort"
 				proxy__start
@@ -709,7 +704,6 @@ function apps__couchpotato() {
 			couchpotato__start
 			
 			if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
-				echo "* Updating the Reverse Proxy Config"
 				proxy__config_couchpotato "$port"
 				proxy__start
 			fi
@@ -758,19 +752,14 @@ function apps__headphones() {
 			# Enable the app
 			headphones__enable
 			
-			# Configure the app
-			echo "* Configuring Headphones"
-			
 			# Update SABnzbd+ Support
 			if echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
 			  sabnzbdPort=$(sabnzbd__get_port)
 			  sabnzbdAPIkey=$(sabnzbd__get_apikey)
 			  sabnzbdUsername=$(sabnzbd__get_username)
-			  sabnzbdPassword=$(sabnzbd__get_password)
-			  
+			  sabnzbdPassword=$(sabnzbd__get_password)	  
 				headphones__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUsername" "$sabnzbdPassword"
 				
-				echo "* Updating SABnzbd+ Config"
 				sabnzbd__config_headphones
 				sabnzbd__start
 			fi
@@ -779,7 +768,6 @@ function apps__headphones() {
 			if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
 				headphones__config_proxy
 				
-				echo "* Updating the Reverse Proxy Config"
 				headphonesPort=$(headphones__get_port)
 				proxy__config_headphones "$headphonesPort"
 				proxy__start
@@ -839,7 +827,6 @@ function apps__headphones() {
 			headphones__start
 
 			if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
-				echo "* Updating the Reverse Proxy Config"
 				proxy__config_headphones "$port"
 				proxy__start
 			fi
@@ -890,19 +877,14 @@ function apps__nzbdrone() {
 			# Enable the app
 			nzbdrone__enable
 			
-			# Configure the app
-			echo "* Configuring NzbDrone"
-			
 			# Update SABnzbd+ Support
 			if echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
 			  sabnzbdPort=$(sabnzbd__get_port)
 			  sabnzbdAPIkey=$(sabnzbd__get_apikey)
 			  sabnzbdUsername=$(sabnzbd__get_username)
 			  sabnzbdPassword=$(sabnzbd__get_password)
-			  
 				nzbdrone__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUsername" "$sabnzbdPassword"
 				
-				echo "* Updating SABnzbd+ Config"
 				sabnzbd__config_nzbdrone
 				sabnzbd__start
 			fi
@@ -915,8 +897,7 @@ function apps__nzbdrone() {
 			# Enable Reverse Proxy Support
 			if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
 				nzbdrone__config_proxy
-				
-				echo "* Updating the Reverse Proxy Config"
+
 				nzbdronePort=$(nzbdrone__get_port)
 				proxy__config_nzbdrone "$nzbdronePort"
 				proxy__start
@@ -979,7 +960,6 @@ function apps__nzbdrone() {
 			nzbdrone__start
 
 			if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
-				echo "* Updating the Reverse Proxy Config"
 				proxy__config_nzbdrone "$port"
 				proxy__start
 			fi
@@ -1029,17 +1009,14 @@ function apps__plexserver() {
 			plexserver__enable
 			
 			if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
-			  echo "* Updating CouchPotato Config"
 				couchpotato__config_plexserver
 				couchpotato__start
 			fi
 			if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-			  echo "* Updating NzbDrone Config"
 				nzbdrone__config_plexserver
 				nzbdrone__start
 			fi
 			if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-			  echo "* Updating Sick Beard Config"
 				sickbeard__config_plexserver
 				sickbeard__start
 			fi
@@ -1119,9 +1096,6 @@ function apps__sabnzbd() {
 			# Enable the app
 			sabnzbd__enable
 			
-			# Configure the app
-			echo "* Configuring SABnzbd+"
-			
 			# Get SABnzbd+ settings, will be used to update other app configs
 			sabnzbdPort=$(sabnzbd__get_port)
 			sabnzbdAPIkey=$(sabnzbd__get_apikey)
@@ -1131,28 +1105,24 @@ function apps__sabnzbd() {
 			if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
 				sabnzbd__config_couchpotato
 				
-				echo "* Updating CouchPotato Config"
 				couchpotato__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey"
 				couchpotato__start
 			fi
 			if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
 				sabnzbd__config_headphones
 				
-				echo "* Updating Headphones Config"
 				headphones__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUsername" "$sabnzbdPassword"
 				headphones__start
 			fi
 			if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
 				sabnzbd__config_nzbdrone
 				
-        echo "* Updating NzbDrone Config"
 				nzbdrone__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUsername" "$sabnzbdPassword"
 				nzbdrone__start
 			fi
 			if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
 				sabnzbd__config_sickbeard
 				
-				echo "* Updating Sick Beard Config"
 				sickbeard__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUsername" "$sabnzbdPassword"
 				sickbeard__start
 			fi			
@@ -1192,17 +1162,17 @@ function apps__sabnzbd() {
 			sabnzbd__start
 
 			if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating Headphones Config"
+				echo "* Updating Headphones’s SABnzbd+ Support"
 				headphones__set_sabnzbd_username "$username"
 				headphones__start
 			fi
 			if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating NzbDrone Config"
+				echo "* Updating NzbDrone’s SABnzbd+ Support"
 				nzbdrone__set_sabnzbd_username "$username"
 				nzbdrone__start
 			fi
 			if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating Sick Beard Config"
+				echo "* Updating Sick Beard’s SABnzbd+ Support"
 				sickbeard__set_sabnzbd_username "$username"
 				sickbeard__start
 			fi
@@ -1219,17 +1189,17 @@ function apps__sabnzbd() {
 			sabnzbd__start
 
 			if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating Headphones Config"
+				echo "* Updating Headphones’s SABnzbd+ Support"
 				headphones__set_sabnzbd_password "$password"
 				headphones__start
 			fi
 			if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating NzbDrone Config"
+				echo "* Updating NzbDrone’s SABnzbd+ Support"
 				nzbdrone__set_sabnzbd_password "$password"
 				nzbdrone__start
 			fi
 			if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating Sick Beard Config"
+				echo "* Updating Sick Beard’s SABnzbd+ Support"
 				sickbeard__set_sabnzbd_password "$password"
 				sickbeard__start
 			fi
@@ -1246,28 +1216,27 @@ function apps__sabnzbd() {
 			sabnzbd__start
 
 			if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating CouchPotato Config"
+				echo "* Updating CouchPotato’s SABnzbd+ Support"
 				couchpotato__set_sabnzbd_port "$port"
 				couchpotato__start
 			fi
 			if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating Headphones Config"
+				echo "* Updating Headphones’s SABnzbd+ Support"
 				headphones__set_sabnzbd_port "$port"
 				headphones__start
 			fi
 			if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating NzbDrone Config"
+				echo "* Updating NzbDrone’s SABnzbd+ Support"
 				nzbdrone__set_sabnzbd_port "$port"
 				nzbdrone__start
 			fi
 			if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating Sick Beard Config"
+				echo "* Updating Sick Beard’s SABnzbd+ Support"
 				sickbeard__set_sabnzbd_port "$port"
 				sickbeard__start
 			fi
 		
 			if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
-				echo "* Updating the Reverse Proxy Config"
 				proxy__config_sabnzbd "$port"
 				proxy__start
 			fi
@@ -1284,22 +1253,22 @@ function apps__sabnzbd() {
 			sabnzbd__start
 
 			if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating CouchPotato Config"
+				echo "* Updating CouchPotato’s SABnzbd+ Support"
 				couchpotato__set_sabnzbd_apikey "$apikey"
 				couchpotato__start
 			fi
 			if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating Headphones Config"
+				echo "* Updating Headphones’s SABnzbd+ Support"
 				headphones__set_sabnzbd_apikey "$apikey"
 				headphones__start
 			fi
 			if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating NzbDrone Config"
+				echo "* Updating NzbDrone’s SABnzbd+ Support"
 				nzbdrone__set_sabnzbd_apikey "$apikey"
 				nzbdrone__start
 			fi
 			if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating Sick Beard Config"
+				echo "* Updating Sick Beard’s SABnzbd+ Support"
 				sickbeard__set_sabnzbd_apikey "$apikey"
 				sickbeard__start
 			fi
@@ -1337,9 +1306,6 @@ function apps__sickbeard() {
 			# Enable the app
 			sickbeard__enable
 			
-			# Configure the app
-			echo "* Configuring Sick Beard"
-			
 			# Update SABnzbd+ Support
 			if echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
 			  sabnzbdPort=$(sabnzbd__get_port)
@@ -1348,7 +1314,6 @@ function apps__sickbeard() {
 			  sabnzbdPassword=$(sabnzbd__get_password)
 				sickbeard__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUsername" "$sabnzbdPassword"
 				
-				echo "* Updating SABnzbd+ Config"
 				sabnzbd__config_sickbeard
 				sabnzbd__start
 			fi
@@ -1362,7 +1327,6 @@ function apps__sickbeard() {
 			if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
 				sickbeard__config_proxy
 				
-				echo "* Updating the Reverse Proxy Config"
 				sickbeardPort=$(sickbeard__get_port)
 				proxy__config_sickbeard "$sickbeardPort"
 				proxy__start
@@ -1422,7 +1386,6 @@ function apps__sickbeard() {
 			sickbeard__start
 		
 			if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
-				echo "* Updating the Reverse Proxy Config"
 				proxy__config_sickbeard "$port"
 				proxy__start
 			fi
@@ -1473,12 +1436,8 @@ function apps__transmission() {
 			# Enable the app
 			transmission__enable
 			
-			# Configure the app
-			echo "* Configuring Transmission"
-			
 			# Enable Reverse Proxy Support
 			if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating the Reverse Proxy Config"
 				transmissionPort=$(transmission__get_port)
 				proxy__config_transmission "$transmissionPort"
 				proxy__start
@@ -1541,7 +1500,6 @@ function apps__transmission() {
 			transmission__start
 			
 			if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
-				echo "* Updating the Reverse Proxy Config"
 				proxy__config_transmission "$port"
 				proxy__start
 			fi
@@ -1609,9 +1567,6 @@ function apps__allapps() {
 			# Enable the app
 			couchpotato__enable
 			
-			# Configure the app
-			echo "* Configuring CouchPotato"
-			
 		  # Update SABnzbd+ Support
 			sabnzbdPort=$(sabnzbd__get_port)
 			sabnzbdAPIkey=$(sabnzbd__get_apikey)
@@ -1622,7 +1577,11 @@ function apps__allapps() {
 			
 			# Enable Reverse Proxy Support
 			if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
-				couchpotato__config_proxy
+			  couchpotato__config_proxy
+			  
+				couchpotatoPort=$(couchpotato__get_port)
+				proxy__config_couchpotato "$couchpotatoPort"
+				proxy__start
 			fi
 			
       # Start the app
@@ -1653,9 +1612,6 @@ function apps__allapps() {
 			# Enable the app
 			headphones__enable
 			
-			# Configure the app
-			echo "* Configuring Headphones"
-			
 			# Update SABnzbd+ Support
 			sabnzbdPort=$(sabnzbd__get_port)
 			sabnzbdAPIkey=$(sabnzbd__get_apikey)
@@ -1665,7 +1621,11 @@ function apps__allapps() {
 
 			# Enable Reverse Proxy Support
 			if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
-				headphones__config_proxy
+			  headphones__config_proxy
+			  
+				headphonesPort=$(headphones__get_port)
+				proxy__config_headphones "$headphonesPort"
+				proxy__start
 			fi
 
       # Start the app
@@ -1696,9 +1656,6 @@ function apps__allapps() {
 			# Enable the app
 			nzbdrone__enable
 			
-			# Configure the app
-			echo "* Configuring NzbDrone"
-			
 			# Update SABnzbd+ Support
 			sabnzbdPort=$(sabnzbd__get_port)
 			sabnzbdAPIkey=$(sabnzbd__get_apikey)
@@ -1711,7 +1668,11 @@ function apps__allapps() {
 			
 			# Enable Reverse Proxy Support
 			if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
-				nzbdrone__config_proxy
+			  nzbdrone__config_proxy
+			  
+				nzbdronePort=$(nzbdrone__get_port)
+				proxy__config_nzbdrone "$nzbdronePort"
+				proxy__start
 			fi
 
       # Start the app
@@ -1769,13 +1730,18 @@ function apps__allapps() {
 			
 			# Enable the app
 			sabnzbd__enable
-			
-			# Configure the app
-			echo "* Configuring SABnzbd+"		
+
 			sabnzbd__config_couchpotato
 			sabnzbd__config_headphones
 			sabnzbd__config_nzbdrone
 			sabnzbd__config_sickbeard
+			
+			# Enable Reverse Proxy Support
+			if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
+				sabnzbdPort=$(sabnzbd__get_port)
+				proxy__config_sabnzbd "$sabnzbdPort"
+				proxy__start
+			fi
 
       # Start the app
 			sabnzbd__start
@@ -1805,9 +1771,6 @@ function apps__allapps() {
 			# Enable the app
 			sickbeard__enable
 			
-			# Configure the app
-			echo "* Configuring Sick Beard"
-			
 			# Update SABnzbd+ Support
 			sabnzbdPort=$(sabnzbd__get_port)
 			sabnzbdAPIkey=$(sabnzbd__get_apikey)
@@ -1820,7 +1783,11 @@ function apps__allapps() {
 			
 			# Enable Reverse Proxy Support
 			if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
-				sickbeard__config_proxy
+			  sickbeard__config_proxy
+			  
+				sickbeardPort=$(sickbeard__get_port)
+				proxy__config_sickbeard "$sickbeardPort"
+				proxy__start
 			fi
 
       # Start the app
@@ -1850,6 +1817,13 @@ function apps__allapps() {
 			
 			# Enable the app
 			transmission__enable
+			
+			# Enable Reverse Proxy Support
+			if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
+				transmissionPort=$(transmission__get_port)
+				proxy__config_transmission "$transmissionPort"
+				proxy__start
+			fi
 
       # Start the app
 			transmission__start

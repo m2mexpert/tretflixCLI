@@ -302,6 +302,7 @@ function nzbdrone__config_sabnzbd() {
 	host="localhost"
 	category="nzbdrone"
 	
+	echo "* Updating NzbDrone's SABnzbd+ Support"
 	nzbdrone__set_sabnzbd_enabled
 	nzbdrone__set_sabnzbd_settings "$port" "$apikey" "$username" "$password" "$host" "$category"
 }
@@ -313,6 +314,7 @@ function nzbdrone__config_plexserver() {
   port="32400"
   host="localhost"
   
+  echo "* Updating NzbDrone's Plex Media Support"
 	nzbdrone__set_plexserver_enabled
 	nzbdrone__set_plexserver_settings "$port" "$host"
 }
@@ -321,7 +323,10 @@ function nzbdrone__config_plexserver() {
 # ---------------------------
 
 function nzbdrone__config_proxy() {
-  nzbdrone__set_urlbase "nzbdrone"
+  urlbase="/nzbdrone"
+  
+  echo "* Updating NzbDrone's Reverse Proxy Support"
+  nzbdrone__set_urlbase "$urlbase"
 }
 
 

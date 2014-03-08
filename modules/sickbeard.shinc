@@ -253,6 +253,7 @@ function sickbeard__config_sabnzbd() {
 	host="localhost"
 	category="sickbeard"
 	
+	echo "* Updating Sick Beard's SABnzbd+ Support"
 	sickbeard__set_sabnzbd_enabled
 	sickbeard__set_sabnzbd_username "$username"
 	sickbeard__set_sabnzbd_password "$password"
@@ -268,6 +269,7 @@ function sickbeard__config_plexserver() {
   port="32400"
   host="localhost"
   
+  echo "* Updating Sick Beard's Plex Media Server Support"
   sickbeard__set_plexserver_enabled
   sickbeard__set_plexserver_host "$host:$port"
 }
@@ -278,6 +280,7 @@ function sickbeard__config_plexserver() {
 function sickbeard__config_proxy() {
   urlbase="/sickbeard"
   
+  echo "* Updating Sick Beard's Reverse Proxy Support"
   sickbeard__set_urlbase "$urlbase"
 }
 
