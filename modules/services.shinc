@@ -151,6 +151,7 @@ function services__proxy() {
 			  couchpotatoPort=$(couchpotato__get_port)
 				proxy__config_couchpotato "$couchpotatoPort"
 				
+				echo "* Updating CouchPotato Config"
 				couchpotato__config_proxy
 				couchpotato__start
 			fi
@@ -158,6 +159,7 @@ function services__proxy() {
 			  headphonesPort=$(headphones__get_port)
 				proxy__config_headphones "$headphonesPort"
 				
+				echo "* Updating Headphones Config"
 				headphones__config_proxy
 				headphones__start
 			fi
@@ -165,6 +167,7 @@ function services__proxy() {
 			  nzbdronePort=$(nzbdrone__get_port)
 				proxy__config_nzbdrone "$nzbdronePort"
 				
+				echo "* Updating NzbDrone Config"
 				nzbdrone__config_proxy
 				nzbdrone__start
 			fi
@@ -176,6 +179,7 @@ function services__proxy() {
 			  sickbeardPort=$(sickbeard__get_port)
 				proxy__config_sickbeard "$sickbeardPort"
 				
+				echo "* Updating Sick Beard Config"
 				sickbeard__config_proxy
 				sickbeard__start
 			fi
