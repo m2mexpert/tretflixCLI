@@ -805,7 +805,7 @@ function config__restore_appdata() {
 	echo
 	if tar -tf "$file" | grep -q "^appdata/couchpotato/$"; then
 		while true; do
-			read -p "Do you want to restore and use CouchPotato? (y/n): " input
+			read -p "Do you want to restore CouchPotato? (y/n): " input
 			case "$input" in
 				[yY] | [yY][Ee][Ss] )
 					couchpotatoAction="Restore"
@@ -822,7 +822,7 @@ function config__restore_appdata() {
 
 	if tar -tf "$file" | grep -q "^appdata/headphones/$"; then
 		while true; do
-			read -p "Do you want to restore and use Headphones? (y/n): " input
+			read -p "Do you want to restore Headphones? (y/n): " input
 			case "$input" in
 				[yY] | [yY][Ee][Ss] )
 					headphonesAction="Restore"
@@ -839,7 +839,7 @@ function config__restore_appdata() {
 	
 	if tar -tf "$file" | grep -q "^appdata/nzbdrone/$"; then
 		while true; do
-			read -p "Do you want to restore and use NzbDrone? (y/n): " input
+			read -p "Do you want to restore NzbDrone? (y/n): " input
 			case "$input" in
 				[yY] | [yY][Ee][Ss] )
 					nzbdroneAction="Restore"
@@ -856,7 +856,7 @@ function config__restore_appdata() {
 
 	if tar -tf "$file" | grep -q "^appdata/plexmediaserver/$"; then
 		while true; do
-			read -p "Do you want to restore and use Plex Media Server? (y/n): " input
+			read -p "Do you want to restore Plex Media Server? (y/n): " input
 			case "$input" in
 				[yY] | [yY][Ee][Ss] )
 					plexserverAction="Restore"
@@ -873,7 +873,7 @@ function config__restore_appdata() {
 	
 	if tar -tf "$file" | grep -q "^appdata/sabnzbdplus/$"; then
 		while true; do
-			read -p "Do you want to restore and use SABnzbd+? (y/n): " input
+			read -p "Do you want to restore SABnzbd+? (y/n): " input
 			case "$input" in
 				[yY] | [yY][Ee][Ss] )
 					sabnzbdAction="Restore"
@@ -890,7 +890,7 @@ function config__restore_appdata() {
 
 	if tar -tf "$file" | grep -q "^appdata/sickbeard/$"; then
 		while true; do
-			read -p "Do you want to restore and use Sick Beard? (y/n): " input
+			read -p "Do you want to restore Sick Beard? (y/n): " input
 			case "$input" in
 				[yY] | [yY][Ee][Ss] )
 					sickbeardAction="Restore"
@@ -907,7 +907,7 @@ function config__restore_appdata() {
 	
 	if tar -tf "$file" | grep -q "^appdata/transmission-daemon/$"; then
 		while true; do
-			read -p "Do you want to restore and use Transmission? (y/n): " input
+			read -p "Do you want to restore Transmission? (y/n): " input
 			case "$input" in
 				[yY] | [yY][Ee][Ss] )
 					transmissionAction="Restore"
