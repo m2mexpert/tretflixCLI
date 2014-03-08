@@ -709,7 +709,7 @@ function apps__couchpotato() {
 			couchpotato__start
 			
 			if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
-				"* Updating the Reverse Proxy Config"
+				echo "* Updating the Reverse Proxy Config"
 				proxy__config_couchpotato "$port"
 				proxy__start
 			fi
@@ -839,7 +839,7 @@ function apps__headphones() {
 			headphones__start
 
 			if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
-				"* Updating the Reverse Proxy Config"
+				echo "* Updating the Reverse Proxy Config"
 				proxy__config_headphones "$port"
 				proxy__start
 			fi
@@ -979,7 +979,7 @@ function apps__nzbdrone() {
 			nzbdrone__start
 
 			if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
-				"* Updating the Reverse Proxy Config"
+				echo "* Updating the Reverse Proxy Config"
 				proxy__config_nzbdrone "$port"
 				proxy__start
 			fi
@@ -1264,7 +1264,7 @@ function apps__sabnzbd() {
 			fi
 		
 			if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
-				"* Updating the Reverse Proxy Config"
+				echo "* Updating the Reverse Proxy Config"
 				proxy__config_sabnzbd "$port"
 				proxy__start
 			fi
@@ -1419,7 +1419,7 @@ function apps__sickbeard() {
 			sickbeard__start
 		
 			if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
-				"* Updating the Reverse Proxy Config"
+				echo "* Updating the Reverse Proxy Config"
 				proxy__config_sickbeard "$port"
 				proxy__start
 			fi
@@ -1540,7 +1540,7 @@ function apps__transmission() {
 			transmission__start
 			
 			if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
-				"* Updating the Reverse Proxy Config"
+				echo "* Updating the Reverse Proxy Config"
 				proxy__config_transmission "$port"
 				proxy__start
 			fi
