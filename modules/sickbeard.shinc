@@ -172,6 +172,7 @@ function sickbeard__set_urlbase() {
 
   sickbeard__stop  
   sed -i -e '/^\[General\]/,/^\[/{/^\[General\]/n;/^\[/!{s/^web_root .*/web_root = '$urlbase'/g}}' $sickbeardConfig
+  sed -i -e '/^\[SickBeard\]/,/^\[/{/^\[SickBeard\]/n;/^\[/!{s/^web_root.*/web_root='$urlbase'/g}}' $sickbeardScriptConfig
 }
 
 function sickbeard__set_sabnzbd_enabled() {
