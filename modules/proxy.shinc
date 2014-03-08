@@ -309,7 +309,8 @@ function proxy__install() {
   #### Not Needed, apt-get handles this
 
   # Install Apache2
-  apt-get -y install apache2
+  apt-get -q -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+    install apache2
   
   # Stop and Disable, apt-get install sometimes automatically enables and starts apps
   proxy__stop

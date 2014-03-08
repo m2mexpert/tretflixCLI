@@ -266,7 +266,8 @@ function sabnzbd__install() {
   #### Not Needed, apt-get handles this
   
   # Install SABnzbd+
-  sudo apt-get -y install sabnzbdplus sabnzbdplus-theme-mobile
+  apt-get -q -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+    install sabnzbdplus sabnzbdplus-theme-mobile
   
   # Stop and Disable, apt-get install sometimes automatically enables and starts apps
   sabnzbd__stop
@@ -295,7 +296,8 @@ function sabnzbd__upgrade() {
   echo "* Upgrading SABnzbd+"
   
   sabnzbd__stop
-  apt-get -y install sabnzbdplus
+  apt-get -q -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+    install sabnzbdplus sabnzbdplus-theme-mobile
 }
 
 function sabnzbd__version_check() {

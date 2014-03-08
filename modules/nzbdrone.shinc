@@ -341,10 +341,12 @@ function nzbdrone__install() {
   fi
   
   # Install Dependencies (Required for editing the DB)
-  apt-get -q -y install sqlite3
+  apt-get -q -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+    install sqlite3
   
   # Install NzbDrone
-  apt-get -q -y install nzbdrone
+  apt-get -q -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+    install nzbdrone
   
   # Stop and Disable, apt-get install sometimes automatically enables and starts apps
   nzbdrone__stop
@@ -387,7 +389,8 @@ function nzbdrone__upgrade() {
   echo "* Upgrading NzbDrone"
   
   nzbdrone__stop
-  apt-get -y install nzbdrone
+  apt-get -q -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+    install nzbdrone
 }
 
 function nzbdrone__version_check() {

@@ -158,7 +158,8 @@ function transmission__install() {
   #### Not Needed, apt-get handles this
   
   # Install NzbDrone
-  apt-get -q -y install transmission-daemon
+  apt-get -q -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+    install transmission-daemon
   
   # Stop and Disable, apt-get install sometimes automatically enables and starts apps
   transmission__stop
@@ -181,7 +182,8 @@ function transmission__upgrade() {
   echo "* Upgrading Transmission"
   
   transmission__stop
-  apt-get -y install transmission-daemon
+  apt-get -q -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+    install transmission-daemon
 }
 
 function transmission__version_check() {
