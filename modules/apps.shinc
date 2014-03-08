@@ -1031,14 +1031,17 @@ function apps__plexserver() {
 			if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
 			  echo "* Updating CouchPotato Config"
 				couchpotato__config_plexserver
+				couchpotato__start
 			fi
 			if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
 			  echo "* Updating NzbDrone Config"
 				nzbdrone__config_plexserver
+				nzbdrone__start
 			fi
 			if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
 			  echo "* Updating Sick Beard Config"
 				sickbeard__config_plexserver
+				sickbeard__start
 			fi
 
       # Start the app
