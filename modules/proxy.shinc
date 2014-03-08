@@ -102,7 +102,8 @@ function proxy__set_couchpotato_location() {
 
     proxy__stop
     echo "$location" >> $proxyConfig
-  else
+    
+  elif ! grep -q "$host/couchpotato" $proxyConfig; then
     proxy__stop
 	  sed -i '/^ProxyPass http:.*couchpotato$/s/localhost:[0-9]*/'$host'/' $proxyConfig
 	  sed -i '/^ProxyPassReverse http:.*couchpotato$/s/localhost:[0-9]*/'$host'/' $proxyConfig
@@ -127,7 +128,8 @@ function proxy__set_headphones_location() {
     
     proxy__stop
     echo "$location" >> $proxyConfig 
-  else
+    
+  elif ! grep -q "$host/headphones" $proxyConfig; then
     proxy__stop
 	  sed -i '/^ProxyPass http:.*headphones$/s/localhost:[0-9]*/'$host'/' $proxyConfig
 	  sed -i '/^ProxyPassReverse http:.*headphones$/s/localhost:[0-9]*/'$host'/' $proxyConfig
@@ -152,7 +154,8 @@ function proxy__set_nzbdrone_location() {
 
     proxy__stop
     echo "$location" >> $proxyConfig
-  else
+    
+  elif ! grep -q "$host/nzbdrone" $proxyConfig; then
     proxy__stop
 	  sed -i '/^ProxyPass http:.*nzbdrone$/s/localhost:[0-9]*/'$host'/' $proxyConfig
 	  sed -i '/^ProxyPassReverse http:.*nzbdrone$/s/localhost:[0-9]*/'$host'/' $proxyConfig
@@ -176,8 +179,9 @@ function proxy__set_sabnzbd_location() {
     location=$(echo "$location" | sed -e 's/^[ \t]*//')
 
     proxy__stop
-    echo "$location" >> $proxyConfig  
-  else
+    echo "$location" >> $proxyConfig
+    
+  elif ! grep -q "$host/sabnzbd" $proxyConfig; then
     proxy__stop
 	  sed -i '/^ProxyPass http:.*sabnzbd$/s/localhost:[0-9]*/'$host'/' $proxyConfig
 	  sed -i '/^ProxyPassReverse http:.*sabnzbd$/s/localhost:[0-9]*/'$host'/' $proxyConfig
@@ -202,7 +206,8 @@ function proxy__set_sickbeard_location() {
 
     proxy__stop
     echo "$location" >> $proxyConfig
-  else
+    
+  elif ! grep -q "$host/sickbeard" $proxyConfig; then
     proxy__stop
 	  sed -i '/^ProxyPass http:.*sickbeard$/s/localhost:[0-9]*/'$host'/' $proxyConfig
 	  sed -i '/^ProxyPassReverse http:.*sickbeard$/s/localhost:[0-9]*/'$host'/' $proxyConfig
@@ -227,7 +232,8 @@ function proxy__set_transmission_location() {
 
     proxy__stop
     echo "$location" >> $proxyConfig
-  else
+    
+  elif ! grep -q "$host/transmission" $proxyConfig; then
     proxy__stop
 	  sed -i '/^ProxyPass http:.*transmission$/s/localhost:[0-9]*/'$host'/' $proxyConfig
 	  sed -i '/^ProxyPassReverse http:.*transmission$/s/localhost:[0-9]*/'$host'/' $proxyConfig
