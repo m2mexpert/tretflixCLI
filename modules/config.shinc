@@ -734,8 +734,6 @@ function config__wizard() {
 }
 
 function config__backup_appdata() {
-	timestamp=$(date "+%Y%m%d%H%M%S")
-
 	echo "* Stopping Services"
   couchpotato__stop
   headphones__stop
@@ -746,6 +744,8 @@ function config__backup_appdata() {
   transmission__stop
 	
 	echo "* Creating Backup Archive"
+	
+	timestamp=$(date "+%Y%m%d%H%M%S")
 	sudo su -c -u $osUser \
 		"cd $tretflixPath && tar cvf backup-$timestamp.tar appdata/"
 	
@@ -787,8 +787,11 @@ function config__restore_appdata() {
   sabnzbd__stop
   sickbeard__stop
   transmission__stop
+  
 	
 	echo "* Creating Backup Archive"
+	
+	timestamp=$(date "+%Y%m%d%H%M%S")
 	sudo su -c -u $osUser \
 		"cd $tretflixPath && tar cvf backup-$timestamp.tar appdata/"
 			
