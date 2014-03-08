@@ -251,7 +251,7 @@ function proxy__config_couchpotato() {
 	port="$1"
 	host="localhost"
 
-  echo "* Updating the Reverse Proxy's CouchPotato Support"
+  echo "* Updating Reverse Proxy's CouchPotato Support"
   proxy__set_couchpotato_location "$host:$port"
 }
 
@@ -262,7 +262,7 @@ function proxy__config_headphones() {
 	port="$1"
   host="localhost"
   
-  echo "* Updating the Reverse Proxy's Headphones Support"
+  echo "* Updating Reverse Proxy's Headphones Support"
   proxy__set_headphones_location "$host:$port"
 }
 
@@ -273,7 +273,7 @@ function proxy__config_nzbdrone() {
 	port="$1"
   host="localhost"
   
-  echo "* Updating the Reverse Proxy's NzbDrone Support"
+  echo "* Updating Reverse Proxy's NzbDrone Support"
   proxy__set_nzbdrone_location "$host:$port"
 }
 
@@ -284,7 +284,7 @@ function proxy__config_sabnzbd() {
 	port="$1"
   host="localhost"
   
-  echo "* Updating the Reverse Proxy's SABnzbd+ Support"
+  echo "* Updating Reverse Proxy's SABnzbd+ Support"
   proxy__set_sabnzbd_location "$host:$port"
 }
 
@@ -295,7 +295,7 @@ function proxy__config_sickbeard() {
 	port="$1"
   host="localhost"
   
-  echo "* Updating the Reverse Proxy's Sick Beard Support"
+  echo "* Updating Reverse Proxy's Sick Beard Support"
   proxy__set_sickbeard_location "$host:$port"
 }
 
@@ -306,7 +306,7 @@ function proxy__config_transmission() {
 	port="$1"
   host="localhost"
   
-  echo "* Updating the Reverse Proxy's Transmission Support"
+  echo "* Updating Reverse Proxy's Transmission Support"
   proxy__set_transmission_location "$host:$port"
 }
 
