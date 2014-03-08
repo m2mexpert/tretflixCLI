@@ -1133,8 +1133,8 @@ function config__restore_appdata() {
     if [ "$sabnzbdAction" == "Enable" ]; then
 			sabnzbdPort=$(sabnzbd__get_port)
 			sabnzbdAPIkey=$(sabnzbd__get_apikey)
-			sabnzbdUsername=$(sabnzbd__get_username)
-			sabnzbdPassword=$(sabnzbd__get_password)
+			sabnzbdUser=$(sabnzbd__get_username)
+			sabnzbdPass=$(sabnzbd__get_password)
       headphones__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
     fi
     if [ "$proxyAction" == "Enable" ]; then
@@ -1166,8 +1166,8 @@ function config__restore_appdata() {
     if [ "$sabnzbdAction" == "Enable" ]; then
 			sabnzbdPort=$(sabnzbd__get_port)
 			sabnzbdAPIkey=$(sabnzbd__get_apikey)
-			sabnzbdUsername=$(sabnzbd__get_username)
-			sabnzbdPassword=$(sabnzbd__get_password)
+			sabnzbdUser=$(sabnzbd__get_username)
+			sabnzbdPass=$(sabnzbd__get_password)
       nzbdrone__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
     fi
     if [ "$plexserverAction" == "Enable" ]; then
@@ -1259,8 +1259,8 @@ function config__restore_appdata() {
     if [ "$sabnzbdAction" == "Enable" ]; then
 			sabnzbdPort=$(sabnzbd__get_port)
 			sabnzbdAPIkey=$(sabnzbd__get_apikey)
-			sabnzbdUsername=$(sabnzbd__get_username)
-			sabnzbdPassword=$(sabnzbd__get_password)
+			sabnzbdUser=$(sabnzbd__get_username)
+			sabnzbdPass=$(sabnzbd__get_password)
       sickbeard__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
     fi
     if [ "$plexserverAction" == "Enable" ]; then

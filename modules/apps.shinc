@@ -756,9 +756,9 @@ function apps__headphones() {
 			if echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
 			  sabnzbdPort=$(sabnzbd__get_port)
 			  sabnzbdAPIkey=$(sabnzbd__get_apikey)
-			  sabnzbdUsername=$(sabnzbd__get_username)
-			  sabnzbdPassword=$(sabnzbd__get_password)	  
-				headphones__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUsername" "$sabnzbdPassword"
+			  sabnzbdUser=$(sabnzbd__get_username)
+			  sabnzbdPass=$(sabnzbd__get_password)	  
+				headphones__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
 				
 				sabnzbd__config_headphones
 				sabnzbd__start
@@ -881,9 +881,9 @@ function apps__nzbdrone() {
 			if echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
 			  sabnzbdPort=$(sabnzbd__get_port)
 			  sabnzbdAPIkey=$(sabnzbd__get_apikey)
-			  sabnzbdUsername=$(sabnzbd__get_username)
-			  sabnzbdPassword=$(sabnzbd__get_password)
-				nzbdrone__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUsername" "$sabnzbdPassword"
+			  sabnzbdUser=$(sabnzbd__get_username)
+			  sabnzbdPass=$(sabnzbd__get_password)
+				nzbdrone__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
 				
 				sabnzbd__config_nzbdrone
 				sabnzbd__start
@@ -1099,8 +1099,8 @@ function apps__sabnzbd() {
 			# Get SABnzbd+ settings, will be used to update other app configs
 			sabnzbdPort=$(sabnzbd__get_port)
 			sabnzbdAPIkey=$(sabnzbd__get_apikey)
-			sabnzbdUsername=$(sabnzbd__get_username)
-			sabnzbdPassword=$(sabnzbd__get_password)
+			sabnzbdUser=$(sabnzbd__get_username)
+			sabnzbdPass=$(sabnzbd__get_password)
 			
 			if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
 				sabnzbd__config_couchpotato
@@ -1111,19 +1111,19 @@ function apps__sabnzbd() {
 			if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
 				sabnzbd__config_headphones
 				
-				headphones__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUsername" "$sabnzbdPassword"
+				headphones__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
 				headphones__start
 			fi
 			if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
 				sabnzbd__config_nzbdrone
 				
-				nzbdrone__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUsername" "$sabnzbdPassword"
+				nzbdrone__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
 				nzbdrone__start
 			fi
 			if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
 				sabnzbd__config_sickbeard
 				
-				sickbeard__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUsername" "$sabnzbdPassword"
+				sickbeard__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
 				sickbeard__start
 			fi			
 
@@ -1310,9 +1310,9 @@ function apps__sickbeard() {
 			if echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
 			  sabnzbdPort=$(sabnzbd__get_port)
 			  sabnzbdAPIkey=$(sabnzbd__get_apikey)
-			  sabnzbdUsername=$(sabnzbd__get_username)
-			  sabnzbdPassword=$(sabnzbd__get_password)
-				sickbeard__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUsername" "$sabnzbdPassword"
+			  sabnzbdUser=$(sabnzbd__get_username)
+			  sabnzbdPass=$(sabnzbd__get_password)
+				sickbeard__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
 				
 				sabnzbd__config_sickbeard
 				sabnzbd__start
@@ -1615,9 +1615,9 @@ function apps__allapps() {
 			# Update SABnzbd+ Support
 			sabnzbdPort=$(sabnzbd__get_port)
 			sabnzbdAPIkey=$(sabnzbd__get_apikey)
-			sabnzbdUsername=$(sabnzbd__get_username)
-			sabnzbdPassword=$(sabnzbd__get_password)		  
-			headphones__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUsername" "$sabnzbdPassword"
+			sabnzbdUser=$(sabnzbd__get_username)
+			sabnzbdPass=$(sabnzbd__get_password)		  
+			headphones__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
 
 			# Enable Reverse Proxy Support
 			if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
@@ -1659,9 +1659,9 @@ function apps__allapps() {
 			# Update SABnzbd+ Support
 			sabnzbdPort=$(sabnzbd__get_port)
 			sabnzbdAPIkey=$(sabnzbd__get_apikey)
-			sabnzbdUsername=$(sabnzbd__get_username)
-			sabnzbdPassword=$(sabnzbd__get_password)
-			nzbdrone__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUsername" "$sabnzbdPassword"
+			sabnzbdUser=$(sabnzbd__get_username)
+			sabnzbdPass=$(sabnzbd__get_password)
+			nzbdrone__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
 
 			# Enable Plex Server Support
 			nzbdrone__config_plexserver
@@ -1774,9 +1774,9 @@ function apps__allapps() {
 			# Update SABnzbd+ Support
 			sabnzbdPort=$(sabnzbd__get_port)
 			sabnzbdAPIkey=$(sabnzbd__get_apikey)
-			sabnzbdUsername=$(sabnzbd__get_username)
-			sabnzbdPassword=$(sabnzbd__get_password)
-			sickbeard__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUsername" "$sabnzbdPassword"
+			sabnzbdUser=$(sabnzbd__get_username)
+			sabnzbdPass=$(sabnzbd__get_password)
+			sickbeard__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
 
 			# Enable Plex Server Support
 			sickbeard__config_plexserver
