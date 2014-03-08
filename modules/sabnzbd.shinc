@@ -206,7 +206,7 @@ function sabnzbd__set_sickbeard_category() {
 	if ! egrep -q "\[\[sickbeard\]\]" $sabnzbdConfig; then
 	  sabnzbd__stop
 		sed -i '/^\[categories\].*/a \
-			[[sickbeard]]\npriority = -100 pp = ""\nname = sickbeard\nscript = Default\nnewzbin = ""\ndir = sickbeard' $sabnzbdConfig  
+			[[sickbeard]]\npriority = -100 pp = ""\nname = sickbeard\nscript = sabToSickBeard.py\nnewzbin = ""\ndir = sickbeard' $sabnzbdConfig  
 	fi
 
 	if [ ! -d "/opt/tretflix/tmp/sabnzbdplus/sickbeard" ]; then
