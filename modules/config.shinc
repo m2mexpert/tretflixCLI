@@ -737,10 +737,10 @@ function config__backup_appdata() {
 	timestamp=$(date "+%Y%m%d%H%M%S")
 
 	echo "* Stopping Services"
-  plexserver__stop
   couchpotato__stop
   headphones__stop
   nzbdrone__stop
+  plexserver__start
   sabnzbd__stop
   sickbeard__stop
   transmission__stop
@@ -753,10 +753,10 @@ function config__backup_appdata() {
   couchpotato__start
   headphones__start
   nzbdrone__start
+  plexserver__start
   sabnzbd__start
   sickbeard__start
   transmission__start
-  plexserver__start
 	
 	echo
 	echo "Backup Saved to $tretflixPath/backup-$timestamp.tar"
@@ -779,10 +779,18 @@ function config__restore_appdata() {
 		exit 1
 	fi
 	
-	echo "* Backing Up Current AppData"
-	timestamp=$(date "+%Y%m%d%H%M%S")
+	echo "* Stopping Services"
+  couchpotato__stop
+  headphones__stop
+  nzbdrone__stop
+  plexserver__stop
+  sabnzbd__stop
+  sickbeard__stop
+  transmission__stop
+	
+	echo "* Creating Backup Archive"
 	sudo su -c -u $osUser \
-		"cd $tretflixPath && tar cvf archived-$timestamp.tar appdata/"
+		"cd $tretflixPath && tar cvf backup-$timestamp.tar appdata/"
 			
 	clear
 	echo "  __                  __    _____ __   __        "
@@ -966,6 +974,9 @@ function config__restore_appdata() {
 			"tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/couchpotato"  
 			
 		couchpotatoAction="Enable"
+	elif echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
+	  # Flag to sync current config w/ the apps being restored
+	  couchpotatoAction="Enable"
 	fi
 	
 	if [ "$headphonesAction" == "Restore" ]; then
@@ -979,6 +990,9 @@ function config__restore_appdata() {
 			"tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/headphones"
 			
 		headphonesAction="Enable"
+	elif echo "$(headphones__get_status)" | grep -q "^Enabled"; then
+	  # Flag to sync current config w/ the apps being restored
+	  headphonesAction="Enable"
 	fi
 	
 	if [ "$nzbdroneAction" == "Restore" ]; then
@@ -992,6 +1006,9 @@ function config__restore_appdata() {
 			"tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/nzbdrone"	
 			
 		nzbdroneAction="Enable"
+	elif echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
+	  # Flag to sync current config w/ the apps being restored
+	  nzbdroneAction="Enable"
 	fi
 	
 	if [ "$plexserverAction" == "Restore" ]; then
@@ -1005,6 +1022,9 @@ function config__restore_appdata() {
 			"tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/plexmediaserver"	
 		
 		plexserverAction="Enable"
+	elif echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
+	  # Flag to sync current config w/ the apps being restored
+	  plexserverAction="Enable"
 	fi
 	
 	if [ "$sabnzbdAction" == "Restore" ]; then
@@ -1018,6 +1038,9 @@ function config__restore_appdata() {
 			"tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/sabnzbdplus"	
 			
 		sabnzbdAction="Enable"
+	elif echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
+	  # Flag to sync current config w/ the apps being restored
+	  sabnzbdAction="Enable"
 	fi
 	
 	if [ "$sickbeardAction" == "Restore" ]; then
@@ -1031,6 +1054,9 @@ function config__restore_appdata() {
 			"tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/sickbeard"	
 			
 		sickbeardAction="Enable"
+	elif echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
+		# Flag to sync current config w/ the apps being restored
+	  sickbeardAction="Enable"
 	fi
 	
 	if [ "$transmissionAction" == "Restore" ]; then
@@ -1044,6 +1070,9 @@ function config__restore_appdata() {
 			"tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/transmission-daemon"	
 			
 		transmissionAction="Enable"
+	elif echo "$(transmission__get_status)" | grep -q "^Enabled"; then
+	  # Flag to sync current config w/ the apps being restored
+	  transmissionAction="Enable"
 	fi
 	
 
