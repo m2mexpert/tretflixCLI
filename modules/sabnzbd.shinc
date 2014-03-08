@@ -104,25 +104,25 @@ function sabnzbd__stop() {
 # ---------------------------------------------------------------------------------------
 
 function sabnzbd__get_username() {
-  username=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdConfig | egrep "(^|^.* )username " | awk '{ print $3 }')
+  username=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdConfig | egrep "(^|^.*[[:space:]])username " | awk '{ print $3 }')
   
   echo "$username"
 }
 
 function sabnzbd__get_password() {
-  password=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdConfig | egrep "(^|^.* )password " | awk '{ print $3 }')
+  password=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdConfig | egrep "(^|^.*[[:space:]])password " | awk '{ print $3 }')
   
   echo "$password"
 }
 
 function sabnzbd__get_port() {
-  port=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdConfig | egrep "(^|^.* )port " | awk '{ print $3 }')
+  port=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdConfig | egrep "(^|^.*[[:space:]])port " | awk '{ print $3 }')
   
   echo "$port"
 }
 
 function sabnzbd__get_apikey() {
-  apikey=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdConfig | egrep "(^|^.* )api_key " | awk '{ print $3 }')
+  apikey=$(sed -n '/^\[misc\]/,/^\[/p' $sabnzbdConfig | egrep "(^|^.*[[:space:]])api_key " | awk '{ print $3 }')
   
   echo "$apikey"
 }
