@@ -1478,8 +1478,6 @@ function apps__transmission() {
 			
 			# Enable Reverse Proxy Support
 			if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
-				transmission__config_proxy
-
 				echo "* Updating the Reverse Proxy Config"
 				transmissionPort=$(transmission__get_port)
 				proxy__config_transmission "$transmissionPort"
@@ -1852,14 +1850,6 @@ function apps__allapps() {
 			
 			# Enable the app
 			transmission__enable
-			
-			# Configure the app
-			echo "* Configuring Transmission"
-			
-			# Enable Reverse Proxy Support
-			if echo "$(proxy__get_status)" | grep -q "^Enabled"; then
-				transmission__config_proxy
-			fi
 
       # Start the app
 			transmission__start
