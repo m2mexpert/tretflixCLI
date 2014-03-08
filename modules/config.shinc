@@ -1311,7 +1311,7 @@ function config__restore_appdata() {
 		fi
 
     if [ "$couchpotatoAction" == "Enable" ]; then
-      couchpotatoPort=$(headphones__get_port)
+      couchpotatoPort=$(couchpotato__get_port)
       proxy__config_couchpotato "$couchpotatoPort"
     fi
     if [ "$headphonesAction" == "Enable" ]; then
@@ -1319,19 +1319,19 @@ function config__restore_appdata() {
       proxy__config_headphones "$headphonesPort"
     fi
     if [ "$nzbdroneAction" == "Enable" ]; then
-      nzbdronePort=$(headphones__get_port)
+      nzbdronePort=$(nzbdrone__get_port)
       proxy__config_nzbdrone "$nzbdronePort"
     fi
     if [ "$sabnzbdAction" == "Enable" ]; then
-      sabnzbdPort=$(headphones__get_port)
+      sabnzbdPort=$(sabnzbd__get_port)
       proxy__config_sabnzbd "$sabnzbdPort"
     fi
     if [ "$sickbeardAction" == "Enable" ]; then
-      sickbeardPort=$(headphones__get_port)
+      sickbeardPort=$(sickbeard__get_port)
       proxy__config_sickbeard "$sickbeardPort"
     fi
     if [ "$transmissionAction" == "Enable" ]; then
-      transmissionPort=$(headphones__get_port)
+      transmissionPort=$(transmission__get_port)
       proxy__config_transmission "$transmissionPort"
     fi
 		
