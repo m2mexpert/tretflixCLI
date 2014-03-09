@@ -384,11 +384,11 @@ function config__wizard() {
 			
 			# Enable the app
 			couchpotato__enable
-		else
-			if couchpotato__version_check; then
-				# Upgrade the app if a newer version is available
-				couchpotato__upgrade
-			fi
+    fi
+    
+		if couchpotato__version_check; then
+			# Upgrade the app if a newer version is available
+			couchpotato__upgrade
 		fi
 		
 		# Configure the app using user input
@@ -429,11 +429,11 @@ function config__wizard() {
 			
 			# Enable the app
 			headphones__enable
-		else
-			if headphones__version_check; then
-				# Upgrade the app if a newer version is available
-				headphones__upgrade
-			fi
+		fi
+		
+		if headphones__version_check; then
+			# Upgrade the app if a newer version is available
+			headphones__upgrade
 		fi
 		
 		# Configure the app using user input
@@ -471,11 +471,11 @@ function config__wizard() {
 			
 			# Enable the app
 			nzbdrone__enable
-		else
-			if nzbdrone__version_check; then
-				# Upgrade the app if a newer version is available
-				nzbdrone__upgrade
-			fi
+		fi
+		
+		if nzbdrone__version_check; then
+			# Upgrade the app if a newer version is available
+			nzbdrone__upgrade
 		fi
 		
 		# Configure the app using user input
@@ -516,11 +516,11 @@ function config__wizard() {
 			
 			# Enable the app
 			plexserver__enable
-		else
-			if plexserver__version_check; then
-				# Upgrade the app if a newer version is available
-				plexserver__upgrade
-			fi
+		fi
+		
+		if plexserver__version_check; then
+			# Upgrade the app if a newer version is available
+			plexserver__upgrade
 		fi
 
 		# Start the app
@@ -543,11 +543,11 @@ function config__wizard() {
 
 			# Enable the app
 			sabnzbd__enable
-		else
-      if sabnzbd__version_check; then
-				# Upgrade the app if a newer version is available
-				sabnzbd__upgrade
-		  fi
+		fi
+		
+		if sabnzbd__version_check; then
+			# Upgrade the app if a newer version is available
+			sabnzbd__upgrade
 		fi
 
 		# Configure the app using user input
@@ -591,11 +591,11 @@ function config__wizard() {
 			
 			# Enable the app
 			sickbeard__enable
-		else
-			if sickbeard__version_check; then
-				# Upgrade the app if a newer version is available
-				sickbeard__upgrade
-			fi
+		fi
+		
+		if sickbeard__version_check; then
+			# Upgrade the app if a newer version is available
+			sickbeard__upgrade
 		fi
 		
 		# Configure the app using user input
@@ -636,12 +636,11 @@ function config__wizard() {
 			
 			# Enable the app
 			transmission__enable
-		else
-			if transmission__version_check; then
-				# Upgrade the app if a newer version is available
-				transmission__stop
-				transmission__upgrade
-			fi
+		fi
+		
+		if transmission__version_check; then
+			# Upgrade the app if a newer version is available
+			transmission__upgrade
 		fi
 		
 		# Configure the app using user input
@@ -673,7 +672,7 @@ function config__wizard() {
 		fi
 
 		# Sync w/ current port settings
-		echo "* Configuring the Reverse Proxy"
+		echo "* Configuring Reverse Proxy"
 
     if [ "$couchpotatoAction" == "Enable" ]; then
       proxy__config_couchpotato "$couchpotatoPort"
@@ -1089,11 +1088,11 @@ function config__restore_appdata() {
 			
 			# Enable the app
 			couchpotato__enable
-		else
-			if couchpotato__version_check; then
-				# Upgrade the app if a newer version is available
-				couchpotato__upgrade
-			fi
+		fi
+		
+		if couchpotato__version_check; then
+			# Upgrade the app if a newer version is available
+			couchpotato__upgrade
 		fi
 
     if [ "$sabnzbdAction" == "Enable" ]; then
@@ -1123,11 +1122,11 @@ function config__restore_appdata() {
 			
 			# Enable the app
 			headphones__enable
-		else
-			if headphones__version_check; then
-				# Upgrade the app if a newer version is available
-				headphones__upgrade
-			fi
+		fi
+		
+		if headphones__version_check; then
+			# Upgrade the app if a newer version is available
+			headphones__upgrade
 		fi
 
     if [ "$sabnzbdAction" == "Enable" ]; then
@@ -1156,11 +1155,11 @@ function config__restore_appdata() {
 			
 			# Enable the app
 			nzbdrone__enable
-		else
-			if nzbdrone__version_check; then
-				# Upgrade the app if a newer version is available
-				nzbdrone__upgrade
-			fi
+		fi
+		
+		if nzbdrone__version_check; then
+			# Upgrade the app if a newer version is available
+			nzbdrone__upgrade
 		fi
 
     if [ "$sabnzbdAction" == "Enable" ]; then
@@ -1192,11 +1191,11 @@ function config__restore_appdata() {
 			
 			# Enable the app
 			plexserver__enable
-		else
-			if plexserver__version_check; then
-				# Upgrade the app if a newer version is available
-				plexserver__upgrade
-			fi
+		fi
+		
+		if plexserver__version_check; then
+			# Upgrade the app if a newer version is available
+			plexserver__upgrade
 		fi
 
 		# Start the app
@@ -1214,11 +1213,11 @@ function config__restore_appdata() {
 
 			# Enable the app
 			sabnzbd__enable
-		else
-      if sabnzbd__version_check; then
-				# Upgrade the app if a newer version is available
-				sabnzbd__upgrade
-		  fi
+		fi
+		
+		if sabnzbd__version_check; then
+			# Upgrade the app if a newer version is available
+			sabnzbd__upgrade
 		fi
 		
     if [ "$couchpotatoAction" == "Enable" ]; then
@@ -1249,11 +1248,11 @@ function config__restore_appdata() {
 			
 			# Enable the app
 			sickbeard__enable
-		else
-			if sickbeard__version_check; then
-				# Upgrade the app if a newer version is available
-				sickbeard__upgrade
-			fi
+		fi
+		
+		if sickbeard__version_check; then
+			# Upgrade the app if a newer version is available
+			sickbeard__upgrade
 		fi
 
     if [ "$sabnzbdAction" == "Enable" ]; then
@@ -1285,12 +1284,11 @@ function config__restore_appdata() {
 			
 			# Enable the app
 			transmission__enable
-		else
-			if transmission__version_check; then
-				# Upgrade the app if a newer version is available
-				transmission__stop
-				transmission__upgrade
-			fi
+		fi
+		
+		if transmission__version_check; then
+			# Upgrade the app if a newer version is available
+			transmission__upgrade
 		fi
 
 		# Start the app
