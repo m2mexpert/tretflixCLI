@@ -88,6 +88,15 @@ function storage__set_local() {
 		exit 1
 	fi
 	
+	echo "* Stopping all enabled apps"
+  couchpotato__stop
+  headphones__stop
+  nzbdrone__stop
+  plexserver__stop
+  sabnzbd__stop
+  sickbeard__stop
+  transmission__stop
+	
 	# Copy "Downloads" to the new path  
 	sudo su -c -u $osUser \
 		"shopt -s dotglob && \
@@ -105,6 +114,15 @@ function storage__set_local() {
 		echo
 		exit 1
 	fi
+	
+	echo "* Starting all enabled apps"
+  couchpotato__start
+  headphones__start
+  nzbdrone__start
+  plexserver__start
+  sabnzbd__start
+  sickbeard__start
+  transmission__start
 	
 	echo
 	storage__show_config
@@ -165,6 +183,15 @@ function storage__set_share() {
 		exit 1
 	fi
 	
+	echo "* Stopping all enabled apps"
+  couchpotato__stop
+  headphones__stop
+  nzbdrone__stop
+  plexserver__stop
+  sabnzbd__stop
+  sickbeard__stop
+  transmission__stop
+	
 	# Copy "Downloads" to the new path  
 	sudo su -c -u $osUser \
 		"shopt -s dotglob && \
@@ -203,6 +230,15 @@ function storage__set_share() {
 			exit 1
 		fi
 	fi
+	
+	echo "* Starting all enabled apps"
+  couchpotato__start
+  headphones__start
+  nzbdrone__start
+  plexserver__start
+  sabnzbd__start
+  sickbeard__start
+  transmission__start
 
 	echo
 	storage__show_config
