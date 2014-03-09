@@ -733,7 +733,7 @@ function config__wizard() {
 }
 
 function config__backup_appdata() {
-	echo "* Stopping Services"
+	echo "* Stopping all enabled apps"
   couchpotato__stop
   headphones__stop
   nzbdrone__stop
@@ -748,7 +748,7 @@ function config__backup_appdata() {
 	sudo su -c -u $osUser \
 		"cd $tretflixPath && tar cvf backup-$timestamp.tar appdata/"
 	
-	echo "* Restarting Services"
+	echo "* Starting all enabled apps"
   couchpotato__start
   headphones__start
   nzbdrone__start
@@ -778,7 +778,7 @@ function config__restore_appdata() {
 		exit 1
 	fi
 	
-	echo "* Stopping Services"
+	echo "* Stopping all enabled apps"
   couchpotato__stop
   headphones__stop
   nzbdrone__stop
