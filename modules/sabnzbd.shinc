@@ -25,6 +25,14 @@ function sabnzbd__get_status() {
   echo "$status"
 }
 
+function sabnzbd__queue_check() {
+  apikey=$(sabnzbd__get_apikey)
+  port=$(sabnzbd__get_port)
+  queue=$(curl "http://localhost:$port/sabnzbd/api?mode=qstatus&output=xml&apikey=$apikey" 2> /dev/null)
+  
+  echo "$queue" | grep "<pp_active>.*</pp_active>" | awk -F "[<>]" '{ print $3 }'
+}
+
 function sabnzbd__show_config() {
   status=$(sabnzbd__get_status)
 
@@ -92,6 +100,11 @@ function sabnzbd__stop() {
       sleep 2
     fi
     if echo "$(sabnzbd__get_status)" | grep -q "Running$"; then
+      # If SABnzbd+ is in post-processing, wait until Idle before stopping the service
+      while [ "$(sabnzbd__queue_check)" == "True" ]; do 
+        echo "Waiting for SABnzbd+ Post Processing..."
+        sleep 3
+      done
       service sabnzbdplus stop
     else
       break
