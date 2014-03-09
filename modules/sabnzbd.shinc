@@ -279,9 +279,6 @@ function sabnzbd__install() {
     apt-get update
   fi
   
-  # Install Dependencies
-  #### Not Needed, apt-get handles this
-  
   # Install SABnzbd+
   apt-get -q -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
     install sabnzbdplus sabnzbdplus-theme-mobile

@@ -345,10 +345,6 @@ function nzbdrone__install() {
     apt-get update
   fi
   
-  # Install Dependencies (Required for editing the DB)
-  apt-get -q -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
-    install sqlite3
-  
   # Install NzbDrone
   apt-get -q -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
     install nzbdrone

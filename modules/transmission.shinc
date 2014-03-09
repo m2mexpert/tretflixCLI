@@ -153,9 +153,6 @@ function transmission__set_port() {
 
 function transmission__install() {
   echo "* Installing Transmission"
-
-  # Install Dependencies
-  #### Not Needed, apt-get handles this
   
   # Install NzbDrone
   apt-get -q -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \

@@ -93,9 +93,6 @@ function plexserver__stop() {
 
 function plexserver__install() {
   echo "* Installing Plex Media Server"
-  
-  # Install Dependencies
-  #### Not Needed, gdebi handles this
 
   releaseList=$(curl http://tretflix.com/misc/currentPlexReleases.txt 2> /dev/null)
   if uname -a | grep -q "i386"; then

@@ -317,9 +317,6 @@ function proxy__config_transmission() {
 function proxy__install() {
   echo "* Installing Reverse Proxy"
 
-  # Install Dependencies
-  #### Not Needed, apt-get handles this
-
   # Install Apache2
   apt-get -q -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
     install apache2

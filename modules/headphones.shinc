@@ -259,9 +259,6 @@ function headphones__config_proxy() {
 function headphones__install() {
   echo "* Installing Headphones"
   
-  # Install Dependencies
-  ##### Coming Soon
-  
   # Git Clone From the Remote Repository
   git clone https://github.com/rembo10/headphones.git $headphonesSource
   

@@ -291,9 +291,6 @@ function sickbeard__config_proxy() {
 function sickbeard__install() {
   echo "* Installing Sick Beard"
   
-  # Install Dependencies
-  ##### Coming Soon
-  
   # Git Clone From the Remote Repository
   git clone https://github.com/midgetspy/Sick-Beard.git $sickbeardSource
   

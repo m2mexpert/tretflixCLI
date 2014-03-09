@@ -276,9 +276,6 @@ function couchpotato__config_proxy() {
 function couchpotato__install() {
   echo "* Installing CouchPotato"
   
-  # Install Dependencies
-  ##### Coming Soon
-  
   # Git Clone From the Remote Repository
   git clone https://github.com/RuudBurger/CouchPotatoServer.git $couchpotatoSource
   
