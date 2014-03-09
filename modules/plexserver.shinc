@@ -123,9 +123,8 @@ function plexserver__install() {
     
   rm -vf /tmp/"$filename"
   
-  # Stop and Disable, gdebi sometimes automatically enables and starts apps
+  # Stop the app, apt-get install sometimes automatically enables and starts apps
   plexserver__stop
-  plexserver__disable
   
   # Copy/Replace the init file
   tar xf $configBundle --strip-components 2 -C /etc/init/ config/init/plexmediaserver.conf

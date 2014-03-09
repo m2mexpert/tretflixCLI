@@ -353,9 +353,8 @@ function nzbdrone__install() {
   apt-get -q -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
     install nzbdrone
   
-  # Stop and Disable, apt-get install sometimes automatically enables and starts apps
+  # Stop the app, apt-get install sometimes automatically enables and starts apps
   nzbdrone__stop
-  nzbdrone__disable
   
   # Copy/Replace the init file
   tar xf $configBundle --strip-components 2 -C /etc/init/ config/init/nzbdrone.conf

@@ -161,9 +161,8 @@ function transmission__install() {
   apt-get -q -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
     install transmission-daemon
   
-  # Stop and Disable, apt-get install sometimes automatically enables and starts apps
+  # Stop the app, apt-get install sometimes automatically enables and starts apps
   transmission__stop
-  transmission__disable
   
   # Copy/Replace the init file
   tar xf $configBundle --strip-components 2 -C /etc/init.d/ config/init.d/transmission-daemon

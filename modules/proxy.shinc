@@ -324,9 +324,8 @@ function proxy__install() {
   apt-get -q -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
     install apache2
   
-  # Stop and Disable, apt-get install sometimes automatically enables and starts apps
+  # Stop the service, apt-get install sometimes automatically enables and starts services
   proxy__stop
-  proxy__disable
   
   # Link the necessary modules (enables them)
   if [ ! -f "/etc/apache2/mods-enabled/proxy.load" ]; then
