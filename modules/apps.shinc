@@ -1162,19 +1162,25 @@ function apps__sabnzbd() {
 			sabnzbd__start
 
 			if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating Headphones’s SABnzbd+ Support"
-				headphones__set_sabnzbd_username "$username"
-				headphones__start
+			  sabnzbdPort=$(sabnzbd__get_port)
+			  sabnzbdAPIkey=$(sabnzbd__get_apikey)
+			  sabnzbdUser=$(sabnzbd__get_username)
+			  sabnzbdPass=$(sabnzbd__get_password)
+				headphones__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
 			fi
 			if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating NzbDrone’s SABnzbd+ Support"
-				nzbdrone__set_sabnzbd_username "$username"
-				nzbdrone__start
+			  sabnzbdPort=$(sabnzbd__get_port)
+			  sabnzbdAPIkey=$(sabnzbd__get_apikey)
+			  sabnzbdUser=$(sabnzbd__get_username)
+			  sabnzbdPass=$(sabnzbd__get_password)
+				nzbdrone__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
 			fi
 			if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating Sick Beard’s SABnzbd+ Support"
-				sickbeard__set_sabnzbd_username "$username"
-				sickbeard__start
+			  sabnzbdPort=$(sabnzbd__get_port)
+			  sabnzbdAPIkey=$(sabnzbd__get_apikey)
+			  sabnzbdUser=$(sabnzbd__get_username)
+			  sabnzbdPass=$(sabnzbd__get_password)
+				sickbeard__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
 			fi
 		fi
 
@@ -1189,19 +1195,25 @@ function apps__sabnzbd() {
 			sabnzbd__start
 
 			if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating Headphones’s SABnzbd+ Support"
-				headphones__set_sabnzbd_password "$password"
-				headphones__start
+			  sabnzbdPort=$(sabnzbd__get_port)
+			  sabnzbdAPIkey=$(sabnzbd__get_apikey)
+			  sabnzbdUser=$(sabnzbd__get_username)
+			  sabnzbdPass=$(sabnzbd__get_password)
+				headphones__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
 			fi
 			if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating NzbDrone’s SABnzbd+ Support"
-				nzbdrone__set_sabnzbd_password "$password"
-				nzbdrone__start
+			  sabnzbdPort=$(sabnzbd__get_port)
+			  sabnzbdAPIkey=$(sabnzbd__get_apikey)
+			  sabnzbdUser=$(sabnzbd__get_username)
+			  sabnzbdPass=$(sabnzbd__get_password)
+				nzbdrone__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
 			fi
 			if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating Sick Beard’s SABnzbd+ Support"
-				sickbeard__set_sabnzbd_password "$password"
-				sickbeard__start
+			  sabnzbdPort=$(sabnzbd__get_port)
+			  sabnzbdAPIkey=$(sabnzbd__get_apikey)
+			  sabnzbdUser=$(sabnzbd__get_username)
+			  sabnzbdPass=$(sabnzbd__get_password)
+				sickbeard__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
 			fi
 		fi
 		
@@ -1216,24 +1228,30 @@ function apps__sabnzbd() {
 			sabnzbd__start
 
 			if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating CouchPotato’s SABnzbd+ Support"
-				couchpotato__set_sabnzbd_port "$port"
-				couchpotato__start
+			  sabnzbdPort=$(sabnzbd__get_port)
+			  sabnzbdAPIkey=$(sabnzbd__get_apikey)
+				couchpotato__config_sabnzbd "$sabnzbdUser" "$sabnzbdPass"
 			fi
 			if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating Headphones’s SABnzbd+ Support"
-				headphones__set_sabnzbd_port "$port"
-				headphones__start
+			  sabnzbdPort=$(sabnzbd__get_port)
+			  sabnzbdAPIkey=$(sabnzbd__get_apikey)
+			  sabnzbdUser=$(sabnzbd__get_username)
+			  sabnzbdPass=$(sabnzbd__get_password)
+				headphones__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
 			fi
 			if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating NzbDrone’s SABnzbd+ Support"
-				nzbdrone__set_sabnzbd_port "$port"
-				nzbdrone__start
+			  sabnzbdPort=$(sabnzbd__get_port)
+			  sabnzbdAPIkey=$(sabnzbd__get_apikey)
+			  sabnzbdUser=$(sabnzbd__get_username)
+			  sabnzbdPass=$(sabnzbd__get_password)
+				nzbdrone__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
 			fi
 			if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating Sick Beard’s SABnzbd+ Support"
-				sickbeard__set_sabnzbd_port "$port"
-				sickbeard__start
+			  sabnzbdPort=$(sabnzbd__get_port)
+			  sabnzbdAPIkey=$(sabnzbd__get_apikey)
+			  sabnzbdUser=$(sabnzbd__get_username)
+			  sabnzbdPass=$(sabnzbd__get_password)
+				sickbeard__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
 			fi
 		
 			if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
@@ -1253,24 +1271,30 @@ function apps__sabnzbd() {
 			sabnzbd__start
 
 			if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating CouchPotato’s SABnzbd+ Support"
-				couchpotato__set_sabnzbd_apikey "$apikey"
-				couchpotato__start
+			  sabnzbdPort=$(sabnzbd__get_port)
+			  sabnzbdAPIkey=$(sabnzbd__get_apikey)
+				couchpotato__config_sabnzbd "$sabnzbdUser" "$sabnzbdPass"
 			fi
 			if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating Headphones’s SABnzbd+ Support"
-				headphones__set_sabnzbd_apikey "$apikey"
-				headphones__start
+			  sabnzbdPort=$(sabnzbd__get_port)
+			  sabnzbdAPIkey=$(sabnzbd__get_apikey)
+			  sabnzbdUser=$(sabnzbd__get_username)
+			  sabnzbdPass=$(sabnzbd__get_password)
+				headphones__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
 			fi
 			if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating NzbDrone’s SABnzbd+ Support"
-				nzbdrone__set_sabnzbd_apikey "$apikey"
-				nzbdrone__start
+			  sabnzbdPort=$(sabnzbd__get_port)
+			  sabnzbdAPIkey=$(sabnzbd__get_apikey)
+			  sabnzbdUser=$(sabnzbd__get_username)
+			  sabnzbdPass=$(sabnzbd__get_password)
+				nzbdrone__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
 			fi
 			if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-				echo "* Updating Sick Beard’s SABnzbd+ Support"
-				sickbeard__set_sabnzbd_apikey "$apikey"
-				sickbeard__start
+			  sabnzbdPort=$(sabnzbd__get_port)
+			  sabnzbdAPIkey=$(sabnzbd__get_apikey)
+			  sabnzbdUser=$(sabnzbd__get_username)
+			  sabnzbdPass=$(sabnzbd__get_password)
+				sickbeard__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
 			fi
 		fi
 	fi
