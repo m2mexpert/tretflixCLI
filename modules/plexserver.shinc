@@ -125,6 +125,9 @@ function plexserver__install() {
   
   # Copy/Replace the init file
   tar xf $configBundle --strip-components 2 -C /etc/init/ config/init/plexmediaserver.conf
+  
+  # Copy/Replace the default config file
+  tar xf $configBundle --strip-components 2 -C /etc/default/ config/default/plexmediaserver
 
   # Copy the config/data directory into appdata
   if [ ! -d "$plexserverData" ]; then
