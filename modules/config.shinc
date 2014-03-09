@@ -817,6 +817,8 @@ function config__restore_appdata() {
 					echo
 			esac      
 		done
+	else
+	  couchpotatoAction="None"
 	fi
 
 	if tar -tf "$file" | grep -q "^appdata/headphones/$"; then
@@ -834,6 +836,8 @@ function config__restore_appdata() {
 					echo
 			esac      
 		done
+	else
+	  headphonesAction="None"
 	fi
 	
 	if tar -tf "$file" | grep -q "^appdata/nzbdrone/$"; then
@@ -851,6 +855,8 @@ function config__restore_appdata() {
 					echo
 			esac      
 		done
+	else
+	  nzbdroneAction="None"
 	fi
 
 	if tar -tf "$file" | grep -q "^appdata/plexmediaserver/$"; then
@@ -868,6 +874,8 @@ function config__restore_appdata() {
 					echo
 			esac      
 		done
+	else
+	  plexserverAction="None"
 	fi
 	
 	if tar -tf "$file" | grep -q "^appdata/sabnzbdplus/$"; then
@@ -885,6 +893,8 @@ function config__restore_appdata() {
 					echo
 			esac      
 		done
+	else
+	  sabnzbdAction="None"
 	fi
 
 	if tar -tf "$file" | grep -q "^appdata/sickbeard/$"; then
@@ -902,6 +912,8 @@ function config__restore_appdata() {
 					echo
 			esac      
 		done
+	else
+	  sickbeardAction="None"
 	fi
 	
 	if tar -tf "$file" | grep -q "^appdata/transmission-daemon/$"; then
@@ -919,6 +931,8 @@ function config__restore_appdata() {
 					echo
 			esac      
 		done
+	else
+	  transmissionAction="None"
 	fi
 
 	echo
