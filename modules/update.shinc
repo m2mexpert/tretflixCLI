@@ -21,7 +21,7 @@ function update__command_handler() {
     case "${CLI_ARGS[1]}" in
     	'cli')
     	  if [ "${#CLI_ARGS[@]}" -eq 2 ]; then
-    	    update__cli "master"
+    	    update__cli "v1.3"
     	  elif [ "${#CLI_ARGS[@]}" -eq 4 ]; then
     	    case "${CLI_ARGS[2]}" in
             '-b' | '--branch')
@@ -46,16 +46,16 @@ function update__cli() {
   branch="$1"
   
   # If branch is 'master', suppress command output
-  if [ "$branch" == "master" ]; then  
+  if [ "$branch" == "v1.3" ]; then
 		sudo su -c -u $osUser \
 			"cd $cliPath && git fetch > /dev/null 2>&1"
 		sudo su -c -u $osUser \
-			"cd $cliPath && git checkout -f master > /dev/null 2>&1"
+		  "cd $cliPath && git checkout -f $branch > /dev/null 2>&1"
 		sudo su -c -u $osUser \
-			"cd $cliPath && git reset --hard origin/master > /dev/null 2>&1"
+			"cd $cliPath && git reset --hard origin/$branch > /dev/null 2>&1"
 		chmod +x "$0"
 		echo "Tretflix CLI has been updated."
-  else
+  elif [ "$branch" == "develop" ]; then
 		sudo su -c -u $osUser \
 			"cd $cliPath && git fetch -v"
 		sudo su -c -u $osUser \
@@ -63,5 +63,9 @@ function update__cli() {
 		sudo su -c -u $osUser \
 			"cd $cliPath && git reset --hard origin/$branch" 
 		chmod +x "$0"
+	else
+	  echo "Invalid Branch"
+	  echo
+	  exit 1
   fi
 }
