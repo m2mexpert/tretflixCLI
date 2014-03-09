@@ -103,6 +103,9 @@ function plexserver__install() {
   else
     url=$(echo "$releaseList" | grep "amd64.deb")
   fi
+  
+  # Extract the installer filename from the URL
+  filename=$(basename "$url")
 
   wget -O /tmp/"$filename" "$url"
   if [ $? -ne 0 ]; then
@@ -143,6 +146,9 @@ function plexserver__upgrade() {
   else
     url=$(echo "$releaseList" | grep "amd64.deb")
   fi
+  
+  # Extract the installer filename from the URL
+  filename=$(basename "$url")
 
   wget -O /tmp/"$filename" "$url"
   if [ $? -ne 0 ]; then
