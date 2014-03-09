@@ -154,24 +154,10 @@ function storage__set_share() {
 		echo
 		exit 1
 	fi
-	
-	# Get the "tmp" symlink's target path
-	currentTmpPath="$(readlink $tmpLink)"
-	# If the "tmp" symlink is still pointed to /media/disk2/tmp (old path) include it in the copy
-	if [ "$currentTmpPath" != "$tmpPath" ]; then
-		tmpAction=true
-	else
-		tmpAction=false
-	fi 
 
 	# Get the size of the data to be synced to the new path
 	downloadsSize=$(du -c "$downloadsLink/" | grep total | awk '{ print $1 }')
-	if $tmpAction; then
-		tmpSize=$(du -c "$tmpLink/" | grep total | awk '{ print $1 }')
-		syncSize=$(($downloadsSize+$tmpSize))
-	else
-		syncSize=$downloadsSize
-	fi
+  syncSize=$downloadsSize
 
 	# Get the space available at the new path
 	newPathSpace=$(df -k "$newPath" | awk '{ print $4 }' | grep -v "Available")
@@ -208,27 +194,6 @@ function storage__set_share() {
 		echo "Error: Failed to update the symbolic link"
 		echo
 		exit 1
-	fi
-	
-	# Copy and Set "tmp" to "downloads/.tmp" if it isn't already
-	if $tmpAction; then
-		# Copy the existing tmp files to the new path/.tmp 
-		sudo su -c -u $osUser \
-			"shopt -s dotglob && \
-			rsync -av --progress --human-readable $tmpLink/. $tmpPath && \
-			shopt -u dotglob"
-			
-		if [ $? -ne 0 ]; then
-			echo "Error: Rsync exited with errors, review output."
-		fi
-		
-		# Change the symbolic link to point to the new path/.tmp
-		ln -sfn $tmpPath $tmpLink
-		if [ $? -ne 0 ]; then
-			echo "Error: Failed to update the symbolic link"
-			echo
-			exit 1
-		fi
 	fi
 	
 	echo "* Starting all enabled apps"
