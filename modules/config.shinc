@@ -376,19 +376,19 @@ function config__wizard() {
 
 	# CouchPotato Section
 	if [ "$couchpotatoAction" == "Enable" ]; then
-		if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
-			# Install the app if not already installed
-			if [ "$(couchpotato__get_status)" == "Not Installed" ]; then
-				couchpotato__install
-			fi
+	
+		# Install the app
+		if [ "$(couchpotato__get_status)" == "Not Installed" ]; then
+			couchpotato__install
 			
+		# Upgrade the app
+		elif couchpotato__version_check; then	
+			couchpotato__upgrade
+		fi
+			
+		if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
 			# Enable the app
 			couchpotato__enable
-    fi
-    
-		if couchpotato__version_check; then
-			# Upgrade the app if a newer version is available
-			couchpotato__upgrade
 		fi
 		
 		# Configure the app using user input
@@ -421,19 +421,18 @@ function config__wizard() {
 
 	# Headphones Section
 	if [ "$headphonesAction" == "Enable" ]; then
-		if ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-			# Install the app if not already installed
-			if [ "$(headphones__get_status)" == "Not Installed" ]; then
-				headphones__install
-			fi
+		# Install the app
+		if [ "$(headphones__get_status)" == "Not Installed" ]; then
+			headphones__install
 			
+		# Upgrade the app
+		elif headphones__version_check; then	
+			headphones__upgrade
+		fi
+			
+		if ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
 			# Enable the app
 			headphones__enable
-		fi
-		
-		if headphones__version_check; then
-			# Upgrade the app if a newer version is available
-			headphones__upgrade
 		fi
 		
 		# Configure the app using user input
@@ -463,19 +462,19 @@ function config__wizard() {
 
 	# NzbDrone Section
 	if [ "$nzbdroneAction" == "Enable" ]; then
-		if ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-			# Install the app if not already installed
-			if [ "$(nzbdrone__get_status)" == "Not Installed" ]; then
-				nzbdrone__install
-			fi
+	
+		# Install the app
+		if [ "$(nzbdrone__get_status)" == "Not Installed" ]; then
+			nzbdrone__install
 			
+		# Upgrade the app
+		elif nzbdrone__version_check; then	
+			nzbdrone__upgrade
+		fi
+			
+		if ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
 			# Enable the app
 			nzbdrone__enable
-		fi
-		
-		if nzbdrone__version_check; then
-			# Upgrade the app if a newer version is available
-			nzbdrone__upgrade
 		fi
 		
 		# Configure the app using user input
@@ -508,19 +507,19 @@ function config__wizard() {
 
 	# Plex Media Server Section
 	if [ "$plexserverAction" == "Enable" ]; then
-		if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
-			# Install the app if not already installed
-			if [ "$(plexserver__get_status)" == "Not Installed" ]; then
-				plexserver__install
-			fi
+
+		# Install the app
+		if [ "$(plexserver__get_status)" == "Not Installed" ]; then
+			plexserver__install
 			
+		# Upgrade the app
+		elif plexserver__version_check; then	
+			plexserver__upgrade
+		fi
+			
+		if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
 			# Enable the app
 			plexserver__enable
-		fi
-		
-		if plexserver__version_check; then
-			# Upgrade the app if a newer version is available
-			plexserver__upgrade
 		fi
 
 		# Start the app
@@ -535,19 +534,19 @@ function config__wizard() {
 
 	# SABnzbd+ Section
 	if [ "$sabnzbdAction" == "Enable" ]; then
-		if ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
-			# Install the app if not already installed
-			if [ "$(sabnzbd__get_status)" == "Not Installed" ]; then
-				sabnzbd__install
-			fi
 
+		# Install the app
+		if [ "$(sabnzbd__get_status)" == "Not Installed" ]; then
+			sabnzbd__install
+			
+		# Upgrade the app
+		elif sabnzbd__version_check; then	
+			sabnzbd__upgrade
+		fi
+			
+		if ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
 			# Enable the app
 			sabnzbd__enable
-		fi
-		
-		if sabnzbd__version_check; then
-			# Upgrade the app if a newer version is available
-			sabnzbd__upgrade
 		fi
 
 		# Configure the app using user input
@@ -583,19 +582,19 @@ function config__wizard() {
 	
 	# Sick Beard Section
 	if [ "$sickbeardAction" == "Enable" ]; then
-		if ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-			# Install the app if not already installed
-			if [ "$(sickbeard__get_status)" == "Not Installed" ]; then
-				sickbeard__install
-			fi
+
+		# Install the app
+		if [ "$(sickbeard__get_status)" == "Not Installed" ]; then
+			sickbeard__install
 			
+		# Upgrade the app
+		elif sickbeard__version_check; then	
+			sickbeard__upgrade
+		fi
+			
+		if ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
 			# Enable the app
 			sickbeard__enable
-		fi
-		
-		if sickbeard__version_check; then
-			# Upgrade the app if a newer version is available
-			sickbeard__upgrade
 		fi
 		
 		# Configure the app using user input
@@ -628,19 +627,19 @@ function config__wizard() {
 	
 	# Transmission Section
 	if [ "$transmissionAction" == "Enable" ]; then
-		if ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
-			# Install the app if not already installed
-			if [ "$(transmission__get_status)" == "Not Installed" ]; then
-				transmission__install
-			fi
+
+		# Install the app
+		if [ "$(transmission__get_status)" == "Not Installed" ]; then
+			transmission__install
 			
+		# Upgrade the app
+		elif transmission__version_check; then	
+			transmission__upgrade
+		fi
+			
+		if ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
 			# Enable the app
 			transmission__enable
-		fi
-		
-		if transmission__version_check; then
-			# Upgrade the app if a newer version is available
-			transmission__upgrade
 		fi
 		
 		# Configure the app using user input
@@ -1094,19 +1093,19 @@ function config__restore_appdata() {
 
 	# CouchPotato Section
 	if [ "$couchpotatoAction" == "Enable" ]; then
-		if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
-			# Install the app if not already installed
-			if [ "$(couchpotato__get_status)" == "Not Installed" ]; then
-				couchpotato__install
-			fi
+
+		# Install the app
+		if [ "$(couchpotato__get_status)" == "Not Installed" ]; then
+			couchpotato__install
 			
+		# Upgrade the app
+		elif couchpotato__version_check; then	
+			couchpotato__upgrade
+		fi
+			
+		if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
 			# Enable the app
 			couchpotato__enable
-		fi
-		
-		if couchpotato__version_check; then
-			# Upgrade the app if a newer version is available
-			couchpotato__upgrade
 		fi
 
     if [ "$sabnzbdAction" == "Enable" ]; then
@@ -1128,19 +1127,19 @@ function config__restore_appdata() {
 
 	# Headphones Section
 	if [ "$headphonesAction" == "Enable" ]; then
-		if ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
-			# Install the app if not already installed
-			if [ "$(headphones__get_status)" == "Not Installed" ]; then
-				headphones__install
-			fi
+
+		# Install the app
+		if [ "$(headphones__get_status)" == "Not Installed" ]; then
+			headphones__install
 			
+		# Upgrade the app
+		elif headphones__version_check; then	
+			headphones__upgrade
+		fi
+			
+		if ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
 			# Enable the app
 			headphones__enable
-		fi
-		
-		if headphones__version_check; then
-			# Upgrade the app if a newer version is available
-			headphones__upgrade
 		fi
 
     if [ "$sabnzbdAction" == "Enable" ]; then
@@ -1161,19 +1160,19 @@ function config__restore_appdata() {
 
 	# NzbDrone Section
 	if [ "$nzbdroneAction" == "Enable" ]; then
-		if ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
-			# Install the app if not already installed
-			if [ "$(nzbdrone__get_status)" == "Not Installed" ]; then
-				nzbdrone__install
-			fi
+
+		# Install the app
+		if [ "$(nzbdrone__get_status)" == "Not Installed" ]; then
+			nzbdrone__install
 			
+		# Upgrade the app
+		elif nzbdrone__version_check; then	
+			nzbdrone__upgrade
+		fi
+			
+		if ! echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
 			# Enable the app
 			nzbdrone__enable
-		fi
-		
-		if nzbdrone__version_check; then
-			# Upgrade the app if a newer version is available
-			nzbdrone__upgrade
 		fi
 
     if [ "$sabnzbdAction" == "Enable" ]; then
@@ -1197,19 +1196,19 @@ function config__restore_appdata() {
 
 	# Plex Media Server Section
 	if [ "$plexserverAction" == "Enable" ]; then
-		if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
-			# Install the app if not already installed
-			if [ "$(plexserver__get_status)" == "Not Installed" ]; then
-				plexserver__install
-			fi
+
+		# Install the app
+		if [ "$(plexserver__get_status)" == "Not Installed" ]; then
+			plexserver__install
 			
+		# Upgrade the app
+		elif plexserver__version_check; then	
+			plexserver__upgrade
+		fi
+			
+		if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
 			# Enable the app
 			plexserver__enable
-		fi
-		
-		if plexserver__version_check; then
-			# Upgrade the app if a newer version is available
-			plexserver__upgrade
 		fi
 
 		# Start the app
@@ -1219,19 +1218,19 @@ function config__restore_appdata() {
 
 	# SABnzbd+ Section
 	if [ "$sabnzbdAction" == "Enable" ]; then
-		if ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
-			# Install the app if not already installed
-			if [ "$(sabnzbd__get_status)" == "Not Installed" ]; then
-				sabnzbd__install
-			fi
 
+		# Install the app
+		if [ "$(sabnzbd__get_status)" == "Not Installed" ]; then
+			sabnzbd__install
+			
+		# Upgrade the app
+		elif sabnzbd__version_check; then	
+			sabnzbd__upgrade
+		fi
+			
+		if ! echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
 			# Enable the app
 			sabnzbd__enable
-		fi
-		
-		if sabnzbd__version_check; then
-			# Upgrade the app if a newer version is available
-			sabnzbd__upgrade
 		fi
 		
     if [ "$couchpotatoAction" == "Enable" ]; then
@@ -1254,19 +1253,19 @@ function config__restore_appdata() {
 	
 	# Sick Beard Section
 	if [ "$sickbeardAction" == "Enable" ]; then
-		if ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
-			# Install the app if not already installed
-			if [ "$(sickbeard__get_status)" == "Not Installed" ]; then
-				sickbeard__install
-			fi
+
+		# Install the app
+		if [ "$(sickbeard__get_status)" == "Not Installed" ]; then
+			sickbeard__install
 			
+		# Upgrade the app
+		elif sickbeard__version_check; then	
+			sickbeard__upgrade
+		fi
+			
+		if ! echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
 			# Enable the app
 			sickbeard__enable
-		fi
-		
-		if sickbeard__version_check; then
-			# Upgrade the app if a newer version is available
-			sickbeard__upgrade
 		fi
 
     if [ "$sabnzbdAction" == "Enable" ]; then
@@ -1290,19 +1289,19 @@ function config__restore_appdata() {
 	
 	# Transmission Section
 	if [ "$transmissionAction" == "Enable" ]; then
-		if ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
-			# Install the app if not already installed
-			if [ "$(transmission__get_status)" == "Not Installed" ]; then
-				transmission__install
-			fi
+
+		# Install the app
+		if [ "$(transmission__get_status)" == "Not Installed" ]; then
+			transmission__install
 			
+		# Upgrade the app
+		elif transmission__version_check; then	
+			transmission__upgrade
+		fi
+			
+		if ! echo "$(transmission__get_status)" | grep -q "^Enabled"; then
 			# Enable the app
 			transmission__enable
-		fi
-		
-		if transmission__version_check; then
-			# Upgrade the app if a newer version is available
-			transmission__upgrade
 		fi
 
 		# Start the app
@@ -1312,12 +1311,12 @@ function config__restore_appdata() {
 	
   # Reverse Proxy Section
 	if [ "$proxyAction" == "Enable" ]; then
+		# Install the service
+		if [ "$(proxy__get_status)" == "Not Installed" ]; then
+			proxy__install
+		fi
+			
 		if ! echo "$(proxy__get_status)" | grep -q "^Enabled"; then
-			# Install the service if not already installed
-			if [ "$(proxy__get_status)" == "Not Installed" ]; then
-				proxy__install
-			fi
-
 			# Enable the service
 			proxy__enable
 		fi
