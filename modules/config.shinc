@@ -987,7 +987,7 @@ function config__restore_appdata() {
 		echo "* Restoring CouchPotato Data"
 		rm -rf "$couchpotatoData"
 		sudo su -c -u $osUser \
-			"tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/couchpotato"  
+			"tar xvf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/couchpotato"  
 			
 		couchpotatoAction="Enable"
 	elif echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
@@ -1003,7 +1003,7 @@ function config__restore_appdata() {
 		echo "* Restoring Headphones Data"
 		rm -rf "$headphonesData"
 		sudo su -c -u $osUser \
-			"tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/headphones"
+			"tar xvf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/headphones"
 			
 		headphonesAction="Enable"
 	elif echo "$(headphones__get_status)" | grep -q "^Enabled"; then
@@ -1019,7 +1019,7 @@ function config__restore_appdata() {
 		echo "* Restoring NzbDrone Data"
 		rm -rf "$nzbdroneData"
 		sudo su -c -u $osUser \
-			"tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/nzbdrone"	
+			"tar xvf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/nzbdrone"	
 			
 		nzbdroneAction="Enable"
 	elif echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
@@ -1035,7 +1035,7 @@ function config__restore_appdata() {
 		echo "* Restoring Plex Media Server Data"   
 		rm -rf "$plexserverData"
 		sudo su -c -u $osUser \
-			"tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/plexmediaserver"	
+			"tar xvf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/plexmediaserver"	
 		
 		plexserverAction="Enable"
 	elif echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
@@ -1051,7 +1051,7 @@ function config__restore_appdata() {
 		echo "* Restoring SABnzbd+ Data"
 		rm -rf "$sabnzbdData"
 		sudo su -c -u $osUser \
-			"tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/sabnzbdplus"	
+			"tar xvf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/sabnzbdplus"	
 			
 		sabnzbdAction="Enable"
 	elif echo "$(sabnzbd__get_status)" | grep -q "^Enabled"; then
@@ -1067,7 +1067,7 @@ function config__restore_appdata() {
 		echo "* Restoring Sick Beard Data"
 		rm -rf "$sickbeardData"
 		sudo su -c -u $osUser \
-			"tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/sickbeard"	
+			"tar xvf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/sickbeard"	
 			
 		sickbeardAction="Enable"
 	elif echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
@@ -1083,7 +1083,7 @@ function config__restore_appdata() {
 		echo "* Restoring Transmission Data"
 		rm -rf "$transmissionData"
 		sudo su -c -u $osUser \
-			"tar xf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/transmission-daemon"	
+			"tar xvf $file --strip-components 1 -C $tretflixPath/appdata/ appdata/transmission-daemon"	
 			
 		transmissionAction="Enable"
 	elif echo "$(transmission__get_status)" | grep -q "^Enabled"; then
