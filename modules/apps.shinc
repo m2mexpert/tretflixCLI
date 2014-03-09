@@ -1167,6 +1167,7 @@ function apps__sabnzbd() {
 			  sabnzbdUser=$(sabnzbd__get_username)
 			  sabnzbdPass=$(sabnzbd__get_password)
 				headphones__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
+				headphones__start
 			fi
 			if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
 			  sabnzbdPort=$(sabnzbd__get_port)
@@ -1174,6 +1175,7 @@ function apps__sabnzbd() {
 			  sabnzbdUser=$(sabnzbd__get_username)
 			  sabnzbdPass=$(sabnzbd__get_password)
 				nzbdrone__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
+				nzbdrone__start
 			fi
 			if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
 			  sabnzbdPort=$(sabnzbd__get_port)
@@ -1181,6 +1183,7 @@ function apps__sabnzbd() {
 			  sabnzbdUser=$(sabnzbd__get_username)
 			  sabnzbdPass=$(sabnzbd__get_password)
 				sickbeard__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
+				sickbeard__start
 			fi
 		fi
 
@@ -1200,6 +1203,7 @@ function apps__sabnzbd() {
 			  sabnzbdUser=$(sabnzbd__get_username)
 			  sabnzbdPass=$(sabnzbd__get_password)
 				headphones__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
+				headphones__start
 			fi
 			if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
 			  sabnzbdPort=$(sabnzbd__get_port)
@@ -1207,6 +1211,7 @@ function apps__sabnzbd() {
 			  sabnzbdUser=$(sabnzbd__get_username)
 			  sabnzbdPass=$(sabnzbd__get_password)
 				nzbdrone__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
+				nzbdrone__start
 			fi
 			if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
 			  sabnzbdPort=$(sabnzbd__get_port)
@@ -1214,6 +1219,7 @@ function apps__sabnzbd() {
 			  sabnzbdUser=$(sabnzbd__get_username)
 			  sabnzbdPass=$(sabnzbd__get_password)
 				sickbeard__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
+				sickbeard__start
 			fi
 		fi
 		
@@ -1231,6 +1237,7 @@ function apps__sabnzbd() {
 			  sabnzbdPort=$(sabnzbd__get_port)
 			  sabnzbdAPIkey=$(sabnzbd__get_apikey)
 				couchpotato__config_sabnzbd "$sabnzbdUser" "$sabnzbdPass"
+				couchpotato__start
 			fi
 			if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
 			  sabnzbdPort=$(sabnzbd__get_port)
@@ -1238,6 +1245,7 @@ function apps__sabnzbd() {
 			  sabnzbdUser=$(sabnzbd__get_username)
 			  sabnzbdPass=$(sabnzbd__get_password)
 				headphones__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
+				headphones__start
 			fi
 			if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
 			  sabnzbdPort=$(sabnzbd__get_port)
@@ -1245,6 +1253,7 @@ function apps__sabnzbd() {
 			  sabnzbdUser=$(sabnzbd__get_username)
 			  sabnzbdPass=$(sabnzbd__get_password)
 				nzbdrone__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
+				nzbdrone__start
 			fi
 			if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
 			  sabnzbdPort=$(sabnzbd__get_port)
@@ -1252,6 +1261,7 @@ function apps__sabnzbd() {
 			  sabnzbdUser=$(sabnzbd__get_username)
 			  sabnzbdPass=$(sabnzbd__get_password)
 				sickbeard__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
+				sickbeard__start
 			fi
 		
 			if echo "$(proxy__get_status)" | egrep -q "^Enabled"; then
@@ -1274,6 +1284,7 @@ function apps__sabnzbd() {
 			  sabnzbdPort=$(sabnzbd__get_port)
 			  sabnzbdAPIkey=$(sabnzbd__get_apikey)
 				couchpotato__config_sabnzbd "$sabnzbdUser" "$sabnzbdPass"
+				couchpotato__start
 			fi
 			if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
 			  sabnzbdPort=$(sabnzbd__get_port)
@@ -1281,6 +1292,7 @@ function apps__sabnzbd() {
 			  sabnzbdUser=$(sabnzbd__get_username)
 			  sabnzbdPass=$(sabnzbd__get_password)
 				headphones__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
+				headphones__start
 			fi
 			if echo "$(nzbdrone__get_status)" | grep -q "^Enabled"; then
 			  sabnzbdPort=$(sabnzbd__get_port)
@@ -1288,6 +1300,7 @@ function apps__sabnzbd() {
 			  sabnzbdUser=$(sabnzbd__get_username)
 			  sabnzbdPass=$(sabnzbd__get_password)
 				nzbdrone__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
+				nzbdrone__start
 			fi
 			if echo "$(sickbeard__get_status)" | grep -q "^Enabled"; then
 			  sabnzbdPort=$(sabnzbd__get_port)
@@ -1295,6 +1308,7 @@ function apps__sabnzbd() {
 			  sabnzbdUser=$(sabnzbd__get_username)
 			  sabnzbdPass=$(sabnzbd__get_password)
 				sickbeard__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey" "$sabnzbdUser" "$sabnzbdPass"
+				sickbeard__start
 			fi
 		fi
 	fi
