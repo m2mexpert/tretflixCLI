@@ -230,6 +230,10 @@ function shares__validate_share() {
   
   # Define the test mount point path
   testMountPoint="/mnt/.test"
+  
+  if [ ! -d "$testMountPoint" ]; then
+    mkdir /mnt/.test
+  fi
 
   # Verify that the host is reachable and/or hostname can be resolved
   tools__host_ping "$host"
