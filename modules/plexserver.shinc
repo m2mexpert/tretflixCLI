@@ -135,8 +135,6 @@ function plexserver__install() {
 }
 
 function plexserver__upgrade() {
-  plexserver__stop
-  
   echo "* Upgrading Plex Media Server"
   
   releaseList=$(curl http://tretflix.com/misc/currentPlexReleases.txt 2> /dev/null)
@@ -153,6 +151,7 @@ function plexserver__upgrade() {
     exit 1
   fi
 
+  plexserver__stop
   gdebi --n /tmp/"$filename"
   if [ $? -ne 0 ]; then
     echo "Installation failed"
