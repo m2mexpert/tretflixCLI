@@ -336,6 +336,18 @@ function nzbdrone__config_proxy() {
 function nzbdrone__install() {
   echo "* Installing NzbDrone"
   
+    # Add the updated libmono apt repository
+  if [ ! -f "/etc/apt/sources.list.d/directhex-monoxide-precise.list" ]; then
+    add-apt-repository -y ppa:directhex/monoxide
+    
+    # Update apt repository package lists
+    apt-get update
+  fi
+  
+  # Install updated libmono
+  apt-get -q -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+    install libmono-2.0-1
+  
   # Add apt repository to sources.list
   if ! grep -q "^deb http://update.nzbdrone.com/repos/apt/debian master main" /etc/apt/sources.list; then 
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys FDA5DFFC
