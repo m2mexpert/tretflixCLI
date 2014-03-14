@@ -1055,7 +1055,7 @@ function apps__plexserver() {
 	    echo "Plex Media Server is disabled"
 	  else
 			echo "* Configuring Plex Media Server"
-			plexserver__set_plexpass_username "$username"
+			plexserver__set_username "$username"
 		fi
 
 	elif [ "$option" == "set password" ]; then
@@ -1065,7 +1065,7 @@ function apps__plexserver() {
 	    echo "Plex Media Server is disabled"
 	  else
 			echo "* Configuring Plex Media Server"
-			plexserver__set_plexpass_password "$password"
+			plexserver__set_password "$password"
 	  fi
 	  		
 	elif [ "$option" == "set port" ]; then
