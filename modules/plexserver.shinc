@@ -265,10 +265,10 @@ function plexserver__get_download_url() {
   
   if uname -a | grep -q "i386"; then
     url=$(echo "$downloadPage" | sed '/<h3>Ubuntu<h3>/,/<h3>/!d;//d' | \
-      sed -n '/href=".*amd64.deb"/ s/.*\(href=".*amd64.deb"\).*/\1/p' | sed 's/href="//' | sed 's/"$//')
+      sed -n '/href=".*i386.deb"/ s/.*\(href=".*i386.deb"\).*/\1/p' | sed 's/href="//' | sed 's/"$//')    
   else
     url=$(echo "$downloadPage" | sed '/<h3>Ubuntu<h3>/,/<h3>/!d;//d' | \
-      sed -n '/href=".*i386.deb"/ s/.*\(href=".*i386.deb"\).*/\1/p' | sed 's/href="//' | sed 's/"$//')
+      sed -n '/href=".*amd64.deb"/ s/.*\(href=".*amd64.deb"\).*/\1/p' | sed 's/href="//' | sed 's/"$//')
   fi
   
   echo "$url"
