@@ -141,10 +141,13 @@ function plexserver__set_password() {
 # ---------------------------------------------------------------------------------------
 
 function plexserver__install() {
+  username="$1"
+  password="$2"
+  
   echo "* Installing Plex Media Server"
 
   # Get URL for latest available build
-  url=$(plexserver__get_download_url)
+  url=$(plexserver__get_download_url "$username" "$password")
   
   # Extract the installer filename from the URL
   filename=$(basename "$url")
@@ -182,10 +185,13 @@ function plexserver__install() {
 }
 
 function plexserver__upgrade() {
+  username="$1"
+  password="$2"
+  
   echo "* Upgrading Plex Media Server"
   
   # Get URL for latest available build
-  url=$(plexserver__get_download_url)
+  url=$(plexserver__get_download_url "$username" "$password")
   
   # Extract the installer filename from the URL
   filename=$(basename "$url")
@@ -209,8 +215,11 @@ function plexserver__upgrade() {
 }
 
 function plexserver__version_check() {
+  username="$1"
+  password="$2"
+  
   # Get URL for latest available build
-  url=$(plexserver__get_download_url)
+  url=$(plexserver__get_download_url "$username" "$password")
   
   # Extract the installer filename from the URL
   filename=$(basename "$url")
@@ -229,8 +238,8 @@ function plexserver__version_check() {
 }
 
 function plexserver__get_download_url() {
-	username=$(plexserver__get_username)
-	password=$(plexserver__get_password)
+  username="$1"
+  password="$2"
 	
 	if [ "$username" ];then
 

@@ -544,11 +544,11 @@ function config__wizard() {
 
 		# Install the app
 		if [ "$(plexserver__get_status)" == "Not Installed" ]; then
-			plexserver__install
+			plexserver__install "$plexserverUser" "$plexserverPass"
 			
 		# Upgrade the app
-		elif plexserver__version_check; then	
-			plexserver__upgrade
+		elif plexserver__version_check "$plexserverUser" "$plexserverPass"; then	
+			plexserver__upgrade "$plexserverUser" "$plexserverPass"
 		fi
 			
 		if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
@@ -1235,14 +1235,18 @@ function config__restore_appdata() {
 
 	# Plex Media Server Section
 	if [ "$plexserverAction" == "Enable" ]; then
+	
+	  # Get Plex Pass username and password
+	  plexserverUser=$(plexserver__get_username)
+		plexserverPass=$(plexserver__get_password)
 
 		# Install the app
 		if [ "$(plexserver__get_status)" == "Not Installed" ]; then
-			plexserver__install
+			plexserver__install "$plexserverUser" "$plexserverPass"
 			
 		# Upgrade the app
-		elif plexserver__version_check; then	
-			plexserver__upgrade
+		elif plexserver__version_check "$plexserverUser" "$plexserverPass"; then	
+			plexserver__upgrade "$plexserverUser" "$plexserverPass"
 		fi
 			
 		if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then

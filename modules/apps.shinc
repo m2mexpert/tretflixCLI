@@ -998,11 +998,16 @@ function apps__plexserver() {
 		
 		  # Install the app
 			if [ "$(plexserver__get_status)" == "Not Installed" ]; then
-				plexserver__install
+			  # Pass empty values for username and password
+				plexserver__install "" ""
 				
 			# Upgrade the app
-			elif plexserver__version_check; then	
-				plexserver__upgrade
+			else
+				plexserverUser=$(plexserver__get_username)
+				plexserverPass=$(plexserver__get_password)
+			  if plexserver__version_check "$plexserverUser" "$plexserverPass"; then	
+				  plexserver__upgrade "$plexserverUser" "$plexserverPass"
+				fi
 			fi
 			
 			# Enable the app
@@ -1036,9 +1041,10 @@ function apps__plexserver() {
 	  if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
 	    echo "Plex Media Server is disabled"
 	  else
-			if plexserver__version_check; then
-				plexserver__upgrade
-				plexserver__start
+			plexserverUser=$(plexserver__get_username)
+			plexserverPass=$(plexserver__get_password)
+			if plexserver__version_check "$plexserverUser" "$plexserverPass"; then	
+				plexserver__upgrade "$plexserverUser" "$plexserverPass"
 			fi
 		fi
 		
@@ -1578,7 +1584,8 @@ function apps__allapps() {
 			nzbdrone__install
 		fi
 		if [ "$(plexserver__get_status)" == "Not Installed" ]; then
-			plexserver__install
+		  # Pass empty values for username and password
+			plexserver__install "" ""
 		fi
 		if [ "$(sabnzbd__get_status)" == "Not Installed" ]; then
 			sabnzbd__install
@@ -1744,8 +1751,10 @@ function apps__allapps() {
 		elif ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
 				
 			# Upgrade the app
-			if plexserver__version_check; then	
-				plexserver__upgrade
+			plexserverUser=$(plexserver__get_username)
+			plexserverPass=$(plexserver__get_password)
+			if plexserver__version_check "$plexserverUser" "$plexserverPass"; then	
+				plexserver__upgrade "$plexserverUser" "$plexserverPass"
 			fi
 			
 			# Enable the app
@@ -1928,9 +1937,10 @@ function apps__allapps() {
 	  if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
 	    echo "Plex Media Server is disabled"
 	  else
-			if plexserver__version_check; then
-				plexserver__upgrade
-				plexserver__start
+			plexserverUser=$(plexserver__get_username)
+			plexserverPass=$(plexserver__get_password)
+			if plexserver__version_check "$plexserverUser" "$plexserverPass"; then	
+				plexserver__upgrade "$plexserverUser" "$plexserverPass"
 			fi
     fi
     		
