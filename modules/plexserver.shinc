@@ -116,7 +116,7 @@ function plexserver__set_username() {
   username="$1"
   username=$(echo "$username" | sed 's/\//\\\//g')
   
-  if [ ! -f $plexpassConfig ]; then
+  if ! grep -q "username =" $plexpassConfig 2> /dev/null; then
     sudo su -c -u $osUser \
       "echo 'username = ' >> $plexpassConfig"
   fi
@@ -128,7 +128,7 @@ function plexserver__set_password() {
   password="$1"
   password=$(echo "$password" | sed 's/\//\\\//g')
 
-  if [ ! -f $plexpassConfig ]; then
+  if ! grep -q "password =" $plexpassConfig 2> /dev/null; then
     sudo su -c -u $osUser \
       "echo 'password = ' >> $plexpassConfig"
   fi
