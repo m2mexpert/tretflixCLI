@@ -143,12 +143,8 @@ function plexserver__set_password() {
 function plexserver__install() {
   echo "* Installing Plex Media Server"
 
-  releaseList=$(curl http://tretflix.com/misc/currentPlexReleases.txt 2> /dev/null)
-  if uname -a | grep -q "i386"; then
-    url=$(echo "$releaseList" | grep "i386.deb")
-  else
-    url=$(echo "$releaseList" | grep "amd64.deb")
-  fi
+  # Get URL for latest available build
+  url=$(plexserver__get_download_url)
   
   # Extract the installer filename from the URL
   filename=$(basename "$url")
