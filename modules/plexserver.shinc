@@ -32,10 +32,15 @@ function plexserver__show_config() {
   echo "----------------------------"
   echo "Status: $status"
   if [ "$status" == "Enabled|Running" ]; then
+	  username=$(plexserver__get_username)
+	  password=$(plexserver__get_password)
     port="32400"
     ipv4=$(tools__get_ip)
     
     echo "Web UI: http://$ipv4:$port/web"
+    echo
+    echo "Plex Pass Username: $username"
+    echo "Plex Pass Password: $password"
   fi
 }
 
@@ -85,6 +90,50 @@ function plexserver__stop() {
       break
     fi
   done
+}
+
+
+# Get App Configuration
+# ---------------------------------------------------------------------------------------
+
+function plexserver__get_username() {
+  username=$(grep "^username " $plexpassConfig | awk '{ print $3 }')
+  
+  echo "$username"
+}
+
+function plexserver__get_password() {
+  password==$(grep "^password " $plexpassConfig | awk '{ print $3 }')
+  
+  echo "$password"
+}
+
+
+# Set App Configuration
+# ---------------------------------------------------------------------------------------
+
+function plexserver__set_username() {
+  username="$1"
+  username=$(echo "$username" | sed 's/\//\\\//g')
+  
+  if [ ! -d $plexpassConfig ]; then
+    sudo su -c -u $osUser \
+      "echo 'username = ' > $plexpassConfig"
+  fi
+  
+  sed -i 's/^username .*/username = '$username'/g' $plexpassConfig
+}
+
+function plexserver__set_password() {
+  password="$1"
+  password=$(echo "$password" | sed 's/\//\\\//g')
+
+  if [ ! -d $plexpassConfig ]; then
+    sudo su -c -u $osUser \
+      "echo 'password = ' > $plexpassConfig"
+  fi
+
+  sed -i 's/^password .*/password = '$password'/g' $plexpassConfig
 }
 
 
@@ -139,12 +188,8 @@ function plexserver__install() {
 function plexserver__upgrade() {
   echo "* Upgrading Plex Media Server"
   
-  releaseList=$(curl http://tretflix.com/misc/currentPlexReleases.txt 2> /dev/null)
-  if uname -a | grep -q "i386"; then
-    url=$(echo "$releaseList" | grep "i386.deb")
-  else
-    url=$(echo "$releaseList" | grep "amd64.deb")
-  fi
+  # Get URL for latest available build
+  url=$(plexserver__get_download_url)
   
   # Extract the installer filename from the URL
   filename=$(basename "$url")
@@ -168,12 +213,8 @@ function plexserver__upgrade() {
 }
 
 function plexserver__version_check() {
-  releaseList=$(curl http://tretflix.com/misc/currentPlexReleases.txt 2> /dev/null)
-  if uname -a | grep -q "i386"; then
-    url=$(echo "$releaseList" | grep "i386.deb")
-  else
-    url=$(echo "$releaseList" | grep "amd64.deb")
-  fi
+  # Get URL for latest available build
+  url=$(plexserver__get_download_url)
   
   # Extract the installer filename from the URL
   filename=$(basename "$url")
@@ -189,6 +230,43 @@ function plexserver__version_check() {
   else
     true
   fi
+}
+
+function plexserver__get_download_url() {
+	username=$(plexserver__get_username)
+	password=$(plexserver__get_password)
+	
+	if [ "$username" ];then
+
+		# Get the sign in authenticity token
+		loginPage=$(wget --keep-session-cookies --save-cookies /tmp/cookies.txt https://plex.tv/users/sign_in -q -O -)
+		authToken=$(echo "$loginPage" | sed -n '/value=".*=="/ s/.*\(value=".*=="\).*/\1/p' | sed 's/value="//' | sed 's/"$//')
+
+		# Sign in
+		wget --load-cookies /tmp/cookies.txt --keep-session-cookies --save-cookies /tmp/cookies.txt \
+			--post-data='user[login]='$username'&user[password]='$password'&authenticity_token='$authToken'' \
+			https://plex.tv/users/sign_in -q -O - > /dev/null
+
+    # Get plex pass downloads page source
+    downloadPage=$(wget --load-cookies /tmp/cookies.txt https://plex.tv/downloads?channel=plexpass -q -O -)
+    
+    # Delete the cookies file
+    rm /tmp/cookies.txt
+    
+  else
+    # Get the normal downloads page source
+    downloadPage=$(wget https://plex.tv/downloads -q -O -)
+  fi
+  
+  if uname -a | grep -q "i386"; then
+    url=$(echo "$downloadPage" | sed '/<h3>Ubuntu<h3>/,/<h3>/!d;//d' | \
+      sed -n '/href=".*amd64.deb"/ s/.*\(href=".*amd64.deb"\).*/\1/p' | sed 's/href="//' | sed 's/"$//')
+  else
+    url=$(echo "$downloadPage" | sed '/<h3>Ubuntu<h3>/,/<h3>/!d;//d' | \
+      sed -n '/href=".*i386.deb"/ s/.*\(href=".*i386.deb"\).*/\1/p' | sed 's/href="//' | sed 's/"$//')
+  fi
+  
+  echo "$url"
 }
 
 

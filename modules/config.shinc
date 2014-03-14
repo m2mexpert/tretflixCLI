@@ -214,6 +214,40 @@ function config__wizard() {
 			[yY] | [yY][Ee][Ss] )
 				plexserverAction="Enable"
 				plexserverPort="32400"
+				while true; do
+					read -p "Do you have a Plex Pass Account? (y/n): " input
+					case "$input" in
+						[yY] | [yY][Ee][Ss] )
+						  while true; do
+							  read -p "Enter your Plex Pass Username: " input
+							  if [[ -z "${input}" ]]; then
+                  echo "!! ERROR: Invalid entry."
+                  echo
+							  else
+								  plexserverUser="$input"
+								  break
+							  fi
+							done
+							while true; do
+							  read -p "Enter your Plex Pass Password: " input
+							  if [[ -z "${input}" ]]; then
+                  echo "!! ERROR: Invalid entry."
+                  echo								  
+							  else
+								  plexserverPass="$input"
+								  break
+							  fi
+							done 
+							break;;
+						[nN] | [n|N][O|o] )
+							plexserverUser=""
+							plexserverPass=""
+							break;;
+						* )
+							echo "!! ERROR: Invalid entry."
+							echo
+					esac      
+				done			
 				break;;
 			[nN] | [n|N][O|o] )
 				plexserverAction="Disable"
@@ -521,6 +555,11 @@ function config__wizard() {
 			# Enable the app
 			plexserver__enable
 		fi
+		
+		# Configure the app using user input
+		echo "* Configuring Plex Media Server"
+		plexserver__set_username "$plexserverUser"
+		plexserver__set_password "$plexserverPass"
 
 		# Start the app
 		plexserver__start

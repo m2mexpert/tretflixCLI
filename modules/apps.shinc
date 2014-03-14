@@ -1043,14 +1043,24 @@ function apps__plexserver() {
 		fi
 		
 	elif [ "$option" == "set username" ]; then
-	  echo "The 'set username' command is not available for Plex Media Server"
-	  echo
-	  exit 1
+	  username="$2"
 	  
+	  if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
+	    echo "Plex Media Server is disabled"
+	  else
+			echo "* Configuring Plex Media Server"
+			plexserver__set_plexpass_username "$username"
+		fi
+
 	elif [ "$option" == "set password" ]; then
-	  echo "The 'set password' command is not available for Plex Media Server"
-	  echo
-	  exit 1
+	  password="$2"
+	  
+	  if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
+	    echo "Plex Media Server is disabled"
+	  else
+			echo "* Configuring Plex Media Server"
+			plexserver__set_plexpass_password "$password"
+	  fi
 	  		
 	elif [ "$option" == "set port" ]; then
 	  echo "The 'set port' command is not available for Plex Media Server"
