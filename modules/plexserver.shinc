@@ -32,8 +32,8 @@ function plexserver__show_config() {
   echo "----------------------------"
   echo "Status: $status"
   if [ "$status" == "Enabled|Running" ]; then
-	  username=$(plexserver__get_username)
-	  password=$(plexserver__get_password)
+	  username=$(plexserver__get_plexpass_username)
+	  password=$(plexserver__get_plexpass_password)
     port="32400"
     ipv4=$(tools__get_ip)
     
@@ -96,13 +96,13 @@ function plexserver__stop() {
 # Get App Configuration
 # ---------------------------------------------------------------------------------------
 
-function plexserver__get_username() {
+function plexserver__get_plexpass_username() {
   username=$(grep "^username " $plexpassConfig 2> /dev/null | awk '{ print $3 }')
   
   echo "$username"
 }
 
-function plexserver__get_password() {
+function plexserver__get_plexpass_password() {
   password=$(grep "^password " $plexpassConfig 2> /dev/null | awk '{ print $3 }')
   
   echo "$password"
@@ -112,7 +112,7 @@ function plexserver__get_password() {
 # Set App Configuration
 # ---------------------------------------------------------------------------------------
 
-function plexserver__set_username() {
+function plexserver__set_plexpass_username() {
   username="$1"
   username=$(echo "$username" | sed 's/\//\\\//g')
   
@@ -124,7 +124,7 @@ function plexserver__set_username() {
   sed -i 's/^username .*/username = '$username'/g' $plexpassConfig
 }
 
-function plexserver__set_password() {
+function plexserver__set_plexpass_password() {
   password="$1"
   password=$(echo "$password" | sed 's/\//\\\//g')
 
@@ -140,9 +140,17 @@ function plexserver__set_password() {
 # Install, Configure & Upgrade
 # ---------------------------------------------------------------------------------------
 
+function plexserver__deploy_appdata() {
+  # Copy the config/data directory into appdata
+  if [ ! -d "$plexserverData" ]; then
+    sudo su -c -u $osUser \
+      "tar xf $appdataBundle --strip-components 1 -C $tretflixPath/appdata/ appdata/plexmediaserver"
+  fi
+}
+
 function plexserver__install() {
-  username="$1"
-  password="$2"
+  username=$(plexserver__get_plexpass_username)
+	password=$(plexserver__get_plexpass_password)
   
   echo "* Installing Plex Media Server"
 
@@ -176,17 +184,11 @@ function plexserver__install() {
   
   # Copy/Replace the default config file
   tar xf $configBundle --strip-components 2 -C /etc/default/ config/default/plexmediaserver
-
-  # Copy the config/data directory into appdata
-  if [ ! -d "$plexserverData" ]; then
-    sudo su -c -u $osUser \
-      "tar xf $appdataBundle --strip-components 1 -C $tretflixPath/appdata/ appdata/plexmediaserver"
-  fi
 }
 
 function plexserver__upgrade() {
-  username="$1"
-  password="$2"
+  username=$(plexserver__get_plexpass_username)
+	password=$(plexserver__get_plexpass_password)
   
   echo "* Upgrading Plex Media Server"
   
@@ -215,8 +217,8 @@ function plexserver__upgrade() {
 }
 
 function plexserver__version_check() {
-  username="$1"
-  password="$2"
+  username=$(plexserver__get_plexpass_username)
+	password=$(plexserver__get_plexpass_password)
   
   # Get URL for latest available build
   url=$(plexserver__get_download_url "$username" "$password")

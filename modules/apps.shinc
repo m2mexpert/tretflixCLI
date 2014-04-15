@@ -998,15 +998,12 @@ function apps__plexserver() {
 		
 		  # Install the app
 			if [ "$(plexserver__get_status)" == "Not Installed" ]; then
-			  # Pass empty values for username and password
-				plexserver__install "" ""
+				plexserver__install
 				
 			# Upgrade the app
 			else
-				plexserverUser=$(plexserver__get_username)
-				plexserverPass=$(plexserver__get_password)
-			  if plexserver__version_check "$plexserverUser" "$plexserverPass"; then	
-				  plexserver__upgrade "$plexserverUser" "$plexserverPass"
+			  if plexserver__version_check; then	
+				  plexserver__upgrade
 				fi
 			fi
 			
@@ -1041,10 +1038,8 @@ function apps__plexserver() {
 	  if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
 	    echo "Plex Media Server is disabled"
 	  else
-			plexserverUser=$(plexserver__get_username)
-			plexserverPass=$(plexserver__get_password)
-			if plexserver__version_check "$plexserverUser" "$plexserverPass"; then	
-				plexserver__upgrade "$plexserverUser" "$plexserverPass"
+			if plexserver__version_check; then	
+				plexserver__upgrade
 			fi
 		fi
 		
@@ -1055,7 +1050,7 @@ function apps__plexserver() {
 	    echo "Plex Media Server is disabled"
 	  else
 			echo "* Configuring Plex Media Server"
-			plexserver__set_username "$username"
+			plexserver__set_plexpass_username "$username"
 		fi
 
 	elif [ "$option" == "set password" ]; then
@@ -1065,7 +1060,7 @@ function apps__plexserver() {
 	    echo "Plex Media Server is disabled"
 	  else
 			echo "* Configuring Plex Media Server"
-			plexserver__set_password "$password"
+			plexserver__set_plexpass_password "$password"
 	  fi
 	  		
 	elif [ "$option" == "set port" ]; then
@@ -1584,8 +1579,7 @@ function apps__allapps() {
 			nzbdrone__install
 		fi
 		if [ "$(plexserver__get_status)" == "Not Installed" ]; then
-		  # Pass empty values for username and password
-			plexserver__install "" ""
+			plexserver__install
 		fi
 		if [ "$(sabnzbd__get_status)" == "Not Installed" ]; then
 			sabnzbd__install
@@ -1751,10 +1745,8 @@ function apps__allapps() {
 		elif ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
 				
 			# Upgrade the app
-			plexserverUser=$(plexserver__get_username)
-			plexserverPass=$(plexserver__get_password)
-			if plexserver__version_check "$plexserverUser" "$plexserverPass"; then	
-				plexserver__upgrade "$plexserverUser" "$plexserverPass"
+			if plexserver__version_check; then	
+				plexserver__upgrade
 			fi
 			
 			# Enable the app
@@ -1937,10 +1929,8 @@ function apps__allapps() {
 	  if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
 	    echo "Plex Media Server is disabled"
 	  else
-			plexserverUser=$(plexserver__get_username)
-			plexserverPass=$(plexserver__get_password)
-			if plexserver__version_check "$plexserverUser" "$plexserverPass"; then	
-				plexserver__upgrade "$plexserverUser" "$plexserverPass"
+			if plexserver__version_check; then
+				plexserver__upgrade
 			fi
     fi
     		

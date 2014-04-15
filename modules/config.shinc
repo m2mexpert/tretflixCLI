@@ -224,7 +224,7 @@ function config__wizard() {
                   echo "!! ERROR: Invalid entry."
                   echo
 							  else
-								  plexserverUser="$input"
+								  plexpassUser="$input"
 								  break
 							  fi
 							done
@@ -234,14 +234,14 @@ function config__wizard() {
                   echo "!! ERROR: Invalid entry."
                   echo								  
 							  else
-								  plexserverPass="$input"
+								  plexpassPasswd="$input"
 								  break
 							  fi
 							done 
 							break;;
 						[nN] | [n|N][O|o] )
-							plexserverUser=""
-							plexserverPass=""
+							plexpassUser=""
+							plexpassPasswd=""
 							break;;
 						* )
 							echo "!! ERROR: Invalid entry."
@@ -541,25 +541,28 @@ function config__wizard() {
 
 	# Plex Media Server Section
 	if [ "$plexserverAction" == "Enable" ]; then
+	
+	  # Deploy the appdata package (if necessary)
+	  plexserver__deploy_appdata
+
+		# Configure appdata
+		echo "* Configuring Plex Pass Access"
+		plexserver__set_plexpass_username "$plexserverUser"
+		plexserver__set_plexpass_password "$plexserverPass"
 
 		# Install the app
 		if [ "$(plexserver__get_status)" == "Not Installed" ]; then
-			plexserver__install "$plexserverUser" "$plexserverPass"
+			plexserver__install
 			
 		# Upgrade the app
-		elif plexserver__version_check "$plexserverUser" "$plexserverPass"; then	
-			plexserver__upgrade "$plexserverUser" "$plexserverPass"
+		elif plexserver__version_check; then	
+			plexserver__upgrade
 		fi
 			
 		if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
 			# Enable the app
 			plexserver__enable
 		fi
-		
-		# Configure the app using user input
-		echo "* Configuring Plex Media Server"
-		plexserver__set_username "$plexserverUser"
-		plexserver__set_password "$plexserverPass"
 
 		# Start the app
 		plexserver__start
@@ -1235,18 +1238,14 @@ function config__restore_appdata() {
 
 	# Plex Media Server Section
 	if [ "$plexserverAction" == "Enable" ]; then
-	
-	  # Get Plex Pass username and password
-	  plexserverUser=$(plexserver__get_username)
-		plexserverPass=$(plexserver__get_password)
 
 		# Install the app
 		if [ "$(plexserver__get_status)" == "Not Installed" ]; then
-			plexserver__install "$plexserverUser" "$plexserverPass"
+			plexserver__install
 			
 		# Upgrade the app
 		elif plexserver__version_check "$plexserverUser" "$plexserverPass"; then	
-			plexserver__upgrade "$plexserverUser" "$plexserverPass"
+			plexserver__upgrade
 		fi
 			
 		if ! echo "$(plexserver__get_status)" | grep -q "^Enabled"; then
