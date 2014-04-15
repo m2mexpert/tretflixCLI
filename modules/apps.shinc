@@ -1294,7 +1294,7 @@ function apps__sabnzbd() {
 			if echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
 			  sabnzbdPort=$(sabnzbd__get_port)
 			  sabnzbdAPIkey=$(sabnzbd__get_apikey)
-				couchpotato__config_sabnzbd "$sabnzbdAPIkey"
+				couchpotato__config_sabnzbd "$sabnzbdPort" "$sabnzbdAPIkey"
 				couchpotato__start
 			fi
 			if echo "$(headphones__get_status)" | grep -q "^Enabled"; then
