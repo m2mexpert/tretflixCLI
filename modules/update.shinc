@@ -50,22 +50,16 @@ function update__cli() {
     if cd "$cliPath" && git fetch -v --dry-run 2>&1 | grep "$branch" | grep -q 'up to date'; then
       echo "Tretflix CLI is up-to-date."
     else
-			sudo su -c -u $osUser \
-				"cd $cliPath && git fetch > /dev/null 2>&1"
-			sudo su -c -u $osUser \
-				"cd $cliPath && git checkout -f $branch > /dev/null 2>&1"
-			sudo su -c -u $osUser \
-				"cd $cliPath && git reset --hard origin/$branch > /dev/null 2>&1"
+			cd $cliPath && git fetch > /dev/null 2>&1
+			cd $cliPath && git checkout -f $branch > /dev/null 2>&1
+			
 			chmod +x "$0"
 			echo "Tretflix CLI has been updated."
 		fi
   elif [ "$branch" == "develop" ]; then
-		sudo su -c -u $osUser \
-			"cd $cliPath && git fetch -v"
-		sudo su -c -u $osUser \
-			"cd $cliPath && git checkout -f $branch"
-		sudo su -c -u $osUser \
-			"cd $cliPath && git reset --hard origin/$branch" 
+		cd $cliPath && git fetch -v
+		cd $cliPath && git checkout -f $branch
+		
 		chmod +x "$0"
 	else
 	  echo "Invalid Branch"
