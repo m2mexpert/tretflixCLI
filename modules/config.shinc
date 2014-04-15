@@ -547,8 +547,8 @@ function config__wizard() {
 
 		# Configure appdata
 		echo "* Configuring Plex Pass Access"
-		plexserver__set_plexpass_username "$plexserverUser"
-		plexserver__set_plexpass_password "$plexserverPass"
+		plexserver__set_plexpass_username "$plexpassUser"
+		plexserver__set_plexpass_password "$plexpassPasswd"
 
 		# Install the app
 		if [ "$(plexserver__get_status)" == "Not Installed" ]; then
@@ -1244,7 +1244,7 @@ function config__restore_appdata() {
 			plexserver__install
 			
 		# Upgrade the app
-		elif plexserver__version_check "$plexserverUser" "$plexserverPass"; then	
+		elif plexserver__version_check; then	
 			plexserver__upgrade
 		fi
 			
