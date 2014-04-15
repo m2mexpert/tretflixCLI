@@ -240,8 +240,8 @@ function plexserver__version_check() {
 }
 
 function plexserver__get_download_url() {
-  username="$1"
-  password="$2"
+  username=$(plexserver__get_plexpass_username)
+	password=$(plexserver__get_plexpass_password)
 	
 	if [ "$username" ];then
 
