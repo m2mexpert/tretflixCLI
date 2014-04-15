@@ -231,7 +231,7 @@ function plexserver__version_check() {
   installedVers=$(echo "$output" | grep "Installed:" | awk '{ print $2 }' | sed 's/-.*$//')
   candidateVers=$(echo "$filename" | sed 's/^[a-z]*_//g' | sed 's/_.*$//g' | sed 's/-.*$//')
   
-  if awk "BEGIN {exit !($candidateVers <= $installedVers)}"; then
+  if [ "$installedVers" == "$candidateVers" ]; then
     echo "Plex Media Server is up-to-date"
     false
   else
