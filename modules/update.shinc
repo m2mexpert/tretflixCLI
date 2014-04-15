@@ -21,7 +21,7 @@ function update__command_handler() {
     case "${CLI_ARGS[1]}" in
     	'cli')
     	  if [ "${#CLI_ARGS[@]}" -eq 2 ]; then
-    	    update__cli "v1.3"
+    	    update__cli ""
     	  elif [ "${#CLI_ARGS[@]}" -eq 4 ]; then
     	    case "${CLI_ARGS[2]}" in
             '-b' | '--branch')
@@ -45,22 +45,27 @@ function update__command_handler() {
 function update__cli() {
   branch="$1"
   
-  # If branch is 'master', suppress command output
-  if [ "$branch" == "v1.3" ]; then
-    if cd "$cliPath" && git fetch -v --dry-run 2>&1 | grep "$branch" | grep -q 'up to date'; then
+  # If branch is blank, use the main branch and suppress git output
+  if [ -z "$branch" ]; then
+    if cd "$cliPath" && git fetch -v --dry-run 2>&1 | grep "v1.3" | grep -q 'up to date'; then
       echo "Tretflix CLI is up-to-date."
     else
-			cd $cliPath && git fetch > /dev/null 2>&1
-			cd $cliPath && git checkout -f $branch > /dev/null 2>&1
+      cd $cliPath
+		  git fetch -v > /dev/null 2>&1
+		  git checkout -f v1.3 > /dev/null 2>&1
+		  git merge origin/v1.3 > /dev/null 2>&1
 			
 			chmod +x "$0"
 			echo "Tretflix CLI has been updated."
 		fi
-  elif [ "$branch" == "develop" ]; then
-		cd $cliPath && git fetch -v
-		cd $cliPath && git checkout -f $branch
+  elif [ "$branch" == "v1.3" -o "$branch" == "develop" ]; then
+    cd $cliPath
+		git fetch -v
+		git checkout -f $branch
+		git merge origin/$branch
 		
 		chmod +x "$0"
+		echo "Tretflix CLI has been updated."
 	else
 	  echo "Invalid Branch"
 	  echo
