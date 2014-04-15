@@ -129,13 +129,13 @@ function nzbdrone__get_apikey() {
 }
 
 function nzbdrone__get_sabnzbd_settings() {
-  settings=$(sqlite3 $nzbdroneDB "SELECT Settings from DownloadClients WHERE Name='Sabnzbd' AND Implementation='Sabnzbd'")
+  settings=$(sqlite3 $nzbdroneDB "SELECT Settings from DownloadClients WHERE Implementation='Sabnzbd'")
   
   echo "$settings"
 }
 
 function nzbdrone__get_plexserver_settings() {
-  settings=$(sqlite3 $nzbdroneDB "SELECT Settings from Notifications WHERE Name='Tretflix' AND Implementation='PlexServer'")
+  settings=$(sqlite3 $nzbdroneDB "SELECT Settings from Notifications WHERE Implementation='PlexServer'")
   
   echo "$settings"
 }
@@ -213,7 +213,7 @@ function nzbdrone__set_sabnzbd_enabled() {
 	else
 	  # Enable the existing SABnzbd record
 	  nzbdrone__stop
-	  sqlite3 $nzbdroneDB "UPDATE DownloadClients SET Enable='1' WHERE Name='Sabnzbd' AND Implementation='Sabnzbd'"
+	  sqlite3 $nzbdroneDB "UPDATE DownloadClients SET Enable='1' Implementation='Sabnzbd'"
 	fi
 }
 
@@ -245,7 +245,7 @@ function nzbdrone__set_sabnzbd_settings() {
   
   # Update the existing SABnzbd record w/ the modified "Settings"
   nzbdrone__stop
-  sqlite3 $nzbdroneDB "UPDATE DownloadClients SET Settings='$settings' WHERE Name='Sabnzbd' AND Implementation='Sabnzbd'"
+  sqlite3 $nzbdroneDB "UPDATE DownloadClients SET Settings='$settings' WHERE Implementation='Sabnzbd'"
 }
 
 function nzbdrone__set_plexserver_enabled() {
@@ -284,7 +284,7 @@ function nzbdrone__set_plexserver_settings() {
   
   # Update the existing Plex Media Server record w/ the modified "Settings"
   nzbdrone__stop
-  sqlite3 $nzbdroneDB "UPDATE Notifications SET Settings='$settings' WHERE Name='Tretflix' AND Implementation='PlexServer'"
+  sqlite3 $nzbdroneDB "UPDATE Notifications SET Settings='$settings' WHERE Implementation='PlexServer'"
 }
 
 
