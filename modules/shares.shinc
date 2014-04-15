@@ -89,18 +89,23 @@ function shares__add_share() {
     shareStr="//$host/$share"
     mountPointStr="/mnt/$host/$share"
     optionStr="auto,sec=ntlm,uid=$osUser,gid=$osUser,username=$user,password=$pass"
+    optionAlt="auto,nounix,sec=ntlmssp,uid=$osUser,gid=$osUser,username=$user,password=$pass"
   elif [ "$type" == "nfs" ]; then
     shareStr="$host:$share"
     mountPointStr="/mnt/$host$share"
     optionStr="auto"
+    optionAlt="auto"
   else
     echo "Invalid share type"
     echo
     exit 1
   fi
   
+  # Validate the mount point before testing
+  shares__validate_mountpoint "$mountPointStr"
+  
   # Validate the share before adding and mounting
-  shares__validate_share "$host" "$share" "$type" "$user" "$pass"
+  shares__validate_share "$type" "$host" "$shareStr" "$optionStr" "$optionAlt"
   
   # Create the mount point, display error and exit if operation fails
   mkdir -p $mountPointStr > /dev/null 2>&1
@@ -110,7 +115,7 @@ function shares__add_share() {
     exit 1
   fi
   
-  # Write the mount details to fstab
+  # Write the mount line to fstab
   echo "Applying changes to fstab..."
   sudo su -c "echo -e '$shareStr $mountPointStr $type $optionStr 0 0' >> /etc/fstab"
     
@@ -207,49 +212,15 @@ function shares__show_config() {
 	fi
 }
 
-function shares__validate_share() {
-  # Assign friendly names to passed variables
-  host="$1"
-  share="$2"
-  type="$3"
-  user="$4"
-  pass="$5"
-  
-  # Build the share and mount point syntax depending on share type
-  if [ "$type" == "cifs" ]; then
-    shareStr="//$host/$share"
-    mountPointStr="/mnt/$host/$share"
-  elif [ "$type" == "nfs" ]; then
-    shareStr="$host:$share"
-    mountPointStr="/mnt/$host$share"
-  else
-    echo "Invalid share type"
+function shares__validate_mountpoint() {
+  # Verify that the mount point isn't already configured in fstab
+  if cat /etc/fstab | grep -q " $mountPointStr "; then
+    echo "The mount point '$mountPointStr' is already configured in fstab"
     echo
     exit 1
   fi
   
-  # Define the test mount point path
-  testMountPoint="/mnt/.test"
-  
-  if [ ! -d "$testMountPoint" ]; then
-    mkdir /mnt/.test
-  fi
-
-  # Verify that the host is reachable and/or hostname can be resolved
-  tools__host_ping "$host"
-  
-  # Verify that the share and/or mount point isn't already in use
-  if cat /etc/fstab | grep -q "^$shareStr.*$type"; then
-    echo "The share '$shareStr' is already in fstab"
-    echo
-    exit 1
-  elif cat /etc/fstab | grep -q " $mountPointStr "; then
-    echo "The mount point '$mountPointStr' is already in fstab"
-    echo
-    exit 1
-  fi
-
-  # Validate that the mount point is usable if it already exists
+  # If the mount point path exists, validate it's usability
   if tools__path_exists "$mountPointStr"; then
     if [ "$(tools__path_istype $mountPointStr)" != "Directory" ]; then
       echo "The moint point '$mountPointStr' is a file and cannot be used"
@@ -261,8 +232,32 @@ function shares__validate_share() {
       exit 1
     fi
   fi
+}
+
+function shares__validate_share() {
+  # Assign friendly names to passed variables
+  type="$1"
+  host="$2"
+  shareStr="$3"
+  optionStr="$4"
+  optionAlt="$5"
   
-  # If the test mountpoint is already in use, unmount it
+  # Verify that the host is reachable and/or hostname can be resolved
+  tools__host_ping "$host"
+
+  # Verify that the share isn't already configured in fstab
+  if cat /etc/fstab | grep -q "^$shareStr.*$type"; then
+    echo "The share '$shareStr' is already configured in fstab"
+    echo
+    exit 1
+  fi
+  
+  # If the test mount point doesn't exist, create it
+  if [ ! -d "$testMountPoint" ]; then
+    mkdir "$testMountPoint"
+  fi
+
+  # If the test mount point is already in use, unmount it
   if df -T | grep -q "$testMountPoint$"; then
     umount "$testMountPoint" > /dev/null 2>&1
     if [ $? -ne 0 ]; then
@@ -270,32 +265,30 @@ function shares__validate_share() {
       echo
       exit 1
     fi
-  fi
-
+  fi 
+  
   # Mount the share to the test mount point
-  if [ "$type" == "cifs" ]; then
-    share="//$host/$share"
-    output=$(mount -t cifs "$share" "$testMountPoint" -o sec=ntlm,user="$user",pass="$pass" 2>&1)
-  elif [ "$type" == "nfs" ]; then
-    share="$host:$share"
-    output=$(mount -t nfs "$share" "$testMountPoint" 2>&1)
-  fi
-
-  # If test mount was successful, unmount
+  output=$(mount -t "$type" "$shareStr" "$testMountPoint" -o "$optionStr" 2>&1)
   if [ $? -eq 0 ]; then
     umount "$testMountPoint" > /dev/null 2>&1
   else
-    # If test mount was unsuccessful, display the reason
-    if echo "$output" | grep -q "mount error(6): No such device or address"; then
-      echo "Share not found on the host"
-    elif echo "$output" | grep -q "mount error.*Permission denied"; then
-      echo "Access denied, a valid login/password is required"
-    elif echo "$output" | grep -q "access denied by server while mounting"; then
-      echo "Access denied, share access is restricted or share not found on the host"
-    else
-      echo "$output"
-    fi
-    echo
-    exit 1
+    output=$(mount -t "$type" "$shareStr" "$testMountPoint" -o "$optionAlt" 2>&1)
+    if [ $? -eq 0 ]; then
+      umount "$testMountPoint" > /dev/null 2>&1
+      optionStr="$optionAlt"
+		else
+			# If test mount was unsuccessful, display the reason
+			if echo "$output" | grep -q "mount error(6): No such device or address"; then
+				echo "Share not found on the host"
+			elif echo "$output" | grep -q "mount error.*Permission denied"; then
+				echo "Access denied, a valid login/password is required"
+			elif echo "$output" | grep -q "access denied by server while mounting"; then
+				echo "Access denied, share access is restricted or share not found on the host"
+			else
+				echo "$output"
+			fi
+			echo
+			exit 1
+		fi 
   fi
 }
