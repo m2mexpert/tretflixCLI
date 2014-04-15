@@ -228,8 +228,8 @@ function plexserver__version_check() {
   
   # Get the installed & candidate versions
   output=$(apt-cache policy plexmediaserver 2>&1)
-  installedVers=$(echo "$output" | grep "Installed:" | awk '{ print $2 }')
-  candidateVers=$(echo "$filename" | sed 's/^[a-z]*_//g' | sed 's/_.*$//g')
+  installedVers=$(echo "$output" | grep "Installed:" | awk '{ print $2 }' | sed 's/-.*$//')
+  candidateVers=$(echo "$filename" | sed 's/^[a-z]*_//g' | sed 's/_.*$//g' | sed 's/-.*$//')
   
   if awk "BEGIN {exit !($candidateVers <= $installedVers)}"; then
     echo "Plex Media Server is up-to-date"
