@@ -65,7 +65,6 @@ function update__cli() {
 		git merge origin/$branch
 		
 		chmod +x "$0"
-		echo "Tretflix CLI has been updated."
 	else
 	  echo "Invalid Branch"
 	  echo
