@@ -295,15 +295,17 @@ function couchpotato__install() {
   fi
 }
 
-function couchpotato__upgrade() {
-  echo "* Upgrading CouchPotato"
-
-  couchpotato__stop
-  sudo su -c -u $osUser \
-    "cd $couchpotatoSource && git remote update"
-  sudo su -c -u $osUser \
-    "cd $couchpotatoSource && git pull --all"
-}
+# CouchPotato is on a forced automatic upgrade system, no need for this function
+#
+#function couchpotato__upgrade() {
+#  echo "* Upgrading CouchPotato"
+#
+#  couchpotato__stop
+#  sudo su -c -u $osUser \
+#    "cd $couchpotatoSource && git remote update"
+#  sudo su -c -u $osUser \
+#    "cd $couchpotatoSource && git pull --all"
+#}
 
 function couchpotato__version_check() {
   if cd $couchpotatoSource && ! git fetch -v --dry-run 2>&1 | grep -iv "^from" | grep -ivq "\[up to date\]"; then

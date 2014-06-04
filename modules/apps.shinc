@@ -617,10 +617,6 @@ function apps__couchpotato() {
 		  # Install the app
 			if [ "$(couchpotato__get_status)" == "Not Installed" ]; then
 				couchpotato__install
-				
-			# Upgrade the app
-			elif couchpotato__version_check; then	
-				couchpotato__upgrade
 			fi
 			
 			# Enable the app
@@ -665,11 +661,8 @@ function apps__couchpotato() {
 	  if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
 	    echo "CouchPotato is disabled"
 	  else
-			if couchpotato__version_check; then
-				couchpotato__upgrade
-				couchpotato__start
-			fi
-		fi
+		echo "The 'upgrade' option is disabled for CouchPotato"
+	  fi
 		
 	elif [ "$option" == "set username" ]; then
 	  username="$2"
@@ -1607,11 +1600,7 @@ function apps__allapps() {
 		# If the app is not enabled, Install (or Upgrade) the app as needed, update
 		# the config as necessary to support the other associated apps and start the app
 		elif ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
-		  
-		  # Upgrade the app
-			if couchpotato__version_check; then	
-			  couchpotato__upgrade
-      fi
+
 			
 			# Enable the app
 			couchpotato__enable
@@ -1654,8 +1643,8 @@ function apps__allapps() {
 		elif ! echo "$(headphones__get_status)" | grep -q "^Enabled"; then
 		
 		  # Upgrade the app
-			if couchpotato__version_check; then	
-			  couchpotato__upgrade
+			if headphones__version_check; then	
+			  headphones__upgrade
       fi
 			
 			# Enable the app
@@ -1896,11 +1885,8 @@ function apps__allapps() {
 	  if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
 	    echo "CouchPotato is disabled"
 	  else
-			if couchpotato__version_check; then
-				couchpotato__upgrade
-				couchpotato__start
-			fi
-    fi
+		echo "The 'upgrade' option is disabled for CouchPotato"
+      fi
 			
 		# Headphones Section
 		# ---------------------------

@@ -414,10 +414,6 @@ function config__wizard() {
 		# Install the app
 		if [ "$(couchpotato__get_status)" == "Not Installed" ]; then
 			couchpotato__install
-			
-		# Upgrade the app
-		elif couchpotato__version_check; then	
-			couchpotato__upgrade
 		fi
 			
 		if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
@@ -1139,10 +1135,6 @@ function config__restore_appdata() {
 		# Install the app
 		if [ "$(couchpotato__get_status)" == "Not Installed" ]; then
 			couchpotato__install
-			
-		# Upgrade the app
-		elif couchpotato__version_check; then	
-			couchpotato__upgrade
 		fi
 			
 		if ! echo "$(couchpotato__get_status)" | grep -q "^Enabled"; then
