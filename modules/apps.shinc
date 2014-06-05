@@ -1888,8 +1888,6 @@ function apps__allapps() {
 	    echo "CouchPotato is disabled"
 	  else
 		echo "The 'upgrade' option is disabled for CouchPotato"
-		echo
-		exit 1
       fi
 			
 		# Headphones Section
